@@ -9,7 +9,19 @@ class delete_action_column_exaquest extends delete_action_column {
 
 
     protected function get_url_icon_and_label(\stdClass $question): array {
-        if (!question_has_capability_on($question, 'edit')) {
+        global $DB, $USER, $COURSE;
+
+        $questionStatus = $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'status', array('questionbankentryid' => $question->questionbankentryid));
+
+        if (!(question_has_capability_on($question, 'edit')
+            && $questionStatus < BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED
+            && (($question->createdby == $USER->id
+                    && has_capability('block/exaquest:setstatustoreview', \context_course::instance($COURSE->id))
+                    && ($questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_NEW || $questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE))
+                || ((has_capability('block/exaquest:modulverantwortlicher', \context_course::instance($COURSE->id)))
+                    || has_capability('block/exaquest:pruefungskoordination', \context_course::instance($COURSE->id))))
+
+        )) {
             return [null, null, null];
         }
         if ($question->status === question_version_status::QUESTION_STATUS_HIDDEN) {
