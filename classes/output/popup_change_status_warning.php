@@ -14,8 +14,7 @@ class popup_change_status_warning implements renderable, templatable {
     var $questionbankentryid = null;
     var $action = null;
 
-    public function __construct($selectusers, $action, $name, $questionbankentryid) {
-        $this->selectusers = $selectusers;
+    public function __construct($action, $name, $questionbankentryid) {
         $this->name = $name;
         $this->questionbankentryid = $questionbankentryid;
         $this->action = $action;
@@ -30,11 +29,9 @@ class popup_change_status_warning implements renderable, templatable {
         global $PAGE, $COURSE;
         $data = new stdClass();
         $data->name = $this->name;
-        $data->selectusers = array_values($this->selectusers);
+        $data->text = get_string('release_question_warning', 'block_exaquest');
+        $data->title = get_string('release_question_warning_title', 'block_exaquest');
         $data->questionbankentryid = $this->questionbankentryid;
-        if($this->action == 'rework_question'){
-            $data->require = true;
-        }
 
 
 
