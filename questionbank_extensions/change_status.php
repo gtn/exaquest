@@ -19,6 +19,7 @@ namespace qbank_openquestionforreview;
 use core_question\local\bank\column_base;
 
 require_once(__DIR__ . '/../classes/output/popup_change_status.php');
+require_once(__DIR__ . '/../classes/output/popup_change_status_warning.php');
 
 $PAGE->requires->js('/blocks/exaquest/javascript/jquery.js',true);
 /**
@@ -63,20 +64,20 @@ class change_status extends column_base {
             case BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS:
                 if(has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
                     echo '<button href="#" class="changestatus' . $question->questionbankentryid . ' btn btn-primary" role="button" value="technical_review_done"> ' . get_string('technical_review_done', 'block_exaquest') . '</button>';
-                }
-                if(has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
+
                     echo '<button href="#" class="changestatus' . $question->questionbankentryid . ' btn btn-primary" role="button" value="formal_review_done"> ' . get_string('formal_review_done', 'block_exaquest') . '</button>';
-                }
-                if(has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
+
                     echo $output->render(new \block_exaquest\output\popup_change_status($questioncreators, 'rework_question', get_string('revise_question', 'block_exaquest'), $question->questionbankentryid));
+
+                    echo $output->render(new \block_exaquest\output\popup_change_status_warning($questioncreators, 'release_question', get_string('skip_and_release_question', 'block_exaquest'), $question->questionbankentryid));
                 }
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE:
                 if(has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
                     echo '<button href="#" class="changestatus' . $question->questionbankentryid . ' btn btn-primary" role="button" value="technical_review_done"> ' . get_string('technical_review_done', 'block_exaquest') . '</button>';
-                }
-                if(has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
+
                     echo $output->render(new \block_exaquest\output\popup_change_status($questioncreators, 'rework_question', get_string('revise_question', 'block_exaquest'), $question->questionbankentryid));
+                    echo $output->render(new \block_exaquest\output\popup_change_status_warning($questioncreators, 'release_question', get_string('skip_and_release_question', 'block_exaquest'), $question->questionbankentryid));
                 }
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE:
@@ -84,6 +85,7 @@ class change_status extends column_base {
                     echo '<button href="#" class="changestatus'.$question->questionbankentryid.' btn btn-primary" role="button" value="formal_review_done"> '.get_string('formal_review_done', 'block_exaquest').'</button>';
 
                     echo $output->render(new \block_exaquest\output\popup_change_status($questioncreators, 'rework_question', get_string('revise_question', 'block_exaquest'), $question->questionbankentryid));
+                    echo $output->render(new \block_exaquest\output\popup_change_status_warning($questioncreators, 'release_question', get_string('skip_and_release_question', 'block_exaquest'), $question->questionbankentryid));
                 }
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED:
