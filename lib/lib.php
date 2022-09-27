@@ -758,18 +758,28 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
     //$isTeacher = block_exacomp_is_teacher($context) && $courseid != 1;
     //$isStudent = has_capability('block/exacomp:student', $context) && $courseid != 1 && !has_capability('block/exacomp:admin', $context);
     //$isTeacherOrStudent = $isTeacher || $isStudent;
-
+    $catAndCont = get_question_category_and_context_of_course();
 
     $rows[] = new tabobject('tab_dashboard',
         new moodle_url('/blocks/exaquest/dashboard.php', array("courseid" => $courseid)),
         get_string('dashboard', 'block_exaquest'), null, true);
 
     $rows[] = new tabobject('tab_get_questions',
-        new moodle_url('/blocks/exaquest/questbank.php', array("courseid" => $courseid)),
+        new moodle_url('/blocks/exaquest/questbank.php', array("courseid" => $courseid, "category" => $catAndCont[0].','. $catAndCont[1])),
         get_string('get_questionbank', 'block_exaquest'), null, true);
 
 
     return $rows;
+}
+// this is used to get the contexts of the category in the questionbank
+function get_question_category_and_context_of_course(){
+    global $COURSE, $DB;
+    // this is used to get the contexts of the category in the questionbank
+    $context = context_course::instance($COURSE->id);
+    $contexts = explode('/',$context->path);
+
+    $category = end($DB->get_records('question_categories',['contextid' => $contexts[2]]));
+    return [$category->id, $contexts[2]];
 }
 
 

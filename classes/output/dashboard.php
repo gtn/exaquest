@@ -54,18 +54,20 @@ class dashboard implements renderable, templatable {
         $data->my_questions_count =
             block_exaquest_get_my_questionbankentries_count($this->courseid, $this->userid);
         $data->my_questions_to_review_count = block_exaquest_get_my_questionbankentries_to_be_reviewed_count($this->courseid, $this->userid);
-        $data->my_questions_finalised_count = block_exaquest_get_my_finalised_questionbankentries_count($this->courseid, $this->userid);;
+        $data->my_questions_finalised_count = block_exaquest_get_my_finalised_questionbankentries_count($this->courseid, $this->userid);
+
+        $catAndCont = get_question_category_and_context_of_course();
 
         $data->questions_for_me_to_review_link = new moodle_url('/blocks/exaquest/questbank.php',
-            array('courseid' => $this->courseid, "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW));
+            array('courseid' => $this->courseid,"category" => $catAndCont[0].','. $catAndCont[1] ,"filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW));
         $data->questions_for_me_to_review_link = $data->questions_for_me_to_review_link->raw_out(false);
 
         $data->questions_for_me_to_revise_link = new moodle_url('/blocks/exaquest/questbank.php',
-            array('courseid' => $this->courseid, "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE));
+            array('courseid' => $this->courseid,"category" => $catAndCont[0].','. $catAndCont[1] , "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE));
         $data->questions_for_me_to_revise_link = $data->questions_for_me_to_revise_link->raw_out(false);
 
         $data->questions_for_me_to_release_link = new moodle_url('/blocks/exaquest/questbank.php',
-            array('courseid' => $this->courseid, "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_RELEASE));
+            array('courseid' => $this->courseid,"category" => $catAndCont[0].','. $catAndCont[1] , "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_RELEASE));
         $data->questions_for_me_to_release_link = $data->questions_for_me_to_release_link->raw_out(false);
 
         // REQUEST NEW QUESTIONS

@@ -12,6 +12,7 @@ require_once('change_status.php');
 require_once('plugin_feature.php');
 require_once('edit_action_column_exaquest.php');
 require_once('filters/exaquest_filters.php');
+require_once('filters/category_condition_exaquest.php');
 require_once('edit_action_column_exaquest.php');
 require_once('delete_action_column_exaquest.php');
 require_once('history_action_column_exaquest.php');
@@ -183,6 +184,10 @@ class exaquest_view extends view {
         list(, $contextid) = explode(',', $cat);
         $catcontext = \context::instance_by_id($contextid);
         $thiscontext = $this->get_most_specific_context();
+        //var_dump($catcontext);
+        //echo("---------------");
+        //var_dump($thiscontext);
+        //die;
         // Category selection form.
         $this->display_question_bank_header();
         //edited:
@@ -200,7 +205,7 @@ class exaquest_view extends view {
 
                 //array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
                 array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_filters($filterstatus));
-                //array_unshift($this->searchconditions, new \core_question\bank\search\category_condition($cat, $recurse, $editcontexts, $this->baseurl, $this->course));
+                array_unshift($this->searchconditions, new \core_question\bank\search\category_condition_exaquest($cat, $recurse, $editcontexts, $this->baseurl, $this->course));
             }
         }
         $this->display_options_form($showquestiontext);
@@ -225,15 +230,15 @@ class exaquest_view extends view {
         // Note: We do not call this in the loop because quiz ob_ captures this function (see raise() PHP doc).
         \core_php_time_limit::raise(300);
         //edit:
-        $editcontexts = $this->contexts->having_one_edit_tab_cap('editq'); // tabname jsut copied for convinience bacasue it won't change
+        /*$editcontexts = $this->contexts->having_one_edit_tab_cap('editq'); // tabname jsut copied for convinience bacasue it won't change
         // If it is required to create sub question categories i have to iterate over it and find the context_coursecat
         if($editcontexts[1] instanceof \context_coursecat){
             // gets the parent course category for this course
             $category = end($DB->get_records('question_categories',['contextid' => $editcontexts[1]->id])); // end gives me the last element
         } else {
-            throw new \coding_exception('No parent course category found');
-            $category = $this->get_current_category($categoryandcontext);
-        }
+            throw new \coding_exception('No parent course category found');*/
+        $category = $this->get_current_category($categoryandcontext);
+        //}
 
         list($categoryid, $contextid) = explode(',', $categoryandcontext);
         $catcontext = \context::instance_by_id($contextid);
@@ -295,7 +300,7 @@ class exaquest_view extends view {
     function get_current_category_dashboard($categoryandcontext) {
         global $DB;
 
-        $editcontexts = $this->contexts->having_one_edit_tab_cap('editq'); // tabname jsut copied for convinience bacasue it won't change
+        $editcontexts = $this->contexts->having_one_edit_tab_cap('editq'); // tabname just copied for convinience bacause it won't change
 
 
         // If it is required to create sub question categories i have to iterate over it and find the context_coursecat
