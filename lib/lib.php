@@ -243,9 +243,9 @@ function block_exaquest_get_questionbankentries_to_be_reviewed_count($courseid) 
     $sql = "SELECT qs.id
 			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
 			WHERE qs.courseid = :courseid
-			AND qs.status = :fachlichreviewdone
+			AND (qs.status = :fachlichreviewdone
 			OR qs.status = :formalreviewdone
-			OR qs.status = :toassess";
+			OR qs.status = :toassess)";
 
     $questions = count($DB->get_records_sql($sql,
         array("courseid" => $courseid, "fachlichreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE,
@@ -270,9 +270,9 @@ function block_exaquest_get_my_questionbankentries_to_be_reviewed_count($coursei
 			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
 			JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid 
 			WHERE qs.courseid = :courseid
-			AND qs.status = :fachlichreviewdone
+			AND (qs.status = :fachlichreviewdone
 			OR qs.status = :formalreviewdone
-			OR qs.status = :toassess
+			OR qs.status = :toassess)
             AND qbe.ownerid = :ownerid";
 
     $questions = count($DB->get_records_sql($sql,
