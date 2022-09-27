@@ -20,5 +20,10 @@ defined('MOODLE_INTERNAL') || die();
 $messageproviders = array (
     // Notify Fragenersteller that a new questions should be created
     'newquestionsrequest' => array (
+        'defaults' => [
+            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+            'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+            //'airnotifier' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+        ],
     ),
 );
