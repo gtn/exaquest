@@ -52,9 +52,9 @@ class dashboard implements renderable, templatable {
 
 
         $data->my_questions_count =
-            block_exaquest_get_questionbankentries_by_courseid_and_userid_count($this->userid, $this->courseid);
-        $data->my_questions_to_review_count = 0;
-        $data->my_questions_finalised_count = 0;
+            block_exaquest_get_my_questionbankentries_count($this->courseid, $this->userid);
+        $data->my_questions_to_review_count = block_exaquest_get_my_questionbankentries_to_be_reviewed_count($this->courseid, $this->userid);
+        $data->my_questions_finalised_count = block_exaquest_get_my_finalised_questionbankentries_count($this->courseid, $this->userid);;
 
         $data->questions_for_me_to_review_link = new moodle_url('/blocks/exaquest/questbank.php',
             array('courseid' => $this->courseid, "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW));

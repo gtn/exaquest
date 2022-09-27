@@ -215,8 +215,11 @@ function block_exaquest_get_questionbankentries_by_courseid_count($courseid) {
  * @param $courseid
  * @return array
  */
-function block_exaquest_get_questionbankentries_by_courseid_and_userid_count($courseid, $userid) {
-    global $DB;
+function block_exaquest_get_my_questionbankentries_count($courseid, $userid) {
+    global $DB, $USER;
+    if (!$userid) {
+        $userid = $USER->id;
+    }
     $sql = "SELECT qs.id
               FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
               JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid 
@@ -248,6 +251,34 @@ function block_exaquest_get_questionbankentries_to_be_reviewed_count($courseid) 
         array("courseid" => $courseid, "fachlichreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE,
             "formalreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE,
             "toassess" => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS)));
+
+    return $questions;
+}
+
+/**
+ * Returns count of
+ *
+ * @param $courseid
+ * @return array
+ */
+function block_exaquest_get_my_questionbankentries_to_be_reviewed_count($courseid, $userid) {
+    global $DB, $USER;
+    if (!$userid) {
+        $userid = $USER->id;
+    }
+    $sql = "SELECT qs.id
+			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
+			JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid 
+			WHERE qs.courseid = :courseid
+			AND qs.status = :fachlichreviewdone
+			OR qs.status = :formalreviewdone
+			OR qs.status = :toassess
+            AND qbe.ownerid = :ownerid";
+
+    $questions = count($DB->get_records_sql($sql,
+        array("courseid" => $courseid, "fachlichreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE,
+            "formalreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE,
+            "toassess" => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS, "ownerid" => $userid)));
 
     return $questions;
 }
@@ -308,6 +339,31 @@ function block_exaquest_get_finalised_questionbankentries_count($courseid) {
 
     $questions = count($DB->get_records_sql($sql,
         array("courseid" => $courseid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED)));
+
+    return $questions;
+}
+
+/**
+ * Returns count of
+ *
+ * @param $courseid
+ * @return array
+ */
+function block_exaquest_get_my_finalised_questionbankentries_count($courseid, $userid) {
+    // the same as to_release in most cases
+    global $DB, $USER;
+    if (!$userid) {
+        $userid = $USER->id;
+    }
+    $sql = "SELECT qs.id
+			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
+			JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid 
+			WHERE qs.courseid = :courseid
+			AND qs.status = :finalised
+			AND qbe.ownerid = :ownerid";
+
+    $questions = count($DB->get_records_sql($sql,
+        array("courseid" => $courseid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED, "ownerid" => $userid)));
 
     return $questions;
 }
