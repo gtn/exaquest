@@ -2,6 +2,29 @@
 
 
 <div id="exaquest">
+    <!--    TODOs-->
+    <div class="dashboardcard">
+        <p>{{#str}}todos_title, block_exaquest {{/str}}</p>
+        <p>{{#str}}questions_overview_title, block_exaquest {{/str}}</p>
+        <ul>
+            <li>
+                <a class="link" href={{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}} {{#str}}
+                    questions_for_me_to_review, block_exaquest {{/str}}</a>
+            </li>
+            <li>
+                <a class="link" href={{questions_for_me_to_revise_link}}>{{questions_for_me_to_revise_count}} {{#str}}
+                    questions_for_me_to_revise, block_exaquest {{/str}}</a>
+            </li>
+            <li>
+                <a class="link" href={{questions_for_me_to_release_link}}>{{questions_for_me_to_release_count}} {{#str}}
+                    questions_for_me_to_release, block_exaquest {{/str}}</a>
+            </li>
+        </ul>
+        {{#request_questions_popup}}
+            {{>block_exaquest/popup_request_questions}}
+        {{/request_questions_popup}}
+    </div>
+
     <!--    General Information-->
     <div class="dashboardcard">
         <p>{{#str}}questions_overview_title, block_exaquest {{/str}}</p>
@@ -59,28 +82,7 @@
         <button class="btn btn-secondary">{{#str}}create_new_exam_button, block_exaquest {{/str}}</button>
     </div>
 
-    <!--    TODOs-->
-    <div class="dashboardcard">
-        <p>{{#str}}todos_title, block_exaquest {{/str}}</p>
-        <p>{{#str}}questions_overview_title, block_exaquest {{/str}}</p>
-        <ul>
-            <li>
-                <a class="link" href={{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}} {{#str}}
-                    questions_for_me_to_review, block_exaquest {{/str}}</a>
-            </li>
-            <li>
-                <a class="link" href={{questions_for_me_to_revise_link}}>{{questions_for_me_to_revise_count}} {{#str}}
-                    questions_for_me_to_revise, block_exaquest {{/str}}</a>
-            </li>
-            <li>
-                <a class="link" href={{questions_for_me_to_release_link}}>{{questions_for_me_to_release_count}} {{#str}}
-                    questions_for_me_to_release, block_exaquest {{/str}}</a>
-            </li>
-        </ul>
-        {{#request_questions_popup}}
-            {{>block_exaquest/popup_request_questions}}
-        {{/request_questions_popup}}
-    </div>
+
 
     <!--    Statistik-->
     <div class="dashboardcard">

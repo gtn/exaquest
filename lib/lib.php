@@ -35,7 +35,7 @@ const BLOCK_EXAQUEST_QUESTIONSTATUS_NEW = 0;
 const BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS = 1;
 const BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE = 2;
 const BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE = 3;
-const BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED = 4;
+const BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED = 4; // finalised == to release in most cases
 const BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE = 5;
 const BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED = 6;
 const BLOCK_EXAQUEST_QUESTIONSTATUS_IN_QUIZ = 7;
@@ -142,28 +142,6 @@ function block_exaquest_get_reviewer_by_courseid($courseid) {
     return $userarray;
 }
 
-
-/**
- * Returns count of questionbankentries that have to be revised of this course of this user
- * used e.g. for the fragenersteller to see which questions they should revise
- *
- * @param $courseid
- * @param $userid
- * @return array
- */
-function block_exaquest_get_questionbankentries_to_revise_count($courseid, $userid) {
-    global $DB;
-    $sql = "SELECT q.*
-			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
-			JOIN {question_bank_entries} qe ON qs.questionbankentryid = qe.id
-			WHERE qe.ownerid = :ownerid
-			AND qs.status = :status";
-
-    $questions =
-        count($DB->get_records_sql($sql, array("ownerid" => $userid, "status" => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE)));
-
-    return $questions;
-}
 
 
 /**
@@ -321,6 +299,7 @@ function block_exaquest_get_released_and_to_review_questionbankentries_count($co
  * @return array
  */
 function block_exaquest_get_finalised_questionbankentries_count($courseid) {
+    // the same as to_release in most cases
     global $DB;
     $sql = "SELECT qs.id
 			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
@@ -332,6 +311,86 @@ function block_exaquest_get_finalised_questionbankentries_count($courseid) {
 
     return $questions;
 }
+
+//-----------
+
+/**
+ * Returns count of
+ *
+ * @param $courseid
+ * @return array
+ */
+function block_exaquest_get_questions_for_me_to_review_count($courseid, $userid=0) {
+    // get from the table exaquestreviewassing. But there are 2 reviewtypes, do not count twice!
+    global $DB, $USER;
+
+    if(!$userid){
+        $userid = $USER->id;
+    }
+
+    // questionbankentryid DISTINCT to not count twice
+    $sql = "SELECT DISTINCT ra.questionbankentryid
+			FROM {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} ra
+			WHERE ra.reviewerid = :userid";
+
+    $questions = count($DB->get_records_sql($sql,
+        array("userid" => $userid)));
+
+    return $questions;
+}
+
+/**
+ * Returns count of questionbankentries that have to be revised of this course of this user
+ * used e.g. for the fragenersteller to see which questions they should revise
+ *
+ * @param $courseid
+ * @param $userid
+ * @return array
+ */
+function block_exaquest_get_questions_for_me_to_revise_count($courseid, $userid=0) {
+    global $DB, $USER;
+    if (!$userid) {
+        $userid = $USER->id;
+    }
+
+    $sql = "SELECT qs.id
+			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
+			JOIN {question_bank_entries} qe ON qs.questionbankentryid = qe.id
+			WHERE qe.ownerid = :ownerid
+			AND qs.status = :status";
+
+    $questions =
+        count($DB->get_records_sql($sql, array("ownerid" => $userid, "status" => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE)));
+
+    return $questions;
+}
+
+
+/**
+ * Returns count of
+ *
+ * @param $courseid
+ * @return array
+ */
+function block_exaquest_get_questions_for_me_to_release_count($courseid, $userid=0) {
+    global $DB, $USER;
+    if (!$userid) {
+        $userid = $USER->id;
+    }
+    $sql = "SELECT qs.id
+			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
+			JOIN {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} qra ON qra.questionbankentryid = qs.questionbankentryid 
+			WHERE qs.courseid = :courseid
+			AND qs.status = :finalised
+			AND qra.reviewerid = :reviewerid";
+
+    $questions = count($DB->get_records_sql($sql,
+        array("courseid" => $courseid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED, "reviewerid" => $userid)));
+
+    return $questions;
+}
+
+//-----------
 
 
 function block_exaquest_set_up_roles_test()
