@@ -191,5 +191,55 @@ function xmldb_block_exaquest_upgrade($oldversion)
         upgrade_block_savepoint(true, 2022072500, 'exaquest');
     }
 
+    if ($oldversion < 2022101302) {
+        // first commit of stefan, actually done at an earlier version, but moved here on refactor
+
+        // Define table block_exaquest_similarity to be created.
+        $table = new xmldb_table('block_exaquestcategories');
+
+        // Adding fields to table block_exaquest_similarity.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('coursecategoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('categoryname', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('categorytype', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('coursecategoryid', XMLDB_KEY_FOREIGN, ['coursecategoryid'], 'course_categories', ['id']);
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2022101302, 'exaquest');
+    }
+
+    if ($oldversion < 2022101303) {
+        // first commit of stefan, actually done at an earlier version, but moved here on refactor
+
+        // Define table block_exaquest_similarity to be created.
+        $table = new xmldb_table('block_exaquestquestcat_mm');
+
+        // Adding fields to table block_exaquest_similarity.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('questionid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('exaquestcategoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('questionid', XMLDB_KEY_FOREIGN, ['questionid'], 'question', ['id']);
+        $table->add_key('exaquestcategoryid', XMLDB_KEY_FOREIGN, ['exaquestcategoryid'], 'exaquestcategories', ['id']);
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2022101303, 'exaquest');
+    }
+
     return $return_result;
 }

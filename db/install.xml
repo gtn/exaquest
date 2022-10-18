@@ -47,5 +47,29 @@
             <KEY NAME="fk_questionid_2" TYPE="foreign" FIELDS="question_id2" REFTABLE="question" REFFIELDS="id" COMMENT="Foreign key to the second question ID."/>
           </KEYS>
         </TABLE>
+        <TABLE NAME="block_exaquestcategories" COMMENT="Stores all categories of questions for each course category">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id"/>
+                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="coursecategoryid"/>
+                <FIELD NAME="categoryname" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="name of queston category in exaquest"/>
+                <FIELD NAME="categorytype" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="type of queston category in exaquest"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories" REFFIELDS="id"/>
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="block_exaquestquestcat_mm" COMMENT="Stores all categories of questions for each course category">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id"/>
+                <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="questionid"/>
+                <FIELD NAME="exaquestcategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="exaquestcategoryid"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="questionid" TYPE="foreign" FIELDS="questionid" REFTABLE="question" REFFIELDS="id"/>
+                <KEY NAME="exaquestcategoryid" TYPE="foreign" FIELDS="exaquestcategoryid" REFTABLE="exaquestcategories" REFFIELDS="id"/>
+            </KEYS>
+        </TABLE>
     </TABLES>
 </XMLDB>
