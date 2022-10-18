@@ -36,6 +36,8 @@ class block_exaquest extends block_list {
         // TODO: add custom plugin here
         $this->content->items[] = html_writer::tag('a', get_string('similarity', 'block_exaquest'),
             array('href' => $CFG->wwwroot . '/blocks/exaquest/similarity_comparison.php?courseid=' . $COURSE->id));
+        $this->content->items[] = html_writer::tag('a', get_string('quizzes', 'block_exaquest'),
+            array('href' => $CFG->wwwroot . '/blocks/exaquest/quizzes.php?courseid=' . $COURSE->id));
 
         return $this->content;
     }
