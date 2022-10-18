@@ -42,6 +42,17 @@ const BLOCK_EXAQUEST_QUESTIONSTATUS_IN_QUIZ = 7;
 const BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED = 8;
 
 /**
+ * Quiz/Pruefung Status
+ */
+const BLOCK_EXAQUEST_QUIZSTATUS_NEW = 0; // Questions are being added
+const BLOCK_EXAQUEST_QUIZSTATUS_CREATED = 1; // Questions have been added
+const BLOCK_EXAQUEST_QUIZSTATUS_FACHLICH_RELEASED = 2; // Fachlicher Pruefer has released
+const BLOCK_EXAQUEST_QUIZSTATUS_TECHNISCH_RELEASED = 3; // MUSSS released it
+const BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE = 4; // ongoing exam?
+const BLOCK_EXAQUEST_QUIZSTATUS_FINISHED = 5; // exam finished
+const BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED = 6; // grades released
+
+/**
  * Misc
  */
 const BLOCK_EXAQUEST_DB_REVIEWTYPE_FORMAL = 0;
@@ -771,6 +782,10 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
     $rows[] = new tabobject('tab_similarity_comparison',
         new moodle_url('/blocks/exaquest/similarity_comparison.php', array("courseid" => $courseid)),
         get_string('similarity', 'block_exaquest'), null, true);
+
+    $rows[] = new tabobject('tab_quizzes',
+        new moodle_url('/blocks/exaquest/quizzes.php', array("courseid" => $courseid)),
+        get_string('tab_quizzes', 'block_exaquest'), null, true);
 
 
 
