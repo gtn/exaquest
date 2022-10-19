@@ -192,9 +192,6 @@ function xmldb_block_exaquest_upgrade($oldversion)
     }
 
     if ($oldversion < 2022101302) {
-        // first commit of stefan, actually done at an earlier version, but moved here on refactor
-
-        // Define table block_exaquest_similarity to be created.
         $table = new xmldb_table('block_exaquestcategories');
 
         // Adding fields to table block_exaquest_similarity.
@@ -217,9 +214,6 @@ function xmldb_block_exaquest_upgrade($oldversion)
     }
 
     if ($oldversion < 2022101303) {
-        // first commit of stefan, actually done at an earlier version, but moved here on refactor
-
-        // Define table block_exaquest_similarity to be created.
         $table = new xmldb_table('block_exaquestquestcat_mm');
 
         // Adding fields to table block_exaquest_similarity.
@@ -240,7 +234,6 @@ function xmldb_block_exaquest_upgrade($oldversion)
         // Exaquest savepoint reached.
         upgrade_block_savepoint(true, 2022101303, 'exaquest');
     }
-
 
     if ($oldversion < 2022101800) {
         // Define table block_exaquestquizstatus to be created.
