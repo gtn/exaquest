@@ -8,7 +8,7 @@ $string['exaquest:myaddinstance'] = 'Add a new exaquest block to the My Moodle p
 $string['dashboard'] = 'Dashboard';
 $string['get_questionbank'] = 'Questionbank';
 $string['similarity'] = 'Similarity overview';
-$string['quizzes'] = 'Quizzes';
+$string['exams'] = 'Exams';
 
 
 $string['request_questions_label'] = 'Request new questions from ...';
@@ -36,14 +36,14 @@ $string['exaquest:modulverantwortlicher'] = 'Responsible for a module';
 $string['setuproles'] = 'Set up roles and capabilities';
 
 
-// Quizzes
-$string['new_quizzes'] = 'New quizzes';
-$string['new_quizzes'] = 'New quizzes';
-$string['new_quizzes'] = 'New quizzes';
-$string['new_quizzes'] = 'New quizzes';
-$string['new_quizzes'] = 'New quizzes';
-$string['new_quizzes'] = 'New quizzes';
-$string['new_quizzes'] = 'New quizzes';
+// Exams
+$string['new_exams'] = 'New exams';
+$string['new_exams'] = 'New exams';
+$string['new_exams'] = 'New exams';
+$string['new_exams'] = 'New exams';
+$string['new_exams'] = 'New exams';
+$string['new_exams'] = 'New exams';
+$string['new_exams'] = 'New exams';
 
 
 // Dasboardcard

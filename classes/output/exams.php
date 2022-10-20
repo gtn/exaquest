@@ -8,7 +8,7 @@ use stdClass;
 use templatable;
 use moodle_url;
 
-class quizzes implements renderable, templatable {
+class exams implements renderable, templatable {
     var $questions = null;
     private $capabilities;
     private $courseid;

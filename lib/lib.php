@@ -783,9 +783,9 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
         new moodle_url('/blocks/exaquest/similarity_comparison.php', array("courseid" => $courseid)),
         get_string('similarity', 'block_exaquest'), null, true);
 
-    $rows[] = new tabobject('tab_quizzes',
-        new moodle_url('/blocks/exaquest/quizzes.php', array("courseid" => $courseid)),
-        get_string('tab_quizzes', 'block_exaquest'), null, true);
+    $rows[] = new tabobject('tab_exams',
+        new moodle_url('/blocks/exaquest/exams.php', array("courseid" => $courseid)),
+        get_string('tab_exams', 'block_exaquest'), null, true);
 
 
 
