@@ -100,6 +100,8 @@ $string['release_question'] = 'Release question';
 $string['skip_and_release_question'] = 'Skip an release question';
 $string['release_question_warning'] = 'Are you sure you want to skip the review and release the question right away?';
 $string['release_question_warning_title'] = 'Warning';
+$string['change_status'] = 'change status';
+
 
 
 

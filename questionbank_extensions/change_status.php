@@ -37,7 +37,7 @@ class change_status extends column_base {
     }
 
     public function get_title(): string {
-        return "Status verändern";
+        return get_string('change_status', 'block_exaquest');
 
     }
 
