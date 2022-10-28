@@ -105,7 +105,8 @@ $string['change_status'] = 'change status';
 
 $string['open_for_review_text'] = 'Assign review to..';
 $string['revise_text'] = 'Assign revision to..';
-
+$string['open_for_review_title'] = 'Review';
+$string['revise_title'] = 'Revision';
 
 
 
