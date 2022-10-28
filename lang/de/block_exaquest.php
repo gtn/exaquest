@@ -102,6 +102,9 @@ $string['release_question_warning'] = 'Sind Sie sicher, dass Sie die Begutachtun
 $string['release_question_warning_title'] = 'Warnung';
 $string['change_status'] = 'Status verändern';
 
+$string['open_for_review_text'] = 'Begutachtung zuteilen zu..';
+$string['revise_text'] = 'Überarbeitung zuteilen zu..';
+
 
 
 
@@ -114,7 +117,7 @@ $string['exaquest:similarity_button_label'] = "Ähnlichkeitsvergleichsübersicht
 $string['exaquest:similarity_refresh_button_label'] = "Ähnlichkeitsvergleichsübersicht aktualisieren";
 $string['exaquest:similarity_update_button_label'] = "Speichern und aktualisieren";
 $string['exaquest:similarity_compute_button_label'] = "Ähnlichkeit berechnen";
-$string['exaquest:similarity_persist_button_label'] = "Compute and persist Similarity";
+$string['exaquest:similarity_persist_button_label'] = "Anhaltende Ähnlichkeit berechnen";
 $string['exaquest:similarity_substitute_checkbox_label'] = "Substitute IDs";
 $string['exaquest:similarity_hide_checkbox_label'] = "Hide previous versions";
 $string['exaquest:similarity_sort_select_label'] = "Sort By";

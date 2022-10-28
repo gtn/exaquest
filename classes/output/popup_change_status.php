@@ -34,7 +34,11 @@ class popup_change_status implements renderable, templatable {
         $data->questionbankentryid = $this->questionbankentryid;
         if($this->action == 'rework_question'){
             $data->require = true;
+            $data->text = get_string('revise_text', 'block_exaquest');
+        } else {
+            $data->text = get_string('open_for_review_text', 'block_exaquest');
         }
+
 
 
 

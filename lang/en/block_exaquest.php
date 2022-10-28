@@ -103,6 +103,11 @@ $string['release_question_warning_title'] = 'Warning';
 $string['change_status'] = 'change status';
 
 
+$string['open_for_review_text'] = 'Assign review to..';
+$string['revise_text'] = 'Assign revision to..';
+
+
+
 
 
 
