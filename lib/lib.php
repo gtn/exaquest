@@ -786,6 +786,9 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
     $rows[] = new tabobject('tab_exams',
         new moodle_url('/blocks/exaquest/exams.php', array("courseid" => $courseid)),
         get_string('tab_exams', 'block_exaquest'), null, true);
+    $rows[] = new tabobject('tab_category_settings',
+        new moodle_url('/blocks/exaquest/category_settings.php', array("courseid" => $courseid)),
+        get_string('category_settings', 'block_exaquest'), null, true);
 
 
 

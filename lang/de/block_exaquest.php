@@ -9,6 +9,8 @@ $string['dashboard'] = 'Übersicht';
 $string['get_questionbank'] = 'Fragensammlung';
 $string['similarity'] = 'Ähnlichkeitsübersicht';
 $string['exams'] = 'Prüfungen';
+$string['category_settings'] = 'Kategorieeinstellungen';
+
 
 
 $string['request_questions_label'] = 'Neue Frage anforderen von ...';
@@ -107,6 +109,10 @@ $string['revise_text'] = 'Überarbeitung zuteilen zu..';
 $string['open_for_review_title'] = 'Begutachtung';
 $string['revise_title'] = 'Überarbeitung';
 
+
+//Category Settings
+$string['settings_title'] = 'Kategorieeinstellungen';
+$string['settings_description'] = 'Bitte nur eine Kategorie pro Zeile einfügen';
 
 
 

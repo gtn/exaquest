@@ -9,6 +9,8 @@ $string['dashboard'] = 'Dashboard';
 $string['get_questionbank'] = 'Questionbank';
 $string['similarity'] = 'Similarity overview';
 $string['exams'] = 'Exams';
+$string['category_settings'] = 'Category settings';
+
 
 
 $string['request_questions_label'] = 'Request new questions from ...';
@@ -109,8 +111,9 @@ $string['open_for_review_title'] = 'Review';
 $string['revise_title'] = 'Revision';
 
 
-
-
+//Category Settings
+$string['settings_title'] = 'Category Settings';
+$string['settings_description'] = 'Please enter one category per row';
 
 
 // Similarity Comparison

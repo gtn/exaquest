@@ -1,0 +1,24 @@
+<div id="exaquest">
+    <h3>{{#str}} settings_title, block_exaquest {{/str}}</h3>
+    <p>{{#str}} settings_description, block_exaquest {{/str}}</p>
+    <form action="{{action}}" method="post">
+        <div>
+            <label for="fragencharakter">Fragencharakter</label>
+            <textarea id="fragencharakter" class="form-control" name="fragencharakter" rows="4" cols="50">{{#fragencharakter}}{{.}}{{/fragencharakter}}</textarea>
+        </div>
+        <div>
+            <label for="klassifikation">Klassifikation</label>
+            <textarea id="klassifikation" class="form-control" name="klassifikation" rows="4" cols="50">{{#klassifikation}}{{.}}{{/klassifikation}}</textarea>
+        </div>
+        <div>
+            <label for="fragefach">Fragefach</label>
+            <textarea id="fragefach" class="form-control" name="fragefach" rows="4" cols="50">{{#fragefach}}{{.}}{{/fragefach}}</textarea>
+        </div>
+        <div>
+            <label for="lehrinhalt">Lehrinhalt</label>
+            <textarea id="lehrinhalt" class="form-control" name="lehrinhalt" rows="4" cols="50">{{#lehrinhalt}}{{.}}{{/lehrinhalt}}</textarea>
+        </div>
+        <br/>
+        <input type="submit" value="Submit" class="btn btn-primary">
+    </form>
+</div>

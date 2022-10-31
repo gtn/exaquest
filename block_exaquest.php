@@ -38,6 +38,8 @@ class block_exaquest extends block_list {
             array('href' => $CFG->wwwroot . '/blocks/exaquest/similarity_comparison.php?courseid=' . $COURSE->id));
         $this->content->items[] = html_writer::tag('a', get_string('exams', 'block_exaquest'),
             array('href' => $CFG->wwwroot . '/blocks/exaquest/exams.php?courseid=' . $COURSE->id));
+        $this->content->items[] = html_writer::tag('a', get_string('category_settings', 'block_exaquest'),
+            array('href' => $CFG->wwwroot . '/blocks/exaquest/category_settings.php?courseid=' . $COURSE->id));
 
         return $this->content;
     }
