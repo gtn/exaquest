@@ -71,8 +71,6 @@ const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE = 6;
 const BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_RELEASE = 7;
 const BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS = 8;
 
-
-
 function block_exaquest_init_js_css() {
     global $PAGE, $CFG;
 
@@ -152,8 +150,6 @@ function block_exaquest_get_reviewer_by_courseid($courseid) {
     $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fachlfragenreviewer'));
     return $userarray;
 }
-
-
 
 /**
  * Returns all count of questionbankentries that have to be formally reviewed
@@ -241,7 +237,6 @@ function block_exaquest_get_my_questionbankentries_count($courseid, $userid) {
 
     return $questions;
 }
-
 
 /**
  * Returns count of
@@ -387,11 +382,11 @@ function block_exaquest_get_my_finalised_questionbankentries_count($courseid, $u
  * @param $courseid
  * @return array
  */
-function block_exaquest_get_questions_for_me_to_review_count($courseid, $userid=0) {
+function block_exaquest_get_questions_for_me_to_review_count($courseid, $userid = 0) {
     // get from the table exaquestreviewassing. But there are 2 reviewtypes, do not count twice!
     global $DB, $USER;
 
-    if(!$userid){
+    if (!$userid) {
         $userid = $USER->id;
     }
 
@@ -414,7 +409,7 @@ function block_exaquest_get_questions_for_me_to_review_count($courseid, $userid=
  * @param $userid
  * @return array
  */
-function block_exaquest_get_questions_for_me_to_revise_count($courseid, $userid=0) {
+function block_exaquest_get_questions_for_me_to_revise_count($courseid, $userid = 0) {
     global $DB, $USER;
     if (!$userid) {
         $userid = $USER->id;
@@ -432,14 +427,13 @@ function block_exaquest_get_questions_for_me_to_revise_count($courseid, $userid=
     return $questions;
 }
 
-
 /**
  * Returns count of
  *
  * @param $courseid
  * @return array
  */
-function block_exaquest_get_questions_for_me_to_release_count($courseid, $userid=0) {
+function block_exaquest_get_questions_for_me_to_release_count($courseid, $userid = 0) {
     global $DB, $USER;
     if (!$userid) {
         $userid = $USER->id;
@@ -459,9 +453,7 @@ function block_exaquest_get_questions_for_me_to_release_count($courseid, $userid
 
 //-----------
 
-
-function block_exaquest_set_up_roles_test()
-{
+function block_exaquest_set_up_roles_test() {
     global $DB;
     $context = \context_system::instance();
     $options = array(
@@ -480,7 +472,8 @@ function block_exaquest_set_up_roles_test()
         $roleid = create_role('Test Role', 'testen', '', 'manager');
         $archetype = intval($DB->get_record('role', ['shortname' => 'manager'])->id); // manager archetype
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
-        $definitiontable->force_duplicate($archetype, $options); // overwrites everything that is set in the options. The rest stays.
+        $definitiontable->force_duplicate($archetype,
+            $options); // overwrites everything that is set in the options. The rest stays.
         $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
         $definitiontable->save_changes();
         $sourcerole = new \stdClass();
@@ -494,6 +487,7 @@ function block_exaquest_set_up_roles_test()
     assign_capability('block/exaquest:executeexam', CAP_ALLOW, $roleid, $context);
 
 }
+
 /**
  * Sets up the roles in install.php and upgrade.php
  */
@@ -511,8 +505,6 @@ function block_exaquest_set_up_roles() {
         'allowoverride' => 1,
         'allowswitch' => 1,
         'allowview' => 1);
-
-
 
     if (!$DB->record_exists('role', ['shortname' => 'admintechnpruefungsdurchf'])) {
         $roleid = create_role('admin./techn. Prüfungsdurchf.', 'admintechnpruefungsdurchf', '', 'manager');
@@ -584,7 +576,6 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:addquestiontoexam', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
 
-
     if (!$DB->record_exists('role', ['shortname' => 'modulverantwortlicher'])) {
         $roleid = create_role('Modulverantwortlicher', 'modulverantwortlicher', '', 'manager');
         $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
@@ -612,8 +603,6 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:editallquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
 
-
-
     if (!$DB->record_exists('role', ['shortname' => 'fragenersteller'])) {
         $roleid = create_role('Fragenersteller', 'fragenersteller', '', 'manager');
         $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
@@ -637,7 +626,6 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:showownrevisedquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:showquestionstorevise', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
-
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlfragenreviewer'])) {
         $roleid = create_role('fachl. Fragenreviewer', 'fachlfragenreviewer', '', 'manager');
@@ -743,7 +731,6 @@ function block_exaquest_set_up_roles() {
     //}
 }
 
-
 /**
  * Build navigtion tabs, depending on role and version
  *
@@ -776,7 +763,8 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
         get_string('dashboard', 'block_exaquest'), null, true);
 
     $rows[] = new tabobject('tab_get_questions',
-        new moodle_url('/blocks/exaquest/questbank.php', array("courseid" => $courseid, "category" => $catAndCont[0].','. $catAndCont[1])),
+        new moodle_url('/blocks/exaquest/questbank.php',
+            array("courseid" => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1])),
         get_string('get_questionbank', 'block_exaquest'), null, true);
 
     $rows[] = new tabobject('tab_similarity_comparison',
@@ -785,23 +773,22 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
 
     $rows[] = new tabobject('tab_exams',
         new moodle_url('/blocks/exaquest/exams.php', array("courseid" => $courseid)),
-        get_string('tab_exams', 'block_exaquest'), null, true);
+        get_string('exams', 'block_exaquest'), null, true);
     $rows[] = new tabobject('tab_category_settings',
         new moodle_url('/blocks/exaquest/category_settings.php', array("courseid" => $courseid)),
         get_string('category_settings', 'block_exaquest'), null, true);
 
-
-
     return $rows;
 }
+
 // this is used to get the contexts of the category in the questionbank
-function get_question_category_and_context_of_course(){
+function get_question_category_and_context_of_course() {
     global $COURSE, $DB;
     // this is used to get the contexts of the category in the questionbank
     $context = context_course::instance($COURSE->id);
-    $contexts = explode('/',$context->path);
-
-    $category = end($DB->get_records('question_categories',['contextid' => $contexts[2]]));
+    $contexts = explode('/', $context->path);
+    $questioncategory = $DB->get_records('question_categories', ['contextid' => $contexts[2]]);
+    $category = end($questioncategory); // an actual array, not a returnvalue of a function has to be passed, since it sets the internal pointer of the array, so there has to be a real array
     return [$category->id, $contexts[2]];
 }
 

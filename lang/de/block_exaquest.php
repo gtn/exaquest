@@ -13,6 +13,7 @@ $string['category_settings'] = 'Kategorieeinstellungen';
 
 
 
+
 $string['request_questions_label'] = 'Neue Frage anforderen von ...';
 $string['request_questions_button'] = 'Anfordern';
 $string['revise_questions_label'] = 'Folgende Fragen sind zur Überabeitung markiert:';

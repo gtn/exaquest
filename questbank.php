@@ -29,7 +29,7 @@ $PAGE->set_title('showQuestionBank');
 
 $context = context_course::instance($courseid);
 $output = $PAGE->get_renderer('block_exaquest');
-echo $output->header($context, $courseid, get_string('get_questions', 'block_exaquest'));
+echo $output->header($context, $courseid, get_string('get_questionbank', 'block_exaquest'));
 
 
 if (($lastchanged = optional_param('lastchanged', 0, PARAM_INT)) !== 0) {
