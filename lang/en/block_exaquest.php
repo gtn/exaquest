@@ -14,6 +14,7 @@ $string['category_settings'] = 'Category settings';
 
 
 $string['request_questions_label'] = 'Request new questions from ...';
+$string['request_questions_comment_placeholder'] = 'Which kind of question is needed? Optional';
 $string['request_questions_button'] = 'Request';
 $string['revise_questions_label'] = 'The following questions are marked for revision: ';
 $string['formal_review_questions_label'] = 'The following questions are marked for formal finalisation: ';
@@ -25,7 +26,7 @@ $string['fachlich_review_questions_label'] = 'The following questions are marked
 
 // Messages
 $string['messageprovider:newquestionsrequest'] = 'New questions have been requested';
-$string['please_create_new_questions'] = 'Please create new questions in <a href="{$a->url}">{$a->fullname}</a>';
+$string['please_create_new_questions'] = 'Please create new questions in <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['please_create_new_questions_subject'] = 'Please create new questions in {$a->fullname}';
 $string['please_revise_question'] = 'Please revise question';
 $string['please_review_question'] = 'Please review question';

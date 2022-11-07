@@ -15,6 +15,7 @@ $string['category_settings'] = 'Kategorieeinstellungen';
 
 
 $string['request_questions_label'] = 'Neue Frage anforderen von ...';
+$string['request_questions_comment_placeholder'] = 'Welche Art von Frage wird benötigt? Optional.';
 $string['request_questions_button'] = 'Anfordern';
 $string['revise_questions_label'] = 'Folgende Fragen sind zur Überabeitung markiert:';
 $string['formal_review_questions_label'] = 'Folgende Fragen sind zur formalen Finalisierung markiert:';
@@ -26,7 +27,7 @@ $string['fachlich_review_questions_label'] = 'Folgende Fragen sind zur fachliche
 
 // Messages
 $string['messageprovider:newquestionsrequest'] = 'Neue Fragen wurden Angefordert';
-$string['please_create_new_questions'] = 'Bitte erstellen Sie eine neue Frage in <a href="{$a->url}">{$a->fullname}</a>';
+$string['please_create_new_questions'] = 'Bitte erstellen Sie eine neue Frage in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
 $string['please_create_new_questions_subject'] = 'Bitte erstellen Sie eine neue Frage in {$a->fullname}';
 $string['please_revise_question'] = 'Bitte überarbeiten Sie eine Frage';
 $string['please_review_question'] = 'Bitte überarbeiten Sie eine Frage';

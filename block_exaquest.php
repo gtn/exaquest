@@ -1,6 +1,5 @@
 <?php
 
-use qbank_editquestion\editquestion_helper;
 require __DIR__ . '/inc.php';
 
 class block_exaquest extends block_list {
@@ -23,23 +22,27 @@ class block_exaquest extends block_list {
         $this->content->icons = array();
         $this->content->footer = '';
 
-        // this is used to get the contexts of the category in the questionbank
-        $catAndCont = get_question_category_and_context_of_course();
-
-
-        // this is to get the button for creating a new question
-        //$this->content->items[] = editquestion_helper::create_new_question_button(2, array('courseid' => $COURSE->id), true);
-        $this->content->items[] = html_writer::tag('a', get_string('dashboard', 'block_exaquest'),
-            array('href' => $CFG->wwwroot . '/blocks/exaquest/dashboard.php?courseid=' . $COURSE->id));
-        $this->content->items[] = html_writer::tag('a', get_string('get_questionbank', 'block_exaquest'),
-            array('href' => $CFG->wwwroot . '/blocks/exaquest/questbank.php?courseid=' . $COURSE->id.'&category='.$catAndCont[0].'%2C'.$catAndCont[1]));
-        // TODO: add custom plugin here
-        $this->content->items[] = html_writer::tag('a', get_string('similarity', 'block_exaquest'),
-            array('href' => $CFG->wwwroot . '/blocks/exaquest/similarity_comparison.php?courseid=' . $COURSE->id));
-        $this->content->items[] = html_writer::tag('a', get_string('exams', 'block_exaquest'),
-            array('href' => $CFG->wwwroot . '/blocks/exaquest/exams.php?courseid=' . $COURSE->id));
-        $this->content->items[] = html_writer::tag('a', get_string('category_settings', 'block_exaquest'),
-            array('href' => $CFG->wwwroot . '/blocks/exaquest/category_settings.php?courseid=' . $COURSE->id));
+        if ($PAGE->pagelayout == "mydashboard") {
+            $this->content->items[] = html_writer::tag('a', get_string('dashboard', 'block_exaquest'),
+                array('href' => $CFG->wwwroot . '/blocks/exaquest/dashboard.php?courseid=' . $COURSE->id));
+        } else {
+            // this is used to get the contexts of the category in the questionbank
+            $catAndCont = get_question_category_and_context_of_course();
+            // this is to get the button for creating a new question
+            //$this->content->items[] = editquestion_helper::create_new_question_button(2, array('courseid' => $COURSE->id), true);
+            $this->content->items[] = html_writer::tag('a', get_string('dashboard', 'block_exaquest'),
+                array('href' => $CFG->wwwroot . '/blocks/exaquest/dashboard.php?courseid=' . $COURSE->id));
+            $this->content->items[] = html_writer::tag('a', get_string('get_questionbank', 'block_exaquest'),
+                array('href' => $CFG->wwwroot . '/blocks/exaquest/questbank.php?courseid=' . $COURSE->id . '&category=' .
+                    $catAndCont[0] . '%2C' . $catAndCont[1]));
+            // TODO: add custom plugin here
+            $this->content->items[] = html_writer::tag('a', get_string('similarity', 'block_exaquest'),
+                array('href' => $CFG->wwwroot . '/blocks/exaquest/similarity_comparison.php?courseid=' . $COURSE->id));
+            $this->content->items[] = html_writer::tag('a', get_string('exams', 'block_exaquest'),
+                array('href' => $CFG->wwwroot . '/blocks/exaquest/exams.php?courseid=' . $COURSE->id));
+            $this->content->items[] = html_writer::tag('a', get_string('category_settings', 'block_exaquest'),
+                array('href' => $CFG->wwwroot . '/blocks/exaquest/category_settings.php?courseid=' . $COURSE->id));
+        }
 
         return $this->content;
     }
@@ -66,8 +69,8 @@ class block_exaquest extends block_list {
         $pluginconfigs = get_config('block_exaquest');
 
         return (object) [
-                'instance' => $instanceconfigs,
-                'plugin' => $pluginconfigs,
+            'instance' => $instanceconfigs,
+            'plugin' => $pluginconfigs,
         ];
     }
 

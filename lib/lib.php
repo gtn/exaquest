@@ -27,6 +27,7 @@
  */
 const BLOCK_EXAQUEST_DB_QUESTIONSTATUS = 'block_exaquestquestionstatus';
 const BLOCK_EXAQUEST_DB_REVIEWASSIGN = 'block_exaquestreviewassign';
+const BLOCK_EXAQUEST_DB_REQUESTQUEST = 'block_exaquestrequestquest';
 
 /**
  * Question Status
@@ -97,8 +98,29 @@ function block_exaquest_init_js_css() {
 
 }
 
+function block_exaquest_create_questionrequest($userfrom, $userto, $requestcomment){
+    global $DB, $COURSE;
+
+    $messageobject = new stdClass();
+    $messageobject->fullname = $COURSE->fullname;
+    $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
+    $messageobject->url = $messageobject->url->raw_out(false);
+    $messageobject->requestcomment = $requestcomment;
+    $message = get_string('please_create_new_questions', 'block_exaquest', $messageobject);
+    $subject = get_string('please_create_new_questions_subject', 'block_exaquest', $messageobject);
+
+    $request = new stdClass();
+    $request->userid = $userto;
+    $request->comment = $requestcomment;
+
+    $DB->insert_record(BLOCK_EXAQUEST_DB_REQUESTQUEST, $request, $returnid=true, $bulk=false);
+    block_exaquest_send_moodle_notification("newquestionsrequest", $userfrom, $userto, $subject, $message,
+        "Frageerstellung");
+}
+
+
 function block_exaquest_send_moodle_notification($notificationtype, $userfrom, $userto, $subject, $message, $context,
-    $contexturl = null, $dakoramessage = false, $courseid = 0, $customdata = null, $messageformat = FORMAT_HTML) {
+    $contexturl = null, $courseid = 0, $customdata = null, $messageformat = FORMAT_HTML) {
     global $CFG, $DB;
 
     require_once($CFG->dirroot . '/message/lib.php');
@@ -738,7 +760,7 @@ function block_exaquest_set_up_roles() {
  * @param int $courseid
  */
 function block_exaquest_build_navigation_tabs($context, $courseid) {
-    global $USER;
+    global $USER, $PAGE;
 
     //$globalcontext = context_system::instance();
 
@@ -788,8 +810,14 @@ function get_question_category_and_context_of_course() {
     $context = context_course::instance($COURSE->id);
     $contexts = explode('/', $context->path);
     $questioncategory = $DB->get_records('question_categories', ['contextid' => $contexts[2]]);
-    $category = end($questioncategory); // an actual array, not a returnvalue of a function has to be passed, since it sets the internal pointer of the array, so there has to be a real array
-    return [$category->id, $contexts[2]];
+    $category =
+        end($questioncategory); // an actual array, not a returnvalue of a function has to be passed, since it sets the internal pointer of the array, so there has to be a real array
+    if ($category) {
+        return [$category->id, $contexts[2]];
+    } else {
+        return false;
+    }
+
 }
 
 
