@@ -1,7 +1,11 @@
-
+#####################################
+2022110800
+-Added a popup to see which questions have been requested as Fragenersteller
+#####################################
 #####################################
 2022110700
 -Added the possibility to add a comment to the create-question-request
+-Added dashboard with links to all dashboards of all courses with exaquest block a user is enrolled in
 #####################################
 
-before 2022110700 no changelog was keptSS
+before 2022110700 no changelog was kept

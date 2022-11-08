@@ -274,5 +274,21 @@ function xmldb_block_exaquest_upgrade($oldversion)
         upgrade_block_savepoint(true, 2022110700, 'exaquest');
     }
 
+    if ($oldversion < 2022110800) {
+        // add courseid to block_exaquestrequestquest
+        $table = new xmldb_table('block_exaquestrequestquest');
+        $field = new xmldb_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
+        $key = new xmldb_key('fk_courseid', XMLDB_KEY_FOREIGN, ['courseid'], 'course', ['id']);
+
+        // Conditionally launch add field courseid and key
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+            $dbman->add_key($table, $key);
+        }
+
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2022110800, 'exaquest');
+    }
+
     return $return_result;
 }

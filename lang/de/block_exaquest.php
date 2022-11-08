@@ -6,6 +6,7 @@ $string['exaquest:myaddinstance'] = 'Neuen exaquest-block zu meiner Moodleseite 
 
 // Block
 $string['dashboard'] = 'Übersicht';
+$string['dashboard_of_course'] = 'Übersicht Kurs {$a}';
 $string['get_questionbank'] = 'Fragensammlung';
 $string['similarity'] = 'Ähnlichkeitsübersicht';
 $string['exams'] = 'Prüfungen';
@@ -73,9 +74,10 @@ $string['list_of_exams_with_status'] = 'Liste von Prüfungen mit Status:';
 $string['create_new_exam_button'] = 'Neue Prüfung erstellen';
 
 $string['request_questions'] = 'Neue Frage anfordern';
-$string['questions_for_me_to_review'] = 'Fragen für mich zu begutachten';
-$string['questions_for_me_to_revise'] = 'Fragen für mich zu überarbeiten';
-$string['questions_for_me_to_release'] = 'Fragen für mich freizugeben';
+$string['questions_for_me_to_review'] = 'Fragen soll ich begutachten';
+$string['questions_for_me_to_create'] = 'Fragen soll ich erstellen';
+$string['questions_for_me_to_revise'] = 'Fragen soll ich überarbeiten';
+$string['questions_for_me_to_release'] = 'Fragen soll ich freizugeben';
 $string['compare_questions'] = 'Fragen vergleichen';
 
 

@@ -6,6 +6,7 @@ $string['exaquest:myaddinstance'] = 'Add a new exaquest block to the My Moodle p
 
 // Block
 $string['dashboard'] = 'Dashboard';
+$string['dashboard_of_course'] = 'Dashboard of course {$a}';
 $string['get_questionbank'] = 'Questionbank';
 $string['similarity'] = 'Similarity overview';
 $string['exams'] = 'Exams';
@@ -73,6 +74,7 @@ $string['create_new_exam_button'] = 'create new exam';
 
 $string['request_questions'] = 'Request new questions';
 $string['questions_for_me_to_review'] = 'Questions for me to review';
+$string['questions_for_me_to_create'] = 'Questions for me to create';
 $string['questions_for_me_to_revise'] = 'Questions for me to revise';
 $string['questions_for_me_to_release'] = 'Questions for me to release';
 $string['compare_questions'] = 'Compare questions';

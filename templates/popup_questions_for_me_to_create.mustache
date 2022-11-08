@@ -1,0 +1,37 @@
+<!-- using bootstrap modals to do the popups https://getbootstrap.com/docs/4.6/components/modal/ -->
+<!--<button class="btn btn-secondary" data-toggle="modal" data-target="#createQuestionModal">-->
+<!--    {{#str}}request_questions, block_exaquest {{/str}}-->
+<!--&lt;!&ndash;    <i class="icon fa fa-plus fa-fw "></i>&ndash;&gt;-->
+<!--</button>-->
+
+<a class="link" data-toggle="modal" data-target="#questionsForMeToCreateModal"> {{questions_for_me_to_create_count}} {{#str}}
+    questions_for_me_to_create, block_exaquest {{/str}}</a>
+
+<div class="modal fade" id="questionsForMeToCreateModal" tabindex="-1"
+     aria-labelledby="questionsForMeToCreateModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{#str}}questions_for_me_to_create, block_exaquest {{/str}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>{{#str}}
+                    questions_for_me_to_create, block_exaquest {{/str}}
+                    <br>
+                    {{#questions_to_create}}
+                        <br>
+                        {{comment}}
+                    {{/questions_to_create}}
+                    TODO: was sollen wir hier machen können? Wie soll geprüft werden, welche Frage bereits abgearbeitet ist... das muss fast händisch passieren.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

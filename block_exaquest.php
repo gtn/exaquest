@@ -23,8 +23,12 @@ class block_exaquest extends block_list {
         $this->content->footer = '';
 
         if ($PAGE->pagelayout == "mydashboard") {
-            $this->content->items[] = html_writer::tag('a', get_string('dashboard', 'block_exaquest'),
-                array('href' => $CFG->wwwroot . '/blocks/exaquest/dashboard.php?courseid=' . $COURSE->id));
+            // get all courses where exaquest is added as a blocK:
+            $courseids = block_exaquest_get_courseids();
+            foreach($courseids as $courseid){
+                $this->content->items[] = html_writer::tag('a', get_string('dashboard_of_course', 'block_exaquest', $courseid),
+                    array('href' => $CFG->wwwroot . '/blocks/exaquest/dashboard.php?courseid=' . $courseid));
+            }
         } else {
             // this is used to get the contexts of the category in the questionbank
             $catAndCont = get_question_category_and_context_of_course();

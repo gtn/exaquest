@@ -424,6 +424,40 @@ function block_exaquest_get_questions_for_me_to_review_count($courseid, $userid 
 }
 
 /**
+ * Returns count of
+ *
+ * @param $courseid
+ * @return array
+ */
+function block_exaquest_get_questions_for_me_to_create_count($courseid, $userid = 0) {
+    return count(block_exaquest_get_questions_for_me_to_create($courseid, $userid));
+}
+
+/**
+ * Returns count of
+ *
+ * @param $courseid
+ * @return array
+ */
+function block_exaquest_get_questions_for_me_to_create($courseid, $userid = 0) {
+    global $DB, $USER;
+
+    if (!$userid) {
+        $userid = $USER->id;
+    }
+
+    // questionbankentryid DISTINCT to not count twice
+    $sql = "SELECT *
+			FROM {" . BLOCK_EXAQUEST_DB_REQUESTQUEST . "} req
+			WHERE req.userid = :userid";
+
+    $questions = $DB->get_records_sql($sql,
+        array("userid" => $userid));
+
+    return $questions;
+}
+
+/**
  * Returns count of questionbankentries that have to be revised of this course of this user
  * used e.g. for the fragenersteller to see which questions they should revise
  *
@@ -820,4 +854,32 @@ function get_question_category_and_context_of_course() {
 
 }
 
+/**block_instances
+ *
+ * Returns all course ids where an instance of Exabis question management tool is installed
+ */
+function block_exaquest_get_courseids() {
+    global $DB, $USER;
+    $instances = $DB->get_records('block_instances', array('blockname' => 'exaquest'));
 
+    $exaquest_courses = array();
+
+    foreach ($instances as $instance) {
+        $context = $DB->get_record('context', array('id' => $instance->parentcontextid, 'contextlevel' => CONTEXT_COURSE));
+        if ($context) {
+            if(block_exaquest_is_user_in_course($USER->id, $context->instanceid)){
+                $exaquest_courses[$context->instanceid] = $context->instanceid;
+            }
+        }
+    }
+
+    return $exaquest_courses;
+}
+
+function block_exaquest_is_user_in_course($userid, $courseid) {
+    $context = context_course::instance($courseid);
+
+    // also check for exacomp course?
+    // has_capability('block/exacomp:use', $context, $userid))
+    return is_enrolled($context, $userid, '', true);
+}
