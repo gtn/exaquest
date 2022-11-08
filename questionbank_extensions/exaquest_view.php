@@ -306,7 +306,8 @@ class exaquest_view extends view {
         // If it is required to create sub question categories i have to iterate over it and find the context_coursecat
         if($editcontexts[1] instanceof \context_coursecat){
             // gets the parent course category for this course
-            $category = end($DB->get_records('question_categories',['contextid' => $editcontexts[1]->id])); // end gives me the last element
+            $categories = $DB->get_records('question_categories',['contextid' => $editcontexts[1]->id]);
+            $category = end($categories); // end gives me the last element
         } else {
             throw new \coding_exception('No parent course category found');
             $category = $this->get_current_category($categoryandcontext);

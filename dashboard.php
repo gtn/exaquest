@@ -35,18 +35,17 @@ if ($action == 'request_questions') {
     // get all the users with role "fragesteller" and send them a notification
     $allfragenersteller = block_exaquest_get_fragenersteller_by_courseid($courseid);
     if (array_key_exists("selectedusers", $_POST)) {
-        $selectedfragenersteller = $_POST["selectedusers"];
+        if(is_array($_POST["selectedusers"])){
+            $selectedfragenersteller = clean_param_array($_POST["selectedusers"],PARAM_INT);
+        }else{
+            $selectedfragenersteller = clean_param($_POST["selectedusers"],PARAM_INT);
+        }
+        $requestcomment = clean_param($_POST["requestcomment"],PARAM_TEXT);
+
         if ($selectedfragenersteller) {
             $frageneersteller = array_intersect_key($allfragenersteller, $selectedfragenersteller);
             foreach ($frageneersteller as $ersteller) {
-                $messageobject = new stdClass();
-                $messageobject->fullname = $COURSE->fullname;
-                $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
-                $messageobject->url = $messageobject->url->raw_out(false);
-                $message = get_string('please_create_new_questions', 'block_exaquest', $messageobject);
-                $message = get_string('please_create_new_questions_subject', 'block_exaquest', $messageobject);
-                block_exaquest_send_moodle_notification("newquestionsrequest", $USER->id, $ersteller->id, $message, $message,
-                    "Frageerstellung");
+                block_exaquest_create_questionrequest($USER->id, $ersteller->id, $requestcomment);
             }
         }
     }
