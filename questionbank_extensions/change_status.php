@@ -103,9 +103,10 @@ class change_status extends column_base {
                     echo $output->render(new \block_exaquest\output\popup_change_status($questioncreators, 'rework_question', get_string('revise_question', 'block_exaquest'), $question->questionbankentryid));
                 }
                 break;
-            case BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED:
-                break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED:
+                if(has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
+                    echo $output->render(new \block_exaquest\output\popup_change_status($questioncreators, 'rework_question', get_string('revise_question', 'block_exaquest'), $question->questionbankentryid));
+                }
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_IN_QUIZ:
                 break;
