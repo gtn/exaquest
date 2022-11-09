@@ -15,8 +15,9 @@ class dashboard implements renderable, templatable {
     private $userid;
     private $request_questions_popup;
     private $questions_for_me_to_create_popup;
+    private $coursecategoryid;
 
-    public function __construct($userid, $courseid, $capabilities, $fragenersteller, $questions_to_create) {
+    public function __construct($userid, $courseid, $capabilities, $fragenersteller, $questions_to_create, $coursecategoryid) {
         $this->courseid = $courseid;
         $this->capabilities = $capabilities;
         $this->userid = $userid;
@@ -26,6 +27,7 @@ class dashboard implements renderable, templatable {
         //$this->fragenersteller = $fragenersteller; // not needed here, since it is given to popup_request_questions and only needed there
         $this->request_questions_popup = new popup_request_questions($fragenersteller);
         $this->questions_for_me_to_create_popup = new popup_questions_for_me_to_create($questions_to_create);
+        $this->coursecategoryid = $coursecategoryid;
     }
 
     /**
@@ -37,22 +39,22 @@ class dashboard implements renderable, templatable {
         global $PAGE, $COURSE;
         $data = new stdClass();
         $data->capabilities = $this->capabilities;
-        $data->questions_count = block_exaquest_get_questionbankentries_by_courseid_count($this->courseid);
-        $data->questions_to_review_count = block_exaquest_get_questionbankentries_to_be_reviewed_count($this->courseid);
-        $data->questions_finalised_count = block_exaquest_get_finalised_questionbankentries_count($this->courseid);
-        $data->questions_released_count = block_exaquest_get_released_questionbankentries_count($this->courseid);
-        $data->questions_released_and_to_review_count = block_exaquest_get_released_and_to_review_questionbankentries_count($this->courseid);
+        $data->questions_count = block_exaquest_get_questionbankentries_by_coursecategoryid_count($this->coursecategoryid);
+        $data->questions_to_review_count = block_exaquest_get_questionbankentries_to_be_reviewed_count($this->coursecategoryid);
+        $data->questions_finalised_count = block_exaquest_get_finalised_questionbankentries_count($this->coursecategoryid);
+        $data->questions_released_count = block_exaquest_get_released_questionbankentries_count($this->coursecategoryid);
+        $data->questions_released_and_to_review_count = block_exaquest_get_released_and_to_review_questionbankentries_count($this->coursecategoryid);
 
-        $data->questions_for_me_to_create_count = block_exaquest_get_questions_for_me_to_create_count($this->courseid, $this->userid);
-        $data->questions_for_me_to_review_count = block_exaquest_get_questions_for_me_to_review_count($this->courseid, $this->userid);
-        $data->questions_for_me_to_revise_count = block_exaquest_get_questions_for_me_to_revise_count($this->courseid, $this->userid);
-        $data->questions_for_me_to_release_count = block_exaquest_get_questions_for_me_to_release_count($this->courseid, $this->userid);
+        $data->questions_for_me_to_create_count = block_exaquest_get_questions_for_me_to_create_count($this->coursecategoryid, $this->userid);
+        $data->questions_for_me_to_review_count = block_exaquest_get_questions_for_me_to_review_count($this->coursecategoryid, $this->userid);
+        $data->questions_for_me_to_revise_count = block_exaquest_get_questions_for_me_to_revise_count($this->coursecategoryid, $this->userid);
+        $data->questions_for_me_to_release_count = block_exaquest_get_questions_for_me_to_release_count($this->coursecategoryid, $this->userid);
 
 
         $data->my_questions_count =
-            block_exaquest_get_my_questionbankentries_count($this->courseid, $this->userid);
-        $data->my_questions_to_review_count = block_exaquest_get_my_questionbankentries_to_be_reviewed_count($this->courseid, $this->userid);
-        $data->my_questions_finalised_count = block_exaquest_get_my_finalised_questionbankentries_count($this->courseid, $this->userid);
+            block_exaquest_get_my_questionbankentries_count($this->coursecategoryid, $this->userid);
+        $data->my_questions_to_review_count = block_exaquest_get_my_questionbankentries_to_be_reviewed_count($this->coursecategoryid, $this->userid);
+        $data->my_questions_finalised_count = block_exaquest_get_my_finalised_questionbankentries_count($this->coursecategoryid, $this->userid);
 
         $catAndCont = get_question_category_and_context_of_course();
 
@@ -70,7 +72,9 @@ class dashboard implements renderable, templatable {
 
         // REQUEST NEW QUESTIONS
         // this adds the subtemplate. The data, in this case fragenersteller, does not have to be given to THIS data, because it is in the data for request_questions_popup already
-        $data->request_questions_popup = $this->request_questions_popup->export_for_template($output);
+        if($this->capabilities["modulverantwortlicher"]){ // TODO: not only modulverantwortlicher, but also other roles have access to this
+            $data->request_questions_popup = $this->request_questions_popup->export_for_template($output);
+        }
 
         $data->questions_for_me_to_create_popup = $this->questions_for_me_to_create_popup->export_for_template($output);
 

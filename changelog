@@ -1,4 +1,8 @@
 #####################################
+2022110900
+-Reworked multiple functionalities to work on a course_category level instead of courselevel.
+#####################################
+#####################################
 2022110800
 -Added a popup to see which questions have been requested as Fragenersteller
 #####################################

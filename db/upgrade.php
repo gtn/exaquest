@@ -290,5 +290,58 @@ function xmldb_block_exaquest_upgrade($oldversion)
         upgrade_block_savepoint(true, 2022110800, 'exaquest');
     }
 
+
+
+    if ($oldversion < 2022110900) {
+        // change the courseid fields to coursecategoryid
+
+        //// rename fields questionid to questionbanentryid
+        $table = new xmldb_table('block_exaquestquestionstatus');
+        $field = new xmldb_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->rename_field($table, $field, 'coursecategoryid');
+        }
+
+        $table = new xmldb_table('block_exaquestquizstatus');
+        $field = new xmldb_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->rename_field($table, $field, 'coursecategoryid');
+        }
+
+        $table = new xmldb_table('block_exaquestrequestquest');
+        $field = new xmldb_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->rename_field($table, $field, 'coursecategoryid');
+        }
+
+        // drop keys because we want to use coursecategoryid instead of courseid
+        $table = new xmldb_table('block_exaquestquestionstatus');
+        $key = new xmldb_key('courseid', XMLDB_KEY_FOREIGN, array('courseid'), 'course', array('id'));
+        $dbman->drop_key($table, $key);
+
+        $table = new xmldb_table('block_exaquestquizstatus');
+        $key = new xmldb_key('courseid', XMLDB_KEY_FOREIGN, array('courseid'), 'course', array('id'));
+        $dbman->drop_key($table, $key);
+
+        $table = new xmldb_table('block_exaquestrequestquest');
+        $key = new xmldb_key('courseid', XMLDB_KEY_FOREIGN, array('courseid'), 'course', array('id'));
+        $dbman->drop_key($table, $key);
+
+        // add keys coursecategoryid
+        $table = new xmldb_table('block_exaquestquestionstatus');
+        $key = new xmldb_key('coursecategoryid', XMLDB_KEY_FOREIGN, array('coursecategoryid'), 'course_categories', array('id'));
+        $dbman->add_key($table, $key);
+
+        $table = new xmldb_table('block_exaquestquizstatus');
+        $key = new xmldb_key('coursecategoryid', XMLDB_KEY_FOREIGN, array('coursecategoryid'), 'course_categories', array('id'));
+        $dbman->add_key($table, $key);
+
+        $table = new xmldb_table('block_exaquestrequestquest');
+        $key = new xmldb_key('coursecategoryid', XMLDB_KEY_FOREIGN, array('coursecategoryid'), 'course_categories', array('id'));
+        $dbman->add_key($table, $key);
+
+        upgrade_block_savepoint(true, 2022110900, 'exaquest');
+    }
+
     return $return_result;
 }

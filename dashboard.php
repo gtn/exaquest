@@ -12,7 +12,10 @@ require_login($courseid);
 //$course = $DB->get_record('course', array('id' => $courseid));
 $context = context_course::instance($courseid);
 
-if (is_enrolled($context, $USER, "block/exaquest:createquestion")) {
+$coursecategoryid = block_exaquest_get_coursecontextid_by_courseid($courseid);
+
+
+    if (is_enrolled($context, $USER, "block/exaquest:createquestion")) {
     list($thispageurl, $contexts, $cmid, $cm, $module, $pagevars) =
         question_edit_setup('questions', '/question/edit.php');
 }
@@ -33,7 +36,7 @@ $frageneersteller = array();
 $action = optional_param('action', "", PARAM_ALPHAEXT);
 if ($action == 'request_questions') {
     // get all the users with role "fragesteller" and send them a notification
-    $allfragenersteller = block_exaquest_get_fragenersteller_by_courseid($courseid);
+    $allfragenersteller = block_exaquest_get_fragenersteller_by_courseid($courseid); // TODO by courseid or coursecategoryid?
     if (array_key_exists("selectedusers", $_POST)) {
         if(is_array($_POST["selectedusers"])){
             $selectedfragenersteller = clean_param_array($_POST["selectedusers"],PARAM_INT);
@@ -64,18 +67,18 @@ $capabilities["fragenersteller_or_fachlfragenreviewer"] = is_enrolled($context, 
 
 if ($capabilities["modulverantwortlicher"] || $capabilities["pruefungskoordination"]) {
     if (!isset($frageneersteller) || empty($data->fragenersteller)) {
-        $frageneersteller = block_exaquest_get_fragenersteller_by_courseid($courseid);
+        $frageneersteller = block_exaquest_get_fragenersteller_by_courseid($courseid); // TODO: coursecategoryid?
     }
 }
 
 $questions_to_create = [];
 if ($capabilities["fragenersteller"]) {
-    $questions_to_create = block_exaquest_get_questions_for_me_to_create($courseid, $USER->id);
+    $questions_to_create = block_exaquest_get_questions_for_me_to_create($courseid, $USER->id); // TODO: coursecategoryid?
 }
 
 
 
-$dashboard = new \block_exaquest\output\dashboard($USER->id, $courseid, $capabilities, $frageneersteller, $questions_to_create);
+$dashboard = new \block_exaquest\output\dashboard($USER->id, $courseid, $capabilities, $frageneersteller, $questions_to_create, $coursecategoryid);
 echo $output->render($dashboard);
 
 // This is the code for rendering the create-questions-button with moodle-core functions. It is moved to the correct position with javascript.

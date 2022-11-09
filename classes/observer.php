@@ -37,7 +37,14 @@ class block_exaquest_observer {
             // get the questionbankentry via a moodle function (simply a join from questions over the versions to the banke_entry)
             $insert->questionbankentryid = $questionbankentry->id;
             $insert->status = BLOCK_EXAQUEST_QUESTIONSTATUS_NEW;
-            $insert->courseid = $event->courseid;
+            if ($event->get_context() instanceof \context_coursecat) {
+                $insert->coursecategoryid = $event->contextinstanceid;
+            } else if ($event->get_context() instanceof \context_course) {
+                $course = $DB->get_record('course', array('id' => $event->contextinstanceid));
+                $insert->coursecategoryid = block_exaquest_get_coursecontextid_by_courseid($event->contextinstanceid);
+            } else {
+                throw new Exception("neither course nor coursecategory context"); // TODO, what else could there be?
+            }
             $DB->insert_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $insert);
         }
     }

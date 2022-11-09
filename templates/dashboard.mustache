@@ -7,12 +7,15 @@
         <p>{{#str}}todos_title, block_exaquest {{/str}}</p>
         <p>{{#str}}questions_overview_title, block_exaquest {{/str}}</p>
         <ul>
-            <li>
-                {{#questions_for_me_to_create_popup}}
-                    {{>block_exaquest/popup_questions_for_me_to_create}}
-                {{/questions_for_me_to_create_popup}}
-
-            </li>
+            {{#capabilities}}
+                {{#fragenersteller}}
+                    <li>
+                        {{#questions_for_me_to_create_popup}}
+                            {{>block_exaquest/popup_questions_for_me_to_create}}
+                        {{/questions_for_me_to_create_popup}}
+                    </li>
+                {{/fragenersteller}}
+            {{/capabilities}}
             <li>
                 <a class="link" href={{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}} {{#str}}
                     questions_for_me_to_review, block_exaquest {{/str}}</a>
