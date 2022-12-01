@@ -22,6 +22,18 @@ $PAGE->set_title(get_string('exams', 'block_exaquest'));
 
 block_exaquest_init_js_css();
 
+// create quiz needs to call this: create_module($moduleinfo)
+
+/* adding questions to quiz:
+question_bank::get_qtype($qtype)->save_question($question, $fromform);
+$question needs to look like
+
+        $question = new stdClass();
+        $question->category  = $fromform->category;
+        $question->qtype     = $qtype;
+        $question->createdby = $USER->id;
+*/
+
 $output = $PAGE->get_renderer('block_exaquest');
 
 echo $output->header($context, $courseid, get_string('exams_overview', 'block_exaquest'));
