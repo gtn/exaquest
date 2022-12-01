@@ -27,9 +27,9 @@ switch ($action) {
                 $assigndata = new stdClass;
                 $assigndata->questionbankentryid = $questionbankentryid;
                 $assigndata->reviewerid = $user;
-                $assigndata->reviewtype = BLOCK_EXAQUEST_DB_REVIEWTYPE_FORMAL;
+                $assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FORMAL;
                 $DB->insert_record('block_exaquestreviewassign', $assigndata);
-                $assigndata->reviewtype = BLOCK_EXAQUEST_DB_REVIEWTYPE_FACHLICH;
+                $assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH;
                 $DB->insert_record('block_exaquestreviewassign', $assigndata);
 
                 $messageobject = new stdClass;
@@ -128,4 +128,8 @@ switch ($action) {
             }
         }
         break;
+    case ('mark_request_as_done'):
+
+        break;
+
 }

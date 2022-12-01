@@ -23,6 +23,7 @@ $string['formal_review_questions_label'] = 'Folgende Fragen sind zur formalen Fi
 $string['fachlich_review_questions_label'] = 'Folgende Fragen sind zur fachlichen Finalisierung markiert:';
 
 
+$string['mark_as_done'] = 'Als erledigt markieren';
 
 
 

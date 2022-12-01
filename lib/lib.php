@@ -56,8 +56,8 @@ const BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED = 6; // grades released
 /**
  * Misc
  */
-const BLOCK_EXAQUEST_DB_REVIEWTYPE_FORMAL = 0;
-const BLOCK_EXAQUEST_DB_REVIEWTYPE_FACHLICH = 1;
+const BLOCK_EXAQUEST_REVIEWTYPE_FORMAL = 0;
+const BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH = 1;
 
 /**
  * Filter Status
@@ -191,7 +191,7 @@ function block_exaquest_get_questionbankentries_to_formal_review_count($courseid
 			AND ra.reviewtype = :reviewtype";
 
     $questions =
-        count($DB->get_records_sql($sql, array("reviewerid" => $userid, "reviewtype" => BLOCK_EXAQUEST_DB_REVIEWTYPE_FORMAL)));
+        count($DB->get_records_sql($sql, array("reviewerid" => $userid, "reviewtype" => BLOCK_EXAQUEST_REVIEWTYPE_FORMAL)));
 
     return $questions;
 }
@@ -213,7 +213,7 @@ function block_exaquest_get_questionbankentries_to_fachlich_review_count($course
 			AND ra.reviewtype = :reviewtype";
 
     $questions =
-        count($DB->get_records_sql($sql, array("reviewerid" => $userid, "reviewtype" => BLOCK_EXAQUEST_DB_REVIEWTYPE_FACHLICH)));
+        count($DB->get_records_sql($sql, array("reviewerid" => $userid, "reviewtype" => BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH)));
 
     return $questions;
 }

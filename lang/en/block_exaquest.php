@@ -22,6 +22,9 @@ $string['formal_review_questions_label'] = 'The following questions are marked f
 $string['fachlich_review_questions_label'] = 'The following questions are marked for specialist finalisation: ';
 
 
+$string['mark_as_done'] = 'Mark as done';
+
+
 
 
 
