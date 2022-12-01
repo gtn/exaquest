@@ -77,7 +77,7 @@ $string['request_questions'] = 'Neue Frage anfordern';
 $string['questions_for_me_to_review'] = 'Fragen soll ich begutachten';
 $string['questions_for_me_to_create'] = 'Fragen soll ich erstellen';
 $string['questions_for_me_to_revise'] = 'Fragen soll ich überarbeiten';
-$string['questions_for_me_to_release'] = 'Fragen soll ich freizugeben';
+$string['questions_for_me_to_release'] = 'Fragen soll ich freigeben';
 $string['compare_questions'] = 'Fragen vergleichen';
 
 

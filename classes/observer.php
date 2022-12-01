@@ -39,7 +39,7 @@ class block_exaquest_observer {
             $insert->status = BLOCK_EXAQUEST_QUESTIONSTATUS_NEW;
             if ($event->get_context() instanceof \context_coursecat) {
                 $insert->coursecategoryid = $event->contextinstanceid;
-            } else if ($event->get_context() instanceof \context_course) {
+            } else if ($event->get_context() instanceof \context_course) { // TODO: this should NOT happen anyways. Otherwise the question is in the wrong place and will not be seen.
                 $course = $DB->get_record('course', array('id' => $event->contextinstanceid));
                 $insert->coursecategoryid = block_exaquest_get_coursecontextid_by_courseid($event->contextinstanceid);
             } else {

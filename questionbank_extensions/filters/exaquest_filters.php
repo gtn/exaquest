@@ -60,28 +60,33 @@ class exaquest_filters extends condition {
             case BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS:
                 break;
             case BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS:
-                $this->where="qbe.ownerid = '".$USER->id."' ";
+                $this->where="qbe.ownerid = ".$USER->id;
                 break;
             case BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW:
-                $this->where = "qs.status = '" . BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS . "' ";
+                $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS .
+                    " OR qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE .
+                    " OR qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE;
                 break;
             case BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW:
-                $this->where = "qs.status = '" . BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS . "' AND qra.reviewerid = '" . $USER->id. "' ";
+                $this->where = "(qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS .
+                    " OR qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE .
+                    " OR qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE . ") 
+                    AND qra.reviewerid = " . $USER->id;
                 break;
             case BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVISE:
-                $this->where = "qs.status = '" . BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE . "' ";
+                $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE;
                 break;
             case BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE:
-                $this->where = "qs.status = '" . BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE . "' AND qbe.ownerid = '" . $USER->id. "' ";
+                $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE . " AND qbe.ownerid = " . $USER->id;
                 break;
             case BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE:
-                $this->where = "qs.status = '" . BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED . "' ";
+                $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED;
                 break;
             case BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_RELEASE:
-                $this->where = "qs.status = '" . BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED . "' AND qra.reviewerid = '" . $USER->id. "' ";
+                $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED . " AND qra.reviewerid = " . $USER->id;
                 break;
             case BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS:
-                $this->where = "qs.status = '" . BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED . "' ";
+                $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED;
                 break;
         }
         return  $this->where;
