@@ -18,15 +18,23 @@ $(document).on('click', '.selectallornone-userselection', function () {
 $("#createnewquestion_button").appendTo("#dashboard_create_questions_div");
 
 // clone it, to not remove it from other locations
-// const element = $("#createnewquestion_button");
-// const clone = element.clone(true, true);
-// clone.appendTo("#popup_create_questions_div");
+const element = $("#createnewquestion_button");
+const clone = element.clone(true, true);
+clone.appendTo("#popup_create_questions_div");
+
+
+$(document).on('click', '#popup_create_questions_div', function () {
+    const requestsModal = document.getElementById("questionsForMeToCreateModal");
+    requestsModal.removeAttribute("tabindex");
+    // the clicked button creates a second popup. The 2 opened popups interefere with each other. By removing the tabinex attribute of the lower one, the problem is solved.
+});
+
+
 
 
 $(document).on('click', '.mark-request-as-done-button', function () {
     let requests = this.parentElement.parentElement.getElementsByClassName("request-comment");
     if(requests != undefined){
-        debugger
         document.getElementById("modal-body-requests").removeChild(document.getElementById("request-comment-p-" + this.getAttribute("requestid")));
         // remove that entry from the database with ajax
         mark_request_as_done(this.getAttribute("requestid"));
