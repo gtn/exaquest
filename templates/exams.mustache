@@ -13,6 +13,24 @@
             </li>
         </ul>
     </div>
+    <form method="post" action="{{action}}">
+        <label for="quizname">Quiz Name:</label>
+        <input type="text" class="form-control" id="quizname" name="name">
+        <input type="submit"
+               value="{{#str}} create_new_exam, block_exaquest {{/str}}"
+               class="btn btn-primary">
+    </form>
+
+    <form method="post" action="{{go_to_exam_questionbank}}">
+        <select name="quizid" class="form-select">
+            {{#exams}}
+                <option value="{{id}}">{{name}}</option>
+            {{/exams}}
+        </select>
+
+        <input type="submit" class="btn btn-primary" value="{{#str}}
+            add_questions_to_quiz, block_exaquest {{/str}}">
+    </form>
 
     <div class="examcard">
         <p>{{#str}}created_exams, block_exaquest {{/str}}</p>

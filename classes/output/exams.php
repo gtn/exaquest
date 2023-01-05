@@ -19,9 +19,12 @@ class exams implements renderable, templatable {
     private $request_questions_popup;
 
     public function __construct($userid, $courseid, $capabilities) {
+        global $DB, $COURSE;
+
         $this->courseid = $courseid;
         $this->capabilities = $capabilities;
         $this->userid = $userid;
+        $this->exams = $DB->get_records("quiz", array("course" => $COURSE->id));
     }
 
     /**
@@ -33,6 +36,16 @@ class exams implements renderable, templatable {
         global $PAGE, $COURSE;
         $data = new stdClass();
         $data->capabilities = $this->capabilities;
+        $data->action =
+            $PAGE->url->out(false, array('action' => 'create', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
+
+        $catAndCont = get_question_category_and_context_of_course();
+
+        $data->go_to_exam_questionbank = new moodle_url('/blocks/exaquest/exam_questionbank.php',
+            array('courseid' => $this->courseid,"category" => $catAndCont[0].','. $catAndCont[1]));
+        $data->go_to_exam_questionbank = $data->go_to_exam_questionbank->raw_out(false);
+
+        $data->exams = array_values($this->exams);
 
         return $data;
     }

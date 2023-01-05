@@ -5,6 +5,7 @@ require __DIR__ . '/inc.php';
 
 global $DB, $CFG, $COURSE, $USER;
 require_once($CFG->dirroot . '/comment/lib.php');
+require_once($CFG->dirroot . '/mod/quiz/locallib.php');
 
 $questionbankentryid = required_param('questionbankentryid', PARAM_INT);
 $questionid = required_param('questionid', PARAM_INT);
@@ -12,6 +13,7 @@ $action = required_param('action', PARAM_TEXT);
 $courseid  = required_param('courseid', PARAM_INT);
 $users  = optional_param('users', null, PARAM_RAW);
 $commenttext = optional_param('commenttext', null, PARAM_TEXT);
+$quizid = optional_param('quizid', null, PARAM_INT);
 
 switch ($action) {
     case ('open_question_for_review'):
@@ -130,6 +132,15 @@ switch ($action) {
         break;
     case ('mark_request_as_done'):
 
+        break;
+
+    case ('addquestion'):#
+        //add the quiz question
+        $quiz = new stdClass();
+        $quiz->id = $quizid;
+        $quiz->course = $courseid;
+        $quiz->questionsperpage = 1;
+        $ret = quiz_add_quiz_question($questionid, $quiz, $page = 0, $maxmark = null);
         break;
 
 }

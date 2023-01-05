@@ -51,6 +51,9 @@ $string['new_exams'] = 'New exams';
 $string['new_exams'] = 'New exams';
 $string['new_exams'] = 'New exams';
 $string['new_exams'] = 'New exams';
+$string['create_new_exam'] = 'Create new exam';
+$string['add_questions_to_quiz'] = 'Add Questions to quiz';
+$string['add_to_quiz'] = 'Add to quiz';
 
 
 // Dasboardcard
