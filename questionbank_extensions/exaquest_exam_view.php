@@ -43,6 +43,20 @@ class exaquest_exam_view extends exaquest_view {
         parent::__construct($contexts, $pageurl, $course, $cm);
     }
 
+    /**
+     * Display the header element for the question bank.
+     */
+    protected function display_question_bank_header(): void {
+        global $OUTPUT, $DB;
+
+        $quizid = optional_param('quizid', null, PARAM_INT);
+
+        if($quizid!=null){
+            $quizname = $DB->get_field("quiz", "name", array("id"=>$quizid));
+        }
+        echo $OUTPUT->heading(get_string('questionbank_selected_quiz', 'block_exaquest').''. $quizname, 2);
+    }
+
     protected function wanted_columns(): array {
         $this->requiredcolumns = [];
         $excludefeatures = [

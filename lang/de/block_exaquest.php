@@ -53,6 +53,7 @@ $string['new_exams'] = 'Neue Prüfung';
 $string['create_new_exam'] = 'Neue Prüfung erstellen';
 $string['add_questions_to_quiz'] = 'Fragen zu Prüfung hinzufügen';
 $string['add_to_quiz'] = 'Zur Prüfung hinzufügen';
+$string['questionbank_selected_quiz'] = 'Fragenlist mit ausgewählter Prüfung: ';
 
 
 // Dasboardcard
