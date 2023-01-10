@@ -43,17 +43,21 @@ $string['setuproles'] = 'Erstellen von Rollen und Erlaubnissen';
 
 
 // Exams
-$string['new_exams'] = 'Neue Prüfung';
-$string['new_exams'] = 'Neue Prüfung';
-$string['new_exams'] = 'Neue Prüfung';
-$string['new_exams'] = 'Neue Prüfung';
-$string['new_exams'] = 'Neue Prüfung';
-$string['new_exams'] = 'Neue Prüfung';
-$string['new_exams'] = 'Neue Prüfung';
+
 $string['create_new_exam'] = 'Neue Prüfung erstellen';
 $string['add_questions_to_quiz'] = 'Fragen zu Prüfung hinzufügen';
 $string['add_to_quiz'] = 'Zur Prüfung hinzufügen';
 $string['questionbank_selected_quiz'] = 'Fragenlist mit ausgewählter Prüfung: ';
+$string['exams_overview'] = 'Exams overview';
+$string['new_exams'] = 'Neue Prüfungen';
+$string['created_exams'] = 'Mit fragen befüllte Prüfungen';
+$string['fachlich_released_exams'] = 'Fachlich freigegebene Prüfungen';
+$string['active_exams'] = 'Aktive Prüfungen';
+$string['finished_exams'] = 'Fertiggestellte Prüfungen';
+$string['exams_grades_released'] = 'Prüfungen, von denen die Noten freigegeben wurden';
+$string['add_questions_to_these_exams'] = 'Fügen Sie Fragen zu folgenden Prüfungen hinzu:';
+
+
 
 
 // Dasboardcard

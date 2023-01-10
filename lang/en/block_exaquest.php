@@ -44,17 +44,18 @@ $string['setuproles'] = 'Set up roles and capabilities';
 
 
 // Exams
-$string['new_exams'] = 'New exams';
-$string['new_exams'] = 'New exams';
-$string['new_exams'] = 'New exams';
-$string['new_exams'] = 'New exams';
-$string['new_exams'] = 'New exams';
-$string['new_exams'] = 'New exams';
-$string['new_exams'] = 'New exams';
 $string['create_new_exam'] = 'Create new exam';
 $string['add_questions_to_quiz'] = 'Add Questions to quiz';
 $string['add_to_quiz'] = 'Add to quiz';
 $string['questionbank_selected_quiz'] = 'Questionbank with Exam selected: ';
+$string['exams_overview'] = 'Exams overview';
+$string['new_exams'] = 'New exams';
+$string['created_exams'] = 'Created exams';
+$string['fachlich_released_exams'] = 'Fachlich released exams';
+$string['active_exams'] = 'Active exams';
+$string['finished_exams'] = 'Finished exams';
+$string['exams_grades_released'] = 'Exams where grades have been released';
+$string['add_questions_to_these_exams'] = 'Add questions to these exams';
 
 
 
