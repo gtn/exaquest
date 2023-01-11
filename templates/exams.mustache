@@ -10,7 +10,7 @@
 
 
     <div class="examcard">
-        <p>{{#str}}new_exams, block_exaquest {{/str}}</p>
+        <h4>{{#str}}new_exams, block_exaquest {{/str}}</h4>
         <p>{{#str}}add_questions_to_these_exams, block_exaquest {{/str}}</p>
         <form method="post" action="{{go_to_exam_questionbank}}">
             <select name="quizid" class="form-select form-select-lg mb-3">
@@ -22,39 +22,65 @@
             <input type="submit" class="btn btn-primary" value="{{#str}}
             add_questions_to_quiz, block_exaquest {{/str}}">
         </form>
-<!--        <ul>-->
-<!--            <li>-->
-<!--                <a class="link" href="http://localhost/mod/quiz/view.php?id=4"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}-->
-<!--                    exam01</a>-->
-<!--            </li>-->
-<!--            <li>-->
-<!--                <a class="link" href="http://localhost/mod/quiz/view.php?id=5"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}-->
-<!--                    exam02</a>-->
-<!--            </li>-->
-<!--        </ul>-->
     </div>
     <div class="examcard">
-        <p>{{#str}}created_exams, block_exaquest {{/str}}</p>
+        <h4>{{#str}}created_exams, block_exaquest {{/str}}</h4>
         <p>Release these exams</p>
+        <ul>
+            <li>
+                <a class="link" href="http://localhost/mod/quiz/view.php?id=4"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}
+                    exam01 <i class="fa fa-check fa-1x" style="color: grey;"></i></a>
+            </li>
+            <li>
+                <a class="link" href="http://localhost/mod/quiz/view.php?id=5"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}
+                    exam02 <i class="fa fa-check fa-1x" style="color: grey;"></i></a></a>
+            </li>
+        </ul>
     </div>
 
     <div class="examcard">
-        <p>{{#str}}fachlich_released_exams, block_exaquest {{/str}}</p>
+        <h4>{{#str}}fachlich_released_exams, block_exaquest {{/str}}</h4>
         <p>Create exam technically? Wird es erst hier "wirklich" angelegt in moodle? Oder ist das der erste Schritt?</p>
+        <ul>
+            <li>
+                <a class="link" href="http://localhost/mod/quiz/view.php?id=4"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}
+                    exam03 <i class="fa fa-check fa-1x" style="color: grey;"></i></a>
+            </li>
+        </ul>
     </div>
 
     <div class="examcard">
-        <p>{{#str}}active_exams, block_exaquest {{/str}}</p>
+        <h4>{{#str}}active_exams, block_exaquest {{/str}}</h4>
         <p>these are active, students can take these exams</p>
+        <ul>
+            <li>
+                <a class="link" href="http://localhost/mod/quiz/view.php?id=4"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}
+                    exam04 <i class="fa fa-check fa-1x" style="color: grey;"></i></a>
+            </li>
+            <li>
+                <a class="link" href="http://localhost/mod/quiz/view.php?id=5"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}
+                    exam05 <i class="fa fa-check fa-1x" style="color: grey;"></i></a>
+            </li>
+        </ul>
     </div>
 
     <div class="examcard">
-        <p>{{#str}}finished_exams, block_exaquest {{/str}}</p>
-        <p></p>
+        <h4>{{#str}}finished_exams, block_exaquest {{/str}}</h4>
+        <ul>
+            <li>
+                <a class="link" href="http://localhost/mod/quiz/view.php?id=4"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}
+                    exam07 <i class="fa fa-check fa-1x" style="color: grey;"></i></a>
+            </li>
+        </ul>
     </div>
 
     <div class="examcard">
-        <p>{{#str}}exams_grades_released, block_exaquest {{/str}}</p>
-        <p></p>
+        <h4>{{#str}}exams_grades_released, block_exaquest {{/str}}</h4>
+        <ul>
+            <li>
+                <a class="link" href="http://localhost/mod/quiz/view.php?id=4"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}
+                    exam08 <i class="fa fa-check fa-1x" style="color: grey;"></i></a>
+            </li>
+        </ul>
     </div>
 </div>

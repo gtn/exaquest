@@ -47,6 +47,9 @@ class exams implements renderable, templatable {
 
         $data->exams = array_values($this->exams);
 
+        // TODO: exams are not just quizzes from this course but quizzes from this coursecategory. Get them from exaquestquizstatus, by status
+
+
         return $data;
     }
 }

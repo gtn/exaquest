@@ -43,7 +43,7 @@ const BLOCK_EXAQUEST_QUESTIONSTATUS_IN_QUIZ = 7;
 const BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED = 8;
 
 /**
- * Quiz/Pruefung Status
+ * Quiz/Pruefung/Exam Status
  */
 const BLOCK_EXAQUEST_QUIZSTATUS_NEW = 0; // Questions are being added
 const BLOCK_EXAQUEST_QUIZSTATUS_CREATED = 1; // Questions have been added
@@ -435,7 +435,7 @@ function block_exaquest_get_questions_for_me_to_create_count($coursecategoryid, 
 }
 
 /**
- * Returns count of
+ * Returns
  *
  * @param $coursecategoryid
  * @return array
@@ -889,4 +889,30 @@ function block_exaquest_get_coursecontextid_by_courseid($courseid){
     global $DB;
     $course = $DB->get_record('course', array('id' => $courseid));
     return $course->category;
+}
+
+
+/**
+ * Returns exams filtered by status.
+ * Similar to the get questions functions, but all in one function with ifs, instead of that many functions.
+ *
+ * @param $coursecategoryid
+ * @return array
+ */
+function block_exaquest_exams_by_status($coursecategoryid, $userid = 0) {
+    global $DB, $USER;
+
+    if (!$userid) {
+        $userid = $USER->id;
+    }
+
+    // questionbankentryid DISTINCT to not count twice
+    $sql = "SELECT *
+			FROM {" . BLOCK_EXAQUEST_DB_REQUESTQUEST . "} req
+			WHERE req.userid = :userid";
+
+    $questions = $DB->get_records_sql($sql,
+        array("userid" => $userid));
+
+    return $questions;
 }
