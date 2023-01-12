@@ -916,3 +916,5 @@ function block_exaquest_exams_by_status($coursecategoryid, $userid = 0) {
 
     return $questions;
 }
+
+
