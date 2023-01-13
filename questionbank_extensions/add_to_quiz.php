@@ -52,6 +52,7 @@ class add_to_quiz extends column_base {
         $questioncreator->id = $question->createdby;
         $questioncreators= array($questioncreator);#
 
+        //check if already in the quiz
         if(! $DB->record_exists_sql("SELECT *
                                     FROM {question_references} qr
                                          JOIN {quiz_slots} qs ON qr.itemid = qs.id

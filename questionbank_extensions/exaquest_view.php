@@ -201,13 +201,13 @@ class exaquest_view extends view {
                 }
             } else {
                 if ($CFG->usetags) {
-                    array_unshift($this->searchconditions,
-                        new \core_question\bank\search\tag_condition([$catcontext, $thiscontext], $tagids));
+                    //   array_unshift($this->searchconditions,
+                    //     new \core_question\bank\search\tag_condition([$catcontext, $thiscontext], $tagids));
                 }
 
                 //array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
                 array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_filters($filterstatus));
-                array_unshift($this->searchconditions, new \core_question\bank\search\category_condition_exaquest($cat, $recurse, $editcontexts, $this->baseurl, $this->course));
+                //array_unshift($this->searchconditions, new \core_question\bank\search\category_condition_exaquest($cat, $recurse, $editcontexts, $this->baseurl, $this->course));
             }
         }
         $this->display_options_form($showquestiontext);
