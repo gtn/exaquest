@@ -23,6 +23,7 @@ class plugin_feature extends \core_question\local\bank\plugin_features_base {
             new \qbank_deletequestion\delete_action_column_exaquest($qbank),
             new \qbank_history\history_action_column_exaquest($qbank),
             new add_to_quiz($qbank),
+            new usage_check_column($qbank),
         ];
     }
 }

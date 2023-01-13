@@ -9,7 +9,6 @@ global $CFG;
 require_once($CFG->dirroot . '/question/editlib.php');
 
 require_once('change_status.php');
-require_once('add_to_quiz.php');
 require_once('plugin_feature.php');
 require_once('edit_action_column_exaquest.php');
 require_once('filters/exaquest_filters.php');
@@ -133,7 +132,6 @@ class exaquest_view extends view {
         $questionbankclasscolumns["edit_action_column"] = $specialplugincolumnobjects[1];
         $questionbankclasscolumns["delete_action_column"] = $specialplugincolumnobjects[2];
         $questionbankclasscolumns["history_action_column"] = $specialplugincolumnobjects[3];
-        $questionbankclasscolumns["add_to_quiz"] = $specialplugincolumnobjects[4];
 
 
 

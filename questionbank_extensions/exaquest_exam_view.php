@@ -34,6 +34,8 @@ use qbank_questiontodescriptor;
 
 require_once('exaquest_view.php');
 require_once('plugin_feature.php');
+require_once('add_to_quiz.php');
+require_once('usage_check_column.php');
 
 
 
@@ -181,6 +183,7 @@ class exaquest_exam_view extends exaquest_view {
         $questionbankclasscolumns["delete_action_column"] = $specialplugincolumnobjects[2];
         $questionbankclasscolumns["history_action_column"] = $specialplugincolumnobjects[3];
         $questionbankclasscolumns["add_to_quiz"] = $specialplugincolumnobjects[4];
+        $questionbankclasscolumns["usage_check_column"] = $specialplugincolumnobjects[5];
 
 
 

@@ -19,6 +19,7 @@ class plugin_feature extends \core_question\local\bank\plugin_features_base {
     public function get_question_columns(\core_question\local\bank\view $qbank): array {
         return [
             new add_to_quiz($qbank),
+            new usage_check_column($qbank),
         ];
     }
 }
