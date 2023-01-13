@@ -50,11 +50,18 @@ class add_to_quiz extends column_base {
         $questioncreator->firstname = $question->creatorfirstname;
         $questioncreator->lastname = $question->creatorlastname;
         $questioncreator->id = $question->createdby;
-        $questioncreators= array($questioncreator);
+        $questioncreators= array($questioncreator);#
 
-        echo '<button href="#" class="addquestion' . $question->questionbankentryid . ' btn btn-primary" role="button" value="addquestion"> ' . get_string('add_to_quiz', 'block_exaquest') . '</button>';
+        if(! $DB->record_exists_sql("SELECT *
+                                    FROM {question_references} qr
+                                         JOIN {quiz_slots} qs ON qr.itemid = qs.id
+                                   WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ?", array($quizid))){
+            echo '<button href="#" class="addquestion' . $question->questionbankentryid . ' btn btn-primary" role="button" value="addquestion"> ' . get_string('add_to_quiz', 'block_exaquest') . '</button>';
+        }
+
 
         ?>
+
         <script type="text/javascript">
 
             $(document).ready(function() {
