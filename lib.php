@@ -27,6 +27,16 @@ require_once __DIR__ . '/inc.php';
 function block_exaquest_coursemodule_definition_after_data($formwrapper, $mform) {
     global $CFG, $COURSE, $DB, $PAGE;
 
+    ?>
+
+    <script type="text/javascript">
+        function changeFormAction() {
+            document.getElementsByClassName("mform")[0].action = "../blocks/exaquest/exams.php?courseid=2";
+        }
+    </script>
+
+    <?php
+
     // un-comment this, to have the button
     //$mform->addElement('submit', 'saveandreturnexaquest', 'Save and return to the Exaquest page', 'onClick="changeFormAction()"');
 
@@ -75,43 +85,3 @@ function block_exaquest_coursemodule_definition_after_data($formwrapper, $mform)
 //    return;
 //}
 
-?>
-
-
-<!--This would change the action from modedit.php to rerouting to the exams page. This would NOT save the changes though, so it is not a viable solution yet-->
-<script type="text/javascript">
-    function changeFormAction() {
-        debugger
-        document.getElementsByClassName("mform")[0].action = "../blocks/exaquest/exams.php?courseid=4";
-    }
-</script>
-
-<!--<script type="text/javascript">-->
-<!--    function downloadJSAtOnload() {-->
-<!--        function changeFormAction() {-->
-<!--            debugger-->
-<!--            document.getElementsByClassName("mform").action = "www.google.at";-->
-<!--        }-->
-<!---->
-<!--        document.getElementById("id_saveandreturnexaquest").addEventListener("click", function(){-->
-<!--            debugger-->
-<!--            document.getElementsByClassName("mform")[0].action = "../blocks/exaquest/exams.php?courseid=4";-->
-<!--            document.getElementsByClassName("mform")[0].submit();-->
-<!--        });-->
-<!--        debugger-->
-<!--        // document.getElementById("id_submitbutton").addEventListener("click", function(){-->
-<!--        //     debugger-->
-<!--        //     console.log("cancel clicked");-->
-<!--        // });-->
-<!--        //-->
-<!--        // document.getElementById("id_submitbutton2").addEventListener("click", function(){-->
-<!--        //     debugger-->
-<!--        //     console.log("cancel clicked");-->
-<!--        // });-->
-<!--    }-->
-<!--    if (window.addEventListener)-->
-<!--        window.addEventListener("load", downloadJSAtOnload, false);-->
-<!--    else if (window.attachEvent)-->
-<!--        window.attachEvent("onload", downloadJSAtOnload);-->
-<!--    else window.onload = downloadJSAtOnload;-->
-<!--</script>-->

@@ -26,10 +26,10 @@ block_exaquest_init_js_css();
 
 // create quiz needs to call this: create_module($moduleinfo)
 
-if($action == 'create'){
+if($action == 'create') {
     //create an object with all of the neccesary information to build a quiz
     $myQuiz = new stdClass();
-    $myQuiz->modulename='quiz';
+    $myQuiz->modulename = 'quiz';
     $myQuiz->name = $name;
     $myQuiz->introformat = 0;
     $myQuiz->quizpassword = '';
@@ -49,39 +49,53 @@ if($action == 'create'){
     $myQuiz->questiondecimalpoints = 2;
     $myQuiz->visible = 1;
     $myQuiz->questionsperpage = 1;
-    $myQuiz->introeditor = array('text' => 'A matching quiz','format' => 1);
+    $myQuiz->introeditor = array('text' => 'A matching quiz', 'format' => 1);
 
     //all of the review options
-    $myQuiz->attemptduring=1;
-    $myQuiz->correctnessduring=1;
-    $myQuiz->marksduring=1;
-    $myQuiz->specificfeedbackduring=1;
-    $myQuiz->generalfeedbackduring=1;
-    $myQuiz->rightanswerduring=1;
-    $myQuiz->overallfeedbackduring=1;
+    $myQuiz->attemptduring = 1;
+    $myQuiz->correctnessduring = 1;
+    $myQuiz->marksduring = 1;
+    $myQuiz->specificfeedbackduring = 1;
+    $myQuiz->generalfeedbackduring = 1;
+    $myQuiz->rightanswerduring = 1;
+    $myQuiz->overallfeedbackduring = 1;
 
-    $myQuiz->attemptimmediately=1;
-    $myQuiz->correctnessimmediately=1;
-    $myQuiz->marksimmediately=1;
-    $myQuiz->specificfeedbackimmediately=1;
-    $myQuiz->generalfeedbackimmediately=1;
-    $myQuiz->rightanswerimmediately=1;
-    $myQuiz->overallfeedbackimmediately=1;
+    $myQuiz->attemptimmediately = 1;
+    $myQuiz->correctnessimmediately = 1;
+    $myQuiz->marksimmediately = 1;
+    $myQuiz->specificfeedbackimmediately = 1;
+    $myQuiz->generalfeedbackimmediately = 1;
+    $myQuiz->rightanswerimmediately = 1;
+    $myQuiz->overallfeedbackimmediately = 1;
 
-    $myQuiz->marksopen=1;
+    $myQuiz->marksopen = 1;
 
-    $myQuiz->attemptclosed=1;
-    $myQuiz->correctnessclosed=1;
-    $myQuiz->marksclosed=1;
-    $myQuiz->specificfeedbackclosed=1;
-    $myQuiz->generalfeedbackclosed=1;
-    $myQuiz->rightanswerclosed=1;
-    $myQuiz->overallfeedbackclosed=1;
+    $myQuiz->attemptclosed = 1;
+    $myQuiz->correctnessclosed = 1;
+    $myQuiz->marksclosed = 1;
+    $myQuiz->specificfeedbackclosed = 1;
+    $myQuiz->generalfeedbackclosed = 1;
+    $myQuiz->rightanswerclosed = 1;
+    $myQuiz->overallfeedbackclosed = 1;
 
     //actually make the quiz using the function from course/lib.php
 
     $myQuiz2 = create_module($myQuiz);
+    /*
+        $mformclassname = 'mod_'.$module->name.'_mod_form';
+        $mform = new $mformclassname($data, $cw->section, $cm, $course);
+        $mform->set_data($data);
 
+        if ($fromform = $mform->get_data()) {
+            if (!empty($fromform->update)) {
+                list($cm, $fromform) = update_moduleinfo($cm, $fromform, $course, $mform);
+            } else if (!empty($fromform->add)) {
+                $fromform = add_moduleinfo($fromform, $course, $mform);
+            } else {
+                throw new \moodle_exception('invaliddata');
+            }
+        }
+    */
 }
 /*
 
