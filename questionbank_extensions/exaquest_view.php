@@ -213,6 +213,47 @@ class exaquest_view extends view {
         $this->display_options_form($showquestiontext);
     }
 
+    protected function display_options_form($showquestiontext): void {
+        global $PAGE;
+
+        // The html will be refactored in the filter feature implementation.
+        echo \html_writer::start_tag('form', ['method' => 'get',
+            'action' => new \moodle_url($this->baseurl), 'id' => 'displayoptions']);
+        echo \html_writer::start_div();
+
+        $excludes = ['recurse', 'showhidden', 'qbshowtext'];
+        // If the URL contains any tags then we need to prevent them
+        // being added to the form as hidden elements because the tags
+        // are managed separately.
+        if ($this->baseurl->param('qtagids[0]')) {
+            $index = 0;
+            while ($this->baseurl->param("qtagids[{$index}]")) {
+                $excludes[] = "qtagids[{$index}]";
+                $index++;
+            }
+        }
+        echo \html_writer::input_hidden_params($this->baseurl, $excludes);
+
+        $advancedsearch = [];
+
+        foreach ($this->searchconditions as $searchcondition) {
+            if ($searchcondition->display_options_adv()) {
+                $advancedsearch[] = $searchcondition;
+            }
+            echo $searchcondition->display_options();
+        }
+        //$this->display_showtext_checkbox($showquestiontext);
+        if (!empty($advancedsearch)) {
+            $this->display_advanced_search_form($advancedsearch);
+        }
+
+        $go = \html_writer::empty_tag('input', ['type' => 'submit', 'value' => get_string('go')]);
+        echo \html_writer::tag('noscript', \html_writer::div($go), ['class' => 'inline']);
+        echo \html_writer::end_div();
+        echo \html_writer::end_tag('form');
+        $PAGE->requires->yui_module('moodle-question-searchform', 'M.question.searchform.init');
+    }
+
 
     /**
      * Prints the table of questions in a category with interactions
