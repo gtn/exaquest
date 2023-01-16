@@ -26,7 +26,8 @@ class block_exaquest extends block_list {
             // get all courses where exaquest is added as a blocK:
             $courseids = block_exaquest_get_courseids();
             foreach($courseids as $courseid){
-                $this->content->items[] = html_writer::tag('a', get_string('dashboard_of_course', 'block_exaquest', $courseid),
+                $coursename = get_course($courseid)->fullname;
+                $this->content->items[] = html_writer::tag('a', get_string('dashboard_of_course', 'block_exaquest', $coursename),
                     array('href' => $CFG->wwwroot . '/blocks/exaquest/dashboard.php?courseid=' . $courseid));
             }
         } else {

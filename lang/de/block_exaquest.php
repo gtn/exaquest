@@ -6,7 +6,7 @@ $string['exaquest:myaddinstance'] = 'Neuen exaquest-block zu meiner Moodleseite 
 
 // Block
 $string['dashboard'] = 'Übersicht';
-$string['dashboard_of_course'] = 'Übersicht Kurs {$a}';
+$string['dashboard_of_course'] = 'Übersicht Kurs "{$a}"';
 $string['get_questionbank'] = 'Fragensammlung';
 $string['similarity'] = 'Ähnlichkeitsübersicht';
 $string['exams'] = 'Prüfungen';
