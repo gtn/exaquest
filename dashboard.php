@@ -48,7 +48,7 @@ if ($action == 'request_questions') {
         if ($selectedfragenersteller) {
             $frageneersteller = array_intersect_key($allfragenersteller, $selectedfragenersteller);
             foreach ($frageneersteller as $ersteller) {
-                block_exaquest_create_questionrequest($USER->id, $ersteller->id, $requestcomment);
+                block_exaquest_request_question($USER->id, $ersteller->id, $requestcomment);
             }
         }
     }

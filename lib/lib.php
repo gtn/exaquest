@@ -98,27 +98,50 @@ function block_exaquest_init_js_css() {
 
 }
 
-function block_exaquest_create_questionrequest($userfrom, $userto, $requestcomment){
+function block_exaquest_request_question($userfrom, $userto, $comment) {
     global $DB, $COURSE;
+    // enter data into the exaquest tables
+    $request = new stdClass();
+    $request->userid = $userto;
+    $request->comment = $comment;
+    $request->coursecategoryid = block_exaquest_get_coursecontextid_by_courseid($COURSE->id);
+    $DB->insert_record(BLOCK_EXAQUEST_DB_REQUESTQUEST, $request, $returnid = true, $bulk = false);
 
+    // create the message
     $messageobject = new stdClass();
     $messageobject->fullname = $COURSE->fullname;
     $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
     $messageobject->url = $messageobject->url->raw_out(false);
-    $messageobject->requestcomment = $requestcomment;
+    $messageobject->requestcomment = $comment;
     $message = get_string('please_create_new_questions', 'block_exaquest', $messageobject);
     $subject = get_string('please_create_new_questions_subject', 'block_exaquest', $messageobject);
 
-    $request = new stdClass();
-    $request->userid = $userto;
-    $request->comment = $requestcomment;
-    $request->coursecategoryid = block_exaquest_get_coursecontextid_by_courseid($COURSE->id);
-
-    $DB->insert_record(BLOCK_EXAQUEST_DB_REQUESTQUEST, $request, $returnid=true, $bulk=false);
     block_exaquest_send_moodle_notification("newquestionsrequest", $userfrom, $userto, $subject, $message,
         "Frageerstellung");
 }
 
+function block_exaquest_request_review($userfrom, $userto, $comment, $questionbankentryid, $questionname) {
+    global $DB, $COURSE;
+    // enter data into the exaquest tables
+    $assigndata = new stdClass;
+    $assigndata->questionbankentryid = $questionbankentryid;
+    $assigndata->reviewerid = $userto;
+    $assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FORMAL;
+    $DB->insert_record('block_exaquestreviewassign', $assigndata);
+    $assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH;
+    $DB->insert_record('block_exaquestreviewassign', $assigndata);
+
+    // create the message
+    $messageobject = new stdClass;
+    $messageobject->fullname = $COURSE->fullname; // TODO rw: questionname
+    $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]); // TODO rw: blocks/exaquest/questbank.php?
+    $messageobject->url = $messageobject->url->raw_out(false);
+    $messageobject->requestcomment = $comment;
+    $message = get_string('please_review_question', 'block_exaquest', $messageobject);
+    $subject = get_string('please_review_question_subject', 'block_exaquest', $messageobject);
+    block_exaquest_send_moodle_notification("reviewquestion", $userfrom->id, $userto, $message, $subject,
+        "Review");
+}
 
 function block_exaquest_send_moodle_notification($notificationtype, $userfrom, $userto, $subject, $message, $context,
     $contexturl = null, $courseid = 0, $customdata = null, $messageformat = FORMAT_HTML) {
@@ -392,7 +415,8 @@ function block_exaquest_get_my_finalised_questionbankentries_count($coursecatego
 			AND qbe.ownerid = :ownerid";
 
     $questions = count($DB->get_records_sql($sql,
-        array("coursecategoryid" => $coursecategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED, "ownerid" => $userid)));
+        array("coursecategoryid" => $coursecategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED,
+            "ownerid" => $userid)));
 
     return $questions;
 }
@@ -503,7 +527,8 @@ function block_exaquest_get_questions_for_me_to_release_count($coursecategoryid,
 			AND qra.reviewerid = :reviewerid";
 
     $questions = count($DB->get_records_sql($sql,
-        array("coursecategoryid" => $coursecategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED, "reviewerid" => $userid)));
+        array("coursecategoryid" => $coursecategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED,
+            "reviewerid" => $userid)));
 
     return $questions;
 }
@@ -868,7 +893,7 @@ function block_exaquest_get_courseids() {
     foreach ($instances as $instance) {
         $context = $DB->get_record('context', array('id' => $instance->parentcontextid, 'contextlevel' => CONTEXT_COURSE));
         if ($context) {
-            if(block_exaquest_is_user_in_course($USER->id, $context->instanceid)){
+            if (block_exaquest_is_user_in_course($USER->id, $context->instanceid)) {
                 $exaquest_courses[$context->instanceid] = $context->instanceid;
             }
         }
@@ -885,12 +910,11 @@ function block_exaquest_is_user_in_course($userid, $courseid) {
     return is_enrolled($context, $userid, '', true);
 }
 
-function block_exaquest_get_coursecontextid_by_courseid($courseid){
+function block_exaquest_get_coursecontextid_by_courseid($courseid) {
     global $DB;
     $course = $DB->get_record('course', array('id' => $courseid));
     return $course->category;
 }
-
 
 /**
  * Returns exams filtered by status.

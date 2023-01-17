@@ -32,8 +32,14 @@ $string['mark_as_done'] = 'Mark as done';
 $string['messageprovider:newquestionsrequest'] = 'New questions have been requested';
 $string['please_create_new_questions'] = 'Please create new questions in <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['please_create_new_questions_subject'] = 'Please create new questions in {$a->fullname}';
-$string['please_revise_question'] = 'Please revise question';
-$string['please_review_question'] = 'Please review question';
+
+$string['messageprovider:revisequestion'] = 'Questions have been assigned for revision';
+$string['please_revise_question'] = 'Please revise question <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
+$string['please_revise_question_subject'] = 'Please revise question {$a->fullname}';
+
+$string['messageprovider:reviewquestion'] = 'Questions have been assigned for review';
+$string['please_review_question'] = 'Please review question <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
+$string['please_review_question_subject'] = 'Please review question {$a->fullname}';
 
 
 

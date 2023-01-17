@@ -31,8 +31,17 @@ $string['mark_as_done'] = 'Als erledigt markieren';
 $string['messageprovider:newquestionsrequest'] = 'Neue Fragen wurden Angefordert';
 $string['please_create_new_questions'] = 'Bitte erstellen Sie eine neue Frage in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
 $string['please_create_new_questions_subject'] = 'Bitte erstellen Sie eine neue Frage in {$a->fullname}';
-$string['please_revise_question'] = 'Bitte überarbeiten Sie eine Frage';
-$string['please_review_question'] = 'Bitte überarbeiten Sie eine Frage';
+
+$string['messageprovider:revisequestion'] = 'Fragen wurden zur Überarbeitung zugeteilt';
+$string['please_revise_question'] = 'Bitte überarbeiten Sie eine Frage <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
+$string['please_revise_question_subject'] = 'Bitte überarbeiten Sie eine Frage in {$a->fullname}';
+
+
+$string['messageprovider:reviewquestion'] = 'Fragen wurden zum Beurteilen zugeteilt';
+$string['please_review_question'] = 'Bitte beurteilen Sie eine Frage in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
+$string['please_review_question_subject'] = 'Bitte beurteilen Sie eine Frage in {$a->fullname}';
+
+
 
 
 
@@ -74,7 +83,7 @@ $string['questions_finalised_count'] = 'Finalisierte Fragen';
 $string['questions_released_count'] = 'Freigegebene Fragen';
 $string['questions_released_and_to_review_count'] = 'Freigegebene Fragen die überarbeitet werden müssen';
 
-$string['my_questions_count'] = 'questions from me';
+$string['my_questions_count'] = 'Fragen von mir erstellt';
 $string['my_questions_finalised_count'] = 'Meine begutachteten Fragen';
 $string['my_questions_to_review_count'] = 'Meine Fragen zu begutachten';
 

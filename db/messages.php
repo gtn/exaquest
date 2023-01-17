@@ -25,4 +25,18 @@ $messageproviders = array (
             'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
         ],
     ),
+    // Notify that Fragenersteller has to revise a question
+    'revisequestion' => array (
+        'defaults' => [
+            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+            'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+        ],
+    ),
+    // Notify modulverantwortlicher and fachlicherfragenreviewer that they should review a question
+    'reviewquestion' => array (
+        'defaults' => [
+            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+            'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+        ],
+    ),
 );

@@ -23,24 +23,10 @@ switch ($action) {
         $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS;
         $data->id = $DB->get_field('block_exaquestquestionstatus','id', array("questionbankentryid" => $questionbankentryid));
         $DB->update_record('block_exaquestquestionstatus', $data);
+        // TODO rw: get question, to have questionname. Add as parameter to block_exaquest_request_review
         if($users!= null){
-
             foreach($users as $user) {
-                $assigndata = new stdClass;
-                $assigndata->questionbankentryid = $questionbankentryid;
-                $assigndata->reviewerid = $user;
-                $assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FORMAL;
-                $DB->insert_record('block_exaquestreviewassign', $assigndata);
-                $assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH;
-                $DB->insert_record('block_exaquestreviewassign', $assigndata);
-
-                $messageobject = new stdClass;
-                $messageobject->fullname = $COURSE->fullname;
-                $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
-                $messageobject->url = $messageobject->url->raw_out(false);
-                $message = get_string('please_review_question', 'block_exaquest', $messageobject);
-                block_exaquest_send_moodle_notification("newquestionsrequest", $USER->id, $user, $message, $message,
-                    "Review");
+                block_exaquest_request_review($USER, $user, $commenttext, $questionbankentryid);
             }
         }
         if($commenttext!= null){
