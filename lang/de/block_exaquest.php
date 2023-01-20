@@ -11,6 +11,7 @@ $string['get_questionbank'] = 'Fragensammlung';
 $string['similarity'] = 'Ähnlichkeitsübersicht';
 $string['exams'] = 'Prüfungen';
 $string['category_settings'] = 'Kategorieeinstellungen';
+$string['save_and_return'] = 'Speichern und zu Exaquest';
 
 
 
@@ -189,3 +190,4 @@ $string['exaquest:similarity_settings_swggapvalue'] = 'Smith Waterman Gotoh - Ga
 $string['exaquest:similarity_settings_swggapvalue_desc'] = 'a non-positive gap penalty';
 $string['exaquest:similarity_settings_nrofthreads'] = 'Number of threads';
 $string['exaquest:similarity_settings_nrofthreads_desc'] = 'if this value is greater than 1, it will utilize a multi-threaded implementation to compute the similarity, which should be much more performant for greater datasets';
+

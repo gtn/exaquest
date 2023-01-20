@@ -941,4 +941,90 @@ function block_exaquest_exams_by_status($coursecategoryid, $userid = 0) {
     return $questions;
 }
 
+function is_exaquest_active_in_course() {
+    global $COURSE, $PAGE, $CFG;
+
+    $page = new moodle_page();
+    $page->set_url('/course/view.php', array('id' => $COURSE->id));
+    $page->set_pagelayout('course');
+    $page->set_course($COURSE);
+
+    $blockmanager = $page->blocks;
+
+    $blockmanager->load_blocks(true);
+
+    foreach ($blockmanager->get_regions() as $region) {
+        foreach ($blockmanager->get_blocks_for_region($region) as $block) {
+            $instance = $block->instance;
+            if ($instance->blockname == "exaquest") {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+
+function block_exaquest_get_capabilities($context){
+    global $USER;
+    $capabilities = [];
+    // roles
+    $capabilities["modulverantwortlicher"] = is_enrolled($context, $USER, "block/exaquest:modulverantwortlicher");
+    $capabilities["fragenersteller"] = is_enrolled($context, $USER, "block/exaquest:fragenersteller");
+    $capabilities["fachlfragenreviewer"] = is_enrolled($context, $USER, "block/exaquest:fachlfragenreviewer");
+    $capabilities["pruefungskoordination"] = is_enrolled($context, $USER, "block/exaquest:pruefungskoordination");
+    $capabilities["admintechnpruefungsdurchf"] = is_enrolled($context, $USER, "block/exaquest:admintechnpruefungsdurchf");
+    $capabilities["pruefungsstudmis"] = is_enrolled($context, $USER, "block/exaquest:pruefungsstudmis");
+    $capabilities["beurteilungsmitwirkende"] = is_enrolled($context, $USER, "block/exaquest:beurteilungsmitwirkende");
+    $capabilities["fachlicherpruefer"] = is_enrolled($context, $USER, "block/exaquest:fachlicherpruefer");
+    $capabilities["pruefungsmitwirkende"] = is_enrolled($context, $USER, "block/exaquest:pruefungsmitwirkende");
+    $capabilities["fachlicherzweitpruefer"] = is_enrolled($context, $USER, "block/exaquest:fachlicherzweitpruefer");
+
+    // capabilities defined by ZML
+    $capabilities["showquestionstorevise"] = is_enrolled($context, $USER, "block/exaquest:showquestionstorevise");
+    $capabilities["createquestions"] = is_enrolled($context, $USER, "block/exaquest:createquestion");
+    $capabilities["releasequestion"] = is_enrolled($context, $USER, "block/exaquest:releasequestion");
+    $capabilities["readallquestions"] = is_enrolled($context, $USER, "block/exaquest:readallquestions");
+    $capabilities["readquestionstatistics"] = is_enrolled($context, $USER, "block/exaquest:readquestionstatistics");
+    $capabilities["changestatusofreleasedquestions"] = is_enrolled($context, $USER, "block/exaquest:changestatusofreleasedquestions");
+    $capabilities["setstatustoreview"] = is_enrolled($context, $USER, "block/exaquest:setstatustoreview");
+    $capabilities["reviseownquestion"] = is_enrolled($context, $USER, "block/exaquest:reviseownquestion");
+    $capabilities["setstatustofinalised"] = is_enrolled($context, $USER, "block/exaquest:setstatustofinalised");
+    $capabilities["showownrevisedquestions"] = is_enrolled($context, $USER, "block/exaquest:showownrevisedquestions");
+    $capabilities["showquestionstoreview"] = is_enrolled($context, $USER, "block/exaquest:showquestionstoreview");
+    $capabilities["editquestiontoreview"] = is_enrolled($context, $USER, "block/exaquest:editquestiontoreview");
+    $capabilities["showfinalisedquestions"] = is_enrolled($context, $USER, "block/exaquest:showfinalisedquestions");
+    $capabilities["showquestionstorevise"] = is_enrolled($context, $USER, "block/exaquest:showquestionstorevise");
+    $capabilities["editallquestions"] = is_enrolled($context, $USER, "block/exaquest:editallquestions");
+    $capabilities["addquestiontoexam"] = is_enrolled($context, $USER, "block/exaquest:addquestiontoexam");
+    $capabilities["releaseexam"] = is_enrolled($context, $USER, "block/exaquest:releaseexam");
+    $capabilities["technicalreview"] = is_enrolled($context, $USER, "block/exaquest:technicalreview");
+    $capabilities["executeexam"] = is_enrolled($context, $USER, "block/exaquest:executeexam");
+    $capabilities["assignsecondexaminator"] = is_enrolled($context, $USER, "block/exaquest:assignsecondexaminator");
+    $capabilities["definequestionblockingtime"] = is_enrolled($context, $USER, "block/exaquest:definequestionblockingtime");
+    $capabilities["showexamresults"] = is_enrolled($context, $USER, "block/exaquest:showexamresults");
+    $capabilities["gradeexam"] = is_enrolled($context, $USER, "block/exaquest:gradeexam");
+    $capabilities["createexamstatistics"] = is_enrolled($context, $USER, "block/exaquest:createexamstatistics");
+    $capabilities["showexamstatistics"] = is_enrolled($context, $USER, "block/exaquest:showexamstatistics");
+    $capabilities["correctexam"] = is_enrolled($context, $USER, "block/exaquest:correctexam");
+    $capabilities["acknowledgeexamcorrection"] = is_enrolled($context, $USER, "block/exaquest:acknowledgeexamcorrection");
+    $capabilities["releaseexamgrade"] = is_enrolled($context, $USER, "block/exaquest:releaseexamgrade");
+    $capabilities["releasecommissionalexamgrade"] = is_enrolled($context, $USER, "block/exaquest:releasecommissionalexamgrade");
+    $capabilities["exportgradestokusss"] = is_enrolled($context, $USER, "block/exaquest:exportgradestokusss");
+    $capabilities["executeexamreview"] = is_enrolled($context, $USER, "block/exaquest:executeexamreview");
+    $capabilities["addparticipanttomodule"] = is_enrolled($context, $USER, "block/exaquest:addparticipanttomodule");
+    $capabilities["assignroles"] = is_enrolled($context, $USER, "block/exaquest:assignroles");
+    $capabilities["changerolecapabilities"] = is_enrolled($context, $USER, "block/exaquest:changerolecapabilities");
+    $capabilities["createroles"] = is_enrolled($context, $USER, "block/exaquest:createroles");
+
+
+    // created during development
+    //$capabilities["seestatistic"] = is_enrolled($context, $USER, "block/exaquest:seestatistic");
+
+    // there is no logic in mustache ==> do it here. Often roles overlap.
+    //$capabilities["fragenersteller_or_fachlfragenreviewer"] = $capabilities["fragenersteller"] || $capabilities["fachlfragenreviewer"];
+    //$capabilities["modulverantwortlicher_or_pruefungskoordination"] = $capabilities["modulverantwortlicher"] || $capabilities["pruefungskoordination"];
+    // TODO: do not do it like this, but write e.g. "release_questions" capability and give it to modulverantwrotlicher and pruefungskoordination
+    return $capabilities;
+}
 

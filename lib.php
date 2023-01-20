@@ -26,6 +26,7 @@ require_once __DIR__ . '/inc.php';
  */
 function block_exaquest_coursemodule_definition_after_data($formwrapper, $mform) {
     global $CFG, $COURSE, $DB, $PAGE;
+
     ?>
     <script type="text/javascript">
         function changeFormAction() {
@@ -35,8 +36,10 @@ function block_exaquest_coursemodule_definition_after_data($formwrapper, $mform)
 
     <?php
 
-    // un-comment this, to have the button
-    $mform->addElement('submit', 'saveandreturnexaquest', 'Save and return to the Exaquest page', 'onClick="changeFormAction()"');
+    // add button if exaquest is active in this course
+    if(is_exaquest_active_in_course()){
+        $mform->addElement('submit', 'saveandreturnexaquest', get_string('save_and_return', 'block_exaquest'), 'onClick="changeFormAction()"');
+    }
 
     return;
 }

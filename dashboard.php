@@ -55,16 +55,7 @@ if ($action == 'request_questions') {
 }
 
 // RENDER:
-$capabilities = [];
-$capabilities["createquestions"] = is_enrolled($context, $USER, "block/exaquest:createquestion");
-$capabilities["modulverantwortlicher"] = is_enrolled($context, $USER, "block/exaquest:modulverantwortlicher");
-$capabilities["fragenersteller"] = is_enrolled($context, $USER, "block/exaquest:fragenersteller");
-$capabilities["fachlfragenreviewer"] = is_enrolled($context, $USER, "block/exaquest:fachlfragenreviewer");
-$capabilities["pruefungskoordination"] = is_enrolled($context, $USER, "block/exaquest:pruefungskoordination");
-
-// there is no logic in mustache ==> do it here. Often roles overlap.
-$capabilities["fragenersteller_or_fachlfragenreviewer"] = $capabilities["fragenersteller"] || $capabilities["fachlfragenreviewer"];
-$capabilities["modulverantwortlicher_or_pruefungskoordination"] = $capabilities["modulverantwortlicher"] || $capabilities["pruefungskoordination"];
+$capabilities = block_exaquest_get_capabilities($context);
 
 if ($capabilities["modulverantwortlicher"] || $capabilities["pruefungskoordination"]) {
     if (!isset($frageneersteller) || empty($data->fragenersteller)) {

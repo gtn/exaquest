@@ -22,24 +22,26 @@
                             questions_for_me_to_review, block_exaquest {{/str}}</a>
                     </li>
                 {{/fachlfragenreviewer}}
-                {{#fragenersteller}}
+                {{#showquestionstorevise}}
                     <li>
                         <a class="link"
                            href={{questions_for_me_to_revise_link}}>{{questions_for_me_to_revise_count}} {{#str}}
                             questions_for_me_to_revise, block_exaquest {{/str}}</a>
                     </li>
-                {{/fragenersteller}}
-                {{#modulverantwortlicher_or_pruefungskoordination}}
+                {{/showquestionstorevise}}
+                {{#releasequestion}}
                     <li>
                         <a class="link"
                            href={{questions_for_me_to_release_link}}>{{questions_for_me_to_release_count}} {{#str}}
                             questions_for_me_to_release, block_exaquest {{/str}}</a>
                     </li>
-                {{/modulverantwortlicher_or_pruefungskoordination}}
+                {{/releasequestion}}
             </ul>
-            {{#request_questions_popup}}
-                {{>block_exaquest/popup_request_questions}}
-            {{/request_questions_popup}}
+            {{#releasequestion}}
+                {{#request_questions_popup}}
+                    {{>block_exaquest/popup_request_questions}}
+                {{/request_questions_popup}}
+            {{/releasequestion}}
 
         </div>
 
@@ -88,29 +90,29 @@
 
         </div>
 
-        <!--    Prüfungen-->
-        {{#modulverantwortlicher_or_pruefungskoordination}}
-            <div class="dashboardcard">
-                <p>{{#str}}examinations_title, block_exaquest {{/str}}</p>
-                <p>{{#str}}list_of_exams_with_status, block_exaquest {{/str}}</p>
-                <ul>
-                    {{#exams}}
-                        <li>{{name}} {{status}}exam x</li>
-                    {{/exams}}
-                </ul>
-                <button class="btn btn-secondary">{{#str}}create_new_exam_button, block_exaquest {{/str}}</button>
-            </div>
-        {{/modulverantwortlicher_or_pruefungskoordination}}
+        <!--        &lt;!&ndash;    Prüfungen&ndash;&gt;-->
+            <!--        {{#addquestiontoexam}}-->
+        <!--            <div class="dashboardcard">-->
+        <!--                <p>{{#str}}examinations_title, block_exaquest {{/str}}</p>-->
+        <!--                <p>{{#str}}list_of_exams_with_status, block_exaquest {{/str}}</p>-->
+        <!--                <ul>-->
+            <!--                    {{#exams}}-->
+            <!--                        <li>{{name}} {{status}}exam x</li>-->
+                <!--                    {{/exams}}-->
+        <!--                </ul>-->
+        <!--                <button class="btn btn-secondary">{{#str}}create_new_exam_button, block_exaquest {{/str}}</button>-->
+        <!--            </div>-->
+            <!--        {{/addquestiontoexam}}-->
 
 
         <!--    Statistik-->
-        {{#modulverantwortlicher_or_pruefungskoordination}}
+        {{#showexamstatistics}}
             <div class="dashboardcard">
                 <p>{{#str}}statistics_title, block_exaquest {{/str}}</p>
                 <p>{{#str}}compare_questions, block_exaquest {{/str}}</p>
                 {{>block_exaquest/compare_questions}}
             </div>
-        {{/modulverantwortlicher_or_pruefungskoordination}}
+        {{/showexamstatistics}}
 
 
         <!-- IF we want to split it up for some reason: this code... otherwise delete-->
