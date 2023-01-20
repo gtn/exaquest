@@ -34,8 +34,6 @@ use qbank_questiontodescriptor;
 
 require_once('exaquest_view.php');
 require_once('plugin_feature.php');
-require_once('add_to_quiz.php');
-require_once('usage_check_column.php');
 
 
 
