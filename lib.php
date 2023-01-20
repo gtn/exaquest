@@ -26,19 +26,17 @@ require_once __DIR__ . '/inc.php';
  */
 function block_exaquest_coursemodule_definition_after_data($formwrapper, $mform) {
     global $CFG, $COURSE, $DB, $PAGE;
-
     ?>
-
     <script type="text/javascript">
         function changeFormAction() {
-            document.getElementsByClassName("mform")[0].action = "../blocks/exaquest/exams.php?courseid=2";
+            document.getElementsByClassName("mform")[0].action = "../blocks/exaquest/exams.php?createorupdate=1";
         }
     </script>
 
     <?php
 
     // un-comment this, to have the button
-    //$mform->addElement('submit', 'saveandreturnexaquest', 'Save and return to the Exaquest page', 'onClick="changeFormAction()"');
+    $mform->addElement('submit', 'saveandreturnexaquest', 'Save and return to the Exaquest page', 'onClick="changeFormAction()"');
 
     return;
 }
