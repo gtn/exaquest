@@ -29,7 +29,7 @@ function block_exaquest_coursemodule_definition_after_data($formwrapper, $mform)
     ?>
     <script type="text/javascript">
         function changeFormAction() {
-            document.getElementsByClassName("mform")[0].action = "../blocks/exaquest/exams.php?createorupdate=1";
+            document.getElementsByClassName("mform")[0].action = "../blocks/exaquest/create_or_update_exam_redirect.php";
         }
     </script>
 
