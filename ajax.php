@@ -81,8 +81,8 @@ switch ($action) {
         $data->id = $DB->get_field('block_exaquestquestionstatus', 'id', array("questionbankentryid" => $questionbankentryid));
         $DB->update_record('block_exaquestquestionstatus', $data);
         break;
-    case ('rework_question'):
-        //$DB->record_exists('block_exaquestquestionstatus', array("questionbankentryid" => $questionbankentryid));
+    case ('revise_question'):
+                //$DB->record_exists('block_exaquestquestionstatus', array("questionbankentryid" => $questionbankentryid));
         $data = new stdClass;
         $data->questionbankentryid = $questionbankentryid;
         $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE;
@@ -103,16 +103,17 @@ switch ($action) {
             $comment->add($commenttext);
         }
 
-        if ($users != null) {
 
-            foreach ($users as $user) {
-                $messageobject = new stdClass;
-                $messageobject->fullname = $COURSE->fullname;
-                $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
-                $messageobject->url = $messageobject->url->raw_out(false);
-                $message = get_string('please_revise_question', 'block_exaquest', $messageobject);
-                block_exaquest_send_moodle_notification("newquestionsrequest", $USER->id, $user, $message, $message,
-                    "Revise");
+
+
+
+        if ($users != null) {
+            $questionname = $DB->get_record('question', array('id' => $questionid))->name;
+            $catAndCont = get_question_category_and_context_of_course($courseid);
+            if ($users != null) {
+                foreach ($users as $user) {
+                    block_exaquest_request_revision($USER, $user, $commenttext, $questionbankentryid, $questionname, $catAndCont, $courseid);
+                }
             }
         }
         break;

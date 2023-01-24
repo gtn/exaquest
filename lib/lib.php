@@ -144,6 +144,30 @@ function block_exaquest_request_review($userfrom, $userto, $comment, $questionba
         "Review");
 }
 
+function block_exaquest_request_revision($userfrom, $userto, $comment, $questionbankentryid, $questionname, $catAndCont, $courseid) {
+    global $DB, $COURSE;
+    // enter data into the exaquest tables
+    $assigndata = new stdClass;
+    $assigndata->questionbankentryid = $questionbankentryid;
+    $assigndata->reviewerid = $userto;
+    $assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FORMAL;
+    $DB->insert_record('block_exaquestreviewassign', $assigndata);
+    $assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH;
+    $DB->insert_record('block_exaquestreviewassign', $assigndata);
+
+    // create the message
+    $messageobject = new stdClass;
+    $messageobject->fullname = $questionname;
+    //$messageobject->url = new moodle_url('/blocks/exaquest/questbank.php', array('courseid' => $courseid, 'category' => $catAndCont[0] . ',' . $catAndCont[1]));
+    $messageobject->url = new moodle_url('/blocks/exaquest/questbank.php', array('courseid' => $courseid, 'filterstatus' => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE));
+    $messageobject->url = $messageobject->url->raw_out(false);
+    $messageobject->requestcomment = $comment;
+    $message = get_string('please_revise_question', 'block_exaquest', $messageobject);
+    $subject = get_string('please_revise_question_subject', 'block_exaquest', $messageobject);
+    block_exaquest_send_moodle_notification("revisequestion", $userfrom->id, $userto, $subject, $message,
+        "Revise");
+}
+
 function block_exaquest_send_moodle_notification($notificationtype, $userfrom, $userto, $subject, $message, $context,
     $contexturl = null, $courseid = 0, $customdata = null, $messageformat = FORMAT_HTML) {
     global $CFG, $DB;
