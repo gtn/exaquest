@@ -23,6 +23,13 @@
                     questions_for_me_to_create, block_exaquest {{/str}}
                     <br>
                     {{#questions_to_create}}
+
+<!--                        <br>-->
+<!--                        <input type="checkbox" id={{id}} class="userselectioncheckbox"-->
+<!--                               name="selectedusers[{{id}}]" value={{id}}>-->
+<!--                        <label for="selectedusers[{{id}}]">{{comment}}</label>-->
+
+
                         <p class="request-comment" id="request-comment-p-{{id}}">
                             - {{comment}}
                             <a id="request-comment-a-{{id}}" class="mark-request-as-done-button"
@@ -42,6 +49,9 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+<!--                <input type="submit"-->
+<!--                       value="{{#str}} mark_selected_as_done_button, block_exaquest {{/str}}"-->
+<!--                       class="btn btn-primary mark-all-requests-as-done-button">-->
             </div>
         </div>
     </div>

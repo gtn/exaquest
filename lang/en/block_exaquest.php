@@ -24,6 +24,7 @@ $string['fachlich_review_questions_label'] = 'The following questions are marked
 
 
 $string['mark_as_done'] = 'Mark as done';
+$string['mark_selected_as_done_button'] = 'Mark selected requests as done';
 
 
 
@@ -76,6 +77,8 @@ $string['statistics_title'] = 'STATISTICS';
 $string['questions_overall_count'] = 'questions overall';
 $string['questions_reviewed_count'] = 'questions are finalised / reviewed';
 $string['questions_to_review_count'] = 'questions have to be reviewed';
+$string['questions_fachlich_reviewed_count'] = 'Fachlich reviewed questions';
+$string['questions_formal_reviewed_count'] = 'Formal reviewed questions';
 $string['questions_finalised_count'] = 'questions finalised';
 $string['questions_released_count'] = 'questions released';
 $string['questions_released_and_to_review_count'] = 'questions are released and should be reviewed again';
@@ -114,11 +117,11 @@ $string['revise'] = 'Revise:';
 $string['release'] = 'Release:';
 
 $string['open_question_for_review'] = 'Open question for review';
-$string['formal_review_done'] = 'Finish fromal review';
+$string['formal_review_done'] = 'Finish formal review';
 $string['technical_review_done'] = 'Finish technical review';
 $string['revise_question'] = 'Revise question';
 $string['release_question'] = 'Release question';
-$string['skip_and_release_question'] = 'Skip an release question';
+$string['skip_and_release_question'] = 'Skip and release question';
 $string['release_question_warning'] = 'Are you sure you want to skip the review and release the question right away?';
 $string['release_question_warning_title'] = 'Warning';
 $string['change_status'] = 'change status';

@@ -25,6 +25,7 @@ $string['fachlich_review_questions_label'] = 'Folgende Fragen sind zur fachliche
 
 
 $string['mark_as_done'] = 'Als erledigt markieren';
+$string['mark_selected_as_done_button'] = 'Selektierte Anfragen als erledigt markieren';
 
 
 
@@ -80,6 +81,8 @@ $string['statistics_title'] = 'STATISTIKEN';
 $string['questions_overall_count'] = 'Fragen insgesamt';
 $string['questions_reviewed_count'] = 'Begutachtete Fragen';
 $string['questions_to_review_count'] = 'Fragen zu Begutachten';
+$string['questions_fachlich_reviewed_count'] = 'Nur fachlich begutachtete Fragen';
+$string['questions_formal_reviewed_count'] = 'Nur formal begutachtete Fragen';
 $string['questions_finalised_count'] = 'Finalisierte Fragen';
 $string['questions_released_count'] = 'Freigegebene Fragen';
 $string['questions_released_and_to_review_count'] = 'Freigegebene Fragen die überarbeitet werden müssen';

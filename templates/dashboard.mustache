@@ -15,13 +15,13 @@
                         {{/questions_for_me_to_create_popup}}
                     </li>
                 {{/fragenersteller}}
-                {{#fachlfragenreviewer}}
+                {{#showquestionstoreview}}
                     <li>
                         <a class="link"
                            href={{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}} {{#str}}
                             questions_for_me_to_review, block_exaquest {{/str}}</a>
                     </li>
-                {{/fachlfragenreviewer}}
+                {{/showquestionstoreview}}
                 {{#showquestionstorevise}}
                     <li>
                         <a class="link"
@@ -54,6 +54,12 @@
                 </li>
                 <li>
                     {{questions_to_review_count}} {{#str}}questions_to_review_count, block_exaquest {{/str}}
+                </li>
+                <li>
+                    {{questions_fachlich_reviewed_count}} {{#str}}questions_fachlich_reviewed_count, block_exaquest {{/str}}
+                </li>
+                <li>
+                    {{questions_formal_reviewed_count}} {{#str}}questions_formal_reviewed_count, block_exaquest {{/str}}
                 </li>
                 <li>
                     {{questions_finalised_count}} {{#str}}questions_reviewed_count, block_exaquest {{/str}}

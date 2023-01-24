@@ -330,6 +330,46 @@ function block_exaquest_get_questionbankentries_to_be_reviewed_count($coursecate
             "toassess" => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS)));
 
     return $questions;
+
+}
+
+/**
+ * Returns count of
+ *
+ * @param $coursecategoryid
+ * @return array
+ */
+function block_exaquest_get_questionbankentries_formal_reviewed_count($coursecategoryid) {
+    global $DB;
+    $sql = "SELECT qs.id
+			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
+			WHERE qs.coursecategoryid = :coursecategoryid
+			AND qs.status = :formalreviewdone";
+
+    $questions = count($DB->get_records_sql($sql,
+        array("coursecategoryid" => $coursecategoryid, "formalreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE)));
+
+    return $questions;
+}
+
+
+/**
+ * Returns count of
+ *
+ * @param $coursecategoryid
+ * @return array
+ */
+function block_exaquest_get_questionbankentries_fachlich_reviewed_count($coursecategoryid) {
+    global $DB;
+    $sql = "SELECT qs.id
+			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
+			WHERE qs.coursecategoryid = :coursecategoryid
+			AND qs.status = :fachlichreviewdone";
+
+    $questions = count($DB->get_records_sql($sql,
+        array("coursecategoryid" => $coursecategoryid, "fachlichreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE)));
+
+    return $questions;
 }
 
 /**
@@ -709,6 +749,9 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:releasequestion', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:editallquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
+
+    //added during development
+    assign_capability('block/exaquest:showquestionstoreview', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fragenersteller'])) {
         $roleid = create_role('Fragenersteller', 'fragenersteller', '', 'manager');

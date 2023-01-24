@@ -343,5 +343,10 @@ function xmldb_block_exaquest_upgrade($oldversion)
         upgrade_block_savepoint(true, 2022110900, 'exaquest');
     }
 
+    if ($oldversion < 2023012404) {
+        block_exaquest_set_up_roles();
+        upgrade_block_savepoint(true, 2023012404, 'exaquest');
+    }
+
     return $return_result;
 }
