@@ -46,8 +46,16 @@ class usage_check_column extends column_base {
         global $USER, $DB, $COURSE, $PAGE;
 
         //check if already in the quiz
+        if($DB->record_exists_sql("SELECT *
+                                    FROM {question_references} qr
+                                         JOIN {quiz_slots} qs ON qr.itemid = qs.id
+                                   WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?", array($quizid, $question->questionbankentryid))){
+            echo '<div class="p-3 mb-2 bg-secondary text-center text-white">Already used</div>';
+        } else {
+            echo '<div class="p-3 mb-2 bg-success text-center text-white">Not used</div>';
+        }
 
-        echo '<div class="p-3 mb-2 bg-danger text-white"></div>';
+
 
     }
 }
