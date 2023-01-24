@@ -120,7 +120,7 @@ function block_exaquest_request_question($userfrom, $userto, $comment) {
         "Frageerstellung");
 }
 
-function block_exaquest_request_review($userfrom, $userto, $comment, $questionbankentryid, $questionname) {
+function block_exaquest_request_review($userfrom, $userto, $comment, $questionbankentryid, $questionname, $catAndCont, $courseid) {
     global $DB, $COURSE;
     // enter data into the exaquest tables
     $assigndata = new stdClass;
@@ -133,13 +133,14 @@ function block_exaquest_request_review($userfrom, $userto, $comment, $questionba
 
     // create the message
     $messageobject = new stdClass;
-    $messageobject->fullname = $COURSE->fullname; // TODO rw: questionname
-    $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]); // TODO rw: blocks/exaquest/questbank.php?
+    $messageobject->fullname = $questionname;
+    //$messageobject->url = new moodle_url('/blocks/exaquest/questbank.php', array('courseid' => $courseid, 'category' => $catAndCont[0] . ',' . $catAndCont[1]));
+    $messageobject->url = new moodle_url('/blocks/exaquest/questbank.php', array('courseid' => $courseid, 'filterstatus' => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW));
     $messageobject->url = $messageobject->url->raw_out(false);
     $messageobject->requestcomment = $comment;
     $message = get_string('please_review_question', 'block_exaquest', $messageobject);
     $subject = get_string('please_review_question_subject', 'block_exaquest', $messageobject);
-    block_exaquest_send_moodle_notification("reviewquestion", $userfrom->id, $userto, $message, $subject,
+    block_exaquest_send_moodle_notification("reviewquestion", $userfrom->id, $userto, $subject, $message,
         "Review");
 }
 
@@ -864,10 +865,13 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
 }
 
 // this is used to get the contexts of the category in the questionbank
-function get_question_category_and_context_of_course() {
+function get_question_category_and_context_of_course($courseid=null) {
     global $COURSE, $DB;
+    if($courseid == null){
+        $courseid = $COURSE->id;
+    }
     // this is used to get the contexts of the category in the questionbank
-    $context = context_course::instance($COURSE->id);
+    $context = context_course::instance($courseid);
     $contexts = explode('/', $context->path);
     $questioncategory = $DB->get_records('question_categories', ['contextid' => $contexts[2]]);
     $category =
