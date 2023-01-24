@@ -11,6 +11,7 @@ $string['get_questionbank'] = 'Questionbank';
 $string['similarity'] = 'Similarity overview';
 $string['exams'] = 'Exams';
 $string['category_settings'] = 'Category settings';
+$string['save_and_return'] = 'Save and return to Exaquest';
 
 
 

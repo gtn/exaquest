@@ -1,7 +1,11 @@
 #####################################
-xxxx
+2023012000
 -Fixed review-assignments and dashboard count numbers
--
+-Added capability checks in dashboard
+-Added button in quiz-creation form. This button returns the user to the exaquest exams page.
+-Exams page created
+-Exams page: add questions to exams functionality
+-Links in notifications added
 #####################################
 #####################################
 2022110900
