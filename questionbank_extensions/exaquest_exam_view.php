@@ -214,7 +214,7 @@ class exaquest_exam_view extends exaquest_view {
                 }
 
                 //array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
-                array_unshift($this->searchconditions, new \core_question\bank\search\added_to_quiz_condition($filterstatus));
+                //array_unshift($this->searchconditions, new \core_question\bank\search\added_to_quiz_condition($filterstatus));
                 //array_unshift($this->searchconditions, new \core_question\bank\search\category_condition_exaquest($cat, $recurse, $editcontexts, $this->baseurl, $this->course));
             }
         }

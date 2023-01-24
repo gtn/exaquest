@@ -47,7 +47,7 @@ class added_to_quiz_condition extends condition {
                         JOIN {quiz_slots} qusl ON qref.itemid = qusl.id
                         WHERE qref.component='mod_quiz' AND qref.questionarea = 'slot' AND qusl.quizid = qbe.id)";
 */
-        $this->where = "quizid != ". $quizid;
+        $this->where = "quizid != ". $quizid . " OR quizid IS NULL";
         return $this->where;
     }
 }

@@ -42,8 +42,6 @@ class popup_change_status implements renderable, templatable {
         }
 
 
-
-
         $data->action = $this->action;
         $data->sesskey = sesskey();
         return $data;
