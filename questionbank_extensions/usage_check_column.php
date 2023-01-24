@@ -47,7 +47,7 @@ class usage_check_column extends column_base {
 
         //check if already in the quiz
 
-        echo '<div class="p-3 mb-2 bg-danger text-white">.bg-danger</div>';
+        echo '<div class="p-3 mb-2 bg-danger text-white"></div>';
 
     }
 }

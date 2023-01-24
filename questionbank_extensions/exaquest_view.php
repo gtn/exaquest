@@ -289,6 +289,7 @@ class exaquest_view extends view {
         $this->create_new_question_form($category, $canadd);
 
         $this->build_query();
+
         $totalnumber = $this->get_question_count();
         if ($totalnumber == 0) {
             return;

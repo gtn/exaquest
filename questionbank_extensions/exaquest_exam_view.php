@@ -34,6 +34,7 @@ use qbank_questiontodescriptor;
 
 require_once('exaquest_view.php');
 require_once('plugin_feature.php');
+require_once('filters/added_to_quiz_condition.php');
 
 
 
@@ -186,5 +187,37 @@ class exaquest_exam_view extends exaquest_view {
 
 
         return $questionbankclasscolumns;
+    }
+
+    public function wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus=0): void {
+        global $CFG;
+        list(, $contextid) = explode(',', $cat);
+        $catcontext = \context::instance_by_id($contextid);
+        $thiscontext = $this->get_most_specific_context();
+        //var_dump($catcontext);
+        //echo("---------------");
+        //var_dump($thiscontext);
+        //die;
+        // Category selection form.
+        $this->display_question_bank_header();
+        //edited:
+        // Display tag filter if usetags setting is enabled/enablefilters is true.
+        if ($this->enablefilters) {
+            if (is_array($this->customfilterobjects)) {
+                foreach ($this->customfilterobjects as $filterobjects) {
+                    $this->searchconditions[] = $filterobjects;
+                }
+            } else {
+                if ($CFG->usetags) {
+                    //   array_unshift($this->searchconditions,
+                    //     new \core_question\bank\search\tag_condition([$catcontext, $thiscontext], $tagids));
+                }
+
+                //array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
+                array_unshift($this->searchconditions, new \core_question\bank\search\added_to_quiz_condition($filterstatus));
+                //array_unshift($this->searchconditions, new \core_question\bank\search\category_condition_exaquest($cat, $recurse, $editcontexts, $this->baseurl, $this->course));
+            }
+        }
+        $this->display_options_form($showquestiontext);
     }
 }

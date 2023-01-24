@@ -96,4 +96,9 @@ class add_to_quiz extends column_base {
         </script>
         <?php
     }
+
+    public function get_extra_joins(): array {
+        return ['qref' => 'JOIN {question_references} qref ON qbe.id = qref.questionbankentryid',
+            'qusl' => 'JOIN {quiz_slots} qusl ON qref.itemid = qusl.id'];
+    }
 }
