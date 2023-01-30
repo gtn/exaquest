@@ -219,6 +219,8 @@ function block_exaquest_get_reviewer_by_courseid($courseid) {
     $userarray = array();
     $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:modulverantwortlicher'));
     $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fachlfragenreviewer'));
+    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:pruefungskoordination')); // TODO: according to 20230112 Feedbackliste. But should they really have the right to review?
+    $userarray = array_unique($userarray, SORT_REGULAR); // to remove users who have multiple roles
     return $userarray;
 }
 
