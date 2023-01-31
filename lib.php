@@ -27,18 +27,16 @@ require_once __DIR__ . '/inc.php';
 function block_exaquest_coursemodule_definition_after_data($formwrapper, $mform) {
     global $CFG, $COURSE, $DB, $PAGE;
 
-    ?>
-    <script type="text/javascript">
-        function changeFormAction() {
-            document.getElementsByClassName("mform")[0].action = "../blocks/exaquest/create_or_update_exam_redirect.php";
-        }
-    </script>
-
-    <?php
-
     // add button if exaquest is active in this course
-    if(is_exaquest_active_in_course()){
-        $mform->addElement('submit', 'saveandreturnexaquest', get_string('save_and_return', 'block_exaquest'), 'onClick="changeFormAction()"');
+    if(is_exaquest_active_in_course() && $mform->_formName == 'mod_quiz_mod_form'){
+        ?>
+        <script type="text/javascript">
+            function changeFormActionExaquest() {
+                document.getElementsByClassName("mform")[0].action = "../blocks/exaquest/create_or_update_exam_redirect.php";
+            }
+        </script>
+        <?php
+        $mform->addElement('submit', 'saveandreturnexaquest', get_string('save_and_return', 'block_exaquest'), 'onClick="changeFormActionExaquest()"');
     }
 
     return;
