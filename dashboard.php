@@ -12,7 +12,7 @@ require_login($courseid);
 //$course = $DB->get_record('course', array('id' => $courseid));
 $context = context_course::instance($courseid);
 
-$coursecategoryid = block_exaquest_get_coursecontextid_by_courseid($courseid);
+$coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($courseid);
 
 
     if (is_enrolled($context, $USER, "block/exaquest:createquestion")) {

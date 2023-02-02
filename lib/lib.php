@@ -28,6 +28,7 @@
 const BLOCK_EXAQUEST_DB_QUESTIONSTATUS = 'block_exaquestquestionstatus';
 const BLOCK_EXAQUEST_DB_REVIEWASSIGN = 'block_exaquestreviewassign';
 const BLOCK_EXAQUEST_DB_REQUESTQUEST = 'block_exaquestrequestquest';
+const BLOCK_EXAQUEST_DB_QUIZSTATUS = 'block_exaquestquizstatus';
 
 /**
  * Question Status
@@ -104,7 +105,7 @@ function block_exaquest_request_question($userfrom, $userto, $comment) {
     $request = new stdClass();
     $request->userid = $userto;
     $request->comment = $comment;
-    $request->coursecategoryid = block_exaquest_get_coursecontextid_by_courseid($COURSE->id);
+    $request->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($COURSE->id);
     $DB->insert_record(BLOCK_EXAQUEST_DB_REQUESTQUEST, $request, $returnid = true, $bulk = false);
 
     // create the message
@@ -983,7 +984,7 @@ function block_exaquest_is_user_in_course($userid, $courseid) {
     return is_enrolled($context, $userid, '', true);
 }
 
-function block_exaquest_get_coursecontextid_by_courseid($courseid) {
+function block_exaquest_get_coursecategoryid_by_courseid($courseid) {
     global $DB;
     $course = $DB->get_record('course', array('id' => $courseid));
     return $course->category;
@@ -996,22 +997,20 @@ function block_exaquest_get_coursecontextid_by_courseid($courseid) {
  * @param $coursecategoryid
  * @return array
  */
-function block_exaquest_exams_by_status($coursecategoryid, $userid = 0) {
+function block_exaquest_exams_by_status($coursecategoryid, $status) {
     global $DB, $USER;
 
-    if (!$userid) {
-        $userid = $USER->id;
-    }
 
-    // questionbankentryid DISTINCT to not count twice
     $sql = "SELECT *
-			FROM {" . BLOCK_EXAQUEST_DB_REQUESTQUEST . "} req
-			WHERE req.userid = :userid";
+			FROM {" . BLOCK_EXAQUEST_DB_QUIZSTATUS . "} quizstatus
+			JOIN {quiz} q on q.id = quizstatus.quizid 
+			WHERE quizstatus.status = :status
+			AND quizstatus.coursecategoryid = :coursecategoryid";
 
-    $questions = $DB->get_records_sql($sql,
-        array("userid" => $userid));
+    $quizzes = $DB->get_records_sql($sql,
+        array("status" => $status, "coursecategoryid" => $coursecategoryid));
 
-    return $questions;
+    return $quizzes;
 }
 
 function is_exaquest_active_in_course() {

@@ -63,8 +63,9 @@ $string['exams_overview'] = 'Exams overview';
 $string['new_exams'] = 'Neue Prüfungen';
 $string['created_exams'] = 'Mit fragen befüllte Prüfungen';
 $string['fachlich_released_exams'] = 'Fachlich freigegebene Prüfungen';
-$string['active_exams'] = 'Aktive Prüfungen';
-$string['finished_exams'] = 'Fertiggestellte Prüfungen';
+$string['technisch_released_exams'] = 'Technisch freigegebene Prüfungen';
+$string['active_exams'] = 'Prüfungen in Durchführung';
+$string['finished_exams'] = 'Abgeschlossene Prüfungen';
 $string['exams_grades_released'] = 'Prüfungen, von denen die Noten freigegeben wurden';
 $string['add_questions_to_these_exams'] = 'Fügen Sie Fragen zu folgenden Prüfungen hinzu:';
 

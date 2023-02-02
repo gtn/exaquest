@@ -40,12 +40,31 @@ class block_exaquest_observer {
             if ($event->get_context() instanceof \context_coursecat) {
                 $insert->coursecategoryid = $event->contextinstanceid;
             } else if ($event->get_context() instanceof \context_course) { // TODO: this should NOT happen anyways. Otherwise the question is in the wrong place and will not be seen.
-                $course = $DB->get_record('course', array('id' => $event->contextinstanceid));
-                $insert->coursecategoryid = block_exaquest_get_coursecontextid_by_courseid($event->contextinstanceid);
+                //$course = $DB->get_record('course', array('id' => $event->contextinstanceid));
+                $insert->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($event->contextinstanceid);
             } else {
                 throw new Exception("neither course nor coursecategory context"); // TODO, what else could there be?
             }
             $DB->insert_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $insert);
+        }
+    }
+
+
+    /**
+     * Observer for core\event\course_module_created.
+     *
+     * @param core\event\course_module_created $event
+     * @return void
+     */
+    public static function course_module_created(\core\event\course_module_created $event) {
+        global $DB;
+        $data = $event->get_data();
+        if($data['other']['modulename'] == 'quiz'){
+            $insert = new stdClass();
+            $insert->quizid = $data['other']['instanceid'];
+            $insert->status = BLOCK_EXAQUEST_QUIZSTATUS_NEW;
+            $insert->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($event->courseid); // the context is context_module. The event has the courseid.
+            $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, $insert);
         }
     }
 

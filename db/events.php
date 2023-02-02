@@ -21,4 +21,9 @@ $observers = array(
         'callback' => 'block_exaquest_observer::question_created',
         'internal' => false,
     ),
+    array(
+        'eventname' => '\core\event\course_module_created',
+        'callback' => 'block_exaquest_observer::course_module_created',
+        'internal' => false,
+    ),
 );

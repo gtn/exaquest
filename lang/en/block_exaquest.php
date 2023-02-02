@@ -60,6 +60,7 @@ $string['exams_overview'] = 'Exams overview';
 $string['new_exams'] = 'New exams';
 $string['created_exams'] = 'Created exams';
 $string['fachlich_released_exams'] = 'Fachlich released exams';
+$string['technisch_released_exams'] = 'Technisch released exams';
 $string['active_exams'] = 'Active exams';
 $string['finished_exams'] = 'Finished exams';
 $string['exams_grades_released'] = 'Exams where grades have been released';

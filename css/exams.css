@@ -1,0 +1,23 @@
+
+#exaquest .examcard {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px;
+}
+
+#exaquest .examcard table {
+    border-collapse: collapse;
+}
+
+
+#exaquest .examcard th, td {
+    width: 150px;
+    text-align: center;
+    /*border: 1px solid black;*/
+    padding: 5px;
+}
+
+
+#exaquest .examcard .btn {
+    white-space: nowrap;
+}

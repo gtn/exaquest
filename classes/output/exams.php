@@ -22,9 +22,18 @@ class exams implements renderable, templatable {
         global $DB, $COURSE;
 
         $this->courseid = $courseid;
+        $this->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($courseid);
         $this->capabilities = $capabilities;
         $this->userid = $userid;
-        $this->exams = $DB->get_records("quiz", array("course" => $COURSE->id));
+        //$this->exams = $DB->get_records("quiz", array("course" => $COURSE->id));
+        $this->new_exams = block_exaquest_exams_by_status($this->coursecategoryid,BLOCK_EXAQUEST_QUIZSTATUS_NEW);
+        $this->created_exams = block_exaquest_exams_by_status($this->coursecategoryid,BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
+        $this->fachlich_released_exams = block_exaquest_exams_by_status($this->coursecategoryid,BLOCK_EXAQUEST_QUIZSTATUS_FACHLICH_RELEASED);
+        $this->teachnisch_released_exams = block_exaquest_exams_by_status($this->coursecategoryid,BLOCK_EXAQUEST_QUIZSTATUS_TECHNISCH_RELEASED);
+        $this->active_exams = block_exaquest_exams_by_status($this->coursecategoryid,BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE);
+        $this->finished_exams = block_exaquest_exams_by_status($this->coursecategoryid,BLOCK_EXAQUEST_QUIZSTATUS_FINISHED);
+        $this->grading_released_exams = block_exaquest_exams_by_status($this->coursecategoryid,BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED);
+
     }
 
     /**
@@ -45,9 +54,16 @@ class exams implements renderable, templatable {
             array('courseid' => $this->courseid,"category" => $catAndCont[0].','. $catAndCont[1]));
         $data->go_to_exam_questionbank = $data->go_to_exam_questionbank->raw_out(false);
 
-        $data->exams = array_values($this->exams);
+        $data->new_exams = array_values($this->new_exams);
+        $data->created_exams = array_values($this->created_exams);
+        $data->fachlich_released_exams = array_values($this->fachlich_released_exams);
+        $data->teachnisch_released_exams = array_values($this->teachnisch_released_exams);
+        $data->active_exams = array_values($this->active_exams);
+        $data->finished_exams = array_values($this->finished_exams);
+        $data->grading_released_exams = array_values($this->grading_released_exams);
 
         // TODO: exams are not just quizzes from this course but quizzes from this coursecategory. Get them from exaquestquizstatus, by status
+
 
 
         return $data;

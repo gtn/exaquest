@@ -295,7 +295,6 @@ function xmldb_block_exaquest_upgrade($oldversion)
     if ($oldversion < 2022110900) {
         // change the courseid fields to coursecategoryid
 
-        //// rename fields questionid to questionbanentryid
         $table = new xmldb_table('block_exaquestquestionstatus');
         $field = new xmldb_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
         if ($dbman->field_exists($table, $field)) {
