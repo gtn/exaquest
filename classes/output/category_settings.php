@@ -26,8 +26,8 @@ class category_settings implements renderable, templatable {
         $this->userid = $userid;
         $records = $DB->get_records("block_exaquestcategories");
         $categories = array();
-        foreach($records as $record){
-            $categories[$record->categorytype][] = $record->categoryname . "\n";
+        foreach($records as $key => $record){
+                $categories[$record->categorytype][] = $record->categoryname . "\n";
         }
         $this->categories = $categories;
     }

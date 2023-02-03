@@ -220,4 +220,16 @@ class exaquest_exam_view extends exaquest_view {
         }
         $this->display_options_form($showquestiontext);
     }
+
+    protected function load_page_questions($page, $perpage): \moodle_recordset {
+        //this funciton calls the sql query and allows me to adjust questions that will get selected
+        global $DB;
+        $questions = $DB->get_recordset_sql($this->loadsql, $this->sqlparams, $page * $perpage, $perpage);
+        if (empty($questions)) {
+            $questions->close();
+            // No questions on this page. Reset to page 0.
+            $questions = $DB->get_recordset_sql($this->loadsql, $this->sqlparams, 0, $perpage);
+        }
+        return $questions;
+    }
 }
