@@ -13,7 +13,8 @@
                             {{name}} </a>
                     </td>
                     <td>
-                        <a href="{{go_to_exam_questionbank}}&quizid={{id}}" type="submit" class="btn btn-primary" value="">{{#str}}add_questions_to_quiz, block_exaquest {{/str}}</a>
+                        <a href="{{go_to_exam_questionbank}}&quizid={{id}}" type="submit" class="btn btn-primary"
+                        value="">{{#str}}add_questions_to_quiz, block_exaquest {{/str}}</a>
                     </td>
                     <td>
                         <input type="submit" class="btn btn-primary" value="Prüfung zur Begutachtung schicken" href="#">
@@ -29,34 +30,24 @@
         <table>
             <thead></thead>
             <tbody>
-            <tr>
-                <td>
-                    <a class="link"
-                       href="http://localhost/mod/quiz/view.php?id=8"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}
-                        exam01 </a>
-                </td>
-                <td>
-                    <input type="submit" class="btn btn-primary" value="Prüfung fachlich freigeben">
-                    <!--                    <button type="submit" class="btn btn-primary" value="Prüfung fachlich freigeben" href="#">Prüfung fachlich freigeben</button>-->
-                </td>
-                <td>
-                    <input type="submit" class="btn btn-primary" value="Prüfung zur überarbeitung zurückschicken">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a class="link"
-                       href="http://localhost/mod/quiz/view.php?id=8"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}
-                        exam012 </a>
-                </td>
-                <td>
-                    <input type="submit" class="btn btn-primary" value="Prüfung fachlich freigeben">
-                    <!--                    <button type="submit" class="btn btn-primary" value="Prüfung fachlich freigeben" href="#">Prüfung fachlich freigeben</button>-->
-                </td>
-                <td>
-                    <input type="submit" class="btn btn-primary" value="Prüfung zur überarbeitung zurückschicken">
-                </td>
-            </tr>
+            {{#created_exams}}
+                <tr>
+                    <td>
+                        <a class="link"
+                           href="http://localhost/mod/quiz/view.php?id=8"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}
+                            exam01 </a>
+                    </td>
+                    <td>
+                        <!--                    <input type="submit" class="btn btn-primary" value="Prüfung fachlich freigeben">-->
+                        <button type="submit" class="btn btn-primary change-exam-status-button" value="fachlich_release_exam" quizid="2">Prüfung
+                            fachlich freigeben
+                        </button>
+                    </td>
+                    <td>
+                        <input type="submit" class="btn btn-primary" value="Prüfung zur überarbeitung zurückschicken">
+                    </td>
+                </tr>
+            {{/created_exams}}
             </tbody>
         </table>
     </div>

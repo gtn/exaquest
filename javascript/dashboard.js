@@ -33,11 +33,15 @@ $(document).on('click', '#popup_create_questions_div', function () {
 
 
 $(document).on('click', '.mark-request-as-done-button', function () {
-    let requests = this.parentElement.parentElement.getElementsByClassName("request-comment");
-    if(requests != undefined){
-        document.getElementById("modal-body-requests").removeChild(document.getElementById("request-comment-p-" + this.getAttribute("requestid")));
-        // remove that entry from the database with ajax
-        mark_request_as_done(this.getAttribute("requestid"));
+    if (confirm("Wirklich als erledigt markieren?")) {
+        let requests = this.parentElement.parentElement.getElementsByClassName("request-comment");
+        if(requests != undefined){
+            document.getElementById("modal-body-requests").removeChild(document.getElementById("request-comment-p-" + this.getAttribute("requestid")));
+            // remove that entry from the database with ajax
+            mark_request_as_done(this.getAttribute("requestid"));
+        }
+    } else {
+
     }
 });
 

@@ -29,13 +29,7 @@
                             questions_for_me_to_revise, block_exaquest {{/str}}</a>
                     </li>
                 {{/showquestionstorevise}}
-                {{#releasequestion}}
-                    <li>
-                        <a class="link"
-                           href={{questions_for_me_to_release_link}}>{{questions_for_me_to_release_count}} {{#str}}
-                            questions_for_me_to_release, block_exaquest {{/str}}</a>
-                    </li>
-                {{/releasequestion}}
+
             </ul>
             {{#releasequestion}}
                 {{#request_questions_popup}}
@@ -110,7 +104,6 @@
         <!--            </div>-->
             <!--        {{/addquestiontoexam}}-->
 
-
         <!--    Statistik-->
         {{#showexamstatistics}}
             <div class="dashboardcard">
@@ -119,7 +112,6 @@
                 {{>block_exaquest/compare_questions}}
             </div>
         {{/showexamstatistics}}
-
 
         <!-- IF we want to split it up for some reason: this code... otherwise delete-->
         <!--    &lt;!&ndash;    General Information&ndash;&gt;-->
@@ -139,3 +131,12 @@
         <!--    {{>block_exaquest/dashboardcard_statistics}}-->
     </div>
 {{/capabilities}}
+
+<!-- TODO: questions for me to release... should that be in the TODOs? And what exactly should it show?-->
+<!--{{#releasequestion}}-->
+<!--    <li>-->
+<!--        <a class="link"-->
+<!--           href={{questions_for_me_to_release_link}}>{{questions_for_me_to_release_count}} {{#str}}-->
+<!--            questions_for_me_to_release, block_exaquest {{/str}}</a>-->
+<!--    </li>-->
+<!--{{/releasequestion}}-->

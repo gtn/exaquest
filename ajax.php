@@ -26,7 +26,8 @@ switch ($action) {
         $catAndCont = get_question_category_and_context_of_course($courseid);
         if ($users != null) {
             foreach ($users as $user) {
-                block_exaquest_request_review($USER, $user, $commenttext, $questionbankentryid, $questionname, $catAndCont, $courseid);
+                block_exaquest_request_review($USER, $user, $commenttext, $questionbankentryid, $questionname, $catAndCont,
+                    $courseid);
             }
         }
         if ($commenttext != null) {
@@ -82,7 +83,7 @@ switch ($action) {
         $DB->update_record('block_exaquestquestionstatus', $data);
         break;
     case ('revise_question'):
-                //$DB->record_exists('block_exaquestquestionstatus', array("questionbankentryid" => $questionbankentryid));
+        //$DB->record_exists('block_exaquestquestionstatus', array("questionbankentryid" => $questionbankentryid));
         $data = new stdClass;
         $data->questionbankentryid = $questionbankentryid;
         $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE;
@@ -103,16 +104,13 @@ switch ($action) {
             $comment->add($commenttext);
         }
 
-
-
-
-
         if ($users != null) {
             $questionname = $DB->get_record('question', array('id' => $questionid))->name;
             $catAndCont = get_question_category_and_context_of_course($courseid);
             if ($users != null) {
                 foreach ($users as $user) {
-                    block_exaquest_request_revision($USER, $user, $commenttext, $questionbankentryid, $questionname, $catAndCont, $courseid);
+                    block_exaquest_request_revision($USER, $user, $commenttext, $questionbankentryid, $questionname, $catAndCont,
+                        $courseid);
                 }
             }
         }
@@ -120,7 +118,6 @@ switch ($action) {
     case ('mark_request_as_done'):
 
         break;
-
     case ('addquestion'):#
         //add the quiz question
         $quiz = new stdClass();

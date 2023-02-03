@@ -53,19 +53,13 @@ class exams implements renderable, templatable {
         $data->go_to_exam_questionbank = new moodle_url('/blocks/exaquest/exam_questionbank.php',
             array('courseid' => $this->courseid,"category" => $catAndCont[0].','. $catAndCont[1]));
         $data->go_to_exam_questionbank = $data->go_to_exam_questionbank->raw_out(false);
-
         $data->new_exams = array_values($this->new_exams);
-        $data->created_exams = array_values($this->created_exams);
+        $data->created_exams = array_values($this->created_exams); // TODO rw: test if they are shown with current mustache (no way to create them in moodle yet --> create one manually)
         $data->fachlich_released_exams = array_values($this->fachlich_released_exams);
         $data->teachnisch_released_exams = array_values($this->teachnisch_released_exams);
         $data->active_exams = array_values($this->active_exams);
         $data->finished_exams = array_values($this->finished_exams);
         $data->grading_released_exams = array_values($this->grading_released_exams);
-
-        // TODO: exams are not just quizzes from this course but quizzes from this coursecategory. Get them from exaquestquizstatus, by status
-
-
-
         return $data;
     }
 }

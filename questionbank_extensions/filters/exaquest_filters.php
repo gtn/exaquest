@@ -119,7 +119,7 @@ class exaquest_filters extends condition {
         $html.= '    </optgroup>';
         $html.= '    <optgroup label="'.get_string('release', 'block_exaquest').'">';
         $html.= '        <option '.$selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE].' value="'.BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE.'">'.get_string('show_questions_to_release', 'block_exaquest').'</option>';
-        $html.= '        <option '.$selected[BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_RELEASE].' value="'.BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_RELEASE.'">'.get_string('show_questions_for_me_to_release', 'block_exaquest').'</option>';
+        //$html.= '        <option '.$selected[BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_RELEASE].' value="'.BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_RELEASE.'">'.get_string('show_questions_for_me_to_release', 'block_exaquest').'</option>';
         $html.= '        <option '.$selected[BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS].' value="'.BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS.'">'.get_string('show_all_released_questions', 'block_exaquest').'</option>';
         $html.= '    </optgroup>';
         $html.= '</select></div>';

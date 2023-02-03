@@ -28,7 +28,7 @@ function block_exaquest_coursemodule_definition_after_data($formwrapper, $mform)
     global $CFG, $COURSE, $DB, $PAGE;
 
     // add button if exaquest is active in this course
-    if(is_exaquest_active_in_course() && $mform->_formName == 'mod_quiz_mod_form'){
+    if (is_exaquest_active_in_course() && $mform->_formName == 'mod_quiz_mod_form') {
         ?>
         <script type="text/javascript">
             function changeFormActionExaquest() {
@@ -36,8 +36,33 @@ function block_exaquest_coursemodule_definition_after_data($formwrapper, $mform)
             }
         </script>
         <?php
-        $mform->addElement('submit', 'saveandreturnexaquest', get_string('save_and_return', 'block_exaquest'), 'onClick="changeFormActionExaquest()"');
+        $mform->addElement('submit', 'saveandreturnexaquest', get_string('save_and_return', 'block_exaquest'),
+            'onClick="changeFormActionExaquest()"');
     }
+
+    return;
+}
+
+/**
+ * Inject the exaquest element into all moodle module settings forms.
+ *
+ * @param moodleform $formwrapper The moodle quickforms wrapper object.
+ * @param MoodleQuickForm $mform The actual form object (required to modify the form).
+ */
+function block_exaquest_question_definition_after_data($formwrapper, $mform) {
+    global $CFG, $COURSE, $DB, $PAGE;
+
+    return;
+}
+
+/**
+ * Inject the exaquest element into all moodle module settings forms.
+ *
+ * @param moodleform $formwrapper The moodle quickforms wrapper object.
+ * @param MoodleQuickForm $mform The actual form object (required to modify the form).
+ */
+function block_exaquest_instance_form_definition_after_data($formwrapper, $mform) {
+    global $CFG, $COURSE, $DB, $PAGE;
 
     return;
 }

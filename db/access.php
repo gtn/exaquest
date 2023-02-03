@@ -210,4 +210,16 @@ $capabilities = array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
     ),
+    'block/exaquest:seesimilaritytab' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+    ),
+    'block/exaquest:seeexamstab' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+    ),
+    'block/exaquest:seecategorytab' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+    ),
 );
