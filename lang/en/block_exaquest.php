@@ -96,6 +96,7 @@ $string['create_new_exam_button'] = 'create new exam';
 
 $string['request_questions'] = 'Request new questions';
 $string['questions_for_me_to_review'] = 'Questions for me to review';
+$string['questions_for_me_to_submit'] = 'Questions for me to submit';
 $string['questions_for_me_to_create'] = 'Questions for me to create';
 $string['questions_for_me_to_revise'] = 'Questions for me to revise';
 $string['questions_for_me_to_release'] = 'Questions for me to release';
@@ -105,7 +106,8 @@ $string['compare_questions'] = 'Compare questions';
 //Questionbank
 
 $string['show_all_questions'] = 'Show all questions';
-$string['show_my_created_questions'] = 'Show my created Questions';
+$string['show_my_created_questions'] = 'Show my created questions';
+$string['show_my_created_questions_to_submit'] = 'Show my created questions that I still have to submit';
 $string['show_all_qustions_to_review'] = 'Show all qustions to review';
 $string['show_questions_for_me_to_review'] = 'Show questions for me to review';
 $string['show_questions_to_revise'] = 'Show questions to revise';

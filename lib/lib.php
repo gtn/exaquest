@@ -33,8 +33,8 @@ const BLOCK_EXAQUEST_DB_QUIZSTATUS = 'block_exaquestquizstatus';
 /**
  * Question Status
  */
-const BLOCK_EXAQUEST_QUESTIONSTATUS_NEW = 0;
-const BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS = 1;
+const BLOCK_EXAQUEST_QUESTIONSTATUS_NEW = 0; // created by Fragenersteller and still need to be submitted for review
+const BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS = 1; // created by Fragenersteller and submitted for review
 const BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE = 2;
 const BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE = 3;
 const BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED = 4; // finalised == to release in most cases
@@ -65,13 +65,14 @@ const BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH = 1;
  */
 const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS = 0;
 const BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS = 1;
-const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW = 2;
-const BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW = 3;
-const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVISE = 4;
-const BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE = 5;
-const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE = 6;
-const BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_RELEASE = 7;
-const BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS = 8;
+const BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS_TO_SUBMIT = 2; // created but not submitted for review/assessment
+const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW = 3;
+const BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW = 4;
+const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVISE = 5;
+const BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE = 6;
+const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE = 7;
+const BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_RELEASE = 8;
+const BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS = 9;
 
 function block_exaquest_init_js_css() {
     global $PAGE, $CFG;
@@ -312,6 +313,29 @@ function block_exaquest_get_my_questionbankentries_count($coursecategoryid, $use
              AND qbe.ownerid = :ownerid";
 
     $questions = count($DB->get_records_sql($sql, array("coursecategoryid" => $coursecategoryid, "ownerid" => $userid)));
+
+    return $questions;
+}
+
+/**
+ * Returns count of all questionbankentries (all entries in exaquestqeustionstatus)
+ *
+ * @param $coursecategoryid
+ * @return array
+ */
+function block_exaquest_get_my_questionbankentries_to_submit_count($coursecategoryid, $userid) {
+    global $DB, $USER;
+    if (!$userid) {
+        $userid = $USER->id;
+    }
+    $sql = "SELECT qs.id
+              FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
+              JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid 
+             WHERE qs.coursecategoryid = :coursecategoryid
+             AND qbe.ownerid = :ownerid
+             AND qs.status = :newquestion";
+
+    $questions = count($DB->get_records_sql($sql, array("coursecategoryid" => $coursecategoryid, "ownerid" => $userid, "newquestion" => BLOCK_EXAQUEST_QUESTIONSTATUS_NEW)));
 
     return $questions;
 }

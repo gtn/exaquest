@@ -99,6 +99,7 @@ $string['create_new_exam_button'] = 'Neue Prüfung erstellen';
 
 $string['request_questions'] = 'Neue Frage anfordern';
 $string['questions_for_me_to_review'] = 'Fragen soll ich begutachten';
+$string['questions_for_me_to_submit'] = 'Fragen soll ich einreichen';
 $string['questions_for_me_to_create'] = 'Fragen soll ich erstellen';
 $string['questions_for_me_to_revise'] = 'Fragen soll ich überarbeiten';
 $string['questions_for_me_to_release'] = 'Fragen soll ich freigeben';
@@ -109,6 +110,7 @@ $string['compare_questions'] = 'Fragen vergleichen';
 
 $string['show_all_questions'] = 'Alle Fragen anzeigen';
 $string['show_my_created_questions'] = 'Meine erstelleten Fragen anzeigen';
+$string['show_my_created_questions_to_submit'] = 'Meine erstelleten Fragen die ich noch veröffentlichen muss anzeigen';
 $string['show_all_qustions_to_review'] = 'Fragen zur Begutachtung anzeigen';
 $string['show_questions_for_me_to_review'] = 'Meine Fragen zur Begutachtung anzeigen';
 $string['show_questions_to_revise'] = 'Fragen zur Überabeitung anzeigen';

@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * A search class to control whether hidden / deleted questions are hidden in the list.
  *
@@ -24,8 +23,6 @@
  */
 
 namespace core_question\bank\search;
-
-use core_question\local\bank\question_version_status;
 
 /**
  * This class controls whether hidden / deleted questions are hidden in the list.
@@ -44,7 +41,7 @@ class exaquest_filters extends condition {
     /**
      * Constructor.
      */
-    public function __construct($filterstatus=0) {
+    public function __construct($filterstatus = 0) {
         $this->filterstatus = $filterstatus;
 
     }
@@ -56,11 +53,15 @@ class exaquest_filters extends condition {
      */
     public function where() {
         global $USER;
-        switch($this->filterstatus){
+        switch ($this->filterstatus) {
             case BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS:
                 break;
             case BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS:
-                $this->where="qbe.ownerid = ".$USER->id;
+                $this->where = "qbe.ownerid = " . $USER->id;
+                break;
+            case BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS_TO_SUBMIT:
+                $this->where = "qbe.ownerid = " . $USER->id .
+                    " AND qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_NEW;
                 break;
             case BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW:
                 $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS .
@@ -89,7 +90,7 @@ class exaquest_filters extends condition {
                 $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED;
                 break;
         }
-        return  $this->where;
+        return $this->where;
     }
 
     /**
@@ -98,31 +99,49 @@ class exaquest_filters extends condition {
     public function display_options_adv() {
         global $PAGE, $COURSE;
 
-        $selected = array_fill(0, 9, '');
+        $selected = array_fill(0, 10, '');
         $selected[$this->filterstatus] = 'selected="selected"';
 
-
-        $html ='<div><div style="padding:5.5px;float:left">Select Questions:</div><select class="select custom-select searchoptions custom-select" id="id_filterstatus" style="margin-left:5px;margin-bottom:50px" name="filterstatus">';
-        if(has_capability('block/exaquest:readallquestions', \context_course::instance($COURSE->id))){
-            $html .= '<option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS] . ' value="' . BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS . '">' . get_string('show_all_questions', 'block_exaquest') . '</option>';
+        $html =
+            '<div><div style="padding:5.5px;float:left">Select Questions:</div><select class="select custom-select searchoptions custom-select" id="id_filterstatus" style="margin-left:5px;margin-bottom:50px" name="filterstatus">';
+        if (has_capability('block/exaquest:readallquestions', \context_course::instance($COURSE->id))) {
+            $html .= '<option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS] . ' value="' .
+                BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS . '">' . get_string('show_all_questions', 'block_exaquest') . '</option>';
         }
-        $html.= '    <optgroup label="'.get_string('created', 'block_exaquest').'">';
-        $html.= '        <option '.$selected[BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS].' value="'.BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS.'">'.get_string('show_my_created_questions', 'block_exaquest').'</option>';
-        $html.= '    </optgroup>';
-        $html.= '    <optgroup label="'.get_string('review', 'block_exaquest').'">';
-        $html.= '        <option '.$selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW].' value="'.BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW.'">'.get_string('show_all_qustions_to_review', 'block_exaquest').'</option>';
-        $html.= '        <option '.$selected[BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW].' value="'.BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW.'">'.get_string('show_questions_for_me_to_review', 'block_exaquest').'</option>';
-        $html.= '    </optgroup>';
-        $html.= '    <optgroup label="'.get_string('revise', 'block_exaquest').'">';
-        $html.= '        <option '.$selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVISE].' value="'.BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVISE.'">'.get_string('show_questions_to_revise', 'block_exaquest').'</option>';
-        $html.= '        <option '.$selected[BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE].' value="'.BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE.'">'.get_string('show_questions_for_me_to_revise', 'block_exaquest').'</option>';
-        $html.= '    </optgroup>';
-        $html.= '    <optgroup label="'.get_string('release', 'block_exaquest').'">';
-        $html.= '        <option '.$selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE].' value="'.BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE.'">'.get_string('show_questions_to_release', 'block_exaquest').'</option>';
+        $html .= '    <optgroup label="' . get_string('created', 'block_exaquest') . '">';
+        $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS] . ' value="' .
+            BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS . '">' . get_string('show_my_created_questions', 'block_exaquest') .
+            '</option>';
+        $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS_TO_SUBMIT] . ' value="' .
+            BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS_TO_SUBMIT . '">' .
+            get_string('show_my_created_questions_to_submit', 'block_exaquest') . '</option>';
+        $html .= '    </optgroup>';
+        $html .= '    <optgroup label="' . get_string('review', 'block_exaquest') . '">';
+        $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW] . ' value="' .
+            BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW . '">' .
+            get_string('show_all_qustions_to_review', 'block_exaquest') . '</option>';
+        $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW] . ' value="' .
+            BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW . '">' .
+            get_string('show_questions_for_me_to_review', 'block_exaquest') . '</option>';
+        $html .= '    </optgroup>';
+        $html .= '    <optgroup label="' . get_string('revise', 'block_exaquest') . '">';
+        $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVISE] . ' value="' .
+            BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVISE . '">' . get_string('show_questions_to_revise', 'block_exaquest') .
+            '</option>';
+        $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE] . ' value="' .
+            BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE . '">' .
+            get_string('show_questions_for_me_to_revise', 'block_exaquest') . '</option>';
+        $html .= '    </optgroup>';
+        $html .= '    <optgroup label="' . get_string('release', 'block_exaquest') . '">';
+        $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE] . ' value="' .
+            BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE . '">' .
+            get_string('show_questions_to_release', 'block_exaquest') . '</option>';
         //$html.= '        <option '.$selected[BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_RELEASE].' value="'.BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_RELEASE.'">'.get_string('show_questions_for_me_to_release', 'block_exaquest').'</option>';
-        $html.= '        <option '.$selected[BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS].' value="'.BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS.'">'.get_string('show_all_released_questions', 'block_exaquest').'</option>';
-        $html.= '    </optgroup>';
-        $html.= '</select></div>';
+        $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS] . ' value="' .
+            BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS . '">' .
+            get_string('show_all_released_questions', 'block_exaquest') . '</option>';
+        $html .= '    </optgroup>';
+        $html .= '</select></div>';
 
         return $html;
     }
