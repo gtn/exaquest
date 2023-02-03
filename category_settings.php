@@ -35,25 +35,37 @@ echo $output->header($context, $courseid, get_string('exams_overview', 'block_ex
 if( $action == "submit"){
     $DB->delete_records("block_exaquestcategories");
     if($fragencharakter != null){
-        $fragencharakterarray = explode(',', $fragencharakter);
+        $fragencharakterarray = explode(PHP_EOL, $fragencharakter);
+        if(end($fragencharakterarray) == ""){
+            array_pop($fragencharakterarray);
+        }
         foreach($fragencharakterarray as $fragencharakter){
             $DB->insert_record("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $fragencharakter, "categorytype"=> 0));
         }
     }
     if(klassifikation != null){
-        $klassifikationarray = explode(',', $klassifikation);
+        $klassifikationarray = explode(PHP_EOL, $klassifikation);
+        if(end($klassifikationarray) == ""){
+            array_pop($klassifikationarray);
+        }
         foreach($klassifikationarray as $klassifikation){
             $DB->insert_record("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $klassifikation, "categorytype"=> 1));
         }
     }
     if($fragefach != null){
-        $fragefacharray = explode(',', $fragefach);
+        $fragefacharray = explode(PHP_EOL, $fragefach);
+        if(end($fragefacharray) == ""){
+            array_pop($fragefacharray);
+        }
         foreach($fragefacharray as $fragefach){
             $DB->insert_record("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $fragefach, "categorytype"=> 2));
         }
     }
     if($lehrinhalt != null){
-        $lehrinhaltarray = explode(',', $lehrinhalt);
+        $lehrinhaltarray = explode(PHP_EOL, $lehrinhalt);
+        if(end($lehrinhaltarray) == ""){
+            array_pop($lehrinhaltarray);
+        }
         foreach($lehrinhaltarray as $lehrinhalt){
             $DB->insert_record("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $lehrinhalt, "categorytype"=> 3));
         }
