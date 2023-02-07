@@ -119,7 +119,7 @@ function block_exaquest_request_question($userfrom, $userto, $comment) {
     $subject = get_string('please_create_new_questions_subject', 'block_exaquest', $messageobject);
 
     block_exaquest_send_moodle_notification("newquestionsrequest", $userfrom, $userto, $subject, $message,
-        "Frageerstellung");
+        "Frageerstellung", $messageobject->url);
 }
 
 function block_exaquest_request_review($userfrom, $userto, $comment, $questionbankentryid, $questionname, $catAndCont, $courseid) {
@@ -144,7 +144,7 @@ function block_exaquest_request_review($userfrom, $userto, $comment, $questionba
     $message = get_string('please_review_question', 'block_exaquest', $messageobject);
     $subject = get_string('please_review_question_subject', 'block_exaquest', $messageobject);
     block_exaquest_send_moodle_notification("reviewquestion", $userfrom->id, $userto, $subject, $message,
-        "Review");
+        "Review", $messageobject->url);
 }
 
 function block_exaquest_request_revision($userfrom, $userto, $comment, $questionbankentryid, $questionname, $catAndCont,
@@ -170,7 +170,7 @@ function block_exaquest_request_revision($userfrom, $userto, $comment, $question
     $message = get_string('please_revise_question', 'block_exaquest', $messageobject);
     $subject = get_string('please_revise_question_subject', 'block_exaquest', $messageobject);
     block_exaquest_send_moodle_notification("revisequestion", $userfrom->id, $userto, $subject, $message,
-        "Revise");
+        "Revise", $messageobject->url);
 }
 
 function block_exaquest_send_moodle_notification($notificationtype, $userfrom, $userto, $subject, $message, $context,
