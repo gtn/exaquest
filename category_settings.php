@@ -33,14 +33,17 @@ $output = $PAGE->get_renderer('block_exaquest');
 echo $output->header($context, $courseid, get_string('exams_overview', 'block_exaquest'));
 
 if( $action == "submit"){
-    $DB->delete_records("block_exaquestcategories");
+    $check = $DB->get_fieldset_select("block_exaquestcategories", "categoryname", 'coursecategoryid = :coursecategoryid',
+        ['coursecategoryid' => $COURSE->category]);
     if($fragencharakter != null){
         $fragencharakterarray = explode(PHP_EOL, $fragencharakter);
         if(end($fragencharakterarray) == ""){
             array_pop($fragencharakterarray);
         }
         foreach($fragencharakterarray as $fragencharakter){
-            $DB->insert_record("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $fragencharakter, "categorytype"=> 0));
+            if(! $DB->record_exists("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $fragencharakter, "categorytype"=> 0))) {
+                $DB->insert_record("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $fragencharakter, "categorytype" => 0));
+            }
         }
     }
     if(klassifikation != null){
@@ -49,7 +52,9 @@ if( $action == "submit"){
             array_pop($klassifikationarray);
         }
         foreach($klassifikationarray as $klassifikation){
-            $DB->insert_record("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $klassifikation, "categorytype"=> 1));
+            if(! $DB->record_exists("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $klassifikation, "categorytype"=> 1))){
+                $DB->insert_record("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $klassifikation, "categorytype"=> 1));
+            }
         }
     }
     if($fragefach != null){
@@ -57,8 +62,10 @@ if( $action == "submit"){
         if(end($fragefacharray) == ""){
             array_pop($fragefacharray);
         }
-        foreach($fragefacharray as $fragefach){
-            $DB->insert_record("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $fragefach, "categorytype"=> 2));
+        foreach($fragefacharray as $fragefach) {
+            if (!$DB->record_exists("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $fragefach, "categorytype" => 2))) {
+                $DB->insert_record("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $fragefach, "categorytype" => 2));
+            }
         }
     }
     if($lehrinhalt != null){
@@ -66,8 +73,17 @@ if( $action == "submit"){
         if(end($lehrinhaltarray) == ""){
             array_pop($lehrinhaltarray);
         }
-        foreach($lehrinhaltarray as $lehrinhalt){
-            $DB->insert_record("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $lehrinhalt, "categorytype"=> 3));
+        foreach($lehrinhaltarray as $lehrinhalt) {
+            if (!$DB->record_exists("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $lehrinhalt, "categorytype" => 3))) {
+                $DB->insert_record("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $lehrinhalt, "categorytype" => 3));
+            }
+        }
+    }
+    $newcontent = array_merge($fragencharakterarray, $klassifikationarray, $fragefacharray, $lehrinhaltarray);
+
+    foreach($check as $cat){
+        if(!in_array($cat, $newcontent)){
+            $DB->delete_records("block_exaquestcategories", array("categoryname" => $cat));
         }
     }
 }
