@@ -14,8 +14,16 @@ list($thispageurl, $contexts, $cmid, $cm, $module, $pagevars) =
 
 $courseid = required_param('courseid', PARAM_INT);
 $filterstatus = optional_param('filterstatus',0, PARAM_INT);
+$fragencharakter = optional_param('fragencharakter',-1, PARAM_INT);
+$klassifikation = optional_param('klassifikation',-1, PARAM_INT);
+$fragefach = optional_param('fragefach',-1, PARAM_INT);
+$lehrinhalt = optional_param('lehrinhalt',-1, PARAM_INT);
 
 $pagevars['filterstatus'] = $filterstatus;
+$pagevars['fragencharakter'] = $fragencharakter;
+$pagevars['klassifikation'] = $klassifikation;
+$pagevars['fragefach'] = $fragefach;
+$pagevars['lehrinhalt'] = $lehrinhalt;
 
 $page_params = array('courseid' => $courseid);
 

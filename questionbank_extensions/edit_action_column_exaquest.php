@@ -62,4 +62,8 @@ class edit_action_column_exaquest extends edit_action_column {
             return [null, null, null];
         }
     }
+
+    public function get_extra_joins(): array {
+        return ['cfd' => 'JOIN {customfield_data} cfd ON q.id = cfd.instanceid'];
+    }
 }

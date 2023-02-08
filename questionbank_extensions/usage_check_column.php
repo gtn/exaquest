@@ -52,17 +52,20 @@ class usage_check_column extends column_base {
                                    WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?", array($quizid, $question->questionbankentryid))){
             echo '<div class="p-3 mb-2 bg-secondary text-center text-white">Already used in this exam</div>';
         } else {
+            /*
             $cnt = $DB->count_records_sql("SELECT *
                                         FROM {block_exaquestquizstatus} eqst
                                          JOIN {quiz_slots} qs ON eqst.quizid = qs.quizid
                                          JOIN {question_references} qr ON qr.itemid = qs.id
                                             WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?", array($quizid, $question->questionbankentryid));
+
+
             if($cnt>0){
                 echo '<div class="p-3 mb-2 bg-success text-center text-white">'.$cnt.' times used</div>';
             } else {
                 echo '<div class="p-3 mb-2 bg-success text-center text-white">Not used</div>';
             }
-
+            */
         }
 
 

@@ -12,6 +12,7 @@ require_once('change_status.php');
 require_once('plugin_feature.php');
 require_once('edit_action_column_exaquest.php');
 require_once('filters/exaquest_filters.php');
+require_once('filters/exaquest_questioncategoryfilter.php');
 require_once('filters/category_condition_exaquest.php');
 require_once('edit_action_column_exaquest.php');
 require_once('delete_action_column_exaquest.php');
@@ -148,6 +149,10 @@ class exaquest_view extends view {
         $showquestiontext = $pagevars['qbshowtext'];
         $tagids = [];
         $filterstatus = $pagevars['filterstatus'];
+        $fragencharakter = $pagevars['fragencharakter'];
+        $klassifikation = $pagevars['klassifikation'];
+        $fragefach = $pagevars['fragefach'];
+        $lehrinhalt = $pagevars['lehrinhalt'];
 
 
         if (!empty($pagevars['qtagids'])) {
@@ -160,7 +165,7 @@ class exaquest_view extends view {
 
 
         // Show the filters and search options.
-        $this->wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus);
+        $this->wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus, $fragencharakter, $klassifikation, $fragefach,  $lehrinhalt);
 
         // Continues with list of questions.
         $this->display_question_list($this->baseurl, $cat, null, $page, $perpage,
@@ -179,7 +184,7 @@ class exaquest_view extends view {
      * @param array $editcontexts parent contexts
      * @param bool $showquestiontext whether the text of each question should be shown in the list
      */
-    public function wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus=0): void {
+    public function wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus=0, $fragencharakter=-1, $klassifikation=-1, $fragefach=-1,  $lehrinhalt=-1): void {
         global $CFG;
         list(, $contextid) = explode(',', $cat);
         $catcontext = \context::instance_by_id($contextid);
@@ -205,6 +210,7 @@ class exaquest_view extends view {
 
                 //array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
                 array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_filters($filterstatus));
+                array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_questioncategoryfilter($fragencharakter, $klassifikation, $fragefach,  $lehrinhalt));
                 //array_unshift($this->searchconditions, new \core_question\bank\search\category_condition_exaquest($cat, $recurse, $editcontexts, $this->baseurl, $this->course));
             }
         }
@@ -290,6 +296,9 @@ class exaquest_view extends view {
 
         $this->build_query();
 
+        //var_dump($this->loadsql);
+        //die;
+
         $totalnumber = $this->get_question_count();
         if ($totalnumber == 0) {
             return;
@@ -371,6 +380,16 @@ class exaquest_view extends view {
         }
     }
 
-
+    protected function load_page_questions($page, $perpage): \moodle_recordset {
+        //this funciton calls the sql query and allows me to adjust questions that will get selected
+        global $DB;
+        $questions = $DB->get_recordset_sql($this->loadsql, $this->sqlparams, $page * $perpage, $perpage);
+        if (empty($questions)) {
+            $questions->close();
+            // No questions on this page. Reset to page 0.
+            $questions = $DB->get_recordset_sql($this->loadsql, $this->sqlparams, 0, $perpage);
+        }
+        return $questions;
+    }
 
 }
