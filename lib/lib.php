@@ -703,7 +703,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:executeexam', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('enrol/category:seesimilaritytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seesimilaritytab', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungskoordination'])) {
         $roleid = create_role('Prüfungskoordination', 'pruefungskoordination', '', 'manager');
@@ -736,9 +736,9 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:definequestionblockingtime', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('enrol/category:seesimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('enrol/category:seeexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('enrol/category:seecategorytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seesimilaritytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seeexamstab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seecategorytab', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
         $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '', 'manager');
@@ -760,9 +760,9 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:addquestiontoexam', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('enrol/category:seesimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('enrol/category:seeexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('enrol/category:seecategorytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seesimilaritytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seeexamstab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seecategorytab', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'modulverantwortlicher'])) {
         $roleid = create_role('Modulverantwortlicher', 'modulverantwortlicher', '', 'manager');
@@ -791,9 +791,9 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:editallquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('enrol/category:seesimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('enrol/category:seeexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('enrol/category:seecategorytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seesimilaritytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seeexamstab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seecategorytab', CAP_ALLOW, $roleid, $context);
 
     //added during development
     assign_capability('block/exaquest:showquestionstoreview', CAP_ALLOW, $roleid, $context);
@@ -845,9 +845,9 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:editquestiontoreview', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('enrol/category:seesimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('enrol/category:seeexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('enrol/category:seecategorytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seesimilaritytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seeexamstab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seecategorytab', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'beurteilungsmitwirkende'])) {
         $roleid = create_role('Beurteilungsmitwirkende', 'beurteilungsmitwirkende', '', 'manager');
@@ -866,9 +866,9 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:beurteilungsmitwirkende', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('enrol/category:seesimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('enrol/category:seeexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('enrol/category:seecategorytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seesimilaritytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seeexamstab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seecategorytab', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlicherpruefer'])) {
         $roleid = create_role('fachlicher Prüfer', 'fachlicherpruefer', '', 'manager');
@@ -891,9 +891,9 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:assignsecondexaminator', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('enrol/category:seesimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('enrol/category:seeexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('enrol/category:seecategorytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seesimilaritytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seeexamstab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seecategorytab', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsmitwirkende'])) {
         $roleid = create_role('Prüfungsmitwirkende', 'pruefungsmitwirkende', '', 'manager');
@@ -913,9 +913,9 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:addquestiontoexam', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('enrol/category:seesimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('enrol/category:seeexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('enrol/category:seecategorytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seesimilaritytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seeexamstab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seecategorytab', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlicherzweitpruefer'])) {
         $roleid = create_role('Fachlicher Zweitprüfer', 'fachlicherzweitpruefer', '', 'manager');
@@ -934,9 +934,9 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:fachlicherzweitpruefer', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('enrol/category:seesimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('enrol/category:seeexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('enrol/category:seecategorytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seesimilaritytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seeexamstab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seecategorytab', CAP_ALLOW, $roleid, $context);
 
     //
     //role_assign($roleid, $USER->id, $contextid);
