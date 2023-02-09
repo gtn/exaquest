@@ -13,8 +13,6 @@ $string['exams'] = 'Exams';
 $string['category_settings'] = 'Category settings';
 $string['save_and_return'] = 'Save and return to Exaquest';
 
-
-
 $string['request_questions_label'] = 'Request new questions from ...';
 $string['request_questions_comment_placeholder'] = 'Which kind of question is needed? Optional';
 $string['request_questions_button'] = 'Request';
@@ -22,17 +20,13 @@ $string['revise_questions_label'] = 'The following questions are marked for revi
 $string['formal_review_questions_label'] = 'The following questions are marked for formal finalisation: ';
 $string['fachlich_review_questions_label'] = 'The following questions are marked for specialist finalisation: ';
 
-
 $string['mark_as_done'] = 'Mark as done';
 $string['mark_selected_as_done_button'] = 'Mark selected requests as done';
 
-
-
-
-
 // Messages
 $string['messageprovider:newquestionsrequest'] = 'New questions have been requested';
-$string['please_create_new_questions'] = 'Please create new questions in <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
+$string['please_create_new_questions'] =
+    'Please create new questions in <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['please_create_new_questions_subject'] = 'Please create new questions in {$a->fullname}';
 
 $string['messageprovider:revisequestion'] = 'Questions have been assigned for revision';
@@ -43,13 +37,10 @@ $string['messageprovider:reviewquestion'] = 'Questions have been assigned for re
 $string['please_review_question'] = 'Please review question <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['please_review_question_subject'] = 'Please review question {$a->fullname}';
 
-
-
 // Roles and Capabilities
 $string['exaquest:fragenersteller'] = 'Create questions in Exaquest block';
 $string['exaquest:modulverantwortlicher'] = 'Responsible for a module';
 $string['setuproles'] = 'Set up roles and capabilities';
-
 
 // Exams
 $string['create_new_exam'] = 'Create new exam';
@@ -66,9 +57,6 @@ $string['finished_exams'] = 'Finished exams';
 $string['exams_grades_released'] = 'Exams where grades have been released';
 $string['add_questions_to_these_exams'] = 'Add questions to these exams';
 $string['usage_check_column'] = 'Usage checker';
-
-
-
 
 // Dasboardcard
 $string['questions_overview_title'] = 'QUESTIONS';
@@ -90,7 +78,6 @@ $string['my_questions_count'] = 'questions from me';
 $string['my_questions_finalised_count'] = 'of my questions are finalised / reviewed';
 $string['my_questions_to_review_count'] = 'of my questions have to be reviewed';
 
-
 $string['list_of_exams_with_status'] = 'List of exams with status:';
 $string['create_new_exam_button'] = 'create new exam';
 
@@ -101,7 +88,6 @@ $string['questions_for_me_to_create'] = 'Questions for me to create';
 $string['questions_for_me_to_revise'] = 'Questions for me to revise';
 $string['questions_for_me_to_release'] = 'Questions for me to release';
 $string['compare_questions'] = 'Compare questions';
-
 
 //Questionbank
 
@@ -131,17 +117,14 @@ $string['release_question_warning'] = 'Are you sure you want to skip the review 
 $string['release_question_warning_title'] = 'Warning';
 $string['change_status'] = 'change status';
 
-
 $string['open_for_review_text'] = 'Assign review to..';
 $string['revise_text'] = 'Assign revision to..';
 $string['open_for_review_title'] = 'Review';
 $string['revise_title'] = 'Revision';
 
-
 //Category Settings
 $string['settings_title'] = 'Category Settings';
 $string['settings_description'] = 'Please enter one category per row';
-
 
 // Similarity Comparison
 $string['exaquest:similarity_title'] = 'Similarity Comparison';
@@ -179,11 +162,14 @@ $string['exaquest:similarity_settings_algorithm_desc'] = 'Similarity Comparison 
 $string['exaquest:similarity_settings_algorithm_jarowinkler'] = 'Jaro Winkler';
 $string['exaquest:similarity_settings_algorithm_smithwaterman'] = 'Smith Waterman Gotoh';
 $string['exaquest:similarity_settings_threshold'] = 'Threshold [0.0-1.0]';
-$string['exaquest:similarity_settings_threshold_desc'] = 'Defines the threshold for considering two questions similar, range [0.0-1.0]';
+$string['exaquest:similarity_settings_threshold_desc'] =
+    'Defines the threshold for considering two questions similar, range [0.0-1.0]';
 $string['exaquest:similarity_settings_jwminprefixlength'] = 'Jaro Winkler - Minimum Prefix Length';
-$string['exaquest:similarity_settings_jwminprefixlength_desc'] = 'Jaro–Winkler similarity uses a prefix scale p which gives more favorable ratings to strings that match from the beginning for a set prefix length';
+$string['exaquest:similarity_settings_jwminprefixlength_desc'] =
+    'Jaro–Winkler similarity uses a prefix scale p which gives more favorable ratings to strings that match from the beginning for a set prefix length';
 $string['exaquest:similarity_settings_jwprefixscale'] = 'Jaro Winkler - Minimum Prefix Scale';
-$string['exaquest:similarity_settings_jwprefixscale_desc'] = 'The prefix scale should not exceed 1/minPrefixLength, otherwise the similarity may be greater than 1, i.e. for a prefix length of 4, the scale should not exceed 0.25';
+$string['exaquest:similarity_settings_jwprefixscale_desc'] =
+    'The prefix scale should not exceed 1/minPrefixLength, otherwise the similarity may be greater than 1, i.e. for a prefix length of 4, the scale should not exceed 0.25';
 $string['exaquest:similarity_settings_swgmatchmalue'] = 'Smith Waterman Gotoh - Match Value';
 $string['exaquest:similarity_settings_swgmatchmalue_desc'] = 'value when characters are equal (must be greater than mismatchValue)';
 $string['exaquest:similarity_settings_swgmismatchvalue'] = 'Smith Waterman Gotoh - Mismatch Value';
@@ -191,4 +177,61 @@ $string['exaquest:similarity_settings_swgmismatchvalue_desc'] = 'penalty when ch
 $string['exaquest:similarity_settings_swggapvalue'] = 'Smith Waterman Gotoh - Gap Value';
 $string['exaquest:similarity_settings_swggapvalue_desc'] = 'a non-positive gap penalty';
 $string['exaquest:similarity_settings_nrofthreads'] = 'Number of threads';
-$string['exaquest:similarity_settings_nrofthreads_desc'] = 'if this value is greater than 1, it will utilize a multi-threaded implementation to compute the similarity, which should be much more performant for greater datasets';
+$string['exaquest:similarity_settings_nrofthreads_desc'] =
+    'if this value is greater than 1, it will utilize a multi-threaded implementation to compute the similarity, which should be much more performant for greater datasets';
+
+// capabilites
+$string['exaquest:myaddinstance'] = 'myaddinstance';
+$string['exaquest:addinstance'] =   'addinstance';
+
+$string['exaquest:fragenersteller'] = 'Fragenersteller';
+$string['exaquest:modulverantwortlicher'] = 'Modulverantwortlicher';
+$string['exaquest:admintechnpruefungsdurchf'] ='Admintechnischeprüfungsdurchführung';
+$string['exaquest:pruefungskoordination'] ='Prüfungskoordination';
+$string['exaquest:pruefungsstudmis'] ='Prüfungsstudentischermitarbeiter';
+$string['exaquest:fachlfragenreviewer'] ='Fachlicherfragenreviewer';
+$string['exaquest:beurteilungsmitwirkende'] ='Beurteilungsmitwirkende';
+$string['exaquest:fachlicherpruefer'] ='Fachlicherprüfer';
+$string['exaquest:pruefungsmitwirkende'] ='Prüfungsmitwirkende';
+$string['exaquest:fachlicherzweitpruefer'] ='Fachlicherzweitprüfer';
+
+$string['exaquest:readallquestions'] = 'Lesen aller Fragen im freigegebene Fragenpool des zugeordneten Moduls (Module)';
+$string['exaquest:readquestionstatistics'] = 'Fragenstatistik abfragen (Anzahl Fragen je Status, je Kategorie, je QS-Kennzahl...)';
+$string['exaquest:changestatusofreleasedquestions'] = 'Kommentar / Markierung von freigegebenen fremden Fragen im Fragenpool (zB Status-Änderung auf "Qualitätsprüfung erforderlich" Kommentar hier verpflichtend – Frage wird aus Fragenpool entfernt, kann nicht mehr zur Prüfung verwendet werden, bis wieder "Frage freigegeben"). ';
+$string['exaquest:createquestion'] = 'Erstellen einer neuen Frage';
+$string['exaquest:setstatustoreview'] = 'Neue / geänderte eigene Frage zum Review freigeben (Status "zum Review": fachlichen Reviewer eintragen, automatisch auch zur Prüfungskoordination) (Eventuell optional ZML klärt mit MOVER)';
+$string['exaquest:reviseownquestion'] = 'Überarbeitung der eigenen Fragen';
+$string['exaquest:setstatustofinalised'] = 'Eigene Frage für Fragenpool freigeben (Status "Frage finalisiert")';
+$string['exaquest:showownrevisedquestions'] = 'Anzeige der begutachteten eigenen Fragen im Dashboard ';
+$string['exaquest:showquestionstoreview'] = 'Anzeige zum Review zugeordnete Fragen (nur vom Modul, wo Zugriff besteht) im Dashboard';
+$string['exaquest:editquestiontoreview'] = 'Zum Review zugeordnete Fragen bearbeiten (neue Version erstellen) und/oder kommentieren  (Status: "Frage begutachtet" - dann automatisch zurück zum Fragenersteller – wenn keine Änderungen/Kommentar dann Status: "Frage finalisiert" – dann automatisch zum MOVE)';
+$string['exaquest:showfinalisedquestions'] = 'Anzeige der finalisierten Fragen im Dashboard';
+$string['exaquest:showquestionstorevise'] = 'Anzeige der zur Begutachtung markierten Fragen ("Qualitätsprüfung erforderlich") im Dashboard';
+$string['exaquest:releasequestion'] = 'Frage in Fragenpool aufnehmen (Status "Frage freigegeben")';
+$string['exaquest:editallquestions'] = 'Überarbeitung aller Fragen im zugeordneten Fragenpool inkl. Statusänderung';
+$string['exaquest:addquestiontoexam'] = 'Frage einer Prüfung zuordnen (Status "Frage zur Prüfung zugeordnet")';
+$string['exaquest:releaseexam'] = 'Prüfung zur Durchführung freigeben (Status "Prüfung freigegeben")';
+$string['exaquest:technicalreview'] = 'Technische Prüfung (existiert bereits) (Status: "Prüfung technisch freigegeben"';
+$string['exaquest:executeexam'] = 'Prüfung durchführen - Passwort vergeben/bekannt geben, Prüfung sichtbar stellen, Dauer einstellen - automatische Abgabe (Status: "Prüfung in Durchführung")';
+$string['exaquest:assignsecondexaminator'] = 'Zweitprüfer für kommissionelle Prüfung festlegen (zwei Zweitprüfer)';
+$string['exaquest:definequestionblockingtime'] = 'Zeitraum für Fragensperre festlegen (default 1 Jahr)';
+$string['exaquest:showexamresults'] = 'Prüfungsergebnisse einsehen (Status: "Prüfung abgeschlossen")';
+$string['exaquest:gradeexam'] = 'Prüfung beurteilen (Status "Prüfung beurteilt")';
+$string['exaquest:createexamstatistics'] = '(Qualitäts-)Statistik zur Prüfung und der verwendeten Fragen generieren';
+$string['exaquest:showexamstatistics'] = '(Qualitäts-)Statistik zur Prüfung und der verwendeten Fragen ansehen';
+$string['exaquest:correctexam'] = 'Prüfung korrigieren (Fragen aus der Beurteilung nehmen – Zweitprüfer festlegen: Eine Person) (Status Prüfung: "Beurteilung geändert")';
+$string['exaquest:acknowledgeexamcorrection'] = 'Korrigierte Prüfung bestätigen (Status Prüfung; "Beurteilungsänderung bestätigt")';
+$string['exaquest:releaseexamgrade'] = 'Beurteilung freigeben (Status "Prüfungsbeurteilung freigegeben")';
+$string['exaquest:releasecommissionalexamgrade'] = 'Beurteilung kommissioneller Prüfung freigeben (Status "Kommissionelle Prüfungsbeurteilung freigegeben") VERPFLICHTEND von 3 Personen';
+$string['exaquest:exportgradestokusss'] = 'Notenexport ins KUSSS';
+$string['exaquest:executeexamreview'] = 'Prüfungseinsicht durchführen';
+$string['exaquest:addparticipanttomodule'] = 'Personen einem Modul zuordnen';
+$string['exaquest:assignroles'] = 'Rollen zuordnen';
+$string['exaquest:changerolecapabilities'] = 'Rechte in den Rollen ändern (doppelte Anmeldung: neue Nutzerdatenanmeldung, um nicht versehentlich etwas zu ändern)';
+$string['exaquest:createroles'] = 'Neue Rolle anlegen und Rechte zuweisen (doppelte Anmeldung: neue Nutzerdatenanmeldung, um nicht versehentlich etwas zu ändern)';
+
+    // Defined during development
+$string['exaquest:seestatistic'] = 'see statistics tab in exaquest';
+$string['exaquest:seesimilaritytab'] = 'See similarity tab in exaquest';
+$string['exaquest:seeexamstab'] = 'See exams tab in exaquest';
+$string['exaquest:seecategorytab'] = 'See category tab in exaquest';
