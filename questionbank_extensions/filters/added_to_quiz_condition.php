@@ -42,7 +42,7 @@ class added_to_quiz_condition extends condition {
 
         $quizid = optional_param('quizid', null, PARAM_INT);
 
-        /*$this->where = "EXISTS(SELECT *
+        /*$this->where = "qbe.id IN (SELECT qref.
                         FROM {question_references} qref
                         JOIN {quiz_slots} qusl ON qref.itemid = qusl.id
                         WHERE qref.component='mod_quiz' AND qref.questionarea = 'slot' AND qusl.quizid = qbe.id)";

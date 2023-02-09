@@ -52,20 +52,30 @@ class usage_check_column extends column_base {
                                    WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?", array($quizid, $question->questionbankentryid))){
             echo '<div class="p-3 mb-2 bg-secondary text-center text-white">Already used in this exam</div>';
         } else {
-            /*
-            $cnt = $DB->count_records_sql("SELECT *
-                                        FROM {block_exaquestquizstatus} eqst
-                                         JOIN {quiz_slots} qs ON eqst.quizid = qs.quizid
-                                         JOIN {question_references} qr ON qr.itemid = qs.id
-                                            WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?", array($quizid, $question->questionbankentryid));
+            $prevuses = $DB->get_records_sql("SELECT qu.id, qu.timemodified
+                                    FROM {question_references} qr
+                                         JOIN {quiz_slots} qs ON qr.itemid = qs.id
+                                         JOIN {quiz} qu ON qu.id = qs.quizid
+                                         JOIN {course} c ON c.id = qu.course
+                                   WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND c.category = ? AND qr.questionbankentryid = ?", array($COURSE->category, $question->questionbankentryid));
+            $prevusescnt = count($prevuses);
 
+            $last = 0;
+            foreach($prevuses as $prevuse){
+                if($prevuse->timemodified > $last){
+                    $last = $prevuse->timemodified;
+                }
+            }
 
-            if($cnt>0){
-                echo '<div class="p-3 mb-2 bg-success text-center text-white">'.$cnt.' times used</div>';
+            $date = new \DateTime();
+            $date->setTimestamp($last);
+
+            if($prevusescnt>0){
+                echo '<div class="p-3 mb-2 bg-success text-center text-white">'.$prevusescnt.' times used, last on '. $date->format('Y-m-d').'</div>';
             } else {
                 echo '<div class="p-3 mb-2 bg-success text-center text-white">Not used</div>';
             }
-            */
+
         }
 
 
