@@ -55,6 +55,7 @@ class exaquest_exam_view extends exaquest_view {
         if($quizid!=null){
             $quizname = $DB->get_field("quiz", "name", array("id"=>$quizid));
         }
+        
         echo $OUTPUT->heading(get_string('questionbank_selected_quiz', 'block_exaquest').''. $quizname, 2);
     }
 
@@ -183,6 +184,7 @@ class exaquest_exam_view extends exaquest_view {
         $questionbankclasscolumns["history_action_column"] = $specialplugincolumnobjects[3];
         $questionbankclasscolumns["add_to_quiz"] = $specialplugincolumnobjects[4];
         $questionbankclasscolumns["usage_check_column"] = $specialplugincolumnobjects[5];
+        $questionbankclasscolumns["category_options"] = $specialplugincolumnobjects[6];
 
 
 
