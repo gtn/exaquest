@@ -92,4 +92,8 @@ echo $html;
 
 
     }
+    public function get_extra_joins(): array {
+        return ['qref' => 'LEFT JOIN {question_references} qref ON qbe.id = qref.questionbankentryid',
+            'qusl' => 'LEFT JOIN {quiz_slots} qusl ON qref.itemid = qusl.id'];
+    }
 }
