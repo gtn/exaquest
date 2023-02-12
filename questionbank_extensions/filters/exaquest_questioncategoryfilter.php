@@ -41,11 +41,10 @@ class exaquest_questioncategoryfilter extends condition {
     protected $fragefach;
     protected $lehrinhalt;
 
-
     /**
      * Constructor.
      */
-    public function __construct($fragencharakter = -1, $klassifikation = -1, $fragefach = -1,  $lehrinhalt = -1) {
+    public function __construct($fragencharakter = -1, $klassifikation = -1, $fragefach = -1, $lehrinhalt = -1) {
         $this->fragencharakter = $fragencharakter;
         $this->klassifikation = $klassifikation;
         $this->fragefach = $fragefach;
@@ -61,65 +60,65 @@ class exaquest_questioncategoryfilter extends condition {
     public function where() {
         global $USER;
         $this->where = '';
-        if($this->fragencharakter != -1){
-            if($this->where == ''){
+        if ($this->fragencharakter != -1) {
+            if ($this->where == '') {
                 $this->where .= "q.id IN (SELECT q.id
                                        FROM {question} q
                                        JOIN {customfield_data} cfd
                                        ON q.id = cfd.instanceid
-                                       WHERE cfd.value like '%".$this->fragencharakter."%')";
+                                       WHERE cfd.value like '%" . $this->fragencharakter . "%')";
             } else {
                 $this->where .= "AND q.id IN (SELECT q.id
                                        FROM {question} q
                                        JOIN {customfield_data} cfd
                                        ON q.id = cfd.instanceid
-                                       WHERE cfd.value like '%".$this->fragencharakter."%')";
+                                       WHERE cfd.value like '%" . $this->fragencharakter . "%')";
             }
 
         }
-        if($this->klassifikation != -1){
-            if($this->where == ''){
+        if ($this->klassifikation != -1) {
+            if ($this->where == '') {
                 $this->where .= "q.id IN (SELECT q.id
                                        FROM {question} q
                                        JOIN {customfield_data} cfd
                                        ON q.id = cfd.instanceid
-                                       WHERE cfd.value like '%".$this->klassifikation."%')";
+                                       WHERE cfd.value like '%" . $this->klassifikation . "%')";
             } else {
                 $this->where .= "AND q.id IN (SELECT q.id
                                        FROM {question} q
                                        JOIN {customfield_data} cfd
                                        ON q.id = cfd.instanceid
-                                       WHERE cfd.value like '%".$this->klassifikation."%')";
+                                       WHERE cfd.value like '%" . $this->klassifikation . "%')";
             }
         }
-        if($this->fragefach != -1){
-            if($this->where == ''){
+        if ($this->fragefach != -1) {
+            if ($this->where == '') {
                 $this->where .= "q.id IN (SELECT q.id
                                        FROM {question} q
                                        JOIN {customfield_data} cfd
                                        ON q.id = cfd.instanceid
-                                       WHERE cfd.value like '%".$this->fragefach."%')";
+                                       WHERE cfd.value like '%" . $this->fragefach . "%')";
             } else {
                 $this->where .= "AND q.id IN (SELECT q.id
                                        FROM {question} q
                                        JOIN {customfield_data} cfd
                                        ON q.id = cfd.instanceid
-                                       WHERE cfd.value like '%".$this->fragefach."%')";
+                                       WHERE cfd.value like '%" . $this->fragefach . "%')";
             }
         }
-        if($this->lehrinhalt != -1){
-            if($this->where == ''){
+        if ($this->lehrinhalt != -1) {
+            if ($this->where == '') {
                 $this->where .= "q.id IN (SELECT q.id
                                        FROM {question} q
                                        JOIN {customfield_data} cfd
                                        ON q.id = cfd.instanceid
-                                       WHERE cfd.value like '%".$this->lehrinhalt."%')";
+                                       WHERE cfd.value like '%" . $this->lehrinhalt . "%')";
             } else {
                 $this->where .= "AND q.id IN (SELECT q.id
                                        FROM {question} q
                                        JOIN {customfield_data} cfd
                                        ON q.id = cfd.instanceid
-                                       WHERE cfd.value like '%".$this->lehrinhalt."%')";
+                                       WHERE cfd.value like '%" . $this->lehrinhalt . "%')";
             }
         }
 
@@ -132,63 +131,71 @@ class exaquest_questioncategoryfilter extends condition {
     public function display_options_adv() {
         global $PAGE, $COURSE, $DB;
 
-
-
+        $html =
+            '<div style="height:50px"><div style="padding:5.5px;float:left">Select Fragencharakter:</div><select class="select custom-select searchoptions custom-select" id="id_filterstatus" style="margin-left:5px;margin-bottom:50px" name="fragencharakter">';
+        $html .= '<option value="-1"></option>';
         $qcats = $DB->get_records("block_exaquestcategories", array("coursecategoryid" => $COURSE->category));
-        foreach($qcats as $qcat) {
-            $questcats[$qcat->categorytype][] = $qcat;
+        $questcats = [];
+        if ($qcats) {
+            foreach ($qcats as $qcat) {
+                $questcats[$qcat->categorytype][] = $qcat;
+            }
+
+            foreach ($questcats[0] as $cat) {
+                if ($cat->id == $this->fragencharakter) {
+                    $html .= '<option selected="selected" value="' .
+                        $cat->id . '">' . $cat->categoryname . '</option>';
+                } else {
+                    $html .= '<option value="' .
+                        $cat->id . '">' . $cat->categoryname . '</option>';
+                }
+            }
         }
 
+        $html .= '</select></div>';
 
-
-        $html ='<div style="height:50px"><div style="padding:5.5px;float:left">Select Fragencharakter:</div><select class="select custom-select searchoptions custom-select" id="id_filterstatus" style="margin-left:5px;margin-bottom:50px" name="fragencharakter">';
+        $html .= '<div style="height:50px"><div style="padding:5.5px;float:left">Select Klassifikation:</div><select class="select custom-select searchoptions custom-select" id="id_filterstatus" style="margin-left:5px;margin-bottom:50px" name="klassifikation">';
         $html .= '<option value="-1"></option>';
-        foreach($questcats[0] as $cat){
-            if($cat->id == $this->fragencharakter){
-                $html .= '<option selected="selected" value="' .
-                    $cat->id. '">' . $cat->categoryname . '</option>';
-            } else {
-                $html .= '<option value="' .
-                    $cat->id. '">' . $cat->categoryname . '</option>';
+        if ($questcats) {
+            foreach ($questcats[1] as $cat) {
+                if ($cat->id == $this->klassifikation) {
+                    $html .= '<option selected="selected" value="' .
+                        $cat->id . '">' . $cat->categoryname . '</option>';
+                } else {
+                    $html .= '<option value="' .
+                        $cat->id . '">' . $cat->categoryname . '</option>';
+                }
             }
         }
         $html .= '</select></div>';
 
-        $html .='<div style="height:50px"><div style="padding:5.5px;float:left">Select Klassifikation:</div><select class="select custom-select searchoptions custom-select" id="id_filterstatus" style="margin-left:5px;margin-bottom:50px" name="klassifikation">';
+        $html .= '<div style="height:50px"><div style="padding:5.5px;float:left">Select Fragefach:</div><select class="select custom-select searchoptions custom-select" id="id_filterstatus" style="margin-left:5px;margin-bottom:50px" name="fragefach">';
         $html .= '<option value="-1"></option>';
-        foreach($questcats[1] as $cat){
-            if($cat->id == $this->klassifikation){
-                $html .= '<option selected="selected" value="' .
-                    $cat->id. '">' . $cat->categoryname . '</option>';
-            } else {
-                $html .= '<option value="' .
-                    $cat->id. '">' . $cat->categoryname . '</option>';
+        if ($questcats) {
+            foreach ($questcats[2] as $cat) {
+                if ($cat->id == $this->fragefach) {
+                    $html .= '<option selected="selected" value="' .
+                        $cat->id . '">' . $cat->categoryname . '</option>';
+                } else {
+                    $html .= '<option value="' .
+                        $cat->id . '">' . $cat->categoryname . '</option>';
+                }
             }
         }
         $html .= '</select></div>';
 
-        $html .='<div style="height:50px"><div style="padding:5.5px;float:left">Select Fragefach:</div><select class="select custom-select searchoptions custom-select" id="id_filterstatus" style="margin-left:5px;margin-bottom:50px" name="fragefach">';
+        $html .= '<div style="height:50px"><div style="padding:5.5px;float:left">Select Lehrinhalt:</div><select class="select custom-select searchoptions custom-select" id="id_filterstatus" style="margin-left:5px;margin-bottom:50px" name="lehrinhalt">';
         $html .= '<option value="-1"></option>';
-        foreach($questcats[2] as $cat){
-            if($cat->id == $this->fragefach){
-                $html .= '<option selected="selected" value="' .
-                    $cat->id. '">' . $cat->categoryname . '</option>';
-            } else {
-                $html .= '<option value="' .
-                    $cat->id. '">' . $cat->categoryname . '</option>';
+        if ($questcats) {
+            foreach ($questcats[3] as $cat) {
+                if ($cat->id == $this->lehrinhalt) {
+                    $html .= '<option selected="selected" value="' . $cat->id . '">' . $cat->categoryname . '</option>';
+                } else {
+                    $html .= '<option value="' . $cat->id . '">' . $cat->categoryname . '</option>';
+                }
             }
         }
-        $html .= '</select></div>';
 
-        $html .='<div style="height:50px"><div style="padding:5.5px;float:left">Select Lehrinhalt:</div><select class="select custom-select searchoptions custom-select" id="id_filterstatus" style="margin-left:5px;margin-bottom:50px" name="lehrinhalt">';
-        $html .= '<option value="-1"></option>';
-        foreach($questcats[3] as $cat){
-            if($cat->id == $this->lehrinhalt){
-                $html .= '<option selected="selected" value="' . $cat->id. '">' . $cat->categoryname . '</option>';
-            } else {
-                $html .= '<option value="' .$cat->id. '">' . $cat->categoryname . '</option>';
-            }
-        }
         $html .= '</select></div>';
 
         return $html;
