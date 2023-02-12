@@ -71,7 +71,7 @@ class usage_check_column extends column_base {
             $date->setTimestamp($last);
 
             if($prevusescnt>0){
-                echo '<div class="p-3 mb-2 bg-success text-center text-white">'.$prevusescnt.' times used, last on '. $date->format('Y-m-d').'</div>';
+                echo '<div class="p-3 mb-2 bg-danger text-center text-white">'.$prevusescnt.' times used, last on '. $date->format('d.m.Y').'</div>';
             } else {
                 echo '<div class="p-3 mb-2 bg-success text-center text-white">Not used</div>';
             }
