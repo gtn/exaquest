@@ -1,5 +1,4 @@
 $(document).on('click', '.change-exam-status-button', function () {
-    debugger
     let data = {
         action: this.value,
         quizid: this.attributes.quizid.value
@@ -11,7 +10,11 @@ $(document).on('click', '.change-exam-status-button', function () {
         data: data
     }).done(function () {
         //console.log(data.action, 'ret', ret);
-        // location.reload();
+        // TODO: more elegant solution needed to ensure everything is updated. Instead of reload for example update the html directly
+        setTimeout(() => {
+            location.reload();
+        }, 500);
+        location.reload();
     }).fail(function (ret) {
         var errorMsg = '';
         if (ret.responseText[0] == '<') {
@@ -20,5 +23,4 @@ $(document).on('click', '.change-exam-status-button', function () {
         }
         console.log("Error in action '" + data.action + "'", errorMsg, 'ret', ret);
     });
-    location.reload();
 });

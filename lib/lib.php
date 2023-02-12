@@ -49,7 +49,7 @@ const BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED = 8;
 const BLOCK_EXAQUEST_QUIZSTATUS_NEW = 0; // Questions are being added
 const BLOCK_EXAQUEST_QUIZSTATUS_CREATED = 1; // Questions have been added
 const BLOCK_EXAQUEST_QUIZSTATUS_FACHLICH_RELEASED = 2; // Fachlicher Pruefer has released
-const BLOCK_EXAQUEST_QUIZSTATUS_TECHNISCH_RELEASED = 3; // MUSSS released it
+const BLOCK_EXAQUEST_QUIZSTATUS_FORMAL_RELEASED = 3; // MUSSS released it
 const BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE = 4; // ongoing exam?
 const BLOCK_EXAQUEST_QUIZSTATUS_FINISHED = 5; // exam finished
 const BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED = 6; // grades released
@@ -1079,12 +1079,28 @@ function block_exaquest_get_coursecategoryid_by_courseid($courseid) {
 function block_exaquest_exams_by_status($coursecategoryid, $status) {
     global $DB, $USER;
 
-    $sql = "SELECT *
+    $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid
 			FROM {" . BLOCK_EXAQUEST_DB_QUIZSTATUS . "} quizstatus
 			JOIN {quiz} q on q.id = quizstatus.quizid 
+			JOIN {course_modules} cm on cm.instance = q.id
+			JOIN {modules} m on m.id = cm.module
 			WHERE quizstatus.status = :status
-			AND quizstatus.coursecategoryid = :coursecategoryid";
+			AND quizstatus.coursecategoryid = :coursecategoryid
+			AND m.name = 'quiz'";
 
+    /**
+     * SELECT q.id as quizid, q.name as name, cm.id as coursemoduleid, cm.module as module
+    FROM mdl_block_exaquestquizstatus quizstatus
+    JOIN mdl_quiz q on q.id = quizstatus.quizid
+    JOIN mdl_course_modules cm on cm.instance = q.id
+    JOIN mdl_modules m on m.id = cm.module
+    WHERE quizstatus.status = 4
+    AND quizstatus.coursecategoryid = 2
+    AND m.name = "quiz"
+     * faster without the join on modules by simply checking AND cm.module = 18... but what if that changes one day? ==> JOIN
+     */
+
+    //JOIN {modules} m on m.id = cm.module
     $quizzes = $DB->get_records_sql($sql,
         array("status" => $status, "coursecategoryid" => $coursecategoryid));
 

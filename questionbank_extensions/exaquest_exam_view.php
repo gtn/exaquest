@@ -55,7 +55,7 @@ class exaquest_exam_view extends exaquest_view {
         if($quizid!=null){
             $quizname = $DB->get_field("quiz", "name", array("id"=>$quizid));
         }
-        
+
         echo $OUTPUT->heading(get_string('questionbank_selected_quiz', 'block_exaquest').''. $quizname, 2);
     }
 
@@ -191,7 +191,7 @@ class exaquest_exam_view extends exaquest_view {
         return $questionbankclasscolumns;
     }
 
-    public function wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus=0): void {
+    public function wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus=0, $fragencharakter=-1, $klassifikation=-1, $fragefach=-1,  $lehrinhalt=-1): void {
         global $CFG;
         list(, $contextid) = explode(',', $cat);
         $catcontext = \context::instance_by_id($contextid);
