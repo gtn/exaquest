@@ -68,6 +68,8 @@ class block_exaquest_observer {
         }
     }
 
+    // ---------------------
+
 
     /**
      * Observer for core\event\course_module_completion_updated.
@@ -76,6 +78,25 @@ class block_exaquest_observer {
      * @return void
      */
     public static function course_module_completion_updated(\core\event\course_module_completion_updated $event) {
+        global $DB;
+        $data = $event->get_data();
+        if($data['other']['modulename'] == 'quiz'){
+            $insert = new stdClass();
+            $insert->quizid = $data['other']['instanceid'];
+            $insert->status = BLOCK_EXAQUEST_QUIZSTATUS_NEW;
+            $insert->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($event->courseid); // the context is context_module. The event has the courseid.
+            $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, $insert);
+        }
+    }
+
+
+    /**
+     * Observer for core\event\course_module_updated.
+     *
+     * @param core\event\course_module_updated $event
+     * @return void
+     */
+    public static function course_module_updated(\core\event\course_module_updated $event) {
         global $DB;
         $data = $event->get_data();
         if($data['other']['modulename'] == 'quiz'){

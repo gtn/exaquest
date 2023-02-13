@@ -335,7 +335,8 @@ function block_exaquest_get_my_questionbankentries_to_submit_count($coursecatego
              AND qbe.ownerid = :ownerid
              AND qs.status = :newquestion";
 
-    $questions = count($DB->get_records_sql($sql, array("coursecategoryid" => $coursecategoryid, "ownerid" => $userid, "newquestion" => BLOCK_EXAQUEST_QUESTIONSTATUS_NEW)));
+    $questions = count($DB->get_records_sql($sql,
+        array("coursecategoryid" => $coursecategoryid, "ownerid" => $userid, "newquestion" => BLOCK_EXAQUEST_QUESTIONSTATUS_NEW)));
 
     return $questions;
 }
@@ -605,7 +606,8 @@ function block_exaquest_get_questions_for_me_to_revise_count($coursecategoryid, 
 }
 
 /**
- * Returns count of questions for me to release. TODO: what should that mean? In which case is there a specific person responsible for releasing?
+ * Returns count of questions for me to release. TODO: what should that mean? In which case is there a specific person responsible
+ * for releasing?
  *
  * @param $coursecategoryid
  * @return array
@@ -823,7 +825,6 @@ function block_exaquest_set_up_roles() {
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
 
-
     if (!$DB->record_exists('role', ['shortname' => 'fachlfragenreviewer'])) {
         $roleid = create_role('fachl. Fragenreviewer', 'fachlfragenreviewer', '', 'manager');
         $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
@@ -949,6 +950,14 @@ function block_exaquest_set_up_roles() {
 }
 
 /**
+ * Checks the active exams and changes status to finished, according to timing.
+ */
+function block_exaquest_check_active_exams() {
+    $activeexams = block_exaquest_exams_by_status(null, BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE);
+    $activeexams;
+}
+
+/**
  * Build navigtion tabs, depending on role and version
  *
  * @param object $context
@@ -975,8 +984,6 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
     //$isTeacherOrStudent = $isTeacher || $isStudent;
     $catAndCont = get_question_category_and_context_of_course();
 
-
-
     $rows[] = new tabobject('tab_dashboard',
         new moodle_url('/blocks/exaquest/dashboard.php', array("courseid" => $courseid)),
         get_string('dashboard', 'block_exaquest'), null, true);
@@ -994,7 +1001,6 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
             get_string('similarity', 'block_exaquest'), null, true);
     }
 
-
     if (has_capability('block/exaquest:seeexamstab', \context_course::instance($COURSE->id))) {
         $rows[] = new tabobject('tab_exams',
             new moodle_url('/blocks/exaquest/exams.php', array("courseid" => $courseid)),
@@ -1006,8 +1012,6 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
             new moodle_url('/blocks/exaquest/category_settings.php', array("courseid" => $courseid)),
             get_string('category_settings', 'block_exaquest'), null, true);
     }
-
-
 
     return $rows;
 }
@@ -1076,10 +1080,11 @@ function block_exaquest_get_coursecategoryid_by_courseid($courseid) {
  * @param $status
  * @return array
  */
-function block_exaquest_exams_by_status($coursecategoryid, $status) {
+function block_exaquest_exams_by_status($coursecategoryid = null, $status = BLOCK_EXAQUEST_QUIZSTATUS_NEW) {
     global $DB, $USER;
 
-    $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid
+    if ($coursecategoryid) {
+        $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid
 			FROM {" . BLOCK_EXAQUEST_DB_QUIZSTATUS . "} quizstatus
 			JOIN {quiz} q on q.id = quizstatus.quizid 
 			JOIN {course_modules} cm on cm.instance = q.id
@@ -1088,21 +1093,31 @@ function block_exaquest_exams_by_status($coursecategoryid, $status) {
 			AND quizstatus.coursecategoryid = :coursecategoryid
 			AND m.name = 'quiz'";
 
-    /**
-     * SELECT q.id as quizid, q.name as name, cm.id as coursemoduleid, cm.module as module
-    FROM mdl_block_exaquestquizstatus quizstatus
-    JOIN mdl_quiz q on q.id = quizstatus.quizid
-    JOIN mdl_course_modules cm on cm.instance = q.id
-    JOIN mdl_modules m on m.id = cm.module
-    WHERE quizstatus.status = 4
-    AND quizstatus.coursecategoryid = 2
-    AND m.name = "quiz"
-     * faster without the join on modules by simply checking AND cm.module = 18... but what if that changes one day? ==> JOIN
-     */
+        /**
+         * SELECT q.id as quizid, q.name as name, cm.id as coursemoduleid, cm.module as module
+         * FROM mdl_block_exaquestquizstatus quizstatus
+         * JOIN mdl_quiz q on q.id = quizstatus.quizid
+         * JOIN mdl_course_modules cm on cm.instance = q.id
+         * JOIN mdl_modules m on m.id = cm.module
+         * WHERE quizstatus.status = 4
+         * AND quizstatus.coursecategoryid = 2
+         * AND m.name = "quiz"
+         * faster without the join on modules by simply checking AND cm.module = 18... but what if that changes one day? ==> JOIN
+         */
 
-    //JOIN {modules} m on m.id = cm.module
-    $quizzes = $DB->get_records_sql($sql,
-        array("status" => $status, "coursecategoryid" => $coursecategoryid));
+        $quizzes = $DB->get_records_sql($sql,
+            array("status" => $status, "coursecategoryid" => $coursecategoryid));
+    } else {
+        $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid
+			FROM {" . BLOCK_EXAQUEST_DB_QUIZSTATUS . "} quizstatus
+			JOIN {quiz} q on q.id = quizstatus.quizid 
+			JOIN {course_modules} cm on cm.instance = q.id
+			JOIN {modules} m on m.id = cm.module
+			WHERE quizstatus.status = :status
+			AND m.name = 'quiz'";
+        $quizzes = $DB->get_records_sql($sql,
+            array("status" => $status));
+    }
 
     return $quizzes;
 }
