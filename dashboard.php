@@ -8,6 +8,7 @@ require_once(__DIR__ . '/questionbank_extensions/exaquest_view.php');
 
 $courseid = required_param('courseid', PARAM_INT);
 require_login($courseid);
+require_capability('block/exaquest:seedashboardtab', context_course::instance($courseid));
 
 //$course = $DB->get_record('course', array('id' => $courseid));
 $context = context_course::instance($courseid);
