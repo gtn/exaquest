@@ -13,7 +13,7 @@ $klassifikation  = optional_param('klassifikation', null, PARAM_TEXT);
 $fragefach  = optional_param('fragefach', null, PARAM_TEXT);
 $lehrinhalt  = optional_param('lehrinhalt', null, PARAM_TEXT);
 require_login($courseid);
-
+require_capability('block/exaquest:seeexamstab', context_course::instance($courseid));
 
 //$course = $DB->get_record('course', array('id' => $courseid));
 $context = context_course::instance($courseid);
