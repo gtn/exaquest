@@ -3,6 +3,7 @@ $string['pluginname'] = 'Fragenverwaltungstool';
 $string['exaquest'] = 'Fragenverwaltungstool';
 $string['exaquest:addinstance'] = 'Neuen exaquest-block hinzufügen';
 $string['exaquest:myaddinstance'] = 'Neuen exaquest-block zu meiner Moodleseite hinzufügen';
+$string['exaquest:view'] = 'Exaquest Block anzeigen.';
 
 // Block
 $string['dashboard'] = 'Übersicht';

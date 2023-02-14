@@ -14,6 +14,9 @@ $users = optional_param('users', null, PARAM_RAW);
 $commenttext = optional_param('commenttext', null, PARAM_TEXT);
 $quizid = optional_param('quizid', null, PARAM_INT);
 
+require_login($courseid);
+require_capability('block/exaquest:seequestionbanktab', context_course::instance($courseid));
+
 switch ($action) {
     case ('open_question_for_review'):
         //$DB->record_exists('block_exaquestquestionstatus', array("questionbankentryid" => $questionbankentryid));

@@ -33,7 +33,6 @@ class exams implements renderable, templatable {
         $this->active_exams = block_exaquest_exams_by_status($this->coursecategoryid,BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE);
         $this->finished_exams = block_exaquest_exams_by_status($this->coursecategoryid,BLOCK_EXAQUEST_QUIZSTATUS_FINISHED);
         $this->grading_released_exams = block_exaquest_exams_by_status($this->coursecategoryid,BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED);
-
     }
 
     /**

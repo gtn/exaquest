@@ -6,6 +6,10 @@ global $DB, $CFG, $COURSE, $USER;
 $action = required_param('action', PARAM_TEXT);
 $quizid = required_param('quizid', PARAM_INT);
 
+
+require_login($COURSE->id);
+require_capability('block/exaquest:seeexamstab', context_course::instance($COURSE->id));
+
 switch ($action) {
     case ('create_exam'):
         block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);

@@ -16,6 +16,8 @@ require_login($courseid);
 //$course = $DB->get_record('course', array('id' => $courseid));
 $context = context_course::instance($courseid);
 
+require_capability('block/exaquest:seeexamstab', $context);
+
 $page_params = array('courseid' => $courseid);
 
 $url = new moodle_url('/blocks/exaquest/exams.php', $page_params);

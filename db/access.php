@@ -1,11 +1,20 @@
 <?php
 $capabilities = array(
+    'block/exaquest:view' => array(
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_BLOCK,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW, // every role in exaquest has archetype manager (for now)
+            'user' => CAP_PREVENT,
+            // add any other roles you want to allow here
+        )
+    ),
 
     'block/exaquest:myaddinstance' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
-            'user' => CAP_ALLOW
+            'user' => CAP_ALLOW,
         ),
 
         'clonepermissionsfrom' => 'moodle/my:manageblocks'
@@ -219,6 +228,14 @@ $capabilities = array(
         'contextlevel' => CONTEXT_COURSE,
     ),
     'block/exaquest:seecategorytab' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+    ),
+    'block/exaquest:seedashboardtab' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+    ),
+    'block/exaquest:seequestionbanktab' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
     ),
