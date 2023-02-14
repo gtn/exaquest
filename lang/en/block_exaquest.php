@@ -128,6 +128,8 @@ $string['revise_title'] = 'Revision';
 $string['settings_title'] = 'Category Settings';
 $string['settings_description'] = 'Please enter one category per row';
 
+$string['category_options'] = 'Category options';
+
 // Similarity Comparison
 $string['exaquest:similarity_title'] = 'Similarity Comparison';
 $string['exaquest:similarity_button_tooltip'] = "Go to the Similarity Comparison overview";
