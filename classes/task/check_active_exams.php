@@ -14,16 +14,24 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace block_exaquest\task;
+
 defined('MOODLE_INTERNAL') || die();
 
-$tasks = array(
-    array(
-        'classname' => 'block_exaquest\task\check_active_exams',
-        'blocking' => 0,
-        'minute' => '*',
-        'hour' => '*',
-        'day' => '*',
-        'month' => '*',
-        'dayofweek' => '*',
-    ),
-);
+require_once __DIR__ . '/../../inc.php';
+
+/**
+ * Checks the active exams and changes status to finished, according to timing.
+ */
+class check_active_exams extends \core\task\adhoc_task {
+    /**
+     * Execute the task.
+     */
+    public function execute() {
+        block_exaquest_check_active_exams();
+    }
+}
+
+
+
+

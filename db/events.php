@@ -26,4 +26,19 @@ $observers = array(
         'callback' => 'block_exaquest_observer::course_module_created',
         'internal' => false,
     ),
+    array(
+        'eventname' => '\core\event\course_module_completion_updated',
+        'callback' => 'block_exaquest_observer::course_module_completion_updated',
+        'internal' => false,
+    ),
+    array(
+        'eventname' => '\core\event\attempt_becameoverdue',
+        'callback' => 'block_exaquest_observer::course_module_completion_updated',
+        'internal' => false,
+    ),
+    array(
+        'eventname' => '\core\event\course_module_updated',
+        'callback' => 'block_exaquest_observer::course_module_updated',
+        'internal' => false,
+    ),
 );

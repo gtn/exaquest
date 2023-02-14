@@ -13,11 +13,13 @@
                             {{name}} </a>
                     </td>
                     <td>
-                        <a href="{{go_to_exam_questionbank}}&quizid={{id}}" type="submit" class="btn btn-primary"
+                        <a href="{{go_to_exam_questionbank}}&quizid={{quizid}}" type="submit" class="btn btn-primary"
                         value="">{{#str}}add_questions_to_quiz, block_exaquest {{/str}}</a>
                     </td>
                     <td>
-                        <input type="submit" class="btn btn-primary" value="Prüfung zur Begutachtung schicken" href="#">
+                        <button type="submit" class="btn btn-primary change-exam-status-button"
+                                value="create_exam" quizid={{quizid}}>Prüfung zur Begutachtung schicken
+                        </button>
                     </td>
                 </tr>
             {{/new_exams}}
@@ -26,7 +28,7 @@
     </div>
     <div class="examcard">
         <h4>{{#str}}created_exams, block_exaquest {{/str}}</h4>
-        <p>Diese Prüfungen wurden befüllt. Fachliches review notwendig.</p>
+        <p>Diese Prüfungen wurden befüllt. Fachliche Begutachtung notwendig.</p>
         <table>
             <thead></thead>
             <tbody>
@@ -34,17 +36,21 @@
                 <tr>
                     <td>
                         <a class="link"
-                           href="http://localhost/mod/quiz/view.php?id=8"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}
-                            exam01 </a>
+                           href="http://localhost/mod/quiz/view.php?id={{coursemoduelid}}"{{questions_for_me_to_review_link}}
+                        > {{questions_for_me_to_review_count}}
+                        {{name}} </a>
                     </td>
                     <td>
                         <!--                    <input type="submit" class="btn btn-primary" value="Prüfung fachlich freigeben">-->
-                        <button type="submit" class="btn btn-primary change-exam-status-button" value="fachlich_release_exam" quizid="2">Prüfung
+                        <button type="submit" class="btn btn-primary change-exam-status-button"
+                                value="fachlich_release_exam" quizid={{quizid}}>Prüfung
                             fachlich freigeben
                         </button>
                     </td>
                     <td>
-                        <input type="submit" class="btn btn-primary" value="Prüfung zur überarbeitung zurückschicken">
+                        <button type="submit" class="btn btn-primary change-exam-status-button"
+                                value="request_revision" quizid={{quizid}}>Prüfung zur Überarbeitung zurückschicken
+                        </button>
                     </td>
                 </tr>
             {{/created_exams}}
@@ -54,57 +60,70 @@
 
     <div class="examcard">
         <h4>{{#str}}fachlich_released_exams, block_exaquest {{/str}}</h4>
-        <p>Diese Prüfungen wurden fachlich begutachtet. Technisches review notwendig.</p>
+        <p>Diese Prüfungen wurden fachlich begutachtet. Formales review notwendig.</p>
         <table>
             <thead></thead>
             <tbody>
-            <tr>
-                <td>
-                    <a class="link"
-                       href="http://localhost/mod/quiz/view.php?id=8"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}
-                        exam02 </a>
-                </td>
-                <td>
-                    <input type="submit" class="btn btn-primary" value="Prüfung technisch freigeben">
-                </td>
-            </tr>
+            {{#fachlich_released_exams}}
+                <tr>
+                    <td>
+                        <a class="link"
+                           href="http://localhost/mod/quiz/view.php?id={{coursemoduelid}}"{{questions_for_me_to_review_link}}
+                        > {{questions_for_me_to_review_count}}
+                        {{name}} </a>
+                    </td>
+                    <td>
+                        <button type="submit" class="btn btn-primary change-exam-status-button"
+                                value="formal_release_exam" quizid={{quizid}}>Prüfung formal freigeben
+                        </button>
+                    </td>
+                </tr>
+            {{/fachlich_released_exams}}
             </tbody>
         </table>
     </div>
 
     <div class="examcard">
-        <h4>{{#str}}technisch_released_exams, block_exaquest {{/str}}</h4>
-        <p>Diese Prüfungen wurden fachlich und technisch begutachtet. Freigabe zur Durchführung notwendig.</p>
+        <h4>{{#str}}formal_released_exams, block_exaquest {{/str}}</h4>
+        <p>Diese Prüfungen wurden fachlich und formal begutachtet. Freigabe zur Durchführung notwendig.</p>
         <table>
             <thead></thead>
             <tbody>
-            <tr>
-                <td>
-                    <a class="link"
-                       href="http://localhost/mod/quiz/view.php?id=8"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}
-                        exam03 </a>
-                </td>
-                <td>
-                    <input type="submit" class="btn btn-primary" value="Zur Durchführung freigeben">
-                </td>
-            </tr>
+            {{#formal_released_exams}}
+                <tr>
+                    <td>
+                        <a class="link"
+                           href="http://localhost/mod/quiz/view.php?id={{coursemoduelid}}"{{questions_for_me_to_review_link}}
+                        > {{questions_for_me_to_review_count}}
+                        {{name}} </a>
+                    </td>
+                    <td>
+                        <button type="submit" class="btn btn-primary change-exam-status-button"
+                                value="release_exam" quizid={{quizid}}>Zur Durchführung freigeben
+                        </button>
+                    </td>
+                </tr>
+            {{/formal_released_exams}}
             </tbody>
         </table>
     </div>
 
     <div class="examcard">
         <h4>{{#str}}active_exams, block_exaquest {{/str}}</h4>
-        <p>Fachlich und technisch freigegebene Prüfungen. Diese sind aktiv. SuS können diese Prüfung durchführen.</p>
+        <p>Fachlich und formal freigegebene Prüfungen. Diese sind aktiv. SuS können diese Prüfung durchführen. Status wird automatisch verändert, wenn Zeit abgelaufen ist.</p>
         <table>
             <thead></thead>
             <tbody>
-            <tr>
-                <td>
-                    <a class="link"
-                       href="http://localhost/mod/quiz/view.php?id=8"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}
-                        exam04 </a>
-                </td>
-            </tr>
+            {{#active_exams}}
+                <tr>
+                    <td>
+                        <a class="link"
+                           href="http://localhost/mod/quiz/view.php?id={{coursemoduelid}}"{{questions_for_me_to_review_link}}
+                        > {{questions_for_me_to_review_count}}
+                        {{name}} </a>
+                    </td>
+                </tr>
+            {{/active_exams}}
             </tbody>
         </table>
     </div>
@@ -118,8 +137,9 @@
             <tr>
                 <td>
                     <a class="link"
-                       href="http://localhost/mod/quiz/view.php?id=8"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}
-                        exam05 </a>
+                       href="http://localhost/mod/quiz/view.php?id={{coursemoduelid}}"{{questions_for_me_to_review_link}}
+                    > {{questions_for_me_to_review_count}}
+                    {{name}} </a>
                 </td>
             </tr>
             </tbody>
@@ -134,8 +154,9 @@
             <tr>
                 <td>
                     <a class="link"
-                       href="http://localhost/mod/quiz/view.php?id=8"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}
-                        exam06 </a>
+                       href="http://localhost/mod/quiz/view.php?id={{coursemoduelid}}"{{questions_for_me_to_review_link}}
+                    > {{questions_for_me_to_review_count}}
+                    {{name}} </a>
                 </td>
             </tr>
             </tbody>
@@ -149,7 +170,7 @@
 <!--    <p>Create exam technically? Wird es erst hier "wirklich" angelegt in moodle? Oder ist das der erste Schritt?</p>-->
 <!--    <ul>-->
 <!--        <li>-->
-<!--            <a class="link" href="http://localhost/mod/quiz/view.php?id=8"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}-->
+<!--            <a class="link" href="http://localhost/mod/quiz/view.php?coursemoduelid={{coursemoduelid}}"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}-->
 <!--                exam03 <i class="fa fa-check fa-1x" style="color: grey;"></i></a>-->
 <!--        </li>-->
 <!--    </ul>-->
@@ -160,7 +181,7 @@
 <!--    <p>these are active, students can take these exams</p>-->
 <!--    <ul>-->
 <!--        <li>-->
-<!--            <a class="link" href="http://localhost/mod/quiz/view.php?id=8"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}-->
+<!--            <a class="link" href="http://localhost/mod/quiz/view.php?id={{coursemoduelid}}"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}-->
 <!--                exam04 <i class="fa fa-check fa-1x" style="color: grey;"></i></a>-->
 <!--        </li>-->
 <!--        <li>-->
@@ -174,7 +195,7 @@
 <!--    <h4>{{#str}}finished_exams, block_exaquest {{/str}}</h4>-->
 <!--    <ul>-->
 <!--        <li>-->
-<!--            <a class="link" href="http://localhost/mod/quiz/view.php?id=8"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}-->
+<!--            <a class="link" href="http://localhost/mod/quiz/view.php?id={{coursemoduelid}}"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}-->
 <!--                exam07 <i class="fa fa-check fa-1x" style="color: grey;"></i></a>-->
 <!--        </li>-->
 <!--    </ul>-->
@@ -184,7 +205,7 @@
 <!--    <h4>{{#str}}exams_grades_released, block_exaquest {{/str}}</h4>-->
 <!--    <ul>-->
 <!--        <li>-->
-<!--            <a class="link" href="http://localhost/mod/quiz/view.php?id=8"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}-->
+<!--            <a class="link" href="http://localhost/mod/quiz/view.php?id={{coursemoduelid}}"{{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}}-->
 <!--                exam08 <i class="fa fa-check fa-1x" style="color: grey;"></i></a>-->
 <!--        </li>-->
 <!--    </ul>-->
