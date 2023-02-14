@@ -145,7 +145,7 @@ $string['revise_title'] = 'Überarbeitung';
 $string['settings_title'] = 'Kategorieeinstellungen';
 $string['settings_description'] = 'Bitte nur eine Kategorie pro Zeile einfügen';
 
-
+$string['category_options'] = 'Fragekategorien';
 
 
 
