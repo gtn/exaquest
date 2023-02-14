@@ -149,7 +149,7 @@ class exaquest_history_view extends question_history_view {
         return $questionbankclasscolumns;
     }
 
-    public function wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext): void {
+    public function wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus=0, $fragencharakter=-1, $klassifikation=-1, $fragefach=-1,  $lehrinhalt=-1): void {
         $categorydata = explode(',', $cat);
         $contextid = $categorydata[1];
         $catcontext = \context::instance_by_id($contextid);

@@ -124,7 +124,7 @@ class exaquest_finished_exam_view extends exaquest_exam_view
         return $this->requiredcolumns;
     }
 
-    public function wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus=0): void {
+    public function wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus=0, $fragencharakter=-1, $klassifikation=-1, $fragefach=-1,  $lehrinhalt=-1): void {
         global $CFG;
         list(, $contextid) = explode(',', $cat);
         $catcontext = \context::instance_by_id($contextid);

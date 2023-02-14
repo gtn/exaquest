@@ -20,7 +20,7 @@ $tasks = array(
     array(
         'classname' => 'block_exaquest\task\check_active_exams',
         'blocking' => 0,
-        'minute' => '*',
+        'minute' => '*/1',
         'hour' => '*',
         'day' => '*',
         'month' => '*',

@@ -16,6 +16,8 @@
 
 namespace block_exaquest\task;
 
+use core\task\scheduled_task;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once __DIR__ . '/../../inc.php';
@@ -23,12 +25,17 @@ require_once __DIR__ . '/../../inc.php';
 /**
  * Checks the active exams and changes status to finished, according to timing.
  */
-class check_active_exams extends \core\task\adhoc_task {
+class check_active_exams extends \core\task\scheduled_task {
     /**
      * Execute the task.
      */
     public function execute() {
         block_exaquest_check_active_exams();
+    }
+
+    public function get_name() {
+        //return block_exacomp_trans(['en:Import Data with additional functionality', 'de:Daten Importieren mit zusätzlicher Funktionalität']);
+        return "Check status of active quizzes and update if finished.";
     }
 }
 

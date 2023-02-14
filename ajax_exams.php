@@ -23,13 +23,11 @@ switch ($action) {
     case ('release_exam'):
         block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE);
         break;
-    case ('fachlich_release_exam'):
-        //TODO
+    case ('finish_exam'):
+        block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_FINISHED);
         break;
-    case ('fachlich_release_exam'):
-        //TODO
-        break;
-    case ('fachlich_release_exam'):
-        //TODO
+    case ('release_grades'):
+        //TODO ACTUALLY release the grades... and maybe task for when they release it to also change status
+        block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED);
         break;
 }

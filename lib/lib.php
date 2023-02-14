@@ -954,7 +954,7 @@ function block_exaquest_set_up_roles() {
  */
 function block_exaquest_check_active_exams() {
     $activeexams = block_exaquest_exams_by_status(null, BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE);
-    $activeexams;
+    $activeexams; // TODO
 }
 
 /**

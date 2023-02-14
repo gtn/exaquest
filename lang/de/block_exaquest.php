@@ -69,6 +69,7 @@ $string['finished_exams'] = 'Abgeschlossene Prüfungen';
 $string['exams_grades_released'] = 'Prüfungen, von denen die Noten freigegeben wurden';
 $string['add_questions_to_these_exams'] = 'Fügen Sie Fragen zu folgenden Prüfungen hinzu:';
 $string['usage_check_column'] = 'Verwendungsüberprüfung';
+$string['check_added_questions'] = 'Zugeordnete Fragen überprüfen';
 
 
 
