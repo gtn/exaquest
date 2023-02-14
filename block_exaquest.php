@@ -11,7 +11,17 @@ class block_exaquest extends block_list {
         global $CFG, $COURSE, $PAGE, $DB;
 
         $context = context_block::instance($this->instance->id);
-        if (has_capability('block/exaquest:view', $context)) {
+        //$context = context_system::instance(); // todo: system? or block? think of dashboard. for now solved with viewdashboardoutsidecourse cap
+
+        // get all courses where exaquest is added as a block:
+        $courseids = block_exaquest_get_courseids();
+        $hascapability_in_some_course = false;
+        foreach ($courseids as $courseid) {
+            if(has_capability('block/exaquest:viewdashboardoutsidecourse', context_course::instance($courseid))){
+                $hascapability_in_some_course = true;
+            }
+        }
+        if (has_capability('block/exaquest:view', $context) || $hascapability_in_some_course ) {
             if ($this->content !== null) {
                 return $this->content;
             }
@@ -27,7 +37,7 @@ class block_exaquest extends block_list {
 
             if ($PAGE->pagelayout == "mydashboard") {
                 // get all courses where exaquest is added as a blocK:
-                $courseids = block_exaquest_get_courseids();
+                //$courseids = block_exaquest_get_courseids();
                 foreach ($courseids as $courseid) {
                     $coursename = get_course($courseid)->fullname;
                     $this->content->items[] =

@@ -15,6 +15,8 @@ $context = context_course::instance($courseid);
 
 $coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($courseid);
 
+//block_exaquest_set_up_roles(); // for testing
+
 
     if (is_enrolled($context, $USER, "block/exaquest:createquestion")) {
     list($thispageurl, $contexts, $cmid, $cm, $module, $pagevars) =
