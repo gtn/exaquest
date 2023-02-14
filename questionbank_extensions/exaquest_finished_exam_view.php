@@ -17,15 +17,81 @@ class exaquest_finished_exam_view extends exaquest_exam_view
     /**
      * Display the header element for the question bank.
      */
-    protected function display_question_bank_header(): void {
+    protected function display_question_bank_header(): void
+    {
         global $OUTPUT, $DB;
 
         $quizid = optional_param('quizid', null, PARAM_INT);
 
-        if($quizid!=null){
-            $quizname = $DB->get_field("quiz", "name", array("id"=>$quizid));
+        if ($quizid != null) {
+            $quizname = $DB->get_field("quiz", "name", array("id" => $quizid));
         }
 
+        $coustomfieldvalues = $DB->get_records_sql("SELECT *
+                              FROM {quiz_slots} qusl
+                              JOIN {question_references} qref ON qusl.id = qref.itemid
+                              JOIN {question_versions} qv ON qv.questionbankentryid = qref.questionbankentryid
+                              JOIN {customfield_data} cfd ON cfd.instanceid = qv.questionid
+                              WHERE qv.version = (SELECT Max(v.version)
+                                                    FROM   {question_versions} v
+                                                    JOIN {question_bank_entries} be
+                                                    ON be.id = v.questionbankentryid
+                                                    WHERE  be.id = qref.questionbankentryid) AND qusl.quizid=" . $quizid);
+
+        $categoryoptionidarray = array();
+        foreach ($coustomfieldvalues as $categoryoptionid) {
+            $mrg = explode(',', $categoryoptionid->value);
+            $categoryoptionidarray = array_merge($categoryoptionidarray, $mrg);
+        }
+        $categoryoptionidcount = array();
+        foreach ($categoryoptionidarray as $categoryoptionid) {
+            $categoryoptionidcount[$categoryoptionid] += 1;
+        }
+        $categoryoptionidkeys = array();
+        foreach ($categoryoptionidcount as $key => $categoryoptionidcnt) {
+            $categoryoptionidkeys[] = $key;
+        }
+
+
+        $query = "('" . implode("','", $categoryoptionidkeys) . "')";
+
+        $categoryoptions = $DB->get_records_sql("SELECT eqc.id, eqc.categoryname, eqc.categorytype
+                                    FROM {block_exaquestcategories} eqc
+                                   WHERE eqc.id IN " . $query);
+
+        $options = array();
+        foreach ($categoryoptions as $categoryoption) {
+            $options[$categoryoption->categorytype][$categoryoption->id] = $categoryoption->categoryname;
+        }
+
+        $content = array('','','','');
+        foreach ($options as $key => $option){
+            foreach ($option as $keyy => $name) {
+                $content[$key] .= '<div class="col-lg-12">' . $name . ': ' . $categoryoptionidcount[$keyy] . '</div>';
+            }
+        }
+
+        $html = '<div class="container-fluid">
+                    <div class="row">
+                         <div class="col-lg-3">
+                         Fragencharakter
+                            '.$content[0].'
+                        </div>
+                        <div class="col-lg-3">
+                        Klassifikation
+                            '.$content[1].'
+                        </div>
+                        <div class="col-lg-3">
+                        Fragefach
+                            '.$content[2].'
+                        </div>
+                        <div class="col-lg-3">
+                        Lerninhalt
+                            '.$content[3].'
+                        </div>
+                    </div>
+                </div>';
+        echo $html;
         echo $OUTPUT->heading(get_string('questionbank_selected_quiz', 'block_exaquest').''. $quizname, 2);
     }
 
