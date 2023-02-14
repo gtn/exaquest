@@ -67,32 +67,34 @@ class exaquest_finished_exam_view extends exaquest_exam_view
         $content = array('','','','');
         foreach ($options as $key => $option){
             foreach ($option as $keyy => $name) {
-                $content[$key] .= '<div class="col-lg-12">' . $name . ': ' . $categoryoptionidcount[$keyy] . '</div>';
+                $content[$key] .= '<div class="col-lg-12"><span>' . $name . ': ' . $categoryoptionidcount[$keyy] . '</span></div>';
             }
         }
+        echo $OUTPUT->heading(get_string('questionbank_selected_quiz', 'block_exaquest').''. $quizname, 2);
 
         $html = '<div class="container-fluid">
                     <div class="row">
                          <div class="col-lg-3">
-                         Fragencharakter
+                         <div class="col-lg-12 border-bottom"><h6>Fragencharakter</h6></div>
                             '.$content[0].'
                         </div>
                         <div class="col-lg-3">
-                        Klassifikation
+                        <div class="col-lg-12 border-bottom"><h6>Klassifikation</h6></div>
                             '.$content[1].'
                         </div>
                         <div class="col-lg-3">
-                        Fragefach
+                        <div class="col-lg-12 border-bottom"><h6>Fragefach</h6></div>
                             '.$content[2].'
                         </div>
                         <div class="col-lg-3">
-                        Lerninhalt
+                        <div class="col-lg-12 border-bottom"><h6>Lerninhalt</h6></div>
                             '.$content[3].'
                         </div>
                     </div>
                 </div>';
+        echo "<br/>";
         echo $html;
-        echo $OUTPUT->heading(get_string('questionbank_selected_quiz', 'block_exaquest').''. $quizname, 2);
+        echo "<br/>";
     }
 
     protected function wanted_columns(): array {
