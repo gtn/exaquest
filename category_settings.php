@@ -46,7 +46,7 @@ if( $action == "submit"){
             }
         }
     }
-    if(klassifikation != null){
+    if($klassifikation != null){
         $klassifikationarray = explode(PHP_EOL, $klassifikation);
         if(end($klassifikationarray) == ""){
             array_pop($klassifikationarray);
