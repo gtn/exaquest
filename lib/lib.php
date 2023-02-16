@@ -808,6 +808,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:seedashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:seequestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:createquestion', CAP_ALLOW, $roleid, $context);
 
     //added during development
     assign_capability('block/exaquest:showquestionstoreview', CAP_ALLOW, $roleid, $context);
@@ -1018,7 +1019,7 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
         new moodle_url('/blocks/exaquest/dashboard.php', array("courseid" => $courseid)),
         get_string('dashboard', 'block_exaquest'), null, true);
 
-    if (has_capability('block/exaquest:createquestion', \context_course::instance($COURSE->id))) {
+    if (has_capability('block/exaquest:seequestionbanktab', \context_course::instance($COURSE->id))) {
         $rows[] = new tabobject('tab_get_questions',
             new moodle_url('/blocks/exaquest/questbank.php',
                 array("courseid" => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1])),
