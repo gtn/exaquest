@@ -9,6 +9,7 @@ use core_question\local\bank\menu_action_column_base;
 require_once('add_to_quiz.php');
 require_once('usage_check_column.php');
 require_once('category_options.php');
+require_once('remove_from_quiz.php');
 
 /**
  * Class plugin_feature is the entrypoint for the columns.
@@ -28,7 +29,8 @@ class plugin_feature extends \core_question\local\bank\plugin_features_base {
             new \qbank_history\history_action_column_exaquest($qbank),
             new add_to_quiz($qbank),
             new usage_check_column($qbank),
-            new category_options($qbank)
+            new category_options($qbank),
+            new remove_from_quiz($qbank)
         ];
     }
 }

@@ -51,14 +51,15 @@ class remove_from_quiz extends column_base {
         $questioncreator->lastname = $question->creatorlastname;
         $questioncreator->id = $question->createdby;
         $questioncreators= array($questioncreator);#
+        $url = new \moodle_url('/mod/quiz/edit_rest.php');
+        $quizslotid = $DB->get_field_sql("SELECT qs.id
+                                              FROM {question_references} qr
+                                              JOIN {quiz_slots} qs ON qr.itemid = qs.id
+                                              WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?", array($quizid, $question->questionbankentryid));
 
-        //check if already in the quiz
-        if(! $DB->record_exists_sql("SELECT *
-                                    FROM {question_references} qr
-                                         JOIN {quiz_slots} qs ON qr.itemid = qs.id
-                                   WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?", array($quizid, $question->questionbankentryid))){
-            echo '<button href="#" class="addquestion' . $question->questionbankentryid . ' btn btn-primary" role="button" value="addquestion"> ' . get_string('add_to_quiz', 'block_exaquest') . '</button>';
-        }
+
+        echo '<button href="#" id="removequestion' . $question->questionbankentryid.'" class="removequestion' . $question->questionbankentryid . ' btn btn-primary" type="button" value="removequestion"> ' . get_string('remove_from_quiz', 'block_exaquest') . '</button>';
+
 
 
         ?>
@@ -66,18 +67,20 @@ class remove_from_quiz extends column_base {
         <script type="text/javascript">
 
             $(document).ready(function() {
-                $(".addquestion<?php echo $question->questionbankentryid; ?>").click(function (e) {
+                $("#removequestion<?php echo $question->questionbankentryid; ?>").click(function (e) {
+                    alert("Check");
                     var data = {
-                        action: $(this).val(),
-                        questionbankentryid: <?php echo $question->questionbankentryid; ?>,
-                        questionid: <?php echo $question->id; ?>,
+                        action: "DELETE",
+                        class: "resource",
+                        id: <?php echo $quizslotid; ?>,
                         courseid: <?php echo $COURSE->id; ?>,
                         quizid: <?php echo $quizid; ?>,
+                        sesskey: "<?php echo sessKey(); ?>"
                     };
                     e.preventDefault();
                     var ajax = $.ajax({
                         method: "POST",
-                        url: "ajax.php",
+                        url: "<?php echo $url; ?>",
                         data: data
                     }).done(function (ret) {
                         console.log(data.action, 'ret', ret);
@@ -95,5 +98,7 @@ class remove_from_quiz extends column_base {
 
         </script>
         <?php
+
+
     }
 }
