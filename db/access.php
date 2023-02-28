@@ -75,6 +75,14 @@ $capabilities = array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
     ),
+    'block/exaquest:fragenerstellerlight' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+    ),
+    'block/exaquest:fachlfragenreviewerlight' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+    ),
 
     // capabilities defined by ZML:
     'block/exaquest:readallquestions' => array(

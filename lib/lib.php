@@ -987,7 +987,7 @@ function block_exaquest_set_up_roles() {
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'fragenerstellerlight'])->id;
     }
-    assign_capability('block/exaquest:fragenersteller', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:fragenerstellerlight', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:createquestion', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:readallquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:changestatusofreleasedquestions', CAP_ALLOW, $roleid, $context);
@@ -1047,7 +1047,11 @@ function block_exaquest_set_up_roles() {
  */
 function block_exaquest_check_active_exams() {
     $activeexams = block_exaquest_exams_by_status(null, BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE);
-    $activeexams; // TODO
+    $timeoverdueexams = array_filter($activeexams, function($exam, $key) {
+        return $exam->timeclose < time();
+    }, ARRAY_FILTER_USE_BOTH);
+
+    $timeoverdueexams; // TODO: change status of those
 }
 
 /**
@@ -1201,7 +1205,7 @@ function block_exaquest_exams_by_status($coursecategoryid = null, $status = BLOC
         $quizzes = $DB->get_records_sql($sql,
             array("status" => $status, "coursecategoryid" => $coursecategoryid));
     } else {
-        $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid
+        $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid, q.timeclose as timeclose
 			FROM {" . BLOCK_EXAQUEST_DB_QUIZSTATUS . "} quizstatus
 			JOIN {quiz} q on q.id = quizstatus.quizid 
 			JOIN {course_modules} cm on cm.instance = q.id
