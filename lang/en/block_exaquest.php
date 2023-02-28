@@ -111,7 +111,7 @@ $string['release'] = 'Release:';
 
 $string['open_question_for_review'] = 'Open question for review';
 $string['formal_review_done'] = 'Finish formal review';
-$string['technical_review_done'] = 'Finish technical review';
+$string['fachlich_review_done'] = 'Finish fachlich review';
 $string['revise_question'] = 'Revise question';
 $string['release_question'] = 'Release question';
 $string['skip_and_release_question'] = 'Skip and release question';

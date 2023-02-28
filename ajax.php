@@ -63,7 +63,7 @@ switch ($action) {
         }
         $DB->update_record('block_exaquestquestionstatus', $data);
         break;
-    case ('technical_review_done'):
+    case ('fachlich_review_done'):
         $record = $DB->get_record('block_exaquestquestionstatus', array("questionbankentryid" => $questionbankentryid));
         $data = new stdClass;
         $data->id = $record->id;

@@ -128,7 +128,7 @@ $string['release'] = 'Freigeben:';
 
 $string['open_question_for_review'] = 'Frage zur Begutachtung freigeben';
 $string['formal_review_done'] = 'Formal finalisieren';
-$string['technical_review_done'] = 'Fachlich finalisieren';
+$string['fachlich_review_done'] = 'Fachlich finalisieren';
 $string['revise_question'] = 'Frage überarbeiten';
 $string['release_question'] = 'Frage freigeben';
 $string['skip_and_release_question'] = 'Überspringen und Freigeben';
