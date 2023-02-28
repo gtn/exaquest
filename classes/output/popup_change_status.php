@@ -30,7 +30,18 @@ class popup_change_status implements renderable, templatable {
         global $PAGE, $COURSE;
         $data = new stdClass();
         $data->name = $this->name;
+        $readonlyusers = [];
+        $context = \context_course::instance($COURSE->id);
+        foreach ($this->selectusers as $key => $user){
+            if(is_enrolled($context, $user, "block/exaquest:modulverantwortlicher") || is_enrolled($context, $user, "block/exaquest:pruefungskoordination")){
+                $readonlyusers[] =  $user;
+                unset($this->selectusers[$key]);
+            }
+        }
+        $data->readonlyusers = $readonlyusers;
         $data->selectusers = array_values($this->selectusers);
+
+
         $data->questionbankentryid = $this->questionbankentryid;
         if($this->action == 'revise_question'){
             $data->require = true;

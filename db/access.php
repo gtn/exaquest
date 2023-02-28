@@ -243,4 +243,12 @@ $capabilities = array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
     ),
+    'block/exaquest:viewownquestions' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+    ),
+    'block/exaquest:showquestionstorelease' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+    ),
 );
