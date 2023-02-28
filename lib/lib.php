@@ -71,7 +71,7 @@ const BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW = 4;
 const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVISE = 5;
 const BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE = 6;
 const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE = 7;
-const BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_RELEASE = 8;
+const BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_RELEASE = 8; // 2023.02.28: there is no difference between "for me to release" "all to release" for now
 const BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS = 9;
 
 function block_exaquest_init_js_css() {
@@ -747,6 +747,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:seedashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:seequestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:showquestionstorelease', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
         $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '', 'manager');
@@ -809,6 +810,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:seequestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:createquestion', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:showquestionstorelease', CAP_ALLOW, $roleid, $context);
 
     //added during development
     assign_capability('block/exaquest:showquestionstoreview', CAP_ALLOW, $roleid, $context);
@@ -969,6 +971,66 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:seedashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:seequestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
+
+    // ---
+    if (!$DB->record_exists('role', ['shortname' => 'fragenerstellerlight'])) {
+        $roleid = create_role('Fragenerstellerlight', 'fragenerstellerlight', '', 'manager');
+        $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
+        $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
+        $definitiontable->force_duplicate($archetype,
+            $options); // overwrites everything that is set in the options. The rest stays.
+        $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
+        $definitiontable->save_changes();
+        $sourcerole = new \stdClass();
+        $sourcerole->id = $archetype;
+        role_cap_duplicate($sourcerole, $roleid);
+    } else {
+        $roleid = $DB->get_record('role', ['shortname' => 'fragenerstellerlight'])->id;
+    }
+    assign_capability('block/exaquest:fragenersteller', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:createquestion', CAP_ALLOW, $roleid, $context);
+    //assign_capability('block/exaquest:readallquestions', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:changestatusofreleasedquestions', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:setstatustoreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:reviseownquestion', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:showownrevisedquestions', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:showquestionstorevise', CAP_ALLOW, $roleid, $context);
+    assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
+    //added during development:
+    assign_capability('block/exaquest:seedashboardtab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seequestionbanktab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewownquestions', CAP_ALLOW, $roleid, $context);
+
+
+    if (!$DB->record_exists('role', ['shortname' => 'fachlfragenreviewerlight'])) {
+        $roleid = create_role('fachl. Fragenreviewerlight', 'fachlfragenreviewerlight', '', 'manager');
+        $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
+        $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
+        $definitiontable->force_duplicate($archetype,
+            $options); // overwrites everything that is set in the options. The rest stays.
+        $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
+        $definitiontable->save_changes();
+        $sourcerole = new \stdClass();
+        $sourcerole->id = $archetype;
+        role_cap_duplicate($sourcerole, $roleid);
+    } else {
+        $roleid = $DB->get_record('role', ['shortname' => 'fachlfragenreviewerlight'])->id;
+    }
+    assign_capability('block/exaquest:fachlfragenreviewerlight', CAP_ALLOW, $roleid, $context);
+    //assign_capability('block/exaquest:readallquestions', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:changestatusofreleasedquestions', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:showquestionstoreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:editquestiontoreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
+    //added during development:
+    assign_capability('block/exaquest:seesimilaritytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seeexamstab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seecategorytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seedashboardtab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:seequestionbanktab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewownquestions', CAP_ALLOW, $roleid, $context);
 
     //
     //role_assign($roleid, $USER->id, $contextid);
@@ -1190,6 +1252,7 @@ function is_exaquest_active_in_course() {
     return false;
 }
 
+// don't use this. It is not complete, and not useful. Would always have to update.
 function block_exaquest_get_capabilities($context) {
     global $USER;
     $capabilities = [];
@@ -1245,6 +1308,7 @@ function block_exaquest_get_capabilities($context) {
 
     // created during development
     //$capabilities["seestatistic"] = is_enrolled($context, $USER, "block/exaquest:seestatistic");
+    $capabilities["showquestionstorelease"] = is_enrolled($context, $USER, "block/exaquest:showquestionstorelease");
 
     // there is no logic in mustache ==> do it here. Often roles overlap.
     //$capabilities["fragenersteller_or_fachlfragenreviewer"] = $capabilities["fragenersteller"] || $capabilities["fachlfragenreviewer"];
