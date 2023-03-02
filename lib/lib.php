@@ -1051,7 +1051,9 @@ function block_exaquest_check_active_exams() {
         return $exam->timeclose < time();
     }, ARRAY_FILTER_USE_BOTH);
 
-    $timeoverdueexams; // TODO: change status of those
+    foreach ($timeoverdueexams as $exam){
+        block_exaquest_exams_set_status($exam->quizid, BLOCK_EXAQUEST_QUIZSTATUS_FINISHED);
+    }
 }
 
 /**
