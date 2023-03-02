@@ -35,6 +35,7 @@ use qbank_questiontodescriptor;
 require_once('exaquest_view.php');
 require_once('plugin_feature.php');
 require_once('filters/added_to_quiz_condition.php');
+require_once('filters/only_released_questions.php');
 
 
 
@@ -185,6 +186,7 @@ class exaquest_exam_view extends exaquest_view {
         $questionbankclasscolumns["add_to_quiz"] = $specialplugincolumnobjects[4];
         $questionbankclasscolumns["usage_check_column"] = $specialplugincolumnobjects[5];
         $questionbankclasscolumns["category_options"] = $specialplugincolumnobjects[6];
+        $questionbankclasscolumns["remove_from_quiz"] = $specialplugincolumnobjects[7];
 
 
 
@@ -217,6 +219,7 @@ class exaquest_exam_view extends exaquest_view {
 
                 //array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
                 array_unshift($this->searchconditions, new \core_question\bank\search\added_to_quiz_condition($filterstatus));
+                array_unshift($this->searchconditions, new \core_question\bank\search\only_released_questions());
                 //array_unshift($this->searchconditions, new \core_question\bank\search\category_condition_exaquest($cat, $recurse, $editcontexts, $this->baseurl, $this->course));
             }
         }

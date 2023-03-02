@@ -9,6 +9,7 @@ use core_plugin_manager;
 require_once('exaquest_exam_view.php');
 require_once('plugin_feature.php');
 require_once('filters/in_quiz_filter.php');
+require_once('filters/only_released_questions.php');
 class exaquest_finished_exam_view extends exaquest_exam_view
 {
     public function __construct($contexts, $pageurl, $course, $cm = null) {
@@ -254,6 +255,8 @@ class exaquest_finished_exam_view extends exaquest_exam_view
 
                 //array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
                 array_unshift($this->searchconditions, new \core_question\bank\search\in_quiz_filter($filterstatus));
+                array_unshift($this->searchconditions, new \core_question\bank\search\only_released_questions());
+
                 //array_unshift($this->searchconditions, new \core_question\bank\search\category_condition_exaquest($cat, $recurse, $editcontexts, $this->baseurl, $this->course));
             }
         }
