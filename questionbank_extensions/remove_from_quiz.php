@@ -72,7 +72,6 @@ class remove_from_quiz extends column_base {
 
             $(document).ready(function() {
                 $("#removequestion<?php echo $question->questionbankentryid; ?>").click(function (e) {
-                    alert("Check");
                     var data = {
                         action: "DELETE",
                         class: "resource",
