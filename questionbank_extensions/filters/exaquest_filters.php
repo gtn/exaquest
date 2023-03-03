@@ -90,9 +90,10 @@ class exaquest_filters extends condition {
                 $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED;
                 break;
         }
-        if(!has_capability('block/exaquest:viewownquestions', \context_system::instance())){
+        //this is for restricing view of questions for new fragenersteller light role
+       /* if(!has_capability('block/exaquest:viewownquestions', \context_system::instance())){
             $this->where .= " AND qbe.ownerid = " . $USER->id;
-        }
+        } */
 
         return $this->where;
     }
