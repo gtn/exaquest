@@ -198,6 +198,8 @@ $string['exaquest:beurteilungsmitwirkende'] ='Beurteilungsmitwirkende';
 $string['exaquest:fachlicherpruefer'] ='Fachlicherprüfer';
 $string['exaquest:pruefungsmitwirkende'] ='Prüfungsmitwirkende';
 $string['exaquest:fachlicherzweitpruefer'] ='Fachlicherzweitprüfer';
+$string['exaquest:fachlfragenreviewerlight'] ='Fachlfragenreviewerlight';
+$string['exaquest:fragenerstellerlight'] ='Fragenerstellerlight';
 
 $string['exaquest:readallquestions'] = 'Lesen aller Fragen im freigegebene Fragenpool des zugeordneten Moduls (Module)';
 $string['exaquest:readquestionstatistics'] = 'Fragenstatistik abfragen (Anzahl Fragen je Status, je Kategorie, je QS-Kennzahl...)';
@@ -239,3 +241,5 @@ $string['exaquest:seestatistic'] = 'see statistics tab in exaquest';
 $string['exaquest:seesimilaritytab'] = 'See similarity tab in exaquest';
 $string['exaquest:seeexamstab'] = 'See exams tab in exaquest';
 $string['exaquest:seecategorytab'] = 'See category tab in exaquest';
+$string['exaquest:seedashboardtab'] = 'See dashboard tab in exaquest';
+$string['exaquest:seequestionbanktab'] = 'See question tab in exaquest';

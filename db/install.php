@@ -33,7 +33,7 @@ function xmldb_block_exaquest_install() {
     // create the categories:
     $record = new stdClass();
     $record->name = 'Fragencharakter';
-    $record->shortname = "Fragencharakter";
+    $record->shortname = "fragencharakter";
     $record->type = 'exaquestcategory';
     $record->sortorder = 0;
     $configdata = [];
@@ -51,7 +51,7 @@ function xmldb_block_exaquest_install() {
 
     $record = new stdClass();
     $record->name = 'Klassifikation';
-    $record->shortname = "Klassifikation";
+    $record->shortname = "klassifikation";
     $record->type = 'exaquestcategory';
     $record->sortorder = 0;
     $configdata = [];
@@ -68,7 +68,7 @@ function xmldb_block_exaquest_install() {
 
     $record = new stdClass();
     $record->name = 'Fragefach';
-    $record->shortname = "Fragefach";
+    $record->shortname = "fragefach";
     $record->type = 'exaquestcategory';
     $record->sortorder = 0;
     $configdata = [];
@@ -85,7 +85,7 @@ function xmldb_block_exaquest_install() {
 
     $record = new stdClass();
     $record->name = 'Lehrinhalt';
-    $record->shortname = "Lehrinhalt";
+    $record->shortname = "lehrinhalt";
     $record->type = 'exaquestcategory';
     $record->sortorder = 0;
     $configdata = [];

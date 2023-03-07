@@ -6,14 +6,15 @@
  * @copyright  2022 Stefan Swerk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace block_exaquest\output;
 
 use GTN\Logger;
 use moodle_url;
 use renderable;
 use renderer_base;
-use templatable;
 use stdClass;
+use templatable;
 
 class compare_questions implements renderable, templatable {
     private $courseid;
@@ -26,8 +27,9 @@ class compare_questions implements renderable, templatable {
     private moodle_url $overview_url;
 
     public function __construct($questions, $courseid, $allSimilarityRecordArr, $statisticsArr,
-            $sortBy="similarityDesc", $substituteIDs=false, $hidePreviousQ=false) {
+        $sortBy = "similarityDesc", $substituteIDs = false, $hidePreviousQ = false, $catAndCont) {
         $this->courseid = $courseid;
+        $this->catAndCont = $catAndCont;
         $this->allSimilarityRecordArr = $allSimilarityRecordArr;
         $this->questions = $questions;
         $this->similarityStatisticsArr = $statisticsArr;
@@ -36,16 +38,43 @@ class compare_questions implements renderable, templatable {
         $this->hidePreviousQ = $hidePreviousQ;
 
         Logger::debug("block_exaquest_compare_questions_renderer - construction",
-                ["courseid" => $courseid, "sortby" => $sortBy, "substituteid" => json_encode($substituteIDs),
-                        "hidepreviousq" => json_encode($hidePreviousQ)]);
-
+            ["courseid" => $courseid, "sortby" => $sortBy, "substituteid" => json_encode($substituteIDs),
+                "hidepreviousq" => json_encode($hidePreviousQ)]);
 
         $this->overview_url = new moodle_url('/blocks/exaquest/similarity_comparison.php',
-                array(  'courseid' => $this->courseid,
-                        'substituteid' => $this->substituteIDs ? 1 : 0,
-                        'hidepreviousq' => $this->hidePreviousQ ? 1 : 0,
-                        'sort' => $this->sortBy));
+            array('courseid' => $this->courseid,
+                'substituteid' => $this->substituteIDs ? 1 : 0,
+                'hidepreviousq' => $this->hidePreviousQ ? 1 : 0,
+                'sort' => $this->sortBy,
+                'category' => $this->catAndCont));
 
+    }
+
+    public static function createAdminSettingsButton(string $settingsSection, string $buttonLabel, moodle_url $return): array {
+        $settings_url = new moodle_url('/admin/settings.php');
+
+        return [
+            "method" => "get",
+            "url" => $settings_url->out(false),
+            "primary" => false,
+            "tooltip" => get_string('exaquest:similarity_edit_question_button', 'block_exaquest'),
+            "label" => $buttonLabel,
+            "classes" => "exaquest-similarity-settings-btn",
+            "attributes" => [
+                "name" => "data-attribute",
+                "value" => "yeah"
+            ],
+            "params" => [
+                [
+                    "name" => "section",
+                    "value" => $settingsSection
+                ],
+                [
+                    "name" => "returnurl",
+                    "value" => $return->out_as_local_url(false)
+                ]
+            ]
+        ];
     }
 
     /**
@@ -74,14 +103,14 @@ class compare_questions implements renderable, templatable {
         $data->similarity_comparison_url = $this->overview_url;
 
         $data->buttons = [
-                self::createShowOverviewButton($data->similarity_comparison_url, $this->courseid, 'exaquest:similarity_refresh_button_label')
+            self::createShowOverviewButton($data->similarity_comparison_url, $this->courseid,
+                'exaquest:similarity_refresh_button_label')
         ];
 
         //TODO: add pagination? see paging_bar in outputcomponents.php
 
         // add statistics
         $data->statistics = $this->similarityStatisticsArr;
-
 
         // first, sort the data
         $this->sortSimilarityRecords();
@@ -100,13 +129,13 @@ class compare_questions implements renderable, templatable {
             'col_threshold' => get_string("exaquest:similarity_col_threshold", "block_exaquest"),
             'col_algorithm' => get_string("exaquest:similarity_col_algorithm", "block_exaquest")
         ];
-        foreach($this->allSimilarityRecordArr as $similarityRecord) {
+        foreach ($this->allSimilarityRecordArr as $similarityRecord) {
             // do not create records for older versions if the user wants to hide them
-            if($this->hidePreviousQ) {
+            if ($this->hidePreviousQ) {
                 // only include latest versions
                 $q1 = $this->questions[$similarityRecord->question_id1];
                 $q2 = $this->questions[$similarityRecord->question_id2];
-                if(is_latest($q1->version, $q1->questionbankentryid) && is_latest($q2->version, $q2->questionbankentryid)) {
+                if (is_latest($q1->version, $q1->questionbankentryid) && is_latest($q2->version, $q2->questionbankentryid)) {
                     $data->similarityrecords[] = $this->prepareSimilarityRecord($similarityRecord);
                 }
             } else { // user wants to show older versions as well
@@ -118,34 +147,60 @@ class compare_questions implements renderable, templatable {
         return $data;
     }
 
-    private function prepareSimilarityRecord(stdClass $dbSimilarityRecord) : array {
-        if(!isset($dbSimilarityRecord)) {
-            return [];
-        }
-        // TODO: check required properties exist
-
+    /**
+     * @param moodle_url $url
+     * @param int $courseid
+     * @return array
+     * @throws \coding_exception
+     */
+    public static function createShowOverviewButton(moodle_url $url, int $courseid,
+        string $buttonLabel = 'exaquest:similarity_button_label'): array {
         return [
-            'isHeader' => false,
-            'col_qid1' => $this->substituteID($dbSimilarityRecord->question_id1),
-            'col_qid2' => $this->substituteID($dbSimilarityRecord->question_id2),
-            'col_issimilar' => $dbSimilarityRecord->is_similar == 1 ? get_string("exaquest:similarity_true", "block_exaquest") : get_string("exaquest:similarity_false", "block_exaquest"),
-            'col_similarity' => number_format($dbSimilarityRecord->similarity,2),
-            'col_timestamp' => userdate_htmltime($dbSimilarityRecord->timestamp_calculation),
-            'col_threshold' => number_format($dbSimilarityRecord->threshold, 2),
-            'col_algorithm' => s($dbSimilarityRecord->algorithm),
-            'hightlightClass' => $this->getCssClassForSimilarity($dbSimilarityRecord),
-            'edit_q1_button' => $this->createEditQuestionButton($dbSimilarityRecord->question_id1, $this->substituteID($dbSimilarityRecord->question_id1)),
-            'edit_q2_button' => $this->createEditQuestionButton($dbSimilarityRecord->question_id2, $this->substituteID($dbSimilarityRecord->question_id2))
-            ];
+            "method" => "get",
+            "url" => $url->out(false),
+            "primary" => false,
+            "tooltip" => get_string('exaquest:similarity_button_tooltip', 'block_exaquest'),
+            "label" => get_string($buttonLabel, 'block_exaquest'),
+            "attributes" => [
+                "name" => "data-attribute",
+                "value" => "yeah"
+            ],
+            "params" => [
+                [
+                    "name" => "courseid",
+                    "value" => $courseid
+                ],
+                [
+                    "name" => "action",
+                    "value" => "showSimilarityComparison"
+                ],
+                [
+                    "name" => "substituteid",
+                    "value" => $url->get_param("substituteid")
+                ],
+                [
+                    "name" => "hidepreviousq",
+                    "value" => $url->get_param("hidepreviousq")
+                ],
+                [
+                    "name" => "sort",
+                    "value" => $url->get_param("sort")
+                ],
+                [
+                    "name" => "category",
+                    "value" => $url->get_param("category")
+                ]
+            ]
+        ];
     }
 
     private function sortSimilarityRecords() {
         // gather keys to sort
-        $similarity  = array_column($this->allSimilarityRecordArr, 'similarity');
+        $similarity = array_column($this->allSimilarityRecordArr, 'similarity');
         $algorithm = array_column($this->allSimilarityRecordArr, 'algorithm');
 
         // Sort the data with similarity descending, algorithm ascending
-        switch($this->sortBy) {
+        switch ($this->sortBy) {
             case "similarityAsc":
                 Logger::debug("block_exaquest_compare_questions_renderer - sorting records in ascending similarity order");
                 array_multisort($similarity, SORT_ASC, $algorithm, SORT_ASC, $this->allSimilarityRecordArr);
@@ -158,78 +213,37 @@ class compare_questions implements renderable, templatable {
         }
     }
 
-    /**
-     * @param moodle_url $url
-     * @param int $courseid
-     * @return array
-     * @throws \coding_exception
-     */
-    public static function createShowOverviewButton(moodle_url $url, int $courseid, string $buttonLabel='exaquest:similarity_button_label'): array {
+    private function prepareSimilarityRecord(stdClass $dbSimilarityRecord): array {
+        if (!isset($dbSimilarityRecord)) {
+            return [];
+        }
+        // TODO: check required properties exist
+
         return [
-                "method" => "get",
-                "url" => $url->out(false),
-                "primary" => false,
-                "tooltip" => get_string('exaquest:similarity_button_tooltip', 'block_exaquest'),
-                "label" => get_string($buttonLabel, 'block_exaquest'),
-                "attributes" => [
-                        "name" => "data-attribute",
-                        "value" => "yeah"
-                ],
-                "params" => [
-                        [
-                                "name" => "courseid",
-                                "value" => $courseid
-                        ],
-                        [
-                                "name" => "action",
-                                "value" => "showSimilarityComparison"
-                        ],
-                        [
-                                "name" => "substituteid",
-                                "value" => $url->get_param("substituteid")
-                        ],
-                        [
-                                "name" => "hidepreviousq",
-                                "value" => $url->get_param("hidepreviousq")
-                        ],
-                        [
-                                "name" => "sort",
-                                "value" => $url->get_param("sort")
-                        ]
-                ]
+            'isHeader' => false,
+            'col_qid1' => $this->substituteID($dbSimilarityRecord->question_id1),
+            'col_qid2' => $this->substituteID($dbSimilarityRecord->question_id2),
+            'col_issimilar' => $dbSimilarityRecord->is_similar == 1 ? get_string("exaquest:similarity_true", "block_exaquest") :
+                get_string("exaquest:similarity_false", "block_exaquest"),
+            'col_similarity' => number_format($dbSimilarityRecord->similarity, 2),
+            'col_timestamp' => userdate_htmltime($dbSimilarityRecord->timestamp_calculation),
+            'col_threshold' => number_format($dbSimilarityRecord->threshold, 2),
+            'col_algorithm' => s($dbSimilarityRecord->algorithm),
+            'hightlightClass' => $this->getCssClassForSimilarity($dbSimilarityRecord),
+            'edit_q1_button' => $this->createEditQuestionButton($dbSimilarityRecord->question_id1,
+                $this->substituteID($dbSimilarityRecord->question_id1)),
+            'edit_q2_button' => $this->createEditQuestionButton($dbSimilarityRecord->question_id2,
+                $this->substituteID($dbSimilarityRecord->question_id2))
         ];
     }
 
+    public function substituteID(int $qid): string {
+        if ($this->substituteIDs && array_key_exists($qid, $this->questions)) {
+            return s($this->questions[$qid]->name . ' [' . $this->questions[$qid]->id . '.V' . $this->questions[$qid]->version .
+                ']');
+        }
 
-    private function createEditQuestionButton(int $qid, string $buttonLabel): array {
-        $question_url = new moodle_url('/question/bank/editquestion/question.php');
-
-        return [
-                "method" => "get",
-                "url" => $question_url->out(false),
-                "primary" => false,
-                "tooltip" => get_string('exaquest:similarity_edit_question_button', 'block_exaquest'),
-                "label" => $buttonLabel,
-                "classes" => "exaquest-similarity-edit-question-btn",
-                "attributes" => [
-                        "name" => "data-attribute",
-                        "value" => "yeah"
-                ],
-                "params" => [
-                        [
-                                "name" => "id",
-                                "value" => $qid
-                        ],
-                        [
-                                "name" => "courseid",
-                                "value" => $this->courseid
-                        ],
-                        [
-                                "name" => "returnurl",
-                                "value" => $this->overview_url->out_as_local_url(false)
-                        ]
-                ]
-        ];
+        return s($qid);
     }
 
     /**
@@ -256,39 +270,34 @@ class compare_questions implements renderable, templatable {
         return $cssClass;
     }
 
-
-    public function substituteID(int $qid): string {
-        if($this->substituteIDs && array_key_exists($qid, $this->questions)) {
-            return s($this->questions[$qid]->name . ' [' . $this->questions[$qid]->id . '.V'.$this->questions[$qid]->version.']');
-        }
-
-        return s($qid);
-    }
-
-    public static function createAdminSettingsButton(string $settingsSection, string $buttonLabel, moodle_url $return): array {
-        $settings_url = new moodle_url('/admin/settings.php');
+    private function createEditQuestionButton(int $qid, string $buttonLabel): array {
+        $question_url = new moodle_url('/question/bank/editquestion/question.php');
 
         return [
-                "method" => "get",
-                "url" => $settings_url->out(false),
-                "primary" => false,
-                "tooltip" => get_string('exaquest:similarity_edit_question_button', 'block_exaquest'),
-                "label" => $buttonLabel,
-                "classes" => "exaquest-similarity-settings-btn",
-                "attributes" => [
-                        "name" => "data-attribute",
-                        "value" => "yeah"
+            "method" => "get",
+            "url" => $question_url->out(false),
+            "primary" => false,
+            "tooltip" => get_string('exaquest:similarity_edit_question_button', 'block_exaquest'),
+            "label" => $buttonLabel,
+            "classes" => "exaquest-similarity-edit-question-btn",
+            "attributes" => [
+                "name" => "data-attribute",
+                "value" => "yeah"
+            ],
+            "params" => [
+                [
+                    "name" => "id",
+                    "value" => $qid
                 ],
-                "params" => [
-                        [
-                                "name" => "section",
-                                "value" => $settingsSection
-                        ],
-                        [
-                                "name" => "returnurl",
-                                "value" => $return->out_as_local_url(false)
-                        ]
+                [
+                    "name" => "courseid",
+                    "value" => $this->courseid
+                ],
+                [
+                    "name" => "returnurl",
+                    "value" => $this->overview_url->out_as_local_url(false)
                 ]
+            ]
         ];
     }
 

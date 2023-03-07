@@ -86,7 +86,7 @@ class dashboard implements renderable, templatable {
         $data->questions_for_me_to_revise_link = $data->questions_for_me_to_revise_link->raw_out(false);
 
         $data->questions_for_me_to_release_link = new moodle_url('/blocks/exaquest/questbank.php',
-            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
+            array('courseid' => $this->courseid, 'category' => $catAndCont[0] . ',' . $catAndCont[1],
                 "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE));
         $data->questions_for_me_to_release_link = $data->questions_for_me_to_release_link->raw_out(false);
 
@@ -103,7 +103,7 @@ class dashboard implements renderable, templatable {
         $data->buttons = [
             compare_questions::createShowOverviewButton(new moodle_url('/blocks/exaquest/similarity_comparison.php',
                 array('courseid' => $this->courseid,
-                    'substituteid' => 0, 'hidepreviousq' => 0, 'sort' => 0)), $this->courseid)
+                    'substituteid' => 0, 'hidepreviousq' => 0, 'sort' => 0, 'category' => $catAndCont[0] . ',' . $catAndCont[1])), $this->courseid)
         ];
 
         return $data;

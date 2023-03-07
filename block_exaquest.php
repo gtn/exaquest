@@ -56,7 +56,8 @@ class block_exaquest extends block_list {
                         $catAndCont[0] . '%2C' . $catAndCont[1]));
                 // TODO: add custom plugin here
                 $this->content->items[] = html_writer::tag('a', get_string('similarity', 'block_exaquest'),
-                    array('href' => $CFG->wwwroot . '/blocks/exaquest/similarity_comparison.php?courseid=' . $COURSE->id));
+                    array('href' => $CFG->wwwroot . '/blocks/exaquest/similarity_comparison.php?courseid=' . $COURSE->id. '&category=' .
+                        $catAndCont[0] . '%2C' . $catAndCont[1]));
                 $this->content->items[] = html_writer::tag('a', get_string('exams', 'block_exaquest'),
                     array('href' => $CFG->wwwroot . '/blocks/exaquest/exams.php?courseid=' . $COURSE->id));
                 $this->content->items[] = html_writer::tag('a', get_string('category_settings', 'block_exaquest'),

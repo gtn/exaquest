@@ -57,13 +57,14 @@ $similarityComparisonSettings =
 $similarityComparisonSettings = verify_settings($similarityComparisonSettings);
 
 $courseID = required_param('courseid', PARAM_INT);
+$catAndCont = required_param('category', PARAM_TEXT);
 $action = optional_param('action', 'default', PARAM_ALPHANUMEXT);
 $sortBy = optional_param('sort', 'similarityDesc', PARAM_ALPHANUMEXT);
 $substituteIDs = optional_param('substituteid', false, PARAM_BOOL);
 $hidePreviousQ = optional_param('hidepreviousq', false, PARAM_BOOL);
 require_login($courseID);
 [$thispageurl, $contexts, $cmid, $cm, $module, $pagevars] = question_edit_setup('questions', '/question/edit.php');
-$url = new moodle_url('/blocks/exaquest/similarity_comparison.php', array('courseid' => $courseID));
+$url = new moodle_url('/blocks/exaquest/similarity_comparison.php', array('courseid' => $courseID, "category" => $catAndCont));
 $PAGE->set_url($url);
 $PAGE->set_heading(get_string('exaquest:similarity_title', 'block_exaquest'));
 $PAGE->set_title(get_string('exaquest:similarity_title', 'block_exaquest'));
@@ -115,7 +116,7 @@ switch($action) {
     case 'default':
     default:
         renderSimilarityComparison($output, $moodleQuestions, $courseID, $allSimilarityRecordWrappers, $similarityStatistics,
-                $sortBy, $substituteIDs, $hidePreviousQ);
+                $sortBy, $substituteIDs, $hidePreviousQ, $catAndCont);
         echo $output->footer();
         break;
 }
@@ -235,12 +236,12 @@ function handleSimilarityComparisonForm(similarity_comparison_form $mform): void
  * @throws coding_exception
  */
 function renderSimilarityComparison(renderer_base $output, $questions, $courseID, array $allSimilarityRecordArr, array $statisticsArr,
-                                    string $sortBy="similarityDesc", bool $substituteIDs=false, bool $hidePreviousQ=false): void {
+                                    string $sortBy="similarityDesc", bool $substituteIDs=false, bool $hidePreviousQ=false, $catAndCont): void {
     Logger::debug("block_exaquest_similarity_comparison - rendering mustache template compare_questions",["courseid" => $courseID,
-            "sortby" => $sortBy, "substituteid" => json_encode($substituteIDs), "hidepreviousq" => json_encode($hidePreviousQ)]);
+            "sortby" => $sortBy, "substituteid" => json_encode($substituteIDs), "hidepreviousq" => json_encode($hidePreviousQ), "catAndCont" => $catAndCont]);
     // Instantiate mustache companion class
     $dashboard = new \block_exaquest\output\compare_questions($questions, $courseID, $allSimilarityRecordArr, $statisticsArr,
-            $sortBy, $substituteIDs, $hidePreviousQ);
+            $sortBy, $substituteIDs, $hidePreviousQ, $catAndCont);
     // Render HTML output
     echo $output->render($dashboard);
 }

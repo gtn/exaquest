@@ -12,7 +12,7 @@ $handler->rename_category($c1, 'Exaquest Kategorie');
 // create the categories:
 $record = new stdClass();
 $record->name = 'Fragencharakter';
-$record->shortname = "Fragencharakter";
+$record->shortname = "fragencharakter";
 $record->type = 'exaquestcategory';
 $record->sortorder = 0;
 $configdata = [];
@@ -30,7 +30,7 @@ $handler->save_field_configuration($field, $record);
 
 $record = new stdClass();
 $record->name = 'Klassifikation';
-$record->shortname = "Klassifikation";
+$record->shortname = "klassifikation";
 $record->type = 'exaquestcategory';
 $record->sortorder = 0;
 $configdata = [];
@@ -47,7 +47,7 @@ $handler->save_field_configuration($field, $record);
 
 $record = new stdClass();
 $record->name = 'Fragefach';
-$record->shortname = "Fragefach";
+$record->shortname = "fragefach";
 $record->type = 'exaquestcategory';
 $record->sortorder = 0;
 $configdata = [];
@@ -64,7 +64,7 @@ $handler->save_field_configuration($field, $record);
 
 $record = new stdClass();
 $record->name = 'Lehrinhalt';
-$record->shortname = "Lehrinhalt";
+$record->shortname = "lehrinhalt";
 $record->type = 'exaquestcategory';
 $record->sortorder = 0;
 $configdata = [];

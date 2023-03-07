@@ -1096,7 +1096,7 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
 
     if (has_capability('block/exaquest:seesimilaritytab', \context_course::instance($COURSE->id))) {
         $rows[] = new tabobject('tab_similarity_comparison',
-            new moodle_url('/blocks/exaquest/similarity_comparison.php', array("courseid" => $courseid)),
+            new moodle_url('/blocks/exaquest/similarity_comparison.php', array("courseid" => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1])),
             get_string('similarity', 'block_exaquest'), null, true);
     }
 
