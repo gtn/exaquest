@@ -8,7 +8,7 @@ $quizid = required_param('quizid', PARAM_INT);
 
 
 require_login($COURSE->id);
-require_capability('block/exaquest:seeexamstab', context_course::instance($COURSE->id));
+require_capability('block/exaquest:viewexamstab', context_course::instance($COURSE->id));
 
 switch ($action) {
     case ('create_exam'):

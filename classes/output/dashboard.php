@@ -17,7 +17,7 @@ class dashboard implements renderable, templatable {
     private $questions_for_me_to_create_popup;
     private $coursecategoryid;
 
-    public function __construct($userid, $courseid, $capabilities, $fragenersteller, $questions_to_create, $coursecategoryid) {
+    public function __construct($userid, $courseid, $capabilities, $fragenersteller, $questions_to_create, $coursecategoryid, $fachlichepruefer) {
         $this->courseid = $courseid;
         $this->capabilities = $capabilities;
         $this->userid = $userid;
@@ -28,6 +28,7 @@ class dashboard implements renderable, templatable {
         $this->request_questions_popup = new popup_request_questions($fragenersteller);
         $this->questions_for_me_to_create_popup = new popup_questions_for_me_to_create($questions_to_create);
         $this->coursecategoryid = $coursecategoryid;
+        $this->request_questions_popup = new popup_request_exams($fachlichepruefer);
     }
 
     /**

@@ -214,6 +214,19 @@ function block_exaquest_get_fragenersteller_by_courseid($courseid) {
 
 /**
  *
+ * Returns all fachlichepruefer of this course
+ *
+ * @param $courseid
+ * @return array
+ */
+function block_exaquest_get_fachlichepruefer_by_courseid($courseid) {
+    $context = context_course::instance($courseid);
+    return get_enrolled_users($context, 'block/exaquest:fachlicherpruefer');
+}
+
+
+/**
+ *
  * Returns all who have the right to review of this course
  *
  * @param $courseid
@@ -705,9 +718,9 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:executeexam', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('block/exaquest:seesimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seedashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seequestionbanktab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungskoordination'])) {
@@ -731,23 +744,30 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:createquestion', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:setstatustoreview', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:setstatustofinalised', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:showquestionstoreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionstoreview', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:editquestiontoreview', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:showfinalisedquestions', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:showquestionstorevise', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewfinalisedquestions', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:editallquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:addquestiontoexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:assignsecondexaminator', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:definequestionblockingtime', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('block/exaquest:seesimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seeexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seecategorytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seedashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seequestionbanktab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:showquestionstorelease', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionstorelease', CAP_ALLOW, $roleid, $context);
+
+    assign_capability('block/exaquest:viewnewexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewcreatedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewreleasedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewactiveexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
         $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '', 'manager');
@@ -765,15 +785,15 @@ function block_exaquest_set_up_roles() {
     }
     assign_capability('block/exaquest:pruefungsstudmis', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:readquestionstatistics', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:showquestionstorevise', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:addquestiontoexam', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('block/exaquest:seesimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seeexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seecategorytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seedashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seequestionbanktab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'modulverantwortlicher'])) {
@@ -797,23 +817,29 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:reviseownquestion', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:setstatustofinalised', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:editquestiontoreview', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:showfinalisedquestions', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:showquestionstorevise', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewfinalisedquestions', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:releasequestion', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:editallquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('block/exaquest:seesimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seeexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seecategorytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seedashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seequestionbanktab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:createquestion', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:showquestionstorelease', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionstorelease', CAP_ALLOW, $roleid, $context);
 
     //added during development
-    assign_capability('block/exaquest:showquestionstoreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionstoreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewnewexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewcreatedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewreleasedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewactiveexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fragenersteller'])) {
         $roleid = create_role('Fragenersteller', 'fragenersteller', '', 'manager');
@@ -835,12 +861,12 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:changestatusofreleasedquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:setstatustoreview', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:reviseownquestion', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:showownrevisedquestions', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:showquestionstorevise', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewownrevisedquestions', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('block/exaquest:seedashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seequestionbanktab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlfragenreviewer'])) {
@@ -860,15 +886,15 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:fachlfragenreviewer', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:readallquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:changestatusofreleasedquestions', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:showquestionstoreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionstoreview', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:editquestiontoreview', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('block/exaquest:seesimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seeexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seecategorytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seedashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seequestionbanktab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
+    //assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
+    //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'beurteilungsmitwirkende'])) {
@@ -888,12 +914,15 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:beurteilungsmitwirkende', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('block/exaquest:seesimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seeexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seecategorytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seedashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seequestionbanktab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
+
+    assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlicherpruefer'])) {
         $roleid = create_role('fachlicher Prüfer', 'fachlicherpruefer', '', 'manager');
@@ -916,11 +945,11 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:assignsecondexaminator', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('block/exaquest:seesimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seeexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seecategorytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seedashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seequestionbanktab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsmitwirkende'])) {
@@ -941,11 +970,11 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:addquestiontoexam', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('block/exaquest:seesimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seeexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seecategorytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seedashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seequestionbanktab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlicherzweitpruefer'])) {
@@ -965,11 +994,11 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:fachlicherzweitpruefer', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('block/exaquest:seesimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seeexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seecategorytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seedashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seequestionbanktab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
 
     // ---
@@ -993,12 +1022,12 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:changestatusofreleasedquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:setstatustoreview', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:reviseownquestion', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:showownrevisedquestions', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:showquestionstorevise', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewownrevisedquestions', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('block/exaquest:seedashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seequestionbanktab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewownquestions', CAP_ALLOW, $roleid, $context);
 
@@ -1020,15 +1049,15 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:fachlfragenreviewerlight', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:readallquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:changestatusofreleasedquestions', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:showquestionstoreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionstoreview', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:editquestiontoreview', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
-    assign_capability('block/exaquest:seesimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seeexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seecategorytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seedashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:seequestionbanktab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewownquestions', CAP_ALLOW, $roleid, $context);
 
@@ -1087,26 +1116,26 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
         new moodle_url('/blocks/exaquest/dashboard.php', array("courseid" => $courseid)),
         get_string('dashboard', 'block_exaquest'), null, true);
 
-    if (has_capability('block/exaquest:seequestionbanktab', \context_course::instance($COURSE->id))) {
+    if (has_capability('block/exaquest:viewquestionbanktab', \context_course::instance($COURSE->id))) {
         $rows[] = new tabobject('tab_get_questions',
             new moodle_url('/blocks/exaquest/questbank.php',
                 array("courseid" => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1])),
             get_string('get_questionbank', 'block_exaquest'), null, true);
     }
 
-    if (has_capability('block/exaquest:seesimilaritytab', \context_course::instance($COURSE->id))) {
+    if (has_capability('block/exaquest:viewsimilaritytab', \context_course::instance($COURSE->id))) {
         $rows[] = new tabobject('tab_similarity_comparison',
             new moodle_url('/blocks/exaquest/similarity_comparison.php', array("courseid" => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1])),
             get_string('similarity', 'block_exaquest'), null, true);
     }
 
-    if (has_capability('block/exaquest:seeexamstab', \context_course::instance($COURSE->id))) {
+    if (has_capability('block/exaquest:viewexamstab', \context_course::instance($COURSE->id))) {
         $rows[] = new tabobject('tab_exams',
             new moodle_url('/blocks/exaquest/exams.php', array("courseid" => $courseid)),
             get_string('exams', 'block_exaquest'), null, true);
     }
 
-    if (has_capability('block/exaquest:seecategorytab', \context_course::instance($COURSE->id))) {
+    if (has_capability('block/exaquest:viewcategorytab', \context_course::instance($COURSE->id))) {
         $rows[] = new tabobject('tab_category_settings',
             new moodle_url('/blocks/exaquest/category_settings.php', array("courseid" => $courseid)),
             get_string('category_settings', 'block_exaquest'), null, true);
@@ -1275,7 +1304,7 @@ function block_exaquest_get_capabilities($context) {
     $capabilities["fachlicherzweitpruefer"] = is_enrolled($context, $USER, "block/exaquest:fachlicherzweitpruefer");
 
     // capabilities defined by ZML
-    $capabilities["showquestionstorevise"] = is_enrolled($context, $USER, "block/exaquest:showquestionstorevise");
+    $capabilities["viewquestionstorevise"] = is_enrolled($context, $USER, "block/exaquest:viewquestionstorevise");
     $capabilities["createquestions"] = is_enrolled($context, $USER, "block/exaquest:createquestion");
     $capabilities["releasequestion"] = is_enrolled($context, $USER, "block/exaquest:releasequestion");
     $capabilities["readallquestions"] = is_enrolled($context, $USER, "block/exaquest:readallquestions");
@@ -1285,11 +1314,11 @@ function block_exaquest_get_capabilities($context) {
     $capabilities["setstatustoreview"] = is_enrolled($context, $USER, "block/exaquest:setstatustoreview");
     $capabilities["reviseownquestion"] = is_enrolled($context, $USER, "block/exaquest:reviseownquestion");
     $capabilities["setstatustofinalised"] = is_enrolled($context, $USER, "block/exaquest:setstatustofinalised");
-    $capabilities["showownrevisedquestions"] = is_enrolled($context, $USER, "block/exaquest:showownrevisedquestions");
-    $capabilities["showquestionstoreview"] = is_enrolled($context, $USER, "block/exaquest:showquestionstoreview");
+    $capabilities["viewownrevisedquestions"] = is_enrolled($context, $USER, "block/exaquest:viewownrevisedquestions");
+    $capabilities["viewquestionstoreview"] = is_enrolled($context, $USER, "block/exaquest:viewquestionstoreview");
     $capabilities["editquestiontoreview"] = is_enrolled($context, $USER, "block/exaquest:editquestiontoreview");
-    $capabilities["showfinalisedquestions"] = is_enrolled($context, $USER, "block/exaquest:showfinalisedquestions");
-    $capabilities["showquestionstorevise"] = is_enrolled($context, $USER, "block/exaquest:showquestionstorevise");
+    $capabilities["viewfinalisedquestions"] = is_enrolled($context, $USER, "block/exaquest:viewfinalisedquestions");
+    $capabilities["viewquestionstorevise"] = is_enrolled($context, $USER, "block/exaquest:viewquestionstorevise");
     $capabilities["editallquestions"] = is_enrolled($context, $USER, "block/exaquest:editallquestions");
     $capabilities["addquestiontoexam"] = is_enrolled($context, $USER, "block/exaquest:addquestiontoexam");
     $capabilities["releaseexam"] = is_enrolled($context, $USER, "block/exaquest:releaseexam");
@@ -1297,10 +1326,10 @@ function block_exaquest_get_capabilities($context) {
     $capabilities["executeexam"] = is_enrolled($context, $USER, "block/exaquest:executeexam");
     $capabilities["assignsecondexaminator"] = is_enrolled($context, $USER, "block/exaquest:assignsecondexaminator");
     $capabilities["definequestionblockingtime"] = is_enrolled($context, $USER, "block/exaquest:definequestionblockingtime");
-    $capabilities["showexamresults"] = is_enrolled($context, $USER, "block/exaquest:showexamresults");
+    $capabilities["viewexamresults"] = is_enrolled($context, $USER, "block/exaquest:viewexamresults");
     $capabilities["gradeexam"] = is_enrolled($context, $USER, "block/exaquest:gradeexam");
     $capabilities["createexamstatistics"] = is_enrolled($context, $USER, "block/exaquest:createexamstatistics");
-    $capabilities["showexamstatistics"] = is_enrolled($context, $USER, "block/exaquest:showexamstatistics");
+    $capabilities["viewexamstatistics"] = is_enrolled($context, $USER, "block/exaquest:viewexamstatistics");
     $capabilities["correctexam"] = is_enrolled($context, $USER, "block/exaquest:correctexam");
     $capabilities["acknowledgeexamcorrection"] = is_enrolled($context, $USER, "block/exaquest:acknowledgeexamcorrection");
     $capabilities["releaseexamgrade"] = is_enrolled($context, $USER, "block/exaquest:releaseexamgrade");
@@ -1313,8 +1342,8 @@ function block_exaquest_get_capabilities($context) {
     $capabilities["createroles"] = is_enrolled($context, $USER, "block/exaquest:createroles");
 
     // created during development
-    //$capabilities["seestatistic"] = is_enrolled($context, $USER, "block/exaquest:seestatistic");
-    $capabilities["showquestionstorelease"] = is_enrolled($context, $USER, "block/exaquest:showquestionstorelease");
+    //$capabilities["viewstatistic"] = is_enrolled($context, $USER, "block/exaquest:viewstatistic");
+    $capabilities["viewquestionstorelease"] = is_enrolled($context, $USER, "block/exaquest:viewquestionstorelease");
 
     // there is no logic in mustache ==> do it here. Often roles overlap.
     //$capabilities["fragenersteller_or_fachlfragenreviewer"] = $capabilities["fragenersteller"] || $capabilities["fachlfragenreviewer"];

@@ -16,7 +16,7 @@ require_login($courseid);
 //$course = $DB->get_record('course', array('id' => $courseid));
 $context = context_course::instance($courseid);
 
-require_capability('block/exaquest:seeexamstab', $context);
+require_capability('block/exaquest:viewexamstab', $context);
 
 $page_params = array('courseid' => $courseid);
 
@@ -34,6 +34,12 @@ echo $output->header($context, $courseid, get_string('exams_overview', 'block_ex
 // RENDER:
 $capabilities = [];
 $capabilities["createquestions"] = is_enrolled($context, $USER, "block/exaquest:createquestion");
+$capabilities["viewnewexams"] = is_enrolled($context, $USER, "block/exaquest:viewnewexams");
+$capabilities["viewcreatedexams"] = is_enrolled($context, $USER, "block/exaquest:viewcreatedexams");
+$capabilities["viewreleasedexams"] = is_enrolled($context, $USER, "block/exaquest:viewreleasedexams");
+$capabilities["viewactiveexams"] = is_enrolled($context, $USER, "block/exaquest:viewactiveexams");
+$capabilities["viewfinishedexams"] = is_enrolled($context, $USER, "block/exaquest:viewfinishedexams");
+$capabilities["viewgradesreleasedexams"] = is_enrolled($context, $USER, "block/exaquest:viewgradesreleasedexams");
 
 $exams = new \block_exaquest\output\exams($USER->id, $courseid, $capabilities);
 echo $output->render($exams);

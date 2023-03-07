@@ -8,7 +8,7 @@ require_once(__DIR__ . '/questionbank_extensions/exaquest_view.php');
 
 $courseid = required_param('courseid', PARAM_INT);
 require_login($courseid);
-require_capability('block/exaquest:seedashboardtab', context_course::instance($courseid));
+require_capability('block/exaquest:viewdashboardtab', context_course::instance($courseid));
 
 //$course = $DB->get_record('course', array('id' => $courseid));
 $context = context_course::instance($courseid);
@@ -67,8 +67,10 @@ $capabilities = block_exaquest_get_capabilities($context);
 if ($capabilities["modulverantwortlicher"] || $capabilities["pruefungskoordination"]) {
     if (!isset($frageneersteller) || empty($data->fragenersteller)) {
         $frageneersteller = block_exaquest_get_fragenersteller_by_courseid($courseid); // TODO: coursecategoryid?
+        $fachlichepruefer = block_exaquest_get_fachlichepruefer_by_courseid($courseid); // TODO: coursecategoryid?
     }
 }
+
 
 $questions_to_create = [];
 if ($capabilities["fragenersteller"]) {
@@ -77,7 +79,7 @@ if ($capabilities["fragenersteller"]) {
 
 
 
-$dashboard = new \block_exaquest\output\dashboard($USER->id, $courseid, $capabilities, $frageneersteller, $questions_to_create, $coursecategoryid);
+$dashboard = new \block_exaquest\output\dashboard($USER->id, $courseid, $capabilities, $frageneersteller, $questions_to_create, $coursecategoryid, $fachlichepruefer);
 echo $output->render($dashboard);
 
 // This is the code for rendering the create-questions-button with moodle-core functions. It is moved to the correct position with javascript.

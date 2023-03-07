@@ -15,7 +15,7 @@ $commenttext = optional_param('commenttext', null, PARAM_TEXT);
 $quizid = optional_param('quizid', null, PARAM_INT);
 
 require_login($courseid);
-require_capability('block/exaquest:seequestionbanktab', context_course::instance($courseid));
+require_capability('block/exaquest:viewquestionbanktab', context_course::instance($courseid));
 
 switch ($action) {
     case ('open_question_for_review'):

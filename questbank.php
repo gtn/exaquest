@@ -20,7 +20,7 @@ $fragefach = optional_param('fragefach',-1, PARAM_INT);
 $lehrinhalt = optional_param('lehrinhalt',-1, PARAM_INT);
 
 require_login($courseid);
-require_capability('block/exaquest:seequestionbanktab', context_course::instance($courseid));
+require_capability('block/exaquest:viewquestionbanktab', context_course::instance($courseid));
 
 $pagevars['filterstatus'] = $filterstatus;
 $pagevars['fragencharakter'] = $fragencharakter;

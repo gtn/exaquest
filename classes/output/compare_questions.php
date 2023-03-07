@@ -27,7 +27,7 @@ class compare_questions implements renderable, templatable {
     private moodle_url $overview_url;
 
     public function __construct($questions, $courseid, $allSimilarityRecordArr, $statisticsArr,
-        $sortBy = "similarityDesc", $substituteIDs = false, $hidePreviousQ = false, $catAndCont) {
+        $sortBy = "similarityDesc", $substituteIDs = false, $hidePreviousQ = false, $catAndCont = null) {
         $this->courseid = $courseid;
         $this->catAndCont = $catAndCont;
         $this->allSimilarityRecordArr = $allSimilarityRecordArr;

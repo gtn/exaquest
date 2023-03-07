@@ -16,7 +16,7 @@ $courseid = required_param('courseid', PARAM_INT);
 $filterstatus = optional_param('filterstatus',0, PARAM_INT);
 
 require_login($courseid);
-require_capability('block/exaquest:seecategorytab', context_course::instance($courseid));
+require_capability('block/exaquest:viewcategorytab', context_course::instance($courseid));
 
 $pagevars['filterstatus'] = $filterstatus;
 
