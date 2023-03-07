@@ -23,16 +23,96 @@ function xmldb_block_exaquest_install() {
     global $DB;
 
     // TODO: only do it once, if those fields do not exist yet
-    // TODO: this is just a test, remove or finish
+    // TODO: check if the created fields work as intended
 
     $handler = qbank_customfields\customfield\question_handler::create();
     $c1id = $handler->create_category();
     $c1 = $handler->get_categories_with_fields()[$c1id];
-    $handler->rename_category($c1, 'JKUfields2');
+    $handler->rename_category($c1, 'Exaquest Kategorie');
+
+    // create the categories:
     $record = new stdClass();
-    $record->name = 'JKUField';
-    $record->shortname = "JKU";
-    $record->type = 'checkbox';
+    $record->name = 'Fragencharakter';
+    $record->shortname = "Fragencharakter";
+    $record->type = 'exaquestcategory';
+    $record->sortorder = 0;
+    $configdata = [];
+    $configdata += [
+        'required' => 0,
+        'uniquevalues' => 0,
+        'locked' => 0,
+        'visibility' => 2,
+        'defaultvalue' => '',
+        'displaysize' => 0,
+        'maxlength' => 0,
+        'ispassword' => 0,
+        'link' => '',
+        'linktarget' => '',
+        'checkbydefault' => 0,
+        'startyear' => 2000,
+        'endyear' => 3000,
+        'includetime' => 1,
+    ];
+    $record->configdata = json_encode($configdata);
+    $field = field_controller::create(0, (object) ['type' => $record->type], $c1);
+    $handler->save_field_configuration($field, $record);
+
+    $record = new stdClass();
+    $record->name = 'Klassifikation';
+    $record->shortname = "Klassifikation";
+    $record->type = 'exaquestcategory';
+    $record->sortorder = 0;
+    $configdata = [];
+    $configdata += [
+        'required' => 0,
+        'uniquevalues' => 0,
+        'locked' => 0,
+        'visibility' => 2,
+        'defaultvalue' => '',
+        'displaysize' => 0,
+        'maxlength' => 0,
+        'ispassword' => 0,
+        'link' => '',
+        'linktarget' => '',
+        'checkbydefault' => 0,
+        'startyear' => 2000,
+        'endyear' => 3000,
+        'includetime' => 1,
+    ];
+    $record->configdata = json_encode($configdata);
+    $field = field_controller::create(0, (object) ['type' => $record->type], $c1);
+    $handler->save_field_configuration($field, $record);
+
+    $record = new stdClass();
+    $record->name = 'Fragefach';
+    $record->shortname = "Fragefach";
+    $record->type = 'exaquestcategory';
+    $record->sortorder = 0;
+    $configdata = [];
+    $configdata += [
+        'required' => 0,
+        'uniquevalues' => 0,
+        'locked' => 0,
+        'visibility' => 2,
+        'defaultvalue' => '',
+        'displaysize' => 0,
+        'maxlength' => 0,
+        'ispassword' => 0,
+        'link' => '',
+        'linktarget' => '',
+        'checkbydefault' => 0,
+        'startyear' => 2000,
+        'endyear' => 3000,
+        'includetime' => 1,
+    ];
+    $record->configdata = json_encode($configdata);
+    $field = field_controller::create(0, (object) ['type' => $record->type], $c1);
+    $handler->save_field_configuration($field, $record);
+
+    $record = new stdClass();
+    $record->name = 'Lehrinhalt';
+    $record->shortname = "Lehrinhalt";
+    $record->type = 'exaquestcategory';
     $record->sortorder = 0;
     $configdata = [];
     $configdata += [
