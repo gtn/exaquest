@@ -28,7 +28,7 @@ class dashboard implements renderable, templatable {
         $this->request_questions_popup = new popup_request_questions($fragenersteller);
         $this->questions_for_me_to_create_popup = new popup_questions_for_me_to_create($questions_to_create);
         $this->coursecategoryid = $coursecategoryid;
-        $this->request_questions_popup = new popup_request_exams($fachlichepruefer);
+        $this->request_exams_popup = new popup_request_exams($fachlichepruefer);
     }
 
     /**
