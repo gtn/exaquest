@@ -768,6 +768,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewactiveexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:releasequestion', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
         $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '', 'manager');
