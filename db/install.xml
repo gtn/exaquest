@@ -97,5 +97,18 @@
                 <KEY NAME="fk_coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories" REFFIELDS="id"/>
             </KEYS>
         </TABLE>
+        <TABLE NAME="block_exaquestrequestexam" COMMENT="Exams that a user has to create E.g. Modulverantwortlicher tells Fachlicherpruefer to create 3 exams.">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id"/>
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the user"/>
+                <FIELD NAME="comment" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="Question description, e.g. 'a simple question'"/>
+                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="coursecategoryid"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="fk_userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+                <KEY NAME="fk_coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories" REFFIELDS="id"/>
+            </KEYS>
+        </TABLE>
     </TABLES>
 </XMLDB>

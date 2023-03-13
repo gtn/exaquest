@@ -17,7 +17,7 @@ class dashboard implements renderable, templatable {
     private $questions_for_me_to_create_popup;
     private $coursecategoryid;
 
-    public function __construct($userid, $courseid, $capabilities, $fragenersteller, $questions_to_create, $coursecategoryid, $fachlichepruefer) {
+    public function __construct($userid, $courseid, $capabilities, $fragenersteller, $questions_to_create, $coursecategoryid, $fachlichepruefer, $exams_to_create) {
         $this->courseid = $courseid;
         $this->capabilities = $capabilities;
         $this->userid = $userid;
@@ -27,6 +27,7 @@ class dashboard implements renderable, templatable {
         //$this->fragenersteller = $fragenersteller; // not needed here, since it is given to popup_request_questions and only needed there
         $this->request_questions_popup = new popup_request_questions($fragenersteller);
         $this->questions_for_me_to_create_popup = new popup_questions_for_me_to_create($questions_to_create);
+        $this->exams_for_me_to_create_popup = new popup_exams_for_me_to_create($exams_to_create);
         $this->coursecategoryid = $coursecategoryid;
         $this->request_exams_popup = new popup_request_exams($fachlichepruefer);
     }
@@ -59,6 +60,8 @@ class dashboard implements renderable, templatable {
             block_exaquest_get_questions_for_me_to_revise_count($this->coursecategoryid, $this->userid);
         //$data->questions_for_me_to_release_count = block_exaquest_get_questions_for_me_to_release_count($this->coursecategoryid, $this->userid);
         // TODO what should that mean? questions for me to release?
+        $data->exams_for_me_to_create_count =
+            block_exaquest_get_exams_for_me_to_create_count($this->coursecategoryid, $this->userid);
 
         $data->my_questions_count =
             block_exaquest_get_my_questionbankentries_count($this->coursecategoryid, $this->userid);
@@ -98,7 +101,12 @@ class dashboard implements renderable, templatable {
             $data->request_questions_popup = $this->request_questions_popup->export_for_template($output);
         }
 
+        if ($this->capabilities["releasequestion"]) {
+            $data->request_exams_popup = $this->request_exams_popup->export_for_template($output);
+        }
+
         $data->questions_for_me_to_create_popup = $this->questions_for_me_to_create_popup->export_for_template($output);
+        $data->exams_for_me_to_create_popup = $this->exams_for_me_to_create_popup->export_for_template($output);
 
         // similarity comparison button
         $data->buttons = [

@@ -256,7 +256,6 @@ function xmldb_block_exaquest_upgrade($oldversion)
     }
 
     if ($oldversion < 2022110700) {
-        // Define table block_exaquestquizstatus to be created.
         $table = new xmldb_table('block_exaquestrequestquest');
 
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
@@ -342,14 +341,34 @@ function xmldb_block_exaquest_upgrade($oldversion)
         upgrade_block_savepoint(true, 2022110900, 'exaquest');
     }
 
-    if ($oldversion < 2023031000) {
+    if ($oldversion < 2023031300) {
         // Creating roles and assigning capabilities
         // Done as a task AFTER the installation, because the capabilities only exist at the end/after the installation.
         // create the instance
         $setuptask = new \block_exaquest\task\set_up_roles();
         // queue it
         \core\task\manager::queue_adhoc_task($setuptask);
-        upgrade_block_savepoint(true, 2023031000, 'exaquest');
+        upgrade_block_savepoint(true, 2023031300, 'exaquest');
+    }
+
+    if ($oldversion < 2023031303) {
+        $table = new xmldb_table('block_exaquestrequestexam');
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('comment', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('coursecategoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('fk_userid', XMLDB_KEY_FOREIGN, ['userid'], 'user', ['id']);
+        $table->add_key('fk_coursecategoryid', XMLDB_KEY_FOREIGN, ['coursecategoryid'], 'course_categories', ['id']);
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2023031303, 'exaquest');
     }
 
     return $return_result;

@@ -253,35 +253,43 @@ $capabilities = array(
     ),
     'block/exaquest:viewownquestions' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
+        'contextlevel' => CONTEXT_COURSE,
     ),
     'block/exaquest:viewquestionstorelease' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
+        'contextlevel' => CONTEXT_COURSE,
     ),
     'block/exaquest:viewnewexams' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
+        'contextlevel' => CONTEXT_COURSE,
     ),
     'block/exaquest:viewcreatedexams' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
+        'contextlevel' => CONTEXT_COURSE,
     ),
     'block/exaquest:viewreleasedexams' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
+        'contextlevel' => CONTEXT_COURSE,
     ),
     'block/exaquest:viewactiveexams' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
+        'contextlevel' => CONTEXT_COURSE,
     ),
     'block/exaquest:viewfinishedexams' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
+        'contextlevel' => CONTEXT_COURSE,
     ),
     'block/exaquest:viewgradesreleasedexams' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
+        'contextlevel' => CONTEXT_COURSE,
+    ),
+    'block/exaquest:requestnewexam' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+    ),
+    'block/exaquest:createexam' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
     ),
 
 );

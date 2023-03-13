@@ -16,13 +16,18 @@ $string['save_and_return'] = 'Speichern und zu Exaquest';
 
 
 
-
+$string['request_questions'] = 'Neue Frage anfordern';
 $string['request_questions_label'] = 'Neue Frage anforderen von ...';
 $string['request_questions_comment_placeholder'] = 'Welche Art von Frage wird benötigt? Optional.';
 $string['request_questions_button'] = 'Anfordern';
 $string['revise_questions_label'] = 'Folgende Fragen sind zur Überabeitung markiert:';
 $string['formal_review_questions_label'] = 'Folgende Fragen sind zur formalen Finalisierung markiert:';
 $string['fachlich_review_questions_label'] = 'Folgende Fragen sind zur fachlichen Finalisierung markiert:';
+
+$string['request_exams'] = 'Neue Prüfung anfordern';
+$string['request_exams_label'] = 'Neue Prüfung anforderen von ...';
+$string['request_exams_comment_placeholder'] = 'Welche Art von Prüfung wird benötigt? Optional.';
+$string['request_exams_button'] = 'Anfordern';
 
 
 $string['mark_as_done'] = 'Als erledigt markieren';
@@ -31,9 +36,13 @@ $string['mark_selected_as_done_button'] = 'Selektierte Anfragen als erledigt mar
 
 
 // Messages
-$string['messageprovider:newquestionsrequest'] = 'Neue Fragen wurden Angefordert';
+$string['messageprovider:newquestionsrequest'] = 'Neue Fragen wurden angefordert';
 $string['please_create_new_questions'] = 'Bitte erstellen Sie eine neue Frage in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
 $string['please_create_new_questions_subject'] = 'Bitte erstellen Sie eine neue Frage in {$a->fullname}';
+
+$string['messageprovider:newexamsrequest'] = 'Neue Prüfungen wurden angefordert';
+$string['please_create_new_exams'] = 'Bitte erstellen Sie eine neue Prüfung in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
+$string['please_create_new_exams_subject'] = 'Bitte erstellen Sie eine neue Prüfung in {$a->fullname}';
 
 $string['messageprovider:revisequestion'] = 'Fragen wurden zur Überarbeitung zugeteilt';
 $string['please_revise_question'] = 'Bitte überarbeiten Sie eine Frage <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
@@ -100,14 +109,14 @@ $string['my_questions_to_review_count'] = 'Meine Fragen zu begutachten';
 $string['list_of_exams_with_status'] = 'Liste von Prüfungen mit Status:';
 $string['create_new_exam_button'] = 'Neue Prüfung erstellen';
 
-$string['request_questions'] = 'Neue Frage anfordern';
+
 $string['questions_for_me_to_review'] = 'Fragen soll ich begutachten';
 $string['questions_for_me_to_submit'] = 'Fragen soll ich einreichen';
 $string['questions_for_me_to_create'] = 'Fragen soll ich erstellen';
 $string['questions_for_me_to_revise'] = 'Fragen soll ich überarbeiten';
 $string['questions_for_me_to_release'] = 'Fragen soll ich freigeben';
 $string['compare_questions'] = 'Fragen vergleichen';
-
+$string['exams_for_me_to_create'] = 'Prüfungen soll ich erstellen';
 
 //Questionbank
 

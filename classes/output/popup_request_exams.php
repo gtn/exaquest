@@ -8,11 +8,11 @@ use templatable;
 use stdClass;
 
 class popup_request_exams implements renderable, templatable {
-    /** @var string $fragenersteller Part of the data that should be passed to the template. */
-    var $fragenersteller = null;
+    /** @var string $fachlichepruefer Part of the data that should be passed to the template. */
+    var $fachlichepruefer = null;
 
-    public function __construct($fragenersteller) {
-        $this->fragenersteller = $fragenersteller;
+    public function __construct($fachlichepruefer) {
+        $this->fachlichepruefer = $fachlichepruefer;
     }
 
     /**
@@ -28,16 +28,16 @@ class popup_request_exams implements renderable, templatable {
         //$data->fragenersteller_selfmade = [(object)["username"  => array_pop($this->fragenersteller)->username], (object)["username"  =>array_pop($this->fragenersteller)->username]];
         // this would work, but is not feasable to write like this
         // The problem with $data->fragenersteller = $this->fragenersteller; is that there is an associative array, e.g. 3 => stdClass(), 10 => stdClass() etc.... it MUST start counting at 0, otherwise it will break mustache
-        $data->fragenersteller = array_values($this->fragenersteller);
-        foreach ($data->fragenersteller as $fragensteller){
-            $fragensteller->comma = true;
+        $data->fachlichepruefer = array_values($this->fachlichepruefer);
+        foreach ($data->fachlichepruefer as $fachlichepruefer){
+            $fachlichepruefer->comma = true;
         }
-        if(isset($data->fragenersteller) && !empty($data->fragenersteller)){
-            end($data->fragenersteller)->comma = false;
+        if(isset($data->fachlichepruefer) && !empty($data->fachlichepruefer)){
+            end($data->fachlichepruefer)->comma = false;
         }
 
         $data->action =
-            $PAGE->url->out(false, array('action' => 'request_questions', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
+            $PAGE->url->out(false, array('action' => 'request_exams', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
         $data->sesskey = sesskey();
         return $data;
     }

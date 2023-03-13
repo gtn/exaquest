@@ -49,6 +49,13 @@
             {{/releasequestion}}
             <p></p>
             <p>{{#str}}exams_overview_title, block_exaquest {{/str}}</p>
+            {{#fachlicherpruefer}}
+                <li>
+                    {{#exams_for_me_to_create_popup}}
+                        {{>block_exaquest/popup_exams_for_me_to_create}}
+                    {{/exams_for_me_to_create_popup}}
+                </li>
+            {{/fachlicherpruefer}}
             {{#request_exams_popup}}
                 {{>block_exaquest/popup_request_exams}}
             {{/request_exams_popup}}

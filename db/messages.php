@@ -25,6 +25,12 @@ $messageproviders = array (
             'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
         ],
     ),
+    'newexamsrequest' => array (
+        'defaults' => [
+            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED, // TODO: this somehow does not work. The admin has to do this manually on ./admin/message.php
+            'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+        ],
+    ),
     // Notify that Fragenersteller has to revise a question
     'revisequestion' => array (
         'defaults' => [

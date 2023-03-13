@@ -1,15 +1,15 @@
 <!-- using bootstrap modals to do the popups https://getbootstrap.com/docs/4.6/components/modal/ -->
-<button class="btn btn-secondary" data-toggle="modal" data-target="#createQuestionModal">
-    {{#str}}request_questions, block_exaquest {{/str}}
+<button class="btn btn-secondary" data-toggle="modal" data-target="#createExamModal">
+    {{#str}}request_exams, block_exaquest {{/str}}
 <!--    <i class="icon fa fa-plus fa-fw "></i>-->
 </button>
-<div class="modal fade" id="createQuestionModal" tabindex="-1"
-     aria-labelledby="createQuestionModalLabel"
+<div class="modal fade" id="createExamModal" tabindex="-1"
+     aria-labelledby="createExamModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">{{#str}}request_questions, block_exaquest {{/str}}</h5>
+                <h5 class="modal-title" id="createExamModalLabel">{{#str}}request_exams, block_exaquest {{/str}}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -17,22 +17,22 @@
             <form method="post" action="{{action}}">
                 <div class="modal-body">
                     <p>{{#str}}
-                        request_questions_label, block_exaquest {{/str}}
+                        request_exams_label, block_exaquest {{/str}}
                         <br>
                         <a class="selectallornone-userselection">select all/none</a>
-                        {{#fragenersteller}}
+                        {{#fachlichepruefer}}
                             <br>
                             <input type="checkbox" id={{id}} class="userselectioncheckbox"
                                    name="selectedusers[{{id}}]" value={{id}}>
                             <label for="selectedusers[{{id}}]">{{firstname}} {{lastname}}</label>
-                        {{/fragenersteller}}
-                        <textarea class="form-control" name="requestcomment" id="requestcomment" rows="3" placeholder={{#str}}request_questions_comment_placeholder, block_exaquest {{/str}}></textarea>
+                        {{/fachlichepruefer}}
+                        <textarea class="form-control" name="requestcomment" id="requestcomment" rows="3" placeholder={{#str}}request_exams_comment_placeholder, block_exaquest {{/str}}></textarea>
                     </p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <input type="submit"
-                           value="{{#str}} request_questions_button, block_exaquest {{/str}}"
+                           value="{{#str}} request_exams_button, block_exaquest {{/str}}"
                            class="btn btn-primary">
                 </div>
             </form>

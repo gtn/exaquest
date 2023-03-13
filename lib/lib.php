@@ -28,6 +28,7 @@
 const BLOCK_EXAQUEST_DB_QUESTIONSTATUS = 'block_exaquestquestionstatus';
 const BLOCK_EXAQUEST_DB_REVIEWASSIGN = 'block_exaquestreviewassign';
 const BLOCK_EXAQUEST_DB_REQUESTQUEST = 'block_exaquestrequestquest';
+const BLOCK_EXAQUEST_DB_REQUESTEXAM = 'block_exaquestrequestexam';
 const BLOCK_EXAQUEST_DB_QUIZSTATUS = 'block_exaquestquizstatus';
 
 /**
@@ -120,6 +121,28 @@ function block_exaquest_request_question($userfrom, $userto, $comment) {
 
     block_exaquest_send_moodle_notification("newquestionsrequest", $userfrom, $userto, $subject, $message,
         "Frageerstellung", $messageobject->url);
+}
+
+function block_exaquest_request_exam($userfrom, $userto, $comment) {
+    global $DB, $COURSE;
+    // enter data into the exaquest tables
+    $request = new stdClass();
+    $request->userid = $userto;
+    $request->comment = $comment;
+    $request->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($COURSE->id);
+    $DB->insert_record(BLOCK_EXAQUEST_DB_REQUESTEXAM, $request, $returnid = true, $bulk = false);
+
+    // create the message
+    $messageobject = new stdClass();
+    $messageobject->fullname = $COURSE->fullname;
+    $messageobject->url = new moodle_url('/course/view.php', ['id' => $COURSE->id]);
+    $messageobject->url = $messageobject->url->raw_out(false);
+    $messageobject->requestcomment = $comment;
+    $message = get_string('please_create_new_exams', 'block_exaquest', $messageobject);
+    $subject = get_string('please_create_new_exams_subject', 'block_exaquest', $messageobject);
+
+    block_exaquest_send_moodle_notification("newexamsrequest", $userfrom, $userto, $subject, $message,
+        "Prüfungserstellung", $messageobject->url);
 }
 
 function block_exaquest_request_review($userfrom, $userto, $comment, $questionbankentryid, $questionname, $catAndCont, $courseid) {
@@ -569,6 +592,18 @@ function block_exaquest_get_questions_for_me_to_create_count($coursecategoryid, 
 }
 
 /**
+ * Returns count of
+ *
+ * @param $coursecategoryid
+ * @return array
+ */
+function block_exaquest_get_exams_for_me_to_create_count($coursecategoryid, $userid = 0) {
+    return count(block_exaquest_get_exams_for_me_to_create($coursecategoryid, $userid));
+}
+
+
+
+/**
  * Returns
  *
  * @param $coursecategoryid
@@ -584,6 +619,30 @@ function block_exaquest_get_questions_for_me_to_create($coursecategoryid, $useri
     // questionbankentryid DISTINCT to not count twice
     $sql = "SELECT *
 			FROM {" . BLOCK_EXAQUEST_DB_REQUESTQUEST . "} req
+			WHERE req.userid = :userid";
+
+    $questions = $DB->get_records_sql($sql,
+        array("userid" => $userid));
+
+    return $questions;
+}
+
+/**
+ * Returns
+ *
+ * @param $coursecategoryid
+ * @return array
+ */
+function block_exaquest_get_exams_for_me_to_create($coursecategoryid, $userid = 0) {
+    global $DB, $USER;
+
+    if (!$userid) {
+        $userid = $USER->id;
+    }
+
+    // questionbankentryid DISTINCT to not count twice
+    $sql = "SELECT *
+			FROM {" . BLOCK_EXAQUEST_DB_REQUESTEXAM . "} req
 			WHERE req.userid = :userid";
 
     $questions = $DB->get_records_sql($sql,
@@ -769,6 +828,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:releasequestion', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:requestnewexam', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
         $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '', 'manager');
@@ -833,7 +893,6 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:createquestion', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionstorelease', CAP_ALLOW, $roleid, $context);
 
-    //added during development
     assign_capability('block/exaquest:viewquestionstoreview', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewnewexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewcreatedexams', CAP_ALLOW, $roleid, $context);
@@ -841,6 +900,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewactiveexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:requestnewexam', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fragenersteller'])) {
         $roleid = create_role('Fragenersteller', 'fragenersteller', '', 'manager');

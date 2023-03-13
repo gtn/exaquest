@@ -35,7 +35,8 @@ block_exaquest_init_js_css();
 $output = $PAGE->get_renderer('block_exaquest');
 
 echo $output->header($context, $courseid, get_string('dashboard', 'block_exaquest'));
-$frageneersteller = array();
+$fragenersteller = array();
+$fachlichepruefer = array();
 $action = optional_param('action', "", PARAM_ALPHAEXT);
 if ($action == 'request_questions') {
     // get all the users with role "fragesteller" and send them a notification
@@ -49,14 +50,30 @@ if ($action == 'request_questions') {
         $requestcomment = clean_param($_POST["requestcomment"],PARAM_TEXT);
 
         if ($selectedfragenersteller) {
-            $frageneersteller = array_intersect_key($allfragenersteller, $selectedfragenersteller);
-            foreach ($frageneersteller as $ersteller) {
+            $fragenersteller = array_intersect_key($allfragenersteller, $selectedfragenersteller);
+            foreach ($fragenersteller as $ersteller) {
                 block_exaquest_request_question($USER->id, $ersteller->id, $requestcomment);
             }
         }
     }
-}else if ($action == 'mark_as_done'){
+}else if ($action == 'request_exams'){
+    // get all the users with role "fachlicherpruefer" and send them a notification
+    $allfachlichepruefer = block_exaquest_get_fachlichepruefer_by_courseid($courseid); // TODO by courseid or coursecategoryid?
+    if (array_key_exists("selectedusers", $_POST)) {
+        if(is_array($_POST["selectedusers"])){
+            $selectedfachlicherpruefer = clean_param_array($_POST["selectedusers"],PARAM_INT);
+        }else{
+            $selectedfachlicherpruefer = clean_param($_POST["selectedusers"],PARAM_INT);
+        }
+        $requestcomment = clean_param($_POST["requestcomment"],PARAM_TEXT);
 
+        if ($selectedfachlicherpruefer) {
+            $fachlichepruefer = array_intersect_key($allfachlichepruefer, $selectedfachlicherpruefer);
+            foreach ($fachlichepruefer as $pruefer) {
+                block_exaquest_request_exam($USER->id, $pruefer->id, $requestcomment);
+            }
+        }
+    }
 }
 
 
@@ -65,8 +82,8 @@ if ($action == 'request_questions') {
 $capabilities = block_exaquest_get_capabilities($context);
 
 if ($capabilities["modulverantwortlicher"] || $capabilities["pruefungskoordination"]) {
-    if (!isset($frageneersteller) || empty($data->fragenersteller)) {
-        $frageneersteller = block_exaquest_get_fragenersteller_by_courseid($courseid); // TODO: coursecategoryid?
+    if (!isset($fragenersteller) || empty($data->fragenersteller)) {
+        $fragenersteller = block_exaquest_get_fragenersteller_by_courseid($courseid); // TODO: coursecategoryid?
         $fachlichepruefer = block_exaquest_get_fachlichepruefer_by_courseid($courseid); // TODO: coursecategoryid?
     }
 }
@@ -77,9 +94,14 @@ if ($capabilities["fragenersteller"]) {
     $questions_to_create = block_exaquest_get_questions_for_me_to_create($courseid, $USER->id); // TODO: coursecategoryid?
 }
 
+$exams_to_create = [];
+if ($capabilities["fachlicherpruefer"]) {
+    $exams_to_create = block_exaquest_get_exams_for_me_to_create($courseid, $USER->id); // TODO: coursecategoryid?
+}
 
 
-$dashboard = new \block_exaquest\output\dashboard($USER->id, $courseid, $capabilities, $frageneersteller, $questions_to_create, $coursecategoryid, $fachlichepruefer);
+
+$dashboard = new \block_exaquest\output\dashboard($USER->id, $courseid, $capabilities, $fragenersteller, $questions_to_create, $coursecategoryid, $fachlichepruefer, $exams_to_create);
 echo $output->render($dashboard);
 
 // This is the code for rendering the create-questions-button with moodle-core functions. It is moved to the correct position with javascript.
