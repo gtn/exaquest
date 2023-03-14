@@ -32,25 +32,44 @@ $(document).on('click', '#popup_create_questions_div', function () {
 
 
 
-$(document).on('click', '.mark-request-as-done-button', function () {
+$(document).on('click', '.mark-question-request-as-done-button', function () {
     if (confirm("Wirklich als erledigt markieren?")) {
         let requests = this.parentElement.parentElement.getElementsByClassName("request-comment");
         if(requests != undefined){
             document.getElementById("modal-body-requests").removeChild(document.getElementById("request-comment-p-" + this.getAttribute("requestid")));
             // remove that entry from the database with ajax
-            mark_request_as_done(this.getAttribute("requestid"));
+            mark_request_as_done(this.getAttribute("requestid"), 'question');
         }
     } else {
 
     }
 });
 
-function mark_request_as_done(requestid) {
+$(document).on('click', '.mark-exam-request-as-done-button', function () {
+    if (confirm("Wirklich als erledigt markieren?")) {
+        let requests = this.parentElement.parentElement.getElementsByClassName("request-comment");
+        if(requests != undefined){
+            document.getElementById("modal-body-requests").removeChild(document.getElementById("request-comment-p-" + this.getAttribute("requestid")));
+            // remove that entry from the database with ajax
+            mark_request_as_done(this.getAttribute("requestid"), 'exam');
+        }
+    } else {
+
+    }
+});
+
+function mark_request_as_done(requestid, requesttype) {
     console.log('mark_request_as_done', requestid);
+    let action = '';
+    if(requesttype == 'exam'){
+        action = 'mark_exam_request_as_done';
+    }else{
+        action = 'mark_question_request_as_done';
+    }
 
     let data = {
         requestid: requestid,
-        action: 'mark_request_as_done'
+        action: action
     };
 
     $.ajax({
