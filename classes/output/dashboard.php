@@ -17,7 +17,8 @@ class dashboard implements renderable, templatable {
     private $questions_for_me_to_create_popup;
     private $coursecategoryid;
 
-    public function __construct($userid, $courseid, $capabilities, $fragenersteller, $questions_to_create, $coursecategoryid, $fachlichepruefer, $exams_to_create) {
+    public function __construct($userid, $courseid, $capabilities, $fragenersteller, $questions_to_create, $coursecategoryid,
+        $fachlichepruefer, $exams_to_create) {
         $this->courseid = $courseid;
         $this->capabilities = $capabilities;
         $this->userid = $userid;
@@ -94,7 +95,6 @@ class dashboard implements renderable, templatable {
                 "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE));
         $data->questions_for_me_to_release_link = $data->questions_for_me_to_release_link->raw_out(false);
 
-
         // REQUEST NEW QUESTIONS
         // this adds the subtemplate. The data, in this case fragenersteller, does not have to be given to THIS data, because it is in the data for request_questions_popup already
         if ($this->capabilities["releasequestion"]) {
@@ -112,7 +112,8 @@ class dashboard implements renderable, templatable {
         $data->buttons = [
             compare_questions::createShowOverviewButton(new moodle_url('/blocks/exaquest/similarity_comparison.php',
                 array('courseid' => $this->courseid,
-                    'substituteid' => 0, 'hidepreviousq' => 0, 'sort' => 0, 'category' => $catAndCont[0] . ',' . $catAndCont[1])), $this->courseid)
+                    'substituteid' => 0, 'hidepreviousq' => 0, 'sort' => 0, 'category' => $catAndCont[0] . ',' . $catAndCont[1])),
+                $this->courseid)
         ];
 
         return $data;

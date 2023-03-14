@@ -13,45 +13,49 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">{{#str}}exams_for_me_to_create, block_exaquest {{/str}}</h5>
+                <h5 class="modal-title" id="exampleModalLabel">{{#str}}
+                    exams_for_me_to_create, block_exaquest {{/str}}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body" id="modal-body-requests">
-                <p>{{#str}}
-                    exams_for_me_to_create, block_exaquest {{/str}}
-                    <br>
-                    {{#exams_to_create}}
+            <p>{{#str}}
+                exams_for_me_to_create, block_exaquest {{/str}}
+                <br>
+                {{#exams_to_create}}
 
-<!--                        <br>-->
-<!--                        <input type="checkbox" id={{id}} class="userselectioncheckbox"-->
-<!--                               name="selectedusers[{{id}}]" value={{id}}>-->
-<!--                        <label for="selectedusers[{{id}}]">{{comment}}</label>-->
+                    <!--                        <br>-->
+                    <!--                        <input type="checkbox" id={{id}} class="userselectioncheckbox"-->
+                    <!--                               name="selectedusers[{{id}}]" value={{id}}>-->
+                    <!--                        <label for="selectedusers[{{id}}]">{{comment}}</label>-->
 
 
-                        <p class="request-comment" id="request-comment-p-{{id}}">
-                            - {{comment}}
-                            <a id="request-comment-a-{{id}}" class="mark-request-as-done-button"
-                               href="#"
-                               title="{{#str}} mark_as_done, block_exaquest {{/str}}"
-                               requestid = {{id}}
-                               role="button"
-                               aria-label="{{#str}} mark_as_done, block_exaquest {{/str}}">
+                    <p class="request-comment" id="request-comment-p-{{id}}">
+                        - {{comment}}
+                        <a id="request-comment-a-{{id}}" class="mark-request-as-done-button"
+                           href="#"
+                           title="{{#str}} mark_as_done, block_exaquest {{/str}}"
+                           requestid= {{id}}
+                                   role="button"
+                           aria-label="{{#str}} mark_as_done, block_exaquest {{/str}}">
                             <span class="normal-icon">{{#pix}} t/markasread, core {{/pix}}</span>
                         </a>
-                        </p>
+                    </p>
 
-<!--                        <a href="#" class="mark-request-as-done-button">{{#pix}} t/markasread, core, mark as done {{/pix}}</a>-->
-                    {{/exams_to_create}}
-                <div id="popup_create_exams_div"></div>
+                    <!--                        <a href="#" class="mark-request-as-done-button">{{#pix}} t/markasread, core, mark as done {{/pix}}</a>-->
+                {{/exams_to_create}}
+                <p></p>
+                <a href="{{create_exam_link}}" type="submit" class="btn
+            btn-secondary"
+                   value="">{{#str}}create_new_exam_button, block_exaquest {{/str}}</a>
                 </p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-<!--                <input type="submit"-->
-<!--                       value="{{#str}} mark_selected_as_done_button, block_exaquest {{/str}}"-->
-<!--                       class="btn btn-primary mark-all-requests-as-done-button">-->
+                <!--                <input type="submit"-->
+                <!--                       value="{{#str}} mark_selected_as_done_button, block_exaquest {{/str}}"-->
+                <!--                       class="btn btn-primary mark-all-requests-as-done-button">-->
             </div>
         </div>
     </div>

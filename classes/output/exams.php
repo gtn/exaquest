@@ -2,11 +2,11 @@
 // Standard GPL and phpdocs
 namespace block_exaquest\output;
 
+use moodle_url;
 use renderable;
 use renderer_base;
 use stdClass;
 use templatable;
-use moodle_url;
 
 class exams implements renderable, templatable {
     var $questions = null;
@@ -26,13 +26,16 @@ class exams implements renderable, templatable {
         $this->capabilities = $capabilities;
         $this->userid = $userid;
         //$this->exams = $DB->get_records("quiz", array("course" => $COURSE->id));
-        $this->new_exams = block_exaquest_exams_by_status($this->coursecategoryid,BLOCK_EXAQUEST_QUIZSTATUS_NEW);
-        $this->created_exams = block_exaquest_exams_by_status($this->coursecategoryid,BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
-        $this->fachlich_released_exams = block_exaquest_exams_by_status($this->coursecategoryid,BLOCK_EXAQUEST_QUIZSTATUS_FACHLICH_RELEASED);
-        $this->formal_released_exams = block_exaquest_exams_by_status($this->coursecategoryid,BLOCK_EXAQUEST_QUIZSTATUS_FORMAL_RELEASED);
-        $this->active_exams = block_exaquest_exams_by_status($this->coursecategoryid,BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE);
-        $this->finished_exams = block_exaquest_exams_by_status($this->coursecategoryid,BLOCK_EXAQUEST_QUIZSTATUS_FINISHED);
-        $this->grading_released_exams = block_exaquest_exams_by_status($this->coursecategoryid,BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED);
+        $this->new_exams = block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_NEW);
+        $this->created_exams = block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
+        $this->fachlich_released_exams =
+            block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_FACHLICH_RELEASED);
+        $this->formal_released_exams =
+            block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_FORMAL_RELEASED);
+        $this->active_exams = block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE);
+        $this->finished_exams = block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_FINISHED);
+        $this->grading_released_exams =
+            block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED);
     }
 
     /**
@@ -50,17 +53,23 @@ class exams implements renderable, templatable {
         $catAndCont = get_question_category_and_context_of_course();
 
         $data->go_to_exam_questionbank = new moodle_url('/blocks/exaquest/exam_questionbank.php',
-            array('courseid' => $this->courseid,"category" => $catAndCont[0].','. $catAndCont[1]));
+            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1]));
         $data->got_to_exam_view = new moodle_url('/blocks/exaquest/finished_exam_questionbank.php',
-            array('courseid' => $this->courseid,"category" => $catAndCont[0].','. $catAndCont[1]));
+            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1]));
         $data->go_to_exam_questionbank = $data->go_to_exam_questionbank->raw_out(false);
         $data->new_exams = array_values($this->new_exams);
-        $data->created_exams = array_values($this->created_exams); // TODO rw: test if they are shown with current mustache (no way to create them in moodle yet --> create one manually)
+        $data->created_exams =
+            array_values($this->created_exams); // TODO rw: test if they are shown with current mustache (no way to create them in moodle yet --> create one manually)
         $data->fachlich_released_exams = array_values($this->fachlich_released_exams);
         $data->formal_released_exams = array_values($this->formal_released_exams);
         $data->active_exams = array_values($this->active_exams);
         $data->finished_exams = array_values($this->finished_exams);
         $data->grading_released_exams = array_values($this->grading_released_exams);
+
+        $data->create_exam_link = new moodle_url('/course/modedit.php',
+            array('add' => 'quiz', 'course' => $COURSE->id, 'section' => 0, 'return' => 0, 'sr' => 0));
+        $data->create_exam_link = $data->create_exam_link->raw_out(false);
+
         return $data;
     }
 }

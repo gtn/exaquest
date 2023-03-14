@@ -6,6 +6,7 @@ use renderable;
 use renderer_base;
 use stdClass;
 use templatable;
+use moodle_url;
 
 class popup_exams_for_me_to_create implements renderable, templatable {
     /** @var string $exams_to_create Part of the data that should be passed to the template. */
@@ -37,6 +38,11 @@ class popup_exams_for_me_to_create implements renderable, templatable {
         }
         $data->action =
             $PAGE->url->out(false, array('action' => 'mark_as_done', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
+
+        $data->create_exam_link = new moodle_url('/course/modedit.php',
+            array('add' => 'quiz', 'course' => $COURSE->id, 'section' => 0, 'return' => 0, 'sr' => 0));
+        $data->create_exam_link = $data->create_exam_link->raw_out(false);
+
         $data->sesskey = sesskey();
         return $data;
     }
