@@ -449,9 +449,34 @@ function createSimilarityRecordObjectWrapper(int $questionID1, int $questionID2,
  * @return array
  */
 function loadMoodleQuestions(array $categoryList) : array {
-    $qFinder = question_finder::get_instance(); // question_bank finder instance
-    $qList = $qFinder?->get_questions_from_categories($categoryList, null); // retrieve all question IDs from the categories
-    return question_load_questions($qList); // load the questions, array of stdclass objects
+    //$qFinder = question_finder::get_instance(); // question_bank finder instance
+    //$qList = $qFinder->get_questions_from_categories($categoryList, null); // retrieve all question IDs from the categories
+    //return question_load_questions($qList); // load the questions, array of stdclass objects
+    $catAndCont = required_param('category', PARAM_TEXT);
+
+    global $DB;
+
+    $sql = "SELECT q.*,
+                   qc.id as category,
+                   qv.status,
+                   qv.id as versionid,
+                   qv.version,
+                   qv.questionbankentryid,
+                   qc.contextid as contextid
+              FROM {question} q
+              JOIN {question_versions} qv
+                ON qv.questionid = q.id
+              JOIN {question_bank_entries} qbe
+                ON qbe.id = qv.questionbankentryid
+              JOIN {question_categories} qc
+                ON qc.id = qbe.questioncategoryid
+              JOIN {block_exaquestquestionstatus} qs 
+                ON qbe.id = qs.questionbankentryid
+              WHERE qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED . " AND qc.id = " . $catAndCont[0];
+
+
+    // Load the questions.
+    return $DB->get_records_sql($sql);
 }
 
 /**
