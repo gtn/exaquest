@@ -70,6 +70,8 @@ $string['exams_grades_released'] = 'Exams where grades have been released';
 $string['add_questions_to_these_exams'] = 'Add questions to these exams';
 $string['usage_check_column'] = 'Usage checker';
 $string['check_added_questions'] = 'Check added questions';
+$string['remove_from_quiz'] = 'Remove question from exam';
+
 
 // Dasboardcard
 $string['questions_overview_title'] = 'QUESTIONS';
