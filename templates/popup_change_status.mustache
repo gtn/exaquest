@@ -1,10 +1,10 @@
 <!-- using bootstrap modals to do the popups https://getbootstrap.com/docs/4.6/components/modal/ -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#changeStatusModal">
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#changeStatusModal{{questionbankentryid}}">
     {{name}}
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="changeStatusModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="changeStatusModalLabel" aria-hidden="true">
+<div class="modal fade" id="changeStatusModal{{questionbankentryid}}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="changeStatusModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
