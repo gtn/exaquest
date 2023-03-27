@@ -816,7 +816,8 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewquestionstorelease', CAP_ALLOW, $roleid, $context);
+    //assign_capability('block/exaquest:viewquestionstorelease', CAP_ALLOW, $roleid, $context); only modulverantwortlicher
+    assign_capability('block/exaquest:viewquestionstorelease', CAP_PROHIBIT, $roleid, $context);
 
     assign_capability('block/exaquest:viewnewexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewcreatedexams', CAP_ALLOW, $roleid, $context);

@@ -101,9 +101,17 @@ class dashboard implements renderable, templatable {
             $data->request_questions_popup = $this->request_questions_popup->export_for_template($output);
         }
 
+        $data->show_exams_heading = false;
         if ($this->capabilities["releasequestion"]) {
             $data->request_exams_popup = $this->request_exams_popup->export_for_template($output);
+            $data->show_exams_heading = true;
         }
+
+        if ($this->capabilities["fachlicherpruefer"]) {;
+            $data->show_exams_heading = true;
+        }
+
+
 
         $data->questions_for_me_to_create_popup = $this->questions_for_me_to_create_popup->export_for_template($output);
         $data->exams_for_me_to_create_popup = $this->exams_for_me_to_create_popup->export_for_template($output);

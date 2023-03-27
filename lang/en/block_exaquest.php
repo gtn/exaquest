@@ -262,9 +262,17 @@ $string['exaquest:createroles'] =
     'Neue Rolle anlegen und Rechte zuweisen (doppelte Anmeldung: neue Nutzerdatenanmeldung, um nicht versehentlich etwas zu ändern)';
 
 // Defined during development
-$string['exaquest:viewstatistic'] = 'see statistics tab in exaquest';
-$string['exaquest:viewsimilaritytab'] = 'See similarity tab in exaquest';
-$string['exaquest:viewexamstab'] = 'See exams tab in exaquest';
-$string['exaquest:viewcategorytab'] = 'See category tab in exaquest';
-$string['exaquest:viewdashboardtab'] = 'See dashboard tab in exaquest';
-$string['exaquest:viewquestionbanktab'] = 'See question tab in exaquest';
+$string['exaquest:viewstatistic'] = 'View statistics tab in exaquest';
+$string['exaquest:viewsimilaritytab'] = 'View similarity tab in exaquest';
+$string['exaquest:viewexamstab'] = 'View exams tab in exaquest';
+$string['exaquest:viewcategorytab'] = 'View category tab in exaquest';
+$string['exaquest:viewdashboardtab'] = 'View dashboard tab in exaquest';
+$string['exaquest:viewquestionbanktab'] = 'View question tab in exaquest';
+$string['exaquest:viewquestionstorelease'] = 'View questions to release';
+$string['exaquest:viewdashboardoutsidecourse'] = 'View exaquest dashboard in moodle dashboard';
+$string['exaquest:requestnewexam'] = 'Allow requesting a new exam in exaquest';
+$string['exaquest:viewcreatedexams'] = 'View created exams in exaquest';
+$string['exaquest:viewfinishedexams'] = 'View finished exams in exaquest';
+$string['exaquest:viewgradesreleasedexams'] = 'View released exams in exaquest';
+$string['exaquest:viewnewexams'] = 'View new exams in exaquest';
+$string['exaquest:viewgradesreleasedexams'] = 'View exams where grades have been released in exaquest';
