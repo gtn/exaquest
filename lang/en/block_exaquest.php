@@ -13,6 +13,7 @@ $string['similarity'] = 'Similarity overview';
 $string['exams'] = 'Exams';
 $string['category_settings'] = 'Category settings';
 $string['save_and_return'] = 'Save and return to Exaquest';
+$string['todos_are_open'] = ' TODOs are open.';
 
 $string['request_questions'] = 'Request new questions';
 $string['request_questions_label'] = 'Request new questions from ...';

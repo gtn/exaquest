@@ -8,7 +8,7 @@ class block_exaquest extends block_list {
     }
 
     public function get_content() {
-        global $CFG, $COURSE, $PAGE, $DB;
+        global $CFG, $COURSE, $PAGE, $DB, $USER;
 
         $context = context_block::instance($this->instance->id);
         //$context = context_system::instance(); // todo: system? or block? think of dashboard. for now solved with viewdashboardoutsidecourse cap
@@ -17,11 +17,11 @@ class block_exaquest extends block_list {
         $courseids = block_exaquest_get_courseids();
         $hascapability_in_some_course = false;
         foreach ($courseids as $courseid) {
-            if(has_capability('block/exaquest:viewdashboardoutsidecourse', context_course::instance($courseid))){
+            if (has_capability('block/exaquest:viewdashboardoutsidecourse', context_course::instance($courseid))) {
                 $hascapability_in_some_course = true;
             }
         }
-        if (has_capability('block/exaquest:view', $context) || $hascapability_in_some_course ) {
+        if (has_capability('block/exaquest:view', $context) || $hascapability_in_some_course) {
             if ($this->content !== null) {
                 return $this->content;
             }
@@ -39,9 +39,17 @@ class block_exaquest extends block_list {
                 // get all courses where exaquest is added as a blocK:
                 //$courseids = block_exaquest_get_courseids();
                 foreach ($courseids as $courseid) {
-                    $coursename = get_course($courseid)->fullname;
+                    $course = get_course($courseid);
+                    $coursename = $course->fullname;
+                    $todocount = block_exaquest_get_todo_count($USER->id, $course->category);
+                    if ($todocount) {
+                        $todocountmesssage = ' ... ' . $todocount . get_string('todos_are_open', 'block_exaquest');
+                    } else {
+                        $todocountmesssage = '';
+                    }
+
                     $this->content->items[] =
-                        html_writer::tag('a', get_string('dashboard_of_course', 'block_exaquest', $coursename),
+                        html_writer::tag('a', get_string('dashboard_of_course', 'block_exaquest', $coursename) . $todocountmesssage,
                             array('href' => $CFG->wwwroot . '/blocks/exaquest/dashboard.php?courseid=' . $courseid));
                 }
             } else {
@@ -56,7 +64,8 @@ class block_exaquest extends block_list {
                         $catAndCont[0] . '%2C' . $catAndCont[1]));
                 // TODO: add custom plugin here
                 $this->content->items[] = html_writer::tag('a', get_string('similarity', 'block_exaquest'),
-                    array('href' => $CFG->wwwroot . '/blocks/exaquest/similarity_comparison.php?courseid=' . $COURSE->id. '&category=' .
+                    array('href' => $CFG->wwwroot . '/blocks/exaquest/similarity_comparison.php?courseid=' . $COURSE->id .
+                        '&category=' .
                         $catAndCont[0] . '%2C' . $catAndCont[1]));
                 $this->content->items[] = html_writer::tag('a', get_string('exams', 'block_exaquest'),
                     array('href' => $CFG->wwwroot . '/blocks/exaquest/exams.php?courseid=' . $COURSE->id));

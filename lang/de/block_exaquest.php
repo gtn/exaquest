@@ -13,6 +13,7 @@ $string['similarity'] = 'Ähnlichkeitsübersicht';
 $string['exams'] = 'Prüfungen';
 $string['category_settings'] = 'Kategorieeinstellungen';
 $string['save_and_return'] = 'Speichern und zu Exaquest';
+$string['todos_are_open'] = ' TODOs sind offen.';
 
 
 

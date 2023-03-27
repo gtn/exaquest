@@ -247,7 +247,6 @@ function block_exaquest_get_fachlichepruefer_by_courseid($courseid) {
     return get_enrolled_users($context, 'block/exaquest:fachlicherpruefer');
 }
 
-
 /**
  *
  * Returns all who have the right to review of this course
@@ -600,8 +599,6 @@ function block_exaquest_get_questions_for_me_to_create_count($coursecategoryid, 
 function block_exaquest_get_exams_for_me_to_create_count($coursecategoryid, $userid = 0) {
     return count(block_exaquest_get_exams_for_me_to_create($coursecategoryid, $userid));
 }
-
-
 
 /**
  * Returns
@@ -1092,7 +1089,6 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewownquestions', CAP_ALLOW, $roleid, $context);
 
-
     if (!$DB->record_exists('role', ['shortname' => 'fachlfragenreviewerlight'])) {
         $roleid = create_role('fachl. Fragenreviewerlight', 'fachlfragenreviewerlight', '', 'manager');
         $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
@@ -1141,7 +1137,7 @@ function block_exaquest_check_active_exams() {
         return $exam->timeclose < time();
     }, ARRAY_FILTER_USE_BOTH);
 
-    foreach ($timeoverdueexams as $exam){
+    foreach ($timeoverdueexams as $exam) {
         block_exaquest_exams_set_status($exam->quizid, BLOCK_EXAQUEST_QUIZSTATUS_FINISHED);
     }
 }
@@ -1186,7 +1182,8 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
 
     if (has_capability('block/exaquest:viewsimilaritytab', \context_course::instance($COURSE->id))) {
         $rows[] = new tabobject('tab_similarity_comparison',
-            new moodle_url('/blocks/exaquest/similarity_comparison.php', array("courseid" => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1])),
+            new moodle_url('/blocks/exaquest/similarity_comparison.php',
+                array("courseid" => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1])),
             get_string('similarity', 'block_exaquest'), null, true);
     }
 
@@ -1245,6 +1242,29 @@ function block_exaquest_get_courseids() {
     }
 
     return $exaquest_courses;
+}
+
+/**
+ * @param $userid
+ * Returns the summed up count of todos. E.g. "2 questions for me to create + 2 questions for me to submit = 4 todos"
+ * questions_for_me_to_create_count + my_questions_to_submit_count + questions_for_me_to_review_count + questions_finalised_count +
+ *     questions_for_me_to_revise_count + exams_for_me_to_create_count. Depending on your role some of those todos may not exist,
+ *     but this will lead to a count of 0 for those todos, which means, it does not matter. No capabilities check needed.
+ */
+function block_exaquest_get_todo_count($userid, $coursecategoryid) {
+    $questions_for_me_to_create_count =
+        block_exaquest_get_questions_for_me_to_create_count($coursecategoryid, $userid);
+    $questions_for_me_to_review_count =
+        block_exaquest_get_questions_for_me_to_review_count($coursecategoryid, $userid);
+    $questions_for_me_to_revise_count =
+        block_exaquest_get_questions_for_me_to_revise_count($coursecategoryid, $userid);
+    $questions_finalised_count = block_exaquest_get_finalised_questionbankentries_count($coursecategoryid);
+    $my_questions_to_submit_count =
+        block_exaquest_get_my_questionbankentries_to_submit_count($coursecategoryid, $userid);
+    $exams_for_me_to_create_count =
+        block_exaquest_get_exams_for_me_to_create_count($coursecategoryid, $userid);
+    return $questions_for_me_to_create_count + $questions_for_me_to_review_count + $questions_for_me_to_revise_count +
+        $questions_finalised_count + $exams_for_me_to_create_count + $my_questions_to_submit_count;
 }
 
 function block_exaquest_is_user_in_course($userid, $courseid) {
