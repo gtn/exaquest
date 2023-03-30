@@ -2,8 +2,7 @@
 
 require_once __DIR__ . '/../inc.php';
 
-function xmldb_block_exaquest_upgrade($oldversion)
-{
+function xmldb_block_exaquest_upgrade($oldversion) {
     global $DB, $CFG;
     $dbman = $DB->get_manager();
     $return_result = true;
@@ -95,7 +94,6 @@ function xmldb_block_exaquest_upgrade($oldversion)
         upgrade_block_savepoint(true, 2022062407, 'exaquest');
     }
 
-
     if ($oldversion < 2022070500) {
         // rename fields questionid to questionbanentryid
         $table = new xmldb_table('block_exaquestquestionstatus');
@@ -110,7 +108,6 @@ function xmldb_block_exaquest_upgrade($oldversion)
             $dbman->rename_field($table, $field, 'questionbankentryid');
         }
 
-
         // drop keys because we want to use questionbankentryid instead of questionid
         $table = new xmldb_table('block_exaquestquestionstatus');
         $key = new xmldb_key('questionid', XMLDB_KEY_FOREIGN, array('questionid'), 'question', array('id'));
@@ -122,15 +119,16 @@ function xmldb_block_exaquest_upgrade($oldversion)
         // Launch drop key primary.
         $dbman->drop_key($table, $key);
 
-
         // add keys block_exaquestquestionstatus and block_exaquestreviewassign with questionbankentryid instead of questionid
         $table = new xmldb_table('block_exaquestquestionstatus');
-        $key = new xmldb_key('questionbankentryid', XMLDB_KEY_FOREIGN, array('questionbankentryid'), 'question_bank_entries', array('id'));
+        $key = new xmldb_key('questionbankentryid', XMLDB_KEY_FOREIGN, array('questionbankentryid'), 'question_bank_entries',
+            array('id'));
         // Launch add key questionbankentryid.
         $dbman->add_key($table, $key);
 
         $table = new xmldb_table('block_exaquestreviewassign');
-        $key = new xmldb_key('questionbankentryid', XMLDB_KEY_FOREIGN, array('questionbankentryid'), 'question_bank_entries', array('id'));
+        $key = new xmldb_key('questionbankentryid', XMLDB_KEY_FOREIGN, array('questionbankentryid'), 'question_bank_entries',
+            array('id'));
         // Launch add key questionbankentryid.
         $dbman->add_key($table, $key);
 
@@ -200,14 +198,12 @@ function xmldb_block_exaquest_upgrade($oldversion)
         $table->add_field('categoryname', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
         $table->add_field('categorytype', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
 
-
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
         $table->add_key('coursecategoryid', XMLDB_KEY_FOREIGN, ['coursecategoryid'], 'course_categories', ['id']);
 
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
-
 
         // Exaquest savepoint reached.
         upgrade_block_savepoint(true, 2022101302, 'exaquest');
@@ -221,7 +217,6 @@ function xmldb_block_exaquest_upgrade($oldversion)
         $table->add_field('questionid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
         $table->add_field('exaquestcategoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
 
-
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
         $table->add_key('questionid', XMLDB_KEY_FOREIGN, ['questionid'], 'question', ['id']);
         $table->add_key('exaquestcategoryid', XMLDB_KEY_FOREIGN, ['exaquestcategoryid'], 'exaquestcategories', ['id']);
@@ -229,7 +224,6 @@ function xmldb_block_exaquest_upgrade($oldversion)
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
-
 
         // Exaquest savepoint reached.
         upgrade_block_savepoint(true, 2022101303, 'exaquest');
@@ -288,8 +282,6 @@ function xmldb_block_exaquest_upgrade($oldversion)
         // Exaquest savepoint reached.
         upgrade_block_savepoint(true, 2022110800, 'exaquest');
     }
-
-
 
     if ($oldversion < 2022110900) {
         // change the courseid fields to coursecategoryid
@@ -351,7 +343,17 @@ function xmldb_block_exaquest_upgrade($oldversion)
         upgrade_block_savepoint(true, 2023031300, 'exaquest');
     }
 
-    if ($oldversion < 2023031303) {
+    if ($oldversion < 2023033000) {
+        // Creating roles and assigning capabilities
+        // Done as a task AFTER the installation, because the capabilities only exist at the end/after the installation.
+        // create the instance
+        $setuptask = new \block_exaquest\task\set_up_roles();
+        // queue it
+        \core\task\manager::queue_adhoc_task($setuptask);
+        upgrade_block_savepoint(true, 2023033000, 'exaquest');
+    }
+
+    if ($oldversion < 2023033001) {
         $table = new xmldb_table('block_exaquestrequestexam');
 
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
@@ -368,17 +370,21 @@ function xmldb_block_exaquest_upgrade($oldversion)
         }
 
         // Exaquest savepoint reached.
-        upgrade_block_savepoint(true, 2023031303, 'exaquest');
+        upgrade_block_savepoint(true, 2023033001, 'exaquest');
     }
 
-    if ($oldversion < 2023032702) {
-        // Creating roles and assigning capabilities
-        // Done as a task AFTER the installation, because the capabilities only exist at the end/after the installation.
-        // create the instance
-        $setuptask = new \block_exaquest\task\set_up_roles();
-        // queue it
-        \core\task\manager::queue_adhoc_task($setuptask);
-        upgrade_block_savepoint(true, 2023032702, 'exaquest');
+    if ($oldversion < 2023033002) {
+        // add field coursecategoryid to block_exaquestreviewassign
+        $table = new xmldb_table('block_exaquestreviewassign');
+        $field = new xmldb_field('coursecategoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null,
+            0); // 0 because non-empty table already exists so it cannot be null
+        $dbman->add_field($table, $field);
+        // add keys coursecategoryid
+        $key = new xmldb_key('coursecategoryid', XMLDB_KEY_FOREIGN, array('coursecategoryid'), 'course_categories', array('id'));
+        $dbman->add_key($table, $key);
+
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2023033002, 'exaquest');
     }
 
     return $return_result;

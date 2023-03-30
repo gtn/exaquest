@@ -50,6 +50,13 @@ $string['messageprovider:reviewquestion'] = 'Questions have been assigned for re
 $string['please_review_question'] = 'Please review question <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['please_review_question_subject'] = 'Please review question {$a->fullname}';
 
+$string['messageprovider:dailytodos'] = 'Daily todo message';
+$string['dailytodos'] = 'You have the following TODOs: <br> {$a->todosmessage}';
+$string['dailytodos_subject'] = 'Exaquest TODOs';
+$string['todos_in_course'] = '{$a->todoscount} TODOs in course <a href="{$a->url}">{$a->fullname}</a><br>';
+
+
+
 // Roles and Capabilities
 $string['exaquest:fragenersteller'] = 'Create questions in Exaquest block';
 $string['exaquest:modulverantwortlicher'] = 'Responsible for a module';

@@ -178,9 +178,11 @@ function block_exaquest_request_revision($userfrom, $userto, $comment, $question
     $assigndata->questionbankentryid = $questionbankentryid;
     $assigndata->reviewerid = $userto;
     $assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FORMAL;
-    $DB->insert_record('block_exaquestreviewassign', $assigndata);
+    $assigndata->coursecategoryid =  block_exaquest_get_coursecategoryid_by_courseid($courseid);
+    // TODO: I am assigning formal and fachlich review here... is this correct?
+    $DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
     $assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH;
-    $DB->insert_record('block_exaquestreviewassign', $assigndata);
+    $DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
 
     // create the message
     $messageobject = new stdClass;
@@ -273,7 +275,7 @@ function block_exaquest_get_reviewer_by_courseid($courseid) {
  * @param $userid
  * @return array
  */
-function block_exaquest_get_questionbankentries_to_formal_review_count($courseid, $userid) {
+function block_exaquest_get_questionbankentries_to_formal_review_count($courseid, $userid) { // TODO change to coursecategoryid and use it in query
     global $DB;
     $sql = "SELECT q.*
 			FROM {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} ra
@@ -295,7 +297,7 @@ function block_exaquest_get_questionbankentries_to_formal_review_count($courseid
  * @param $userid
  * @return array
  */
-function block_exaquest_get_questionbankentries_to_fachlich_review_count($courseid, $userid) {
+function block_exaquest_get_questionbankentries_to_fachlich_review_count($courseid, $userid) { // TODO change to coursecategoryid and use it in query
     global $DB;
     $sql = "SELECT q.*
 			FROM {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} ra
@@ -570,12 +572,13 @@ function block_exaquest_get_questions_for_me_to_review_count($coursecategoryid, 
     }
 
     // questionbankentryid DISTINCT to not count twice
-    $sql = "SELECT DISTINCT ra.questionbankentryid
-			FROM {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} ra
-			WHERE ra.reviewerid = :userid";
+    $sql = 'SELECT DISTINCT ra.questionbankentryid
+			FROM {' . BLOCK_EXAQUEST_DB_REVIEWASSIGN . '} ra
+			WHERE ra.reviewerid = :userid
+			AND ra.coursecategoryid = :coursecategoryid';
 
     $questions = count($DB->get_records_sql($sql,
-        array("userid" => $userid)));
+        array('userid' => $userid, 'coursecategoryid' => $coursecategoryid)));
 
     return $questions;
 }
@@ -614,12 +617,13 @@ function block_exaquest_get_questions_for_me_to_create($coursecategoryid, $useri
     }
 
     // questionbankentryid DISTINCT to not count twice
-    $sql = "SELECT *
-			FROM {" . BLOCK_EXAQUEST_DB_REQUESTQUEST . "} req
-			WHERE req.userid = :userid";
+    $sql = 'SELECT *
+			FROM {' . BLOCK_EXAQUEST_DB_REQUESTQUEST . '} req
+			WHERE req.userid = :userid
+			AND req.coursecategoryid = :coursecategoryid';
 
     $questions = $DB->get_records_sql($sql,
-        array("userid" => $userid));
+        array('userid' => $userid, 'coursecategoryid' => $coursecategoryid));
 
     return $questions;
 }
@@ -638,12 +642,13 @@ function block_exaquest_get_exams_for_me_to_create($coursecategoryid, $userid = 
     }
 
     // questionbankentryid DISTINCT to not count twice
-    $sql = "SELECT *
-			FROM {" . BLOCK_EXAQUEST_DB_REQUESTEXAM . "} req
-			WHERE req.userid = :userid";
+    $sql = 'SELECT *
+			FROM {' . BLOCK_EXAQUEST_DB_REQUESTEXAM . '} req
+			WHERE req.userid = :userid
+            AND req.coursecategoryid = :coursecategoryid';
 
     $questions = $DB->get_records_sql($sql,
-        array("userid" => $userid));
+        array('userid' => $userid, 'coursecategoryid' => $coursecategoryid));
 
     return $questions;
 }
@@ -662,14 +667,15 @@ function block_exaquest_get_questions_for_me_to_revise_count($coursecategoryid, 
         $userid = $USER->id;
     }
 
-    $sql = "SELECT qs.id
-			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
+    $sql = 'SELECT qs.id
+			FROM {' . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . '} qs
 			JOIN {question_bank_entries} qe ON qs.questionbankentryid = qe.id
 			WHERE qe.ownerid = :ownerid
-			AND qs.status = :status";
+			AND qs.status = :status
+			AND qs.coursecategoryid = :coursecategoryid';
 
     $questions =
-        count($DB->get_records_sql($sql, array("ownerid" => $userid, "status" => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE)));
+        count($DB->get_records_sql($sql, array('ownerid' => $userid, 'status' => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE, 'coursecategoryid' => $coursecategoryid)));
 
     return $questions;
 }
@@ -778,6 +784,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungskoordination'])) {
         $roleid = create_role('Prüfungskoordination', 'pruefungskoordination', '', 'manager');
@@ -827,6 +834,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:releasequestion', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:requestnewexam', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
         $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '', 'manager');
@@ -854,6 +862,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'modulverantwortlicher'])) {
         $roleid = create_role('Modulverantwortlicher', 'modulverantwortlicher', '', 'manager');
@@ -899,6 +908,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:requestnewexam', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fragenersteller'])) {
         $roleid = create_role('Fragenersteller', 'fragenersteller', '', 'manager');
@@ -927,6 +937,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlfragenreviewer'])) {
         $roleid = create_role('fachl. Fragenreviewer', 'fachlfragenreviewer', '', 'manager');
@@ -955,6 +966,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'beurteilungsmitwirkende'])) {
         $roleid = create_role('Beurteilungsmitwirkende', 'beurteilungsmitwirkende', '', 'manager');
@@ -982,6 +994,7 @@ function block_exaquest_set_up_roles() {
 
     assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlicherpruefer'])) {
         $roleid = create_role('fachlicher Prüfer', 'fachlicherpruefer', '', 'manager');
@@ -1010,6 +1023,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsmitwirkende'])) {
         $roleid = create_role('Prüfungsmitwirkende', 'pruefungsmitwirkende', '', 'manager');
@@ -1035,6 +1049,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlicherzweitpruefer'])) {
         $roleid = create_role('Fachlicher Zweitprüfer', 'fachlicherzweitpruefer', '', 'manager');
@@ -1059,6 +1074,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
 
     // ---
     if (!$DB->record_exists('role', ['shortname' => 'fragenerstellerlight'])) {
@@ -1089,6 +1105,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewownquestions', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlfragenreviewerlight'])) {
         $roleid = create_role('fachl. Fragenreviewerlight', 'fachlfragenreviewerlight', '', 'manager');
@@ -1118,6 +1135,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewownquestions', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
 
     //
     //role_assign($roleid, $USER->id, $contextid);
@@ -1225,10 +1243,37 @@ function get_question_category_and_context_of_course($courseid = null) {
 
 /**block_instances
  *
- * Returns all course ids where an instance of Exabis question management tool is installed
+ * Returns all course ids where an instance of Exabis question management tool is installed for this user
  */
 function block_exaquest_get_courseids() {
     global $DB, $USER;
+
+    $instances = $DB->get_records('block_instances', array('blockname' => 'exaquest'));
+
+    $exaquest_courses = array();
+
+    foreach ($instances as $instance) {
+        // get only the instances of the block in a COURSE context
+        $context = $DB->get_record('context', array('id' => $instance->parentcontextid, 'contextlevel' => CONTEXT_COURSE));
+        if ($context) {
+            $exaquest_courses[$context->instanceid] = $context->instanceid;
+        }
+    }
+
+    return $exaquest_courses;
+}
+
+/**block_instances
+ *
+ * Returns all course ids where an instance of Exabis question management tool is installed for this user
+ */
+function block_exaquest_get_courseids_for_user($userid = null) {
+    global $DB, $USER;
+
+    if ($userid == null) {
+        $userid = $USER->id;
+    }
+
     $instances = $DB->get_records('block_instances', array('blockname' => 'exaquest'));
 
     $exaquest_courses = array();
@@ -1236,7 +1281,7 @@ function block_exaquest_get_courseids() {
     foreach ($instances as $instance) {
         $context = $DB->get_record('context', array('id' => $instance->parentcontextid, 'contextlevel' => CONTEXT_COURSE));
         if ($context) {
-            if (block_exaquest_is_user_in_course($USER->id, $context->instanceid)) {
+            if (block_exaquest_is_user_in_course($userid, $context->instanceid)) {
                 $exaquest_courses[$context->instanceid] = $context->instanceid;
             }
         }
@@ -1434,3 +1479,57 @@ function block_exaquest_get_capabilities($context) {
     return $capabilities;
 }
 
+function block_exaquest_get_all_exaquest_users() {
+    // get all exaquest courses and then for each course the users ==> get all exaquest users
+    $courseids = block_exaquest_get_courseids();
+    $users_merged = [];
+    $users_unique = [];
+    foreach ($courseids as $courseid) {
+        $context = context_course::instance($courseid);
+        $users_in_course = get_users_by_capability($context, 'block/exaquest:exaquestuser', 'u.id');
+        $users_merged = array_merge($users_merged, $users_in_course);
+    }
+
+    // array_unique does not work for these objects ==> loop
+    foreach ($users_merged as $user) {
+        if (!in_array($user, $users_unique)) {
+            $users_unique[] = $user;
+        }
+    }
+    return $users_unique;
+}
+
+function block_exaquest_create_daily_notifications() {
+    global $USER;
+
+    $users = block_exaquest_get_all_exaquest_users();
+
+    foreach ($users as $user) {
+        // get the todocount
+        $courseids = block_exaquest_get_courseids_for_user($user->id);
+        $todosmessage = '';
+        foreach ($courseids as $courseid) {
+            $course = get_course($courseid);
+            $todocount = block_exaquest_get_todo_count($USER->id, $course->category);
+            if ($todocount) {
+                // create the message
+                $messageobject = new stdClass();
+                $messageobject->todoscount = $todocount;
+                $messageobject->fullname = $course->fullname;
+                $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $courseid]);
+                $messageobject->url = $messageobject->url->raw_out(false);
+                $todosmessage .= get_string('todos_in_course', 'block_exaquest', $messageobject);
+            }
+        }
+        if ($todosmessage != '') {
+            $messageobject = new stdClass();
+            $messageobject->todosmessage = $todosmessage;
+            $message = get_string('dailytodos', 'block_exaquest', $messageobject);
+            $subject = get_string('dailytodos_subject', 'block_exaquest');
+            $url_to_moodle_dashboard = new moodle_url('/my/index.php');
+            $url_to_moodle_dashboard = $url_to_moodle_dashboard->raw_out();
+            block_exaquest_send_moodle_notification("newquestionsrequest", $USER->id, $user->id, $subject, $message,
+                "TODOs", $url_to_moodle_dashboard);
+        }
+    }
+}

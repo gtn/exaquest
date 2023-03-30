@@ -46,13 +46,18 @@ $string['please_create_new_exams'] = 'Bitte erstellen Sie eine neue Prüfung in 
 $string['please_create_new_exams_subject'] = 'Bitte erstellen Sie eine neue Prüfung in {$a->fullname}';
 
 $string['messageprovider:revisequestion'] = 'Fragen wurden zur Überarbeitung zugeteilt';
-$string['please_revise_question'] = 'Bitte überarbeiten Sie eine Frage <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
-$string['please_revise_question_subject'] = 'Bitte überarbeiten Sie eine Frage in {$a->fullname}';
+$string['please_revise_question'] = 'Bitte überarbeiten Sie die Frage <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
+$string['please_revise_question_subject'] = 'Bitte überarbeiten Sie die Frage {$a->fullname}';
 
 
 $string['messageprovider:reviewquestion'] = 'Fragen wurden zum Beurteilen zugeteilt';
-$string['please_review_question'] = 'Bitte beurteilen Sie eine Frage in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
-$string['please_review_question_subject'] = 'Bitte beurteilen Sie eine Frage in {$a->fullname}';
+$string['please_review_question'] = 'Bitte beurteilen Sie die Frage in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
+$string['please_review_question_subject'] = 'Bitte beurteilen Sie die Frage {$a->fullname}';
+
+$string['messageprovider:dailytodos'] = 'Tägliche todo Nachricht';
+$string['dailytodos'] = 'Sie haben folgende TODOs: <br> {$a->todosmessage}';
+$string['dailytodos_subject'] = 'Exaquest TODOs';
+$string['todos_in_course'] = '{$a->todoscount} TODOs in Kurs <a href="{$a->url}">{$a->fullname}</a><br>';
 
 
 

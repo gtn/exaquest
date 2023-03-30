@@ -14,25 +14,31 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace block_exaquest\task;
+
+use core\task\scheduled_task;
+
 defined('MOODLE_INTERNAL') || die();
 
-$tasks = array(
-    array(
-        'classname' => 'block_exaquest\task\check_active_exams',
-        'blocking' => 0,
-        'minute' => '*/1',
-        'hour' => '*',
-        'day' => '*',
-        'month' => '*',
-        'dayofweek' => '*',
-    ),
-    array(
-        'classname' => 'block_exaquest\task\create_daily_notifcations',
-        'blocking' => 0,
-        'minute' => '0',
-        'hour' => '5',
-        'day' => '*',
-        'month' => '*',
-        'dayofweek' => '*',
-    ),
-);
+require_once __DIR__ . '/../../inc.php';
+
+/**
+ * create_daily_notifcations.
+ */
+class create_daily_notifcations extends \core\task\scheduled_task {
+    /**
+     * Execute the task.
+     */
+    public function execute() {
+        block_exaquest_create_daily_notifications();
+    }
+
+    public function get_name() {
+        //return block_exacomp_trans(['en:Import Data with additional functionality', 'de:Daten Importieren mit zusätzlicher Funktionalität']);
+        return "Create daily Exaquest notifications.";
+    }
+}
+
+
+
+

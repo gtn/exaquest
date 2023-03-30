@@ -23,11 +23,13 @@
                 <FIELD NAME="questionbankentryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="questionbankentryid"/>
                 <FIELD NAME="reviewerid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="the assigned reviewer"/>
                 <FIELD NAME="reviewtype" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="type of the review 0=formal, 1=fachlich"/>
+                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="coursecategoryid"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
                 <KEY NAME="questionbankentryid" TYPE="foreign" FIELDS="questionbankentryid" REFTABLE="question_bank_entries" REFFIELDS="id"/>
                 <KEY NAME="reviewerid" TYPE="foreign" FIELDS="reviewerid" REFTABLE="user" REFFIELDS="id"/>
+                <KEY NAME="coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories" REFFIELDS="id"/>
             </KEYS>
         </TABLE>
         <TABLE NAME="block_exaquest_similarity" COMMENT="This table is used as persistence store for the gtn-jku-similarity-comparison extension, see https://gitea.swerk.priv.at/stefan/gtn-jku-similarity-comparison">
