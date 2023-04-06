@@ -23,14 +23,6 @@ require_once(__DIR__ . '/../classes/output/popup_change_status_warning.php');
 
 $PAGE->requires->js('/blocks/exaquest/javascript/jquery.js', true);
 
-/**
- * A column type for the name of the question creator.
- *
- * @package   qbank_viewcreator
- * @copyright 2009 Tim Hunt
- * @author    2021 Ghaly Marc-Alexandre <marc-alexandreghaly@catalyst-ca.net>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 class change_status extends column_base {
 
     public function get_name(): string {
@@ -52,11 +44,12 @@ class change_status extends column_base {
         $questioncreator->id = $question->createdby;
         $questioncreators = array($questioncreator);
 
+
         switch (intval($question->teststatus)) {
 
             case BLOCK_EXAQUEST_QUESTIONSTATUS_NEW:
             case BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE:
-                if (intval($question->createdby) == $USER->id &&
+                if (intval($question->ownerid) == $USER->id &&
                     has_capability('block/exaquest:setstatustoreview', \context_course::instance($COURSE->id))) {
                     $usertoselect = block_exaquest_get_reviewer_by_courseid($COURSE->id);
                     echo $output->render(new \block_exaquest\output\popup_change_status($usertoselect, 'open_question_for_review',
@@ -189,6 +182,9 @@ class change_status extends column_base {
         global $DB;
 
         $questionstatusdb = $DB->get_records("block_exaquestquestionstatus");
+
+        $questionbankentries = $DB->get_records("question_bank_entries");
+
         $questionstatus = array();
         foreach ($questionstatusdb as $qs) {
             $questionstatus[$qs->questionbankentryid] = $qs->status;
@@ -196,6 +192,7 @@ class change_status extends column_base {
 
         foreach ($questions as $question) {
             $question->teststatus = $questionstatus[$question->questionbankentryid];
+            $question->ownerid = $questionbankentries[$question->questionbankentryid];
         }
 
     }

@@ -91,9 +91,9 @@ class exaquest_filters extends condition {
                 break;
         }
         //this is for restricing view of questions for new fragenersteller light role
-       /* if(!has_capability('block/exaquest:viewownquestions', \context_system::instance())){
-            $this->where .= " AND qbe.ownerid = " . $USER->id;
-        } */
+        //if(!has_capability('block/exaquest:readallquestions', \context_system::instance())){
+         //   $this->where .= " AND qbe.ownerid = " . $USER->id;
+        //}
 
         return $this->where;
     }
