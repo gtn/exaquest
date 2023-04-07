@@ -296,10 +296,10 @@ class exaquest_view extends view {
 
         $this->build_query();
 
-        //var_dump($this->loadsql);
-        //die;
+
 
         $totalnumber = $this->get_question_count();
+
         if ($totalnumber == 0) {
             return;
         }
@@ -390,8 +390,59 @@ class exaquest_view extends view {
         }
     }
 
+    /**
+     * Create the SQL query to retrieve the indicated questions, based on
+     * \core_question\bank\search\condition filters.
+     */
+    protected function build_query(): void {
+        // Get the required tables and fields.
+        $joins = [];
+        $fields = ['qv.status', 'qc.id as categoryid', 'qv.version', 'qv.id as versionid', 'qbe.id as questionbankentryid'];
+        if (!empty($this->requiredcolumns)) {
+            foreach ($this->requiredcolumns as $column) {
+                $extrajoins = $column->get_extra_joins();
+                foreach ($extrajoins as $prefix => $join) {
+                    if (isset($joins[$prefix]) && $joins[$prefix] != $join) {
+                        throw new \coding_exception('Join ' . $join . ' conflicts with previous join ' . $joins[$prefix]);
+                    }
+                    $joins[$prefix] = $join;
+                }
+                $fields = array_merge($fields, $column->get_required_fields());
+            }
+        }
+        $fields = array_unique($fields);
+
+        // Build the order by clause.
+        $sorts = [];
+        foreach ($this->sort as $sort => $order) {
+            list($colname, $subsort) = $this->parse_subsort($sort);
+            $sorts[] = $this->requiredcolumns[$colname]->sort_expression($order < 0, $subsort);
+        }
+
+        // Build the where clause.
+        $latestversion = 'qv.version = (SELECT MAX(v.version)
+                                          FROM {question_versions} v
+                                          JOIN {question_bank_entries} be
+                                            ON be.id = v.questionbankentryid
+                                         WHERE be.id = qbe.id)';
+        $tests = ['q.parent = 0', $latestversion];
+        $this->sqlparams = [];
+        foreach ($this->searchconditions as $searchcondition) {
+            if ($searchcondition->where()) {
+                $tests[] = '((' . $searchcondition->where() .'))';
+            }
+            if ($searchcondition->params()) {
+                $this->sqlparams = array_merge($this->sqlparams, $searchcondition->params());
+            }
+        }
+        // Build the SQL.
+        $sql = ' FROM {question} q ' . implode(' ', $joins);
+        $sql .= ' WHERE ' . implode(' AND ', $tests);
+        $this->countsql = 'SELECT count(DISTINCT qbe.id)' . $sql;
+        $this->loadsql = 'SELECT ' . implode(', ', $fields) . $sql . ' ORDER BY ' . implode(', ', $sorts);
+    }
+
     protected function load_page_questions($page, $perpage): \moodle_recordset {
-        //this funciton calls the sql query and allows me to adjust questions that will get selected
         global $DB;
         $questions = $DB->get_recordset_sql($this->loadsql, $this->sqlparams, $page * $perpage, $perpage);
         if (empty($questions)) {
