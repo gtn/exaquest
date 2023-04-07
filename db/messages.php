@@ -27,7 +27,7 @@ $messageproviders = array (
     ),
     'newexamsrequest' => array (
         'defaults' => [
-            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED, // TODO: this somehow does not work. The admin has to do this manually on ./admin/message.php
+            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
             'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
         ],
     ),
@@ -40,6 +40,20 @@ $messageproviders = array (
     ),
     // Notify modulverantwortlicher and fachlicherfragenreviewer that they should review a question
     'reviewquestion' => array (
+        'defaults' => [
+            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+            'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+        ],
+    ),
+    // Notify modulverantwortlicher and fachlicherfragenreviewer that they should review a question
+    'dailytodos' => array (
+        'defaults' => [
+            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+            'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+        ],
+    ),
+    // Notify modulverantwortlicher and fachlicherfragenreviewer that they should review a question
+    'daily_released_questions' => array (
         'defaults' => [
             'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
             'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,

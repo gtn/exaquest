@@ -387,5 +387,15 @@ function xmldb_block_exaquest_upgrade($oldversion) {
         upgrade_block_savepoint(true, 2023033002, 'exaquest');
     }
 
+    if ($oldversion < 2023040700) {
+        // add field timestamp to block_exaquestquestionstatus
+        $table = new xmldb_table('block_exaquestquestionstatus');
+        $field = new xmldb_field('timestamp', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null,
+            0); // 0 because non-empty table already exists so it cannot be null
+        $dbman->add_field($table, $field);
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2023040700, 'exaquest');
+    }
+
     return $return_result;
 }

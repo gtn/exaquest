@@ -1499,18 +1499,39 @@ function block_exaquest_get_all_exaquest_users() {
     return $users_unique;
 }
 
+function block_exaquest_get_all_pruefungskoordination_users() {
+    // get all exaquest courses and then for each course the users ==> get all exaquest users
+    $courseids = block_exaquest_get_courseids();
+    $users_merged = [];
+    $users_unique = [];
+    foreach ($courseids as $courseid) {
+        $context = context_course::instance($courseid);
+        $users_in_course = get_users_by_capability($context, 'block/exaquest:pruefungskoordination', 'u.id');
+        $users_merged = array_merge($users_merged, $users_in_course);
+    }
+
+    // array_unique does not work for these objects ==> loop
+    foreach ($users_merged as $user) {
+        if (!in_array($user, $users_unique)) {
+            $users_unique[] = $user;
+        }
+    }
+    return $users_unique;
+}
+
+
 function block_exaquest_create_daily_notifications() {
     global $USER;
 
     $users = block_exaquest_get_all_exaquest_users();
 
     foreach ($users as $user) {
-        // get the todocount
+        // get the todocount and create the todos notification
         $courseids = block_exaquest_get_courseids_for_user($user->id);
         $todosmessage = '';
         foreach ($courseids as $courseid) {
             $course = get_course($courseid);
-            $todocount = block_exaquest_get_todo_count($USER->id, $course->category);
+            $todocount = block_exaquest_get_todo_count($USER->id, $course->category); // TODO: this is wrong for e.g. Pruefungskoordination
             if ($todocount) {
                 // create the message
                 $messageobject = new stdClass();
@@ -1528,8 +1549,69 @@ function block_exaquest_create_daily_notifications() {
             $subject = get_string('dailytodos_subject', 'block_exaquest');
             $url_to_moodle_dashboard = new moodle_url('/my/index.php');
             $url_to_moodle_dashboard = $url_to_moodle_dashboard->raw_out();
-            block_exaquest_send_moodle_notification("newquestionsrequest", $USER->id, $user->id, $subject, $message,
+            block_exaquest_send_moodle_notification("dailytodos", $USER->id, $user->id, $subject, $message,
                 "TODOs", $url_to_moodle_dashboard);
         }
     }
+
+    // TODO check that logic, not finished yet
+    // get the PK of all courses and send notification about released questions
+    $pks = block_exaquest_get_all_pruefungskoordination_users();
+    foreach ($pks as $pk) {
+        $courseids = block_exaquest_get_courseids_for_user($user->id);
+        $daily_released_questions_message = '';
+        foreach ($courseids as $courseid) {
+            if(has_capability('block/exaquest:pruefungskoordination', \context_course::instance($courseid), $pk->id)){ // could have another role in this course ==> skip
+                $course = get_course($courseid);
+                $daily_released_questions = get_daily_released_questions($course->category);
+                if ($daily_released_questions) {
+                    // create the message
+                    $messageobject = new stdClass();
+                    $messageobject->daily_released_questions = $daily_released_questions;
+                    $messageobject->fullname = $course->fullname;
+                    $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $courseid]);
+                    $messageobject->url = $messageobject->url->raw_out(false);
+                    $daily_released_questions_message .= get_string('daily_released_questions_in_course', 'block_exaquest', $messageobject);
+                }
+            }
+        }
+        if ($daily_released_questions_message != '') {
+            $messageobject = new stdClass();
+            $messageobject->todosmessage = $todosmessage;
+            $message = get_string('daily_released_questions', 'block_exaquest', $messageobject);
+            $subject = get_string('daily_released_questions_subject', 'block_exaquest');
+            $url_to_moodle_dashboard = new moodle_url('/my/index.php');
+            $url_to_moodle_dashboard = $url_to_moodle_dashboard->raw_out();
+            block_exaquest_send_moodle_notification('dailyreleasedquestions', $USER->id, $pk->id, $subject, $message,
+                'Daily released questions', $url_to_moodle_dashboard);
+        }
+    }
+
+    //$courseids = block_exaquest_get_courseids();
+    //foreach ($courseids as $courseid){
+    //    $context = context_course::instance($courseid);
+    //    $pks = get_enrolled_users($context, 'block/exaquest:pruefungskoordination');
+
+    //}
+
+
+}
+
+/**
+ * @param $courseid
+ * returns the count of how many questions have been released in which course
+ */
+function get_daily_released_questions($coursecategoryid){
+    global $DB;
+
+    $time_last_day = time() - 86400; // current time - 24*60*60 to have time of 24h hours ago.
+    // anything that has a timestamp larger than 24h ago has been done yesterday
+
+    $sql = 'SELECT qs.id
+			FROM {' . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . '} qs
+			WHERE qs.coursecategoryid = :coursecategoryid
+			AND qs.timestamp > :timelastday';
+
+    $questions = count($DB->get_records_sql($sql, array('coursecategoryid' => $coursecategoryid, 'timelastday' => $time_last_day)));
+    return $questions;
 }

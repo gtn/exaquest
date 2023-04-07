@@ -10,6 +10,7 @@
                 <FIELD NAME="questionbankentryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="questionbankentryid"/>
                 <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="status"/>
                 <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="coursecategoryid"/>
+                <FIELD NAME="timestamp" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

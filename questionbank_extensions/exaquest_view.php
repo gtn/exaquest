@@ -339,6 +339,16 @@ class exaquest_view extends view {
 
 
     /**
+     * Get the number of questions.
+     * @return int
+     */
+    protected function get_question_count(): int {
+        global $DB;
+        return $DB->count_records_sql($this->countsql, $this->sqlparams);
+    }
+
+
+    /**
      * Create a new question form in dashboard.
      *
      * @param false|mixed|\stdClass $category
