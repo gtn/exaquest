@@ -11,6 +11,7 @@ $questionid = required_param('questionid', PARAM_INT);
 $action = required_param('action', PARAM_TEXT);
 $courseid = required_param('courseid', PARAM_INT);
 $users = optional_param('users', null, PARAM_RAW);
+//$formalreviewusers = optional_param('formalreviewusers', null, PARAM_RAW);
 $commenttext = optional_param('commenttext', null, PARAM_TEXT);
 $quizid = optional_param('quizid', null, PARAM_INT);
 
@@ -31,7 +32,15 @@ switch ($action) {
         if ($users != null) {
             foreach ($users as $user) {
                 block_exaquest_request_review($USER, $user, $commenttext, $questionbankentryid, $questionname, $catAndCont,
-                    $courseid);
+                    $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH);
+            }
+        }
+        // get the PKs, which are the ones that should be assigned to do the formal review
+        $formalreviewusers =  block_exaquest_get_pruefungskoodrination_by_courseid($courseid);
+        if ($formalreviewusers != null) {
+            foreach ($formalreviewusers as $user) {
+                block_exaquest_request_review($USER, $user->id, $commenttext, $questionbankentryid, $questionname, $catAndCont,
+                    $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FORMAL);
             }
         }
         if ($commenttext != null) {

@@ -129,7 +129,6 @@ class change_status extends column_base {
         ?>
 
         <script type="text/javascript">
-
             $(document).ready(function () {
                 $(".changestatus<?php echo $question->questionbankentryid; ?>").click(function (e) {
                     var data = {

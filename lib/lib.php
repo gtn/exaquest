@@ -145,16 +145,15 @@ function block_exaquest_request_exam($userfrom, $userto, $comment) {
         "Prüfungserstellung", $messageobject->url);
 }
 
-function block_exaquest_request_review($userfrom, $userto, $comment, $questionbankentryid, $questionname, $catAndCont, $courseid) {
+function block_exaquest_request_review($userfrom, $userto, $comment, $questionbankentryid, $questionname, $catAndCont, $courseid,
+    $reviewtype) {
     global $DB, $COURSE;
     // enter data into the exaquest tables
     $assigndata = new stdClass;
     $assigndata->questionbankentryid = $questionbankentryid;
     $assigndata->reviewerid = $userto;
-    $assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FORMAL;
-    $DB->insert_record('block_exaquestreviewassign', $assigndata);
-    $assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH;
-    $DB->insert_record('block_exaquestreviewassign', $assigndata);
+    $assigndata->reviewtype = $reviewtype;
+    $DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
 
     // create the message
     $messageobject = new stdClass;
@@ -179,7 +178,7 @@ function block_exaquest_request_revision($userfrom, $userto, $comment, $question
     $assigndata->reviewerid = $userto;
     $assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FORMAL;
     $assigndata->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($courseid);
-    // TODO: I am assigning formal and fachlich review here... is this correct?
+    // TODO: I am assigning formal and fachlich review here... is this correct? --> NO, this would not make sense... The "request revision" should maybe change the owner? or add it to reviewassign but with 3rd value, not fachlich or formal review
     $DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
     $assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH;
     $DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
@@ -259,10 +258,10 @@ function block_exaquest_get_fachlichepruefer_by_courseid($courseid) {
 function block_exaquest_get_reviewer_by_courseid($courseid) {
     $context = context_course::instance($courseid);
     $userarray = array();
-    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:modulverantwortlicher'));
+    //$userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:modulverantwortlicher'));
     $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fachlfragenreviewer'));
-    $userarray = array_merge($userarray, get_enrolled_users($context,
-        'block/exaquest:pruefungskoordination')); // TODO: according to 20230112 Feedbackliste. But should they really have the right to review?
+    //$userarray = array_merge($userarray, get_enrolled_users($context,
+    //    'block/exaquest:pruefungskoordination')); // according to 20230112 Feedbackliste. But should they really have the right to review? nope, they should not be here, as told in later feedbackliste 20230323
     $userarray = array_unique($userarray, SORT_REGULAR); // to remove users who have multiple roles
     return $userarray;
 }
@@ -1522,6 +1521,11 @@ function block_exaquest_get_all_pruefungskoordination_users() {
     return $users_unique;
 }
 
+function block_exaquest_get_pruefungskoodrination_by_courseid($courseid) {
+    $context = context_course::instance($courseid);
+    return get_enrolled_users($context, 'block/exaquest:pruefungskoordination');
+}
+
 function block_exaquest_create_daily_notifications() {
     global $USER;
 
@@ -1641,5 +1645,13 @@ function block_exaquest_clean_up_tables() {
     // delete entries in exaquestreviewassign that have no questionbankentry related
     $sql = 'DELETE FROM {' . BLOCK_EXAQUEST_DB_REVIEWASSIGN . '}
     WHERE questionbankentryid NOT IN (SELECT id FROM {question_bank_entries})';
+    $DB->execute($sql);
+
+    // delete entries in exaquestreviewassign that do not have the status that they should be reviewed
+    $sql = 'DELETE FROM {' . BLOCK_EXAQUEST_DB_REVIEWASSIGN . '}
+    WHERE questionbankentryid NOT IN (SELECT id FROM {' . BLOCK_EXAQUEST_DB_QUESTIONSTATUS .
+        '} WHERE  status = ' . BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS . ' OR status = ' .
+        BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE . ' OR status = ' . BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE .
+        ')';
     $DB->execute($sql);
 }

@@ -32,12 +32,13 @@ class popup_change_status implements renderable, templatable {
         $data->name = $this->name;
         $readonlyusers = [];
         $context = \context_course::instance($COURSE->id);
-        foreach ($this->selectusers as $key => $user){
-            if(is_enrolled($context, $user, "block/exaquest:modulverantwortlicher") || is_enrolled($context, $user, "block/exaquest:pruefungskoordination")){
-                $readonlyusers[] =  $user;
-                unset($this->selectusers[$key]);
-            }
-        }
+        // this is NOT needed anymore. The modulverantwortlicher should not be selectable, the PK should also not be selectable ==> keep code in case later it will be needed after all
+        //foreach ($this->selectusers as $key => $user){
+        //    if(is_enrolled($context, $user, "block/exaquest:modulverantwortlicher") || is_enrolled($context, $user, "block/exaquest:pruefungskoordination")){
+        //        $readonlyusers[] =  $user;
+        //        unset($this->selectusers[$key]);
+        //    }
+        //}
         $data->readonlyusers = $readonlyusers;
         $data->selectusers = array_values($this->selectusers);
 
