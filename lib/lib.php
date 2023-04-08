@@ -1531,7 +1531,7 @@ function block_exaquest_create_daily_notifications() {
         $todosmessage = '';
         foreach ($courseids as $courseid) {
             $course = get_course($courseid);
-            $todocount = block_exaquest_get_todo_count($USER->id, $course->category); // TODO: this is wrong for e.g. Pruefungskoordination
+            $todocount = block_exaquest_get_todo_count($user->id, $course->category);
             if ($todocount) {
                 // create the message
                 $messageobject = new stdClass();
