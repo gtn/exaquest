@@ -56,9 +56,9 @@ $string['dailytodos_subject'] = 'Exaquest TODOs';
 $string['todos_in_course'] = '{$a->todoscount} TODOs in course <a href="{$a->url}">{$a->fullname}</a><br>';
 
 $string['messageprovider:daily_released_questions'] = 'Daily released questions message';
-$string['daily_released_questions'] = 'You have the following TODOs: <br> {$a->todosmessage}';
-$string['daily_released_questions_subject'] = 'Exaquest TODOs';
-$string['daily_released_questions_in_course'] = '{$a->todoscount} TODOs in course <a href="{$a->url}">{$a->fullname}</a><br>';
+$string['daily_released_questions'] = 'Questions have been released the following courses: <br> {$a->daily_released_questions_message}';
+$string['daily_released_questions_subject'] = 'Exaquest questions released';
+$string['daily_released_questions_in_course'] = '{$a->daily_released_questions} questions released in course <a href="{$a->url}">{$a->fullname}</a><br>';
 
 
 

@@ -178,7 +178,7 @@ function block_exaquest_request_revision($userfrom, $userto, $comment, $question
     $assigndata->questionbankentryid = $questionbankentryid;
     $assigndata->reviewerid = $userto;
     $assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FORMAL;
-    $assigndata->coursecategoryid =  block_exaquest_get_coursecategoryid_by_courseid($courseid);
+    $assigndata->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($courseid);
     // TODO: I am assigning formal and fachlich review here... is this correct?
     $DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
     $assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH;
@@ -275,7 +275,8 @@ function block_exaquest_get_reviewer_by_courseid($courseid) {
  * @param $userid
  * @return array
  */
-function block_exaquest_get_questionbankentries_to_formal_review_count($courseid, $userid) { // TODO change to coursecategoryid and use it in query
+function block_exaquest_get_questionbankentries_to_formal_review_count($courseid,
+    $userid) { // TODO change to coursecategoryid and use it in query
     global $DB;
     $sql = "SELECT q.*
 			FROM {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} ra
@@ -297,7 +298,8 @@ function block_exaquest_get_questionbankentries_to_formal_review_count($courseid
  * @param $userid
  * @return array
  */
-function block_exaquest_get_questionbankentries_to_fachlich_review_count($courseid, $userid) { // TODO change to coursecategoryid and use it in query
+function block_exaquest_get_questionbankentries_to_fachlich_review_count($courseid,
+    $userid) { // TODO change to coursecategoryid and use it in query
     global $DB;
     $sql = "SELECT q.*
 			FROM {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} ra
@@ -675,7 +677,8 @@ function block_exaquest_get_questions_for_me_to_revise_count($coursecategoryid, 
 			AND qs.coursecategoryid = :coursecategoryid';
 
     $questions =
-        count($DB->get_records_sql($sql, array('ownerid' => $userid, 'status' => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE, 'coursecategoryid' => $coursecategoryid)));
+        count($DB->get_records_sql($sql, array('ownerid' => $userid, 'status' => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE,
+            'coursecategoryid' => $coursecategoryid)));
 
     return $questions;
 }
@@ -1519,7 +1522,6 @@ function block_exaquest_get_all_pruefungskoordination_users() {
     return $users_unique;
 }
 
-
 function block_exaquest_create_daily_notifications() {
     global $USER;
 
@@ -1561,7 +1563,8 @@ function block_exaquest_create_daily_notifications() {
         $courseids = block_exaquest_get_courseids_for_user($user->id);
         $daily_released_questions_message = '';
         foreach ($courseids as $courseid) {
-            if(has_capability('block/exaquest:pruefungskoordination', \context_course::instance($courseid), $pk->id)){ // could have another role in this course ==> skip
+            if (has_capability('block/exaquest:pruefungskoordination', \context_course::instance($courseid),
+                $pk->id)) { // could have another role in this course ==> skip
                 $course = get_course($courseid);
                 $daily_released_questions = get_daily_released_questions($course->category);
                 if ($daily_released_questions) {
@@ -1571,18 +1574,19 @@ function block_exaquest_create_daily_notifications() {
                     $messageobject->fullname = $course->fullname;
                     $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $courseid]);
                     $messageobject->url = $messageobject->url->raw_out(false);
-                    $daily_released_questions_message .= get_string('daily_released_questions_in_course', 'block_exaquest', $messageobject);
+                    $daily_released_questions_message .= get_string('daily_released_questions_in_course', 'block_exaquest',
+                        $messageobject);
                 }
             }
         }
         if ($daily_released_questions_message != '') {
             $messageobject = new stdClass();
-            $messageobject->todosmessage = $todosmessage;
+            $messageobject->daily_released_questions_message = $daily_released_questions_message;
             $message = get_string('daily_released_questions', 'block_exaquest', $messageobject);
             $subject = get_string('daily_released_questions_subject', 'block_exaquest');
             $url_to_moodle_dashboard = new moodle_url('/my/index.php');
             $url_to_moodle_dashboard = $url_to_moodle_dashboard->raw_out();
-            block_exaquest_send_moodle_notification('dailyreleasedquestions', $USER->id, $pk->id, $subject, $message,
+            block_exaquest_send_moodle_notification('daily_released_questions', $USER->id, $pk->id, $subject, $message,
                 'Daily released questions', $url_to_moodle_dashboard);
         }
     }
@@ -1594,14 +1598,13 @@ function block_exaquest_create_daily_notifications() {
 
     //}
 
-
 }
 
 /**
  * @param $courseid
  * returns the count of how many questions have been released in which course
  */
-function get_daily_released_questions($coursecategoryid){
+function get_daily_released_questions($coursecategoryid) {
     global $DB;
 
     $time_last_day = time() - 86400; // current time - 24*60*60 to have time of 24h hours ago.
@@ -1614,4 +1617,29 @@ function get_daily_released_questions($coursecategoryid){
 
     $questions = count($DB->get_records_sql($sql, array('coursecategoryid' => $coursecategoryid, 'timelastday' => $time_last_day)));
     return $questions;
+}
+
+/**
+ * clean up exaquest tables. E.g. delete entries in questionstatus that have no questionbankentry related.
+ */
+function block_exaquest_clean_up_tables() {
+    global $DB;
+
+    //$DB->delete_records_select(BLOCK_EXACOMP_DB_COMPETENCES,
+    //    "userid=? AND timestamp<=?", [$studentid, $time]);
+
+    //$sql = "DELETE FROM {{$table}}
+    //					WHERE source >= " . data::MIN_SOURCE_ID . "
+    //					AND source NOT IN (SELECT id FROM {" . BLOCK_EXACOMP_DB_DATASOURCES . "})
+    //				";
+
+    // delete entries in exaquestquestionstatus that have no questionbankentry related
+    $sql = 'DELETE FROM {' . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . '}
+    WHERE questionbankentryid NOT IN (SELECT id FROM {question_bank_entries})';
+    $DB->execute($sql);
+
+    // delete entries in exaquestreviewassign that have no questionbankentry related
+    $sql = 'DELETE FROM {' . BLOCK_EXAQUEST_DB_REVIEWASSIGN . '}
+    WHERE questionbankentryid NOT IN (SELECT id FROM {question_bank_entries})';
+    $DB->execute($sql);
 }
