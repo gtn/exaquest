@@ -31,6 +31,12 @@ class set_up_roles extends \core\task\adhoc_task {
     public function execute() {
         block_exaquest_set_up_roles();
     }
+
+    public function get_name() {
+        //return block_exacomp_trans(['en:Import Data with additional functionality', 'de:Daten Importieren mit zusätzlicher Funktionalität']);
+        return "Set up roles for Exaquest.";
+        return get_string('set_up_roles', 'block_exaquest');
+    }
 }
 
 

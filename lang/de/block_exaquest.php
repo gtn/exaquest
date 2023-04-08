@@ -157,6 +157,7 @@ $string['skip_and_release_question'] = 'Überspringen und Freigeben';
 $string['release_question_warning'] = 'Sind Sie sicher, dass Sie die Begutachtung überspringen und die Frage direkt freigeben wollen?';
 $string['release_question_warning_title'] = 'Warnung';
 $string['change_status'] = 'Status verändern';
+$string['notification_will_be_sent_to_pk'] = 'Die Prüfungskoordination wird auch eine Benachrichtigung erhalten, die formale Begutachtung durchzuführen.';
 
 $string['open_for_review_text'] = 'Begutachtung zuteilen zu..';
 $string['revise_text'] = 'Überarbeitung zuteilen zu..';
@@ -290,3 +291,11 @@ $string['exaquest:viewfinishedexams'] = 'View finished exams in exaquest';
 $string['exaquest:viewgradesreleasedexams'] = 'View released exams in exaquest';
 $string['exaquest:viewnewexams'] = 'View new exams in exaquest';
 $string['exaquest:viewgradesreleasedexams'] = 'View exams where grades have been released in exaquest';
+
+
+
+// tasks
+$string['check_active_exams'] = 'Update alle bereits beendeten Prüfungen welche den Status "aktiv" in Exaquest haben, und aktualisiere den Status.';
+$string['clean_up_tables'] = 'Säubere die Exaquest Tabellen, falls fehlerhafte Daten bestehen.';
+$string['create_daily_notifications'] = 'Erstelle die täglichen Exaquest-Nachrichten.';
+$string['set_up_roles'] = 'Rollen für Exaquest aufsetzen.';

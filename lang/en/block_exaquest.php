@@ -145,6 +145,7 @@ $string['skip_and_release_question'] = 'Skip and release question';
 $string['release_question_warning'] = 'Are you sure you want to skip the review and release the question right away?';
 $string['release_question_warning_title'] = 'Warning';
 $string['change_status'] = 'change status';
+$string['notification_will_be_sent_to_pk'] = 'The Prüfungskoordination will also get a notification that the formal review should be done.';
 
 $string['open_for_review_text'] = 'Assign review to..';
 $string['revise_text'] = 'Assign revision to..';
@@ -288,3 +289,10 @@ $string['exaquest:viewfinishedexams'] = 'View finished exams in exaquest';
 $string['exaquest:viewgradesreleasedexams'] = 'View released exams in exaquest';
 $string['exaquest:viewnewexams'] = 'View new exams in exaquest';
 $string['exaquest:viewgradesreleasedexams'] = 'View exams where grades have been released in exaquest';
+
+
+// tasks
+$string['check_active_exams'] = 'Check status of active Exaquest quizzes and update if finished.';
+$string['clean_up_tables'] = 'Clean up Exaquest tables, e.g. delete questionstatus entries where there is no questionbankentryid related.';
+$string['create_daily_notifications'] = 'Create daily Exaquest notifications.';
+$string['set_up_roles'] = 'Set up roles for Exaquest.';

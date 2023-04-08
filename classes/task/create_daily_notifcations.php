@@ -36,6 +36,7 @@ class create_daily_notifcations extends \core\task\scheduled_task {
     public function get_name() {
         //return block_exacomp_trans(['en:Import Data with additional functionality', 'de:Daten Importieren mit zusätzlicher Funktionalität']);
         return "Create daily Exaquest notifications.";
+        return get_string('create_daily_notifications', 'block_exaquest');
     }
 }
 

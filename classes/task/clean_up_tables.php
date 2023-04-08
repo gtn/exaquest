@@ -35,7 +35,8 @@ class clean_up_tables extends \core\task\scheduled_task {
 
     public function get_name() {
         //return block_exacomp_trans(['en:Import Data with additional functionality', 'de:Daten Importieren mit zusätzlicher Funktionalität']);
-        return "Clean up tables, e.g. delete questionstatus entries where there is no questionbankentryid related.";
+        return "Clean up exaquest tables, e.g. delete questionstatus entries where there is no questionbankentryid related.";
+        return get_string('clean_up_tables', 'block_exaquest');
     }
 }
 
