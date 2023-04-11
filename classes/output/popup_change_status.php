@@ -51,6 +51,7 @@ class popup_change_status implements renderable, templatable {
         } else {
             $data->text = get_string('open_for_review_text', 'block_exaquest');
             $data->title = get_string('open_for_review_title', 'block_exaquest');
+            $data->send_to_pk_text = get_string('notification_will_be_sent_to_pk', 'block_exaquest');
         }
 
 
