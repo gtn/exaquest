@@ -19,7 +19,7 @@ $string['todos_are_open'] = ' TODOs sind offen.';
 
 $string['request_questions'] = 'Neue Frage anfordern';
 $string['request_questions_label'] = 'Neue Frage anforderen von ...';
-$string['request_questions_comment_placeholder'] = 'Welche Art von Frage wird benötigt? Optional.';
+$string['request_questions_comment_placeholder'] = 'Welche Art von Frage wird benötigt? Verpflichtendes Feld.';
 $string['request_questions_button'] = 'Anfordern';
 $string['revise_questions_label'] = 'Folgende Fragen sind zur Überabeitung markiert:';
 $string['formal_review_questions_label'] = 'Folgende Fragen sind zur formalen Finalisierung markiert:';

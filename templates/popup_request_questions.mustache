@@ -14,29 +14,30 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" action="{{action}}">
+            <form method="post" action="{{action}}" id="requestquestionsform">
                 <div class="modal-body">
                     <div>{{#str}}
                         request_questions_label, block_exaquest {{/str}}
                         {{{ fragenersteller_autocomplete_html }}}
-                        <a class="selectallornone-userselection">select all/none</a>
-                        {{#fragenersteller}}
-                            <br>
-                            <input type="checkbox" id={{id}} class="userselectioncheckbox"
-                                   name="selectedusers[{{id}}]" value={{id}}>
-                            <label for="selectedusers[{{id}}]">{{firstname}} {{lastname}}</label>
-                        {{/fragenersteller}}
+                        <!--                        <a class="selectallornone-userselection">select all/none</a>-->
+                            <!--                        {{#fragenersteller}}-->
+                            <!--                            <br>-->
+                            <!--                            <input type="checkbox" id={{id}} class="userselectioncheckbox"-->
+                            <!--                                   name="selectedusers[{{id}}]" value={{id}}>-->
+                            <!--                            <label for="selectedusers[{{id}}]">{{firstname}} {{lastname}}</label>-->
+                                <!--                        {{/fragenersteller}}-->
                     </div>
                     <br>
-                    <textarea class="form-control" name="requestcomment" id="requestcomment" rows="3"
+                    <textarea class="form-control requestquestionscomment" name="requestcomment" id="requestcomment" rows="3"
                               placeholder="{{#str}}request_questions_comment_placeholder, block_exaquest {{/str}}"></textarea>
-<!--                    <input type="text" id="my_autocomplete_field" name="my_autocomplete_field">-->
+                    <!--                    <input type="text" id="my_autocomplete_field" name="my_autocomplete_field">-->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <input type="submit"
                            value="{{#str}} request_questions_button, block_exaquest {{/str}}"
-                           class="btn btn-primary">
+                           class="btn btn-primary requestquestionssubmit"
+                           disabled="disabled">
                 </div>
             </form>
         </div>
