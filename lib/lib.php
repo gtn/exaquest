@@ -30,6 +30,7 @@ const BLOCK_EXAQUEST_DB_REVIEWASSIGN = 'block_exaquestreviewassign';
 const BLOCK_EXAQUEST_DB_REQUESTQUEST = 'block_exaquestrequestquest';
 const BLOCK_EXAQUEST_DB_REQUESTEXAM = 'block_exaquestrequestexam';
 const BLOCK_EXAQUEST_DB_QUIZSTATUS = 'block_exaquestquizstatus';
+const BLOCK_EXAQUEST_DB_REVISEASSIGN = 'block_exaquestreviseassign';
 
 /**
  * Question Status
@@ -178,16 +179,15 @@ function block_exaquest_request_revision($userfrom, $userto, $comment, $question
     // enter data into the exaquest tables
     $assigndata = new stdClass;
     $assigndata->questionbankentryid = $questionbankentryid;
-    $assigndata->reviewerid = $userto;
+    $assigndata->reviserid = $userto;
     $assigndata->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($courseid);
-    // TODO: I am assigning formal and fachlich review here... is this correct? --> NO, this would not make sense... The "request revision" should maybe change the owner? or add it to reviewassign but with 3rd value, not fachlich or formal review
-    // TODO: create table like the reviewtable to assign revision
+    // I am assigning formal and fachlich review here... is this correct? --> NO, this would not make sense... The "request revision" should maybe change the owner? or add it to reviewassign but with 3rd value, not fachlich or formal review
+    // created table like the reviewtable to assign revision
     //$assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FORMAL;
     //$DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
     //$assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH;
     //$DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
-    //$assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_REVISE;
-    //$DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
+    $DB->insert_record(BLOCK_EXAQUEST_DB_REVISEASSIGN, $assigndata);
 
     // create the message
     $messageobject = new stdClass;

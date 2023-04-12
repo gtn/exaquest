@@ -78,7 +78,8 @@ class exaquest_filters extends condition {
                 $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE;
                 break;
             case BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE:
-                $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE;
+                $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE .
+                    " AND qrevisea.reviserid = " . $USER->id;;
                 break;
             case BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE:
                 $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED;
@@ -91,10 +92,11 @@ class exaquest_filters extends condition {
                 break;
         }
         //this is for restricing view of questions for new fragenersteller light role
-        if(!has_capability('block/exaquest:readallquestions', \context_course::instance($COURSE->id))){
+        if (!has_capability('block/exaquest:readallquestions', \context_course::instance($COURSE->id))) {
 
-            if($this->filterstatus != BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS && $this->filterstatus !=BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS_TO_SUBMIT){
-                if($this->filterstatus == BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS) {
+            if ($this->filterstatus != BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS &&
+                $this->filterstatus != BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS_TO_SUBMIT) {
+                if ($this->filterstatus == BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS) {
                     $this->where = "qbe.ownerid = " . $USER->id;
                 } else {
                     $this->where .= " AND qbe.ownerid = " . $USER->id;

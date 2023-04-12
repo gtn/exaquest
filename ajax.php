@@ -21,6 +21,13 @@ require_capability('block/exaquest:viewquestionbanktab', context_course::instanc
 switch ($action) {
     case ('open_question_for_review'):
         //$DB->record_exists(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, array("questionbankentryid" => $questionbankentryid));
+
+        // if there is a reviseassign entry ==> delete that, since it is now revised
+        $oldstatus = $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'status', array("questionbankentryid" => $questionbankentryid));
+        if($oldstatus == BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE){
+            $DB->delete_records(BLOCK_EXAQUEST_DB_REVISEASSIGN, ['questionbankentryid' => $questionbankentryid]);
+        }
+
         $data = new stdClass;
         $data->questionbankentryid = $questionbankentryid;
         $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS;
@@ -45,6 +52,7 @@ switch ($action) {
                     $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FORMAL);
             }
         }
+
         if ($commenttext != null) {
             $args = new stdClass;
             $args->contextid = 1;
