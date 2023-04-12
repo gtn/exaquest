@@ -20,6 +20,13 @@
                             questions_for_me_to_submit, block_exaquest {{/str}}</a>
                     </li>
                 {{/fragenersteller}}
+                {{#createquestion}}
+                    <li>
+                        <a class="link"
+                           href={{my_questions_to_submit_link}}> {{my_questions_to_submit_count}} {{#str}}
+                            questions_for_me_to_submit, block_exaquest {{/str}}</a>
+                    </li>
+                {{/createquestion}}
                 {{#viewquestionstoreview}}
                     <li>
                         <a class="link"

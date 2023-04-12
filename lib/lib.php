@@ -1435,7 +1435,7 @@ function block_exaquest_get_capabilities($context) {
 
     // capabilities defined by ZML
     $capabilities["viewquestionstorevise"] = is_enrolled($context, $USER, "block/exaquest:viewquestionstorevise");
-    $capabilities["createquestions"] = is_enrolled($context, $USER, "block/exaquest:createquestion");
+    $capabilities["createquestion"] = is_enrolled($context, $USER, "block/exaquest:createquestion");
     $capabilities["releasequestion"] = is_enrolled($context, $USER, "block/exaquest:releasequestion");
     $capabilities["readallquestions"] = is_enrolled($context, $USER, "block/exaquest:readallquestions");
     $capabilities["readquestionstatistics"] = is_enrolled($context, $USER, "block/exaquest:readquestionstatistics");
