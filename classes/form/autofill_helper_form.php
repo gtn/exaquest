@@ -14,23 +14,15 @@ class autofill_helper_form extends \moodleform {
 
     }
 
-    public function create_autocomplete_html($autocompleteoptions) {
+    public function create_autocomplete_html($autocompleteoptions, $questionbankentryid) {
         $options = array(
             'multiple' => true,
         );
         // moodle/lib/form/autocomplete.php
-        $element = $this->_form->addElement('autocomplete', 'selectedusers', 'Fragenersteller', $autocompleteoptions, $options);
+        // if I keep 'selectedusers' for every mfrom it breaks. Only the first will be displayed correctly, the rest will show a simple select with options, without the added fields.
+        // ==> needs to be unique
+        $element = $this->_form->addElement('autocomplete', 'selectedusers'.$questionbankentryid, 'Fragenersteller', $autocompleteoptions, $options);
         return $element->toHtml();
-
-        // how to use: enrol_users_form has this code:
-        //$options = array(
-        //    'ajax' => 'enrol_manual/form-potential-user-selector',
-        //    'multiple' => true,
-        //    'courseid' => 7,
-        //    'enrolid' => 7,
-        //    'perpage' => 7,
-        //    'userfields' => 'email'
-        //);
-        //$this->_form->addElement('autocomplete', 'userlist', get_string('selectusers', 'enrol_manual'), array(), $options);
+        // how to use example: enrol_users_form has this code:
     }
 }

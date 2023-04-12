@@ -15,19 +15,8 @@
             </div>
                 <div class="modal-body col-auto">
                     <p>{{text}}</p>
-                    <div class="form-check">
+                    <div class="form-check{{questionbankentryid}}">
                         {{{ selectusers_autocomplete_html }}}
-<!--                        {{#readonlyusers}}-->
-<!--                            <input type="checkbox" disabled readonly checked id={{id}} class="userselectioncheckbox{{questionbankentryid}} form-check-input"-->
-<!--                                   name="selectedusers[{{id}}]" value={{id}}>-->
-<!--                            <label class="form-check-label" for="selectedusers[{{id}}]">{{firstname}} {{lastname}}</label>-->
-<!--                        {{/readonlyusers}}-->
-<!--                        {{#selectusers}}-->
-<!--                            <input type="checkbox" checked id={{id}} class="userselectioncheckbox{{questionbankentryid}} form-check-input"-->
-<!--                                   name="selectedusers[{{id}}]" value={{id}}>-->
-
-<!--                            <label class="form-check-label" for="selectedusers[{{id}}]">{{firstname}} {{lastname}}</label>-->
-<!--                        {{/selectusers}}-->
                     </div>
                     <br>
                     <p>{{send_to_pk_text}}</p>
