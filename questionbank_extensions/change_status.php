@@ -136,8 +136,11 @@ class change_status extends column_base {
                         questionbankentryid: <?php echo $question->questionbankentryid; ?>,
                         questionid: <?php echo $question->id; ?>,
                         courseid: <?php echo $COURSE->id; ?>,
-                        users: $('.userselectioncheckbox<?php echo $question->questionbankentryid; ?>:checkbox:checked').map(function () {
-                            return $(this).val();
+                        //users: $('.userselectioncheckbox<?php //echo $question->questionbankentryid; ?>//:checkbox:checked').map(function () {
+                        //    return $(this).val();
+                        //}).get(), this was the code for the checkboxes, now we have a multiselect
+                        users: $('.form-autocomplete-selection').children().map(function() {
+                            return $(this).attr("data-value");
                         }).get(),
                         commenttext: $('.commenttext<?php echo $question->questionbankentryid; ?>').val(),
                     };

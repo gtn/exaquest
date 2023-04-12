@@ -60,6 +60,7 @@ const BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED = 6; // grades released
  */
 const BLOCK_EXAQUEST_REVIEWTYPE_FORMAL = 0;
 const BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH = 1;
+//const BLOCK_EXAQUEST_REVIEWTYPE_REVISE = 2;
 
 /**
  * Filter Status
@@ -178,12 +179,15 @@ function block_exaquest_request_revision($userfrom, $userto, $comment, $question
     $assigndata = new stdClass;
     $assigndata->questionbankentryid = $questionbankentryid;
     $assigndata->reviewerid = $userto;
-    $assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FORMAL;
     $assigndata->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($courseid);
     // TODO: I am assigning formal and fachlich review here... is this correct? --> NO, this would not make sense... The "request revision" should maybe change the owner? or add it to reviewassign but with 3rd value, not fachlich or formal review
-    $DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
-    $assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH;
-    $DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
+    // TODO: create table like the reviewtable to assign revision
+    //$assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FORMAL;
+    //$DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
+    //$assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH;
+    //$DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
+    //$assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_REVISE;
+    //$DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
 
     // create the message
     $messageobject = new stdClass;
@@ -579,6 +583,7 @@ function block_exaquest_get_questions_for_me_to_review_count($coursecategoryid, 
 			FROM {' . BLOCK_EXAQUEST_DB_REVIEWASSIGN . '} ra
 			WHERE ra.reviewerid = :userid
 			AND ra.coursecategoryid = :coursecategoryid';
+			//AND (ra.reviewtype = '. BLOCK_EXAQUEST_REVIEWTYPE_FORMAL .' OR ra.reviewtype =  '. BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH .')';
 
     $questions = count($DB->get_records_sql($sql,
         array('userid' => $userid, 'coursecategoryid' => $coursecategoryid)));
