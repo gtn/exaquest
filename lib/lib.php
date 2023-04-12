@@ -145,7 +145,8 @@ function block_exaquest_request_exam($userfrom, $userto, $comment) {
         "Prüfungserstellung", $messageobject->url);
 }
 
-function block_exaquest_request_review($userfrom, $userto, $comment, $questionbankentryid, $questionname, $coursecategoryid, $courseid,
+function block_exaquest_request_review($userfrom, $userto, $comment, $questionbankentryid, $questionname, $coursecategoryid,
+    $courseid,
     $reviewtype) {
     global $DB, $COURSE;
     // enter data into the exaquest tables
@@ -1246,10 +1247,10 @@ function get_question_category_and_context_of_course($courseid = null) {
 
 /**block_instances
  *
- * Returns all course ids where an instance of Exabis question management tool is installed for this user
+ * Returns all course ids where an instance of Exabis question management tool is installed
  */
 function block_exaquest_get_courseids() {
-    global $DB, $USER;
+    global $DB;
 
     $instances = $DB->get_records('block_instances', array('blockname' => 'exaquest'));
 
@@ -1300,14 +1301,20 @@ function block_exaquest_get_courseids_for_user($userid = null) {
  *     questions_for_me_to_revise_count + exams_for_me_to_create_count. Depending on your role some of those todos may not exist,
  *     but this will lead to a count of 0 for those todos, which means, it does not matter. No capabilities check needed.
  */
-function block_exaquest_get_todo_count($userid, $coursecategoryid) {
+function block_exaquest_get_todo_count($userid, $coursecategoryid, $context) {
     $questions_for_me_to_create_count =
         block_exaquest_get_questions_for_me_to_create_count($coursecategoryid, $userid);
     $questions_for_me_to_review_count =
         block_exaquest_get_questions_for_me_to_review_count($coursecategoryid, $userid);
     $questions_for_me_to_revise_count =
         block_exaquest_get_questions_for_me_to_revise_count($coursecategoryid, $userid);
-    $questions_finalised_count = block_exaquest_get_finalised_questionbankentries_count($coursecategoryid);
+
+    // there is no "for me to release, which is why we take the finalised questionbankentries count. This is not available for everyone ==> check capability
+    $questions_finalised_count = 0;
+    if (has_capability('block/exaquest:viewquestionstorelease', $context, $userid)) {
+        $questions_finalised_count = block_exaquest_get_finalised_questionbankentries_count($coursecategoryid);
+    }
+
     $my_questions_to_submit_count =
         block_exaquest_get_my_questionbankentries_to_submit_count($coursecategoryid, $userid);
     $exams_for_me_to_create_count =
@@ -1538,7 +1545,8 @@ function block_exaquest_create_daily_notifications() {
         $todosmessage = '';
         foreach ($courseids as $courseid) {
             $course = get_course($courseid);
-            $todocount = block_exaquest_get_todo_count($user->id, $course->category);
+            $context = \context_course::instance($courseid);
+            $todocount = block_exaquest_get_todo_count($user->id, $course->category, $context);
             if ($todocount) {
                 // create the message
                 $messageobject = new stdClass();
@@ -1618,10 +1626,11 @@ function get_daily_released_questions($coursecategoryid) {
     $sql = 'SELECT qs.id
 			FROM {' . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . '} qs
 			WHERE qs.coursecategoryid = :coursecategoryid
-			AND qs.timestamp > :timelastday';
+			AND qs.timestamp > :timelastday
+			AND qs.status = '.BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED;
 
-    $questions = count($DB->get_records_sql($sql, array('coursecategoryid' => $coursecategoryid, 'timelastday' => $time_last_day)));
-    return $questions;
+    $questions = $DB->get_records_sql($sql, array('coursecategoryid' => $coursecategoryid, 'timelastday' => $time_last_day));
+    return count($questions);
 }
 
 /**
