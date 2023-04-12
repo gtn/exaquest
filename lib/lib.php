@@ -145,7 +145,7 @@ function block_exaquest_request_exam($userfrom, $userto, $comment) {
         "Prüfungserstellung", $messageobject->url);
 }
 
-function block_exaquest_request_review($userfrom, $userto, $comment, $questionbankentryid, $questionname, $catAndCont, $courseid,
+function block_exaquest_request_review($userfrom, $userto, $comment, $questionbankentryid, $questionname, $coursecategoryid, $courseid,
     $reviewtype) {
     global $DB, $COURSE;
     // enter data into the exaquest tables
@@ -153,6 +153,7 @@ function block_exaquest_request_review($userfrom, $userto, $comment, $questionba
     $assigndata->questionbankentryid = $questionbankentryid;
     $assigndata->reviewerid = $userto;
     $assigndata->reviewtype = $reviewtype;
+    $assigndata->coursecategoryid = $coursecategoryid;
     $DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
 
     // create the message

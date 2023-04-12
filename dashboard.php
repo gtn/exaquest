@@ -109,12 +109,12 @@ if ($capabilities["modulverantwortlicher"] || $capabilities["pruefungskoordinati
 
 $questions_to_create = [];
 if ($capabilities["fragenersteller"]) {
-    $questions_to_create = block_exaquest_get_questions_for_me_to_create($courseid, $USER->id); // TODO: coursecategoryid?
+    $questions_to_create = block_exaquest_get_questions_for_me_to_create($coursecategoryid, $USER->id);
 }
 
 $exams_to_create = [];
 if ($capabilities["fachlicherpruefer"]) {
-    $exams_to_create = block_exaquest_get_exams_for_me_to_create($courseid, $USER->id); // TODO: coursecategoryid?
+    $exams_to_create = block_exaquest_get_exams_for_me_to_create($coursecategoryid, $USER->id);
 }
 
 
