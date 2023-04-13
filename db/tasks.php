@@ -35,4 +35,13 @@ $tasks = array(
         'month' => '*',
         'dayofweek' => '*',
     ),
+    array(
+        'classname' => 'block_exaquest\task\clean_up_tables',
+        'blocking' => 0,
+        'minute' => '0',
+        'hour' => '3',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*',
+    ),
 );

@@ -14,7 +14,7 @@ class block_exaquest extends block_list {
         //$context = context_system::instance(); // todo: system? or block? think of dashboard. for now solved with viewdashboardoutsidecourse cap
 
         // get all courses where exaquest is added as a block:
-        $courseids = block_exaquest_get_courseids();
+        $courseids = block_exaquest_get_courseids_for_user($USER->id);
         $hascapability_in_some_course = false;
         foreach ($courseids as $courseid) {
             if (has_capability('block/exaquest:viewdashboardoutsidecourse', context_course::instance($courseid))) {
@@ -41,7 +41,7 @@ class block_exaquest extends block_list {
                 foreach ($courseids as $courseid) {
                     $course = get_course($courseid);
                     $coursename = $course->fullname;
-                    $todocount = block_exaquest_get_todo_count($USER->id, $course->category);
+                    $todocount = block_exaquest_get_todo_count($USER->id, $course->category, context_course::instance($courseid));
                     if ($todocount) {
                         $todocountmesssage = ' ... ' . $todocount . get_string('todos_are_open', 'block_exaquest');
                     } else {

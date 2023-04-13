@@ -19,7 +19,7 @@ $string['todos_are_open'] = ' TODOs sind offen.';
 
 $string['request_questions'] = 'Neue Frage anfordern';
 $string['request_questions_label'] = 'Neue Frage anforderen von ...';
-$string['request_questions_comment_placeholder'] = 'Welche Art von Frage wird benötigt? Optional.';
+$string['request_questions_comment_placeholder'] = 'Welche Art von Frage wird benötigt? Verpflichtendes Feld.';
 $string['request_questions_button'] = 'Anfordern';
 $string['revise_questions_label'] = 'Folgende Fragen sind zur Überabeitung markiert:';
 $string['formal_review_questions_label'] = 'Folgende Fragen sind zur formalen Finalisierung markiert:';
@@ -58,6 +58,11 @@ $string['messageprovider:dailytodos'] = 'Tägliche todo Nachricht';
 $string['dailytodos'] = 'Sie haben folgende TODOs: <br> {$a->todosmessage}';
 $string['dailytodos_subject'] = 'Exaquest TODOs';
 $string['todos_in_course'] = '{$a->todoscount} TODOs in Kurs <a href="{$a->url}">{$a->fullname}</a><br>';
+
+$string['messageprovider:daily_released_questions'] = 'Gestern veröffentlichte Fragen';
+$string['daily_released_questions'] = 'Es wurden gestern Fragen in folgenden Kursen veröffentlicht: <br> {$a->daily_released_questions_message}';
+$string['daily_released_questions_subject'] = 'Exaquest veröffentlichte Fragen';
+$string['daily_released_questions_in_course'] = '{$a->daily_released_questions} Fragen wurden gestern in  <a href="{$a->url}">{$a->fullname}</a> veröffentlicht.<br>';
 
 
 
@@ -146,12 +151,13 @@ $string['release'] = 'Freigeben:';
 $string['open_question_for_review'] = 'Frage zur Begutachtung freigeben';
 $string['formal_review_done'] = 'Formal finalisieren';
 $string['fachlich_review_done'] = 'Fachlich finalisieren';
-$string['revise_question'] = 'Frage überarbeiten';
+$string['revise_question'] = 'Frage zur Überarbeitung schicken';
 $string['release_question'] = 'Frage freigeben';
 $string['skip_and_release_question'] = 'Überspringen und Freigeben';
 $string['release_question_warning'] = 'Sind Sie sicher, dass Sie die Begutachtung überspringen und die Frage direkt freigeben wollen?';
 $string['release_question_warning_title'] = 'Warnung';
 $string['change_status'] = 'Status verändern';
+$string['notification_will_be_sent_to_pk'] = 'Die Prüfungskoordination wird auch eine Benachrichtigung erhalten, die formale Begutachtung durchzuführen.';
 
 $string['open_for_review_text'] = 'Begutachtung zuteilen zu..';
 $string['revise_text'] = 'Überarbeitung zuteilen zu..';
@@ -285,3 +291,11 @@ $string['exaquest:viewfinishedexams'] = 'View finished exams in exaquest';
 $string['exaquest:viewgradesreleasedexams'] = 'View released exams in exaquest';
 $string['exaquest:viewnewexams'] = 'View new exams in exaquest';
 $string['exaquest:viewgradesreleasedexams'] = 'View exams where grades have been released in exaquest';
+
+
+
+// tasks
+$string['check_active_exams'] = 'Update alle bereits beendeten Prüfungen welche den Status "aktiv" in Exaquest haben, und aktualisiere den Status.';
+$string['clean_up_tables'] = 'Säubere die Exaquest Tabellen, falls fehlerhafte Daten bestehen.';
+$string['create_daily_notifications'] = 'Erstelle die täglichen Exaquest-Nachrichten.';
+$string['set_up_roles'] = 'Rollen für Exaquest aufsetzen.';

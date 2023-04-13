@@ -1,11 +1,17 @@
+/*jshint esversion: 6 */
+/*globals $:false */
+/*global console*/
+/*global confirm*/
+/*global alert*/
+
 $(document).on('click', '.selectallornone-userselection', function () {
     let checkboxes = this.parentElement.getElementsByClassName("userselectioncheckbox");
-    if(checkboxes != undefined){
-        if(checkboxes[0].checked == true){
+    if (checkboxes != undefined) {
+        if (checkboxes[0].checked == true) {
             checkboxes.forEach(checkbox => {
                 checkbox.checked = false;
             });
-        }else{
+        } else {
             checkboxes.forEach(checkbox => {
                 checkbox.checked = true;
             });
@@ -30,40 +36,12 @@ $(document).on('click', '#popup_create_questions_div', function () {
 });
 
 
-
-
-$(document).on('click', '.mark-question-request-as-done-button', function () {
-    if (confirm("Wirklich als erledigt markieren?")) {
-        let requests = this.parentElement.parentElement.getElementsByClassName("request-comment");
-        if(requests != undefined){
-            document.getElementById("modal-body-requests").removeChild(document.getElementById("request-comment-p-" + this.getAttribute("requestid")));
-            // remove that entry from the database with ajax
-            mark_request_as_done(this.getAttribute("requestid"), 'question');
-        }
-    } else {
-
-    }
-});
-
-$(document).on('click', '.mark-exam-request-as-done-button', function () {
-    if (confirm("Wirklich als erledigt markieren?")) {
-        let requests = this.parentElement.parentElement.getElementsByClassName("request-comment");
-        if(requests != undefined){
-            document.getElementById("modal-body-requests").removeChild(document.getElementById("request-comment-p-" + this.getAttribute("requestid")));
-            // remove that entry from the database with ajax
-            mark_request_as_done(this.getAttribute("requestid"), 'exam');
-        }
-    } else {
-
-    }
-});
-
 function mark_request_as_done(requestid, requesttype) {
     console.log('mark_request_as_done', requestid);
     let action = '';
-    if(requesttype == 'exam'){
+    if (requesttype == 'exam') {
         action = 'mark_exam_request_as_done';
-    }else{
+    } else {
         action = 'mark_question_request_as_done';
     }
 
@@ -88,3 +66,59 @@ function mark_request_as_done(requestid, requesttype) {
         console.log("Error in action '" + data.action + "'", errorMsg, 'ret', ret);
     });
 }
+
+$(document).on('click', '.mark-question-request-as-done-button', function () {
+    if (confirm("Wirklich als erledigt markieren?")) {
+        let requests = this.parentElement.parentElement.getElementsByClassName("request-comment");
+        if (requests != undefined) {
+            document.getElementById("modal-body-requests").removeChild(document.getElementById("request-comment-p-" + this.getAttribute("requestid")));
+            // remove that entry from the database with ajax
+            mark_request_as_done(this.getAttribute("requestid"), 'question');
+        }
+    }
+});
+
+
+$(document).on('click', '.mark-exam-request-as-done-button', function () {
+    if (confirm("Wirklich als erledigt markieren?")) {
+        let requests = this.parentElement.parentElement.getElementsByClassName("request-comment");
+        if (requests != undefined) {
+            document.getElementById("modal-body-requests").removeChild(document.getElementById("request-comment-p-" + this.getAttribute("requestid")));
+            // remove that entry from the database with ajax
+            mark_request_as_done(this.getAttribute("requestid"), 'exam');
+        }
+    }
+});
+
+
+$(document).ready(function () {
+    $('#requestquestionsform').on('submit', function () {
+        debugger
+        let $selecteduser = $('#id_selectedusers').val();
+        if ($selecteduser.length == 0) {
+            alert("Es muss mindestens ein Fragenersteller ausgewählt sein");
+            return false;
+        } else {
+            return true;
+        }
+    });
+
+    // $('.form-autocomplete-selection').on('keypress', function () {
+    //     debugger
+    //     var textarea_value = $('.requestquestionscomment').val();
+    //     if (textarea_value != '') {
+    //         $('.requestquestionssubmit').attr('disabled', false);
+    //     } else {
+    //         $('.requestquestionssubmit').attr('disabled', true);
+    //     }
+    // });
+
+    $('.requestquestionscomment').on('keyup', function () {
+        var textarea_value = $('.requestquestionscomment').val();
+        if (textarea_value != '') {
+            $('.requestquestionssubmit').attr('disabled', false);
+        } else {
+            $('.requestquestionssubmit').attr('disabled', true);
+        }
+    });
+});

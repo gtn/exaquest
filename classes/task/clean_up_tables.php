@@ -25,18 +25,18 @@ require_once __DIR__ . '/../../inc.php';
 /**
  * create_daily_notifcations.
  */
-class create_daily_notifcations extends \core\task\scheduled_task {
+class clean_up_tables extends \core\task\scheduled_task {
     /**
      * Execute the task.
      */
     public function execute() {
-        block_exaquest_create_daily_notifications();
+        block_exaquest_clean_up_tables();
     }
 
     public function get_name() {
         //return block_exacomp_trans(['en:Import Data with additional functionality', 'de:Daten Importieren mit zusätzlicher Funktionalität']);
-        return "Create daily Exaquest notifications.";
-        return get_string('create_daily_notifications', 'block_exaquest');
+        return "Clean up exaquest tables, e.g. delete questionstatus entries where there is no questionbankentryid related.";
+        return get_string('clean_up_tables', 'block_exaquest');
     }
 }
 

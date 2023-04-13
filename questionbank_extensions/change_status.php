@@ -129,7 +129,6 @@ class change_status extends column_base {
         ?>
 
         <script type="text/javascript">
-
             $(document).ready(function () {
                 $(".changestatus<?php echo $question->questionbankentryid; ?>").click(function (e) {
                     var data = {
@@ -137,8 +136,11 @@ class change_status extends column_base {
                         questionbankentryid: <?php echo $question->questionbankentryid; ?>,
                         questionid: <?php echo $question->id; ?>,
                         courseid: <?php echo $COURSE->id; ?>,
-                        users: $('.userselectioncheckbox<?php echo $question->questionbankentryid; ?>:checkbox:checked').map(function () {
-                            return $(this).val();
+                        //users: $('.userselectioncheckbox<?php //echo $question->questionbankentryid; ?>//:checkbox:checked').map(function () {
+                        //    return $(this).val();
+                        //}).get(), this was the code for the checkboxes, now we have a multiselect
+                        users: $('.form-autocomplete-selection').children().map(function() {
+                            return $(this).attr("data-value");
                         }).get(),
                         commenttext: $('.commenttext<?php echo $question->questionbankentryid; ?>').val(),
                     };
@@ -192,14 +194,15 @@ class change_status extends column_base {
 
         foreach ($questions as $question) {
             $question->teststatus = $questionstatus[$question->questionbankentryid];
-            $question->ownerid = $questionbankentries[$question->questionbankentryid];
+            $question->ownerid = $questionbankentries[$question->questionbankentryid]->ownerid;
         }
 
     }
 
     public function get_extra_joins(): array {
         return ['qs' => 'JOIN {block_exaquestquestionstatus} qs ON qbe.id = qs.questionbankentryid',
-            'qra' => 'LEFT JOIN {block_exaquestreviewassign} qra ON qbe.id = qra.questionbankentryid'];
+            'qra' => 'LEFT JOIN {block_exaquestreviewassign} qra ON qbe.id = qra.questionbankentryid',
+            'qrevisea' => 'LEFT JOIN {block_exaquestreviseassign} qrevisea ON qbe.id = qrevisea.questionbankentryid'];
     }
 
 }

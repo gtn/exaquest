@@ -354,6 +354,7 @@ function xmldb_block_exaquest_upgrade($oldversion) {
     }
 
     if ($oldversion < 2023033001) {
+        // create new table block_exaquestrequestexam
         $table = new xmldb_table('block_exaquestrequestexam');
 
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
@@ -385,6 +386,41 @@ function xmldb_block_exaquest_upgrade($oldversion) {
 
         // Exaquest savepoint reached.
         upgrade_block_savepoint(true, 2023033002, 'exaquest');
+    }
+
+    if ($oldversion < 2023040700) {
+        // add field timestamp to block_exaquestquestionstatus
+        $table = new xmldb_table('block_exaquestquestionstatus');
+        $field = new xmldb_field('timestamp', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null,
+            0); // 0 because non-empty table already exists so it cannot be null
+        $dbman->add_field($table, $field);
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2023040700, 'exaquest');
+    }
+
+    if ($oldversion < 2023041201) {
+        // create new table block_exaquestreviseassign
+        $table = new xmldb_table('block_exaquestreviseassign');
+
+        // Adding fields to table block_exaquestreviseassign.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('questionbankentryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('reviserid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('coursecategoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table block_exaquestreviewassign.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('questionbankentryid', XMLDB_KEY_FOREIGN, ['questionbankentryid'], 'question_bank_entries', ['id']);
+        $table->add_key('reviserid', XMLDB_KEY_FOREIGN, ['reviserid'], 'user', ['id']);
+        $table->add_key('coursecategoryid', XMLDB_KEY_FOREIGN, ['coursecategoryid'], 'course_categories', ['id']);
+
+        // Conditionally launch create table for block_exaquestreviseassign.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2023041201, 'exaquest');
     }
 
     return $return_result;

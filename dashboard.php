@@ -40,6 +40,24 @@ $fachlichepruefer = array();
 $action = optional_param('action', "", PARAM_ALPHAEXT);
 if ($action == 'request_questions') {
     // get all the users with role "fragesteller" and send them a notification
+    //$allfragenersteller = block_exaquest_get_fragenersteller_by_courseid($courseid); // TODO by courseid or coursecategoryid?
+    //if (array_key_exists("selectedusers", $_POST)) {
+    //    if(is_array($_POST["selectedusers"])){
+    //        $selectedfragenersteller = clean_param_array($_POST["selectedusers"],PARAM_INT);
+    //    }else{
+    //        $selectedfragenersteller = clean_param($_POST["selectedusers"],PARAM_INT);
+    //    }
+    //    $requestcomment = clean_param($_POST["requestcomment"],PARAM_TEXT);
+    //
+    //    if ($selectedfragenersteller) {
+    //        $fragenersteller = array_intersect_key($allfragenersteller, $selectedfragenersteller);
+    //        foreach ($fragenersteller as $ersteller) {
+    //            block_exaquest_request_question($USER->id, $ersteller->id, $requestcomment);
+    //        }
+    //    }
+    //}
+    // this was the code for the checkboxes. Now we do it with the autocomplete html
+
     $allfragenersteller = block_exaquest_get_fragenersteller_by_courseid($courseid); // TODO by courseid or coursecategoryid?
     if (array_key_exists("selectedusers", $_POST)) {
         if(is_array($_POST["selectedusers"])){
@@ -50,7 +68,7 @@ if ($action == 'request_questions') {
         $requestcomment = clean_param($_POST["requestcomment"],PARAM_TEXT);
 
         if ($selectedfragenersteller) {
-            $fragenersteller = array_intersect_key($allfragenersteller, $selectedfragenersteller);
+            $fragenersteller = array_intersect_key($allfragenersteller, array_flip($selectedfragenersteller));
             foreach ($fragenersteller as $ersteller) {
                 block_exaquest_request_question($USER->id, $ersteller->id, $requestcomment);
             }
@@ -91,12 +109,12 @@ if ($capabilities["modulverantwortlicher"] || $capabilities["pruefungskoordinati
 
 $questions_to_create = [];
 if ($capabilities["fragenersteller"]) {
-    $questions_to_create = block_exaquest_get_questions_for_me_to_create($courseid, $USER->id); // TODO: coursecategoryid?
+    $questions_to_create = block_exaquest_get_questions_for_me_to_create($coursecategoryid, $USER->id);
 }
 
 $exams_to_create = [];
 if ($capabilities["fachlicherpruefer"]) {
-    $exams_to_create = block_exaquest_get_exams_for_me_to_create($courseid, $USER->id); // TODO: coursecategoryid?
+    $exams_to_create = block_exaquest_get_exams_for_me_to_create($coursecategoryid, $USER->id);
 }
 
 

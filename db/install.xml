@@ -10,6 +10,7 @@
                 <FIELD NAME="questionbankentryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="questionbankentryid"/>
                 <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="status"/>
                 <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="coursecategoryid"/>
+                <FIELD NAME="timestamp" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -17,7 +18,7 @@
                 <KEY NAME="coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories" REFFIELDS="id"/>
             </KEYS>
         </TABLE>
-        <TABLE NAME="block_exaquestreviewassign" COMMENT="Assignment of reviews. Questions are assigned to persons that should to fachlich or formal review.">
+        <TABLE NAME="block_exaquestreviewassign" COMMENT="Assignment of reviews. Questions are assigned to persons that should do fachlich or formal review.">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id"/>
                 <FIELD NAME="questionbankentryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="questionbankentryid"/>
@@ -110,6 +111,20 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
                 <KEY NAME="fk_userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
                 <KEY NAME="fk_coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories" REFFIELDS="id"/>
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="block_exaquestreviseassign" COMMENT="Assignment of revisions. Questions are assigned to persons that should revise that question.">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id"/>
+                <FIELD NAME="questionbankentryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="questionbankentryid"/>
+                <FIELD NAME="reviserid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="the assigned reviewer"/>
+                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="coursecategoryid"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="questionbankentryid" TYPE="foreign" FIELDS="questionbankentryid" REFTABLE="question_bank_entries" REFFIELDS="id"/>
+                <KEY NAME="reviserid" TYPE="foreign" FIELDS="reviserid" REFTABLE="user" REFFIELDS="id"/>
+                <KEY NAME="coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories" REFFIELDS="id"/>
             </KEYS>
         </TABLE>
     </TABLES>

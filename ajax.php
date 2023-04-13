@@ -11,6 +11,7 @@ $questionid = required_param('questionid', PARAM_INT);
 $action = required_param('action', PARAM_TEXT);
 $courseid = required_param('courseid', PARAM_INT);
 $users = optional_param('users', null, PARAM_RAW);
+//$formalreviewusers = optional_param('formalreviewusers', null, PARAM_RAW);
 $commenttext = optional_param('commenttext', null, PARAM_TEXT);
 $quizid = optional_param('quizid', null, PARAM_INT);
 
@@ -19,20 +20,39 @@ require_capability('block/exaquest:viewquestionbanktab', context_course::instanc
 
 switch ($action) {
     case ('open_question_for_review'):
-        //$DB->record_exists('block_exaquestquestionstatus', array("questionbankentryid" => $questionbankentryid));
+        //$DB->record_exists(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, array("questionbankentryid" => $questionbankentryid));
+
+        // if there is a reviseassign entry ==> delete that, since it is now revised
+        $oldstatus = $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'status', array("questionbankentryid" => $questionbankentryid));
+        if($oldstatus == BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE){
+            $DB->delete_records(BLOCK_EXAQUEST_DB_REVISEASSIGN, ['questionbankentryid' => $questionbankentryid]);
+        }
+
         $data = new stdClass;
         $data->questionbankentryid = $questionbankentryid;
         $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS;
-        $data->id = $DB->get_field('block_exaquestquestionstatus', 'id', array("questionbankentryid" => $questionbankentryid));
-        $DB->update_record('block_exaquestquestionstatus', $data);
+        $data->id = $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'id', array("questionbankentryid" => $questionbankentryid));
+        $data->timestamp = time();
+        $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
         $questionname = $DB->get_record('question', array('id' => $questionid))->name;
-        $catAndCont = get_question_category_and_context_of_course($courseid);
+        //$catAndCont = get_question_category_and_context_of_course($courseid);
+        $course = get_course($courseid);
+        $coursecategoryid = $course->category;
         if ($users != null) {
             foreach ($users as $user) {
-                block_exaquest_request_review($USER, $user, $commenttext, $questionbankentryid, $questionname, $catAndCont,
-                    $courseid);
+                block_exaquest_request_review($USER, $user, $commenttext, $questionbankentryid, $questionname, $coursecategoryid,
+                    $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH);
             }
         }
+        // get the PKs, which are the ones that should be assigned to do the formal review
+        $formalreviewusers =  block_exaquest_get_pruefungskoodrination_by_courseid($courseid);
+        if ($formalreviewusers != null) {
+            foreach ($formalreviewusers as $user) {
+                block_exaquest_request_review($USER, $user->id, $commenttext, $questionbankentryid, $questionname, $coursecategoryid,
+                    $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FORMAL);
+            }
+        }
+
         if ($commenttext != null) {
             $args = new stdClass;
             $args->contextid = 1;
@@ -49,10 +69,11 @@ switch ($action) {
         }
         break;
     case ('formal_review_done'):
-        //$DB->record_exists('block_exaquestquestionstatus', array("questionbankentryid" => $questionbankentryid))
-        $record = $DB->get_record('block_exaquestquestionstatus', array("questionbankentryid" => $questionbankentryid));
+        //$DB->record_exists(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, array("questionbankentryid" => $questionbankentryid))
+        $record = $DB->get_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, array("questionbankentryid" => $questionbankentryid));
         $data = new stdClass;
         $data->id = $record->id;
+        $data->timestamp = time();
         $data->questionbankentryid = $questionbankentryid;
         if ($record->status == BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE) {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED;
@@ -61,12 +82,13 @@ switch ($action) {
         } else {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE;
         }
-        $DB->update_record('block_exaquestquestionstatus', $data);
+        $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
         break;
     case ('fachlich_review_done'):
-        $record = $DB->get_record('block_exaquestquestionstatus', array("questionbankentryid" => $questionbankentryid));
+        $record = $DB->get_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, array("questionbankentryid" => $questionbankentryid));
         $data = new stdClass;
         $data->id = $record->id;
+        $data->timestamp = time();
         $data->questionbankentryid = $questionbankentryid;
         if ($record->status == BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE) {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED;
@@ -75,23 +97,25 @@ switch ($action) {
         } else {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE;
         }
-        $DB->update_record('block_exaquestquestionstatus', $data);
+        $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
         break;
     case ('release_question'):
-        //$DB->record_exists('block_exaquestquestionstatus', array("questionbankentryid" => $questionbankentryid));
         $data = new stdClass;
         $data->questionbankentryid = $questionbankentryid;
+        $data->timestamp = time();
         $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED;
-        $data->id = $DB->get_field('block_exaquestquestionstatus', 'id', array("questionbankentryid" => $questionbankentryid));
-        $DB->update_record('block_exaquestquestionstatus', $data);
+        $data->id = $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'id', array("questionbankentryid" => $questionbankentryid));
+        $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
+
         break;
     case ('revise_question'):
-        //$DB->record_exists('block_exaquestquestionstatus', array("questionbankentryid" => $questionbankentryid));
+        //$DB->record_exists(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, array("questionbankentryid" => $questionbankentryid));
         $data = new stdClass;
         $data->questionbankentryid = $questionbankentryid;
+        $data->timestamp = time();
         $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE;
-        $data->id = $DB->get_field('block_exaquestquestionstatus', 'id', array("questionbankentryid" => $questionbankentryid));
-        $DB->update_record('block_exaquestquestionstatus', $data);
+        $data->id = $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'id', array("questionbankentryid" => $questionbankentryid));
+        $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
         if ($commenttext != null) {
             $args = new stdClass;
             $args->contextid = 1;
@@ -109,10 +133,12 @@ switch ($action) {
 
         if ($users != null) {
             $questionname = $DB->get_record('question', array('id' => $questionid))->name;
-            $catAndCont = get_question_category_and_context_of_course($courseid);
+            //$catAndCont = get_question_category_and_context_of_course($courseid);
+            $course = get_course($courseid);
+            $coursecategoryid = $course->category;
             if ($users != null) {
                 foreach ($users as $user) {
-                    block_exaquest_request_revision($USER, $user, $commenttext, $questionbankentryid, $questionname, $catAndCont,
+                    block_exaquest_request_revision($USER, $user, $commenttext, $questionbankentryid, $questionname, $coursecategoryid,
                         $courseid);
                 }
             }
