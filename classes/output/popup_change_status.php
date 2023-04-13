@@ -29,7 +29,7 @@ class popup_change_status implements renderable, templatable {
      * @return stdClass
      */
     public function export_for_template(renderer_base $output) {
-        global $PAGE, $COURSE;
+        global $PAGE, $COURSE, $DB;
         $data = new stdClass();
         $data->name = $this->name;
         $readonlyusers = [];
@@ -49,6 +49,11 @@ class popup_change_status implements renderable, templatable {
             $data->require = true;
             $data->text = get_string('revise_text', 'block_exaquest');
             $data->title = get_string('revise_title', 'block_exaquest');
+            $selectuser = $DB->get_records_sql('SELECT u.id, u.firstname, u.lastname
+                                               FROM {question_versions} qv
+                                               JOIN {question} q ON qv.questionid = q.id
+                                               JOIN {user} u ON q.createdby = u.id
+                                               WHERE qv.questionbankentryid = '.$this->questionbankentryid);
         } else {
             $data->text = get_string('open_for_review_text', 'block_exaquest');
             $data->title = get_string('open_for_review_title', 'block_exaquest');
