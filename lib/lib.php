@@ -844,6 +844,8 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:releasequestion', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:requestnewexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:doformalreview', CAP_ALLOW, $roleid, $context);
+
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
         $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '', 'manager');
@@ -918,6 +920,8 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:requestnewexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:dofachlichreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:doformalreview', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fragenersteller'])) {
         $roleid = create_role('Fragenersteller', 'fragenersteller', '', 'manager');
@@ -976,6 +980,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:dofachlichreview', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'beurteilungsmitwirkende'])) {
         $roleid = create_role('Beurteilungsmitwirkende', 'beurteilungsmitwirkende', '', 'manager');
