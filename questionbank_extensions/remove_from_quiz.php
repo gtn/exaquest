@@ -46,11 +46,7 @@ class remove_from_quiz extends column_base {
         global $USER, $DB, $COURSE, $PAGE;
         //echo '<div class="container"><div class="row"><div class="col-md-12 text-right">';
         $output = $PAGE->get_renderer('block_exaquest');
-        $questioncreator = new \stdClass();
-        $questioncreator->firstname = $question->creatorfirstname;
-        $questioncreator->lastname = $question->creatorlastname;
-        $questioncreator->id = $question->createdby;
-        $questioncreators= array($questioncreator);#
+
         $url = new \moodle_url('/mod/quiz/edit_rest.php');
         $quizslotid = $DB->get_field_sql("SELECT qs.id
                                               FROM {question_references} qr
