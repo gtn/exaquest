@@ -747,7 +747,7 @@ function block_exaquest_set_up_roles_test() {
         $roleid = $DB->get_record('role', ['shortname' => 'admintechnpruefungsdurchf'])->id;
     }
     assign_capability('block/exaquest:admintechnpruefungsdurchf', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:technicalreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:doformalreview', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:executeexam', CAP_ALLOW, $roleid, $context);
 
 }
@@ -785,7 +785,7 @@ function block_exaquest_set_up_roles() {
         $roleid = $DB->get_record('role', ['shortname' => 'admintechnpruefungsdurchf'])->id;
     }
     assign_capability('block/exaquest:admintechnpruefungsdurchf', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:technicalreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:doformalreview', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:executeexam', CAP_ALLOW, $roleid, $context);
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
@@ -1469,7 +1469,7 @@ function block_exaquest_get_capabilities($context) {
     $capabilities["editallquestions"] = is_enrolled($context, $USER, "block/exaquest:editallquestions");
     $capabilities["addquestiontoexam"] = is_enrolled($context, $USER, "block/exaquest:addquestiontoexam");
     $capabilities["releaseexam"] = is_enrolled($context, $USER, "block/exaquest:releaseexam");
-    $capabilities["technicalreview"] = is_enrolled($context, $USER, "block/exaquest:technicalreview");
+    $capabilities["doformalreview"] = is_enrolled($context, $USER, "block/exaquest:doformalreview");
     $capabilities["executeexam"] = is_enrolled($context, $USER, "block/exaquest:executeexam");
     $capabilities["assignsecondexaminator"] = is_enrolled($context, $USER, "block/exaquest:assignsecondexaminator");
     $capabilities["definequestionblockingtime"] = is_enrolled($context, $USER, "block/exaquest:definequestionblockingtime");
