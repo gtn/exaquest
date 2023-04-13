@@ -14,7 +14,7 @@ class autofill_helper_form extends \moodleform {
 
     }
 
-    public function create_autocomplete_html($autocompleteoptions, $id=0) {
+    public function create_autocomplete_html($autocompleteoptions, $id=null) {
         $options = array(
             'multiple' => true,
         );
