@@ -50,7 +50,7 @@ class edit_action_column_exaquest extends edit_action_column {
 
         if (question_has_capability_on($question, 'edit')
             && $questionStatus < BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED
-            && (($question->createdby == $USER->id
+            && (($question->ownerid == $USER->id
                     && has_capability('block/exaquest:setstatustoreview', \context_course::instance($COURSE->id))
                     && ($questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_NEW || $questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE))
             || ((has_capability('block/exaquest:modulverantwortlicher', \context_course::instance($COURSE->id)))

@@ -55,6 +55,11 @@ class change_status extends column_base {
                     echo $output->render(new \block_exaquest\output\popup_change_status($usertoselect, 'open_question_for_review',
                         get_string('open_question_for_review', 'block_exaquest'), $question->questionbankentryid));
                 }
+            if (has_capability('block/exaquest:modulverantwortlicher', \context_course::instance($COURSE->id)) ||
+                has_capability('block/exaquest:pruefungskoordination', \context_course::instance($COURSE->id))) {
+                echo $output->render(new \block_exaquest\output\popup_change_status_warning('release_question',
+                    get_string('skip_and_release_question', 'block_exaquest'), $question->questionbankentryid));
+            }
                 //echo '<a href="#" class="changestatus'.$question->questionbankentryid.' btn btn-primary btn-sm" role="button" value="open_question_for_review"> '.get_string('open_question_for_review', 'block_exaquest').'</a>';
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS:

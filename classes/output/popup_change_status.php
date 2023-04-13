@@ -49,7 +49,7 @@ class popup_change_status implements renderable, templatable {
             $data->require = true;
             $data->text = get_string('revise_text', 'block_exaquest');
             $data->title = get_string('revise_title', 'block_exaquest');
-            $selectuser = $DB->get_records_sql('SELECT u.id, u.firstname, u.lastname
+            $data->selectusers = $DB->get_records_sql('SELECT u.id, u.firstname, u.lastname
                                                FROM {question_versions} qv
                                                JOIN {question} q ON qv.questionid = q.id
                                                JOIN {user} u ON q.createdby = u.id
