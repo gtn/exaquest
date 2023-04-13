@@ -93,9 +93,8 @@ $(document).on('click', '.mark-exam-request-as-done-button', function () {
 
 $(document).ready(function () {
     $('#requestquestionsform').on('submit', function () {
-        debugger
         let $selecteduser = $('#id_selectedusers').val();
-        if ($selecteduser.length == 0) {
+        if ($selecteduser && $selecteduser.length == 0) {
             alert("Es muss mindestens ein Fragenersteller ausgewählt sein");
             return false;
         } else {

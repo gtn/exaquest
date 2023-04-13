@@ -143,6 +143,16 @@ class change_status extends column_base {
         <script type="text/javascript">
             $(document).ready(function () {
                 $(".changestatus<?php echo $question->questionbankentryid; ?>").click(function (e) {
+                    debugger
+                    //let changestatus_value = $(".changestatus<?php //echo $question->questionbankentryid; ?>//").val();
+                    let changestatus_value = e.currentTarget.value;
+                    if (changestatus_value == 'revise_question' || changestatus_value == 'open_question_for_review'){
+                        let $selecteduser = $('#id_selectedusers<?php echo $question->questionbankentryid; ?>').val();
+                        if ($selecteduser && $selecteduser.length == 0) {
+                            alert("Es muss mindestens eine Person ausgewählt sein");
+                            return false;
+                        }
+                    }
                     var data = {
                         action: $(this).val(),
                         questionbankentryid: <?php echo $question->questionbankentryid; ?>,
@@ -151,7 +161,7 @@ class change_status extends column_base {
                         //users: $('.userselectioncheckbox<?php //echo $question->questionbankentryid; ?>//:checkbox:checked').map(function () {
                         //    return $(this).val();
                         //}).get(), this was the code for the checkboxes, now we have a multiselect
-                        users: $('.form-autocomplete-selection').children().map(function() {
+                        users: $('.form-autocomplete-selection').children().map(function () {
                             return $(this).attr("data-value");
                         }).get(),
                         commenttext: $('.commenttext<?php echo $question->questionbankentryid; ?>').val(),
@@ -185,6 +195,17 @@ class change_status extends column_base {
                         $(".disable<?php echo $question->questionbankentryid; ?>").attr('disabled', true);
                     }
                 });
+
+                // $('.requestquestionscomment').on('keyup', function () {
+                //     var textarea_value = $('.requestquestionscomment').val();
+                //     if (textarea_value != '') {
+                //         $('.requestquestionssubmit').attr('disabled', false);
+                //     } else {
+                //         $('.requestquestionssubmit').attr('disabled', true);
+                //     }
+                // });
+
+
             });
 
         </script>
