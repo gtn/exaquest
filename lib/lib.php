@@ -583,7 +583,7 @@ function block_exaquest_get_questions_for_me_to_review_count($coursecategoryid, 
 			FROM {' . BLOCK_EXAQUEST_DB_REVIEWASSIGN . '} ra
 			WHERE ra.reviewerid = :userid
 			AND ra.coursecategoryid = :coursecategoryid';
-			//AND (ra.reviewtype = '. BLOCK_EXAQUEST_REVIEWTYPE_FORMAL .' OR ra.reviewtype =  '. BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH .')';
+    //AND (ra.reviewtype = '. BLOCK_EXAQUEST_REVIEWTYPE_FORMAL .' OR ra.reviewtype =  '. BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH .')';
 
     $questions = count($DB->get_records_sql($sql,
         array('userid' => $userid, 'coursecategoryid' => $coursecategoryid)));
@@ -846,7 +846,6 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:doformalreview', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
-
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
         $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '', 'manager');
@@ -1242,6 +1241,7 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
 }
 
 // this is used to get the contexts of the category in the questionbank
+// TODO why $contexts[2]?
 function get_question_category_and_context_of_course($courseid = null) {
     global $COURSE, $DB;
     if ($courseid == null) {
@@ -1286,8 +1286,9 @@ function block_exaquest_get_courseids() {
 /**block_instances
  *
  * Returns all course ids where an instance of Exabis question management tool is installed for this user
+ * The course has to have an enddate that ends in the last 6 months, or no enddate (be active)
  */
-function block_exaquest_get_courseids_for_user($userid = null) {
+function block_exaquest_get_courseids_of_relevant_courses_for_user($userid = null) {
     global $DB, $USER;
 
     if ($userid == null) {
@@ -1302,7 +1303,15 @@ function block_exaquest_get_courseids_for_user($userid = null) {
         $context = $DB->get_record('context', array('id' => $instance->parentcontextid, 'contextlevel' => CONTEXT_COURSE));
         if ($context) {
             if (block_exaquest_is_user_in_course($userid, $context->instanceid)) {
-                $exaquest_courses[$context->instanceid] = $context->instanceid;
+                // check if the course is still active or was active in the lase 6 months
+                $course = get_course($context->instanceid);
+                if ($course->enddate) {
+                    if ($course->enddate > (time() - 15552000)) { // 15552000 is 6 months in seconds
+                        $exaquest_courses[$context->instanceid] = $context->instanceid;
+                    }
+                } else {
+                    $exaquest_courses[$context->instanceid] = $context->instanceid;
+                }
             }
         }
     }
@@ -1554,7 +1563,7 @@ function block_exaquest_create_daily_notifications() {
 
     foreach ($users as $user) {
         // get the todocount and create the todos notification
-        $courseids = block_exaquest_get_courseids_for_user($user->id);
+        $courseids = block_exaquest_get_courseids_of_relevant_courses_for_user($user->id);
         $todosmessage = '';
         foreach ($courseids as $courseid) {
             $course = get_course($courseid);
@@ -1586,7 +1595,7 @@ function block_exaquest_create_daily_notifications() {
     // get the PK of all courses and send notification about released questions
     $pks = block_exaquest_get_all_pruefungskoordination_users();
     foreach ($pks as $pk) {
-        $courseids = block_exaquest_get_courseids_for_user($user->id);
+        $courseids = block_exaquest_get_courseids_of_relevant_courses_for_user($user->id);
         $daily_released_questions_message = '';
         foreach ($courseids as $courseid) {
             if (has_capability('block/exaquest:pruefungskoordination', \context_course::instance($courseid),
@@ -1640,7 +1649,7 @@ function get_daily_released_questions($coursecategoryid) {
 			FROM {' . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . '} qs
 			WHERE qs.coursecategoryid = :coursecategoryid
 			AND qs.timestamp > :timelastday
-			AND qs.status = '.BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED;
+			AND qs.status = ' . BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED;
 
     $questions = $DB->get_records_sql($sql, array('coursecategoryid' => $coursecategoryid, 'timelastday' => $time_last_day));
     return count($questions);

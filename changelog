@@ -1,7 +1,19 @@
 #####################################
-xxxxx
--Links in review and revise notifications added
--Fachlich and Formal reviewed questions counts added to dashboard
+xxxx
+-Show only courses that are active or have been active in the last 6 months in moodle dashboard
+#####################################
+#####################################
+2023041400
+-Links in review and revise notifications added.
+-Fachlich and Formal reviewed questions counts added to dashboard.
+-Exams can be created. Questions can be added. Statistics for the added questions of a quiz can be seen.
+-Exams status can be changed manually. Finished exams will be marked as done automatically.
+-Questions for me to revise, Questions for me to submit: Filters added, todos in dashboard added.
+-Popups to request new questions or to change statuses reworked to have a multiselect, new roles to select, mandatory fields.
+-Fragenerstellerlight and Fachlicherfragenreviewerlight added
+-Questioncreation: added categorysettings to select
+-Daily notification for open todos and for released questions created.
+-Todos counter added to the moodle dashboard.
 #####################################
 #####################################
 2023012000

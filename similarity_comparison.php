@@ -452,9 +452,9 @@ function loadMoodleQuestions(array $categoryList) : array {
     //$qFinder = question_finder::get_instance(); // question_bank finder instance
     //$qList = $qFinder->get_questions_from_categories($categoryList, null); // retrieve all question IDs from the categories
     //return question_load_questions($qList); // load the questions, array of stdclass objects
-    $catAndCont = required_param('category', PARAM_TEXT);
-
     global $DB;
+    $catAndCont = required_param('category', PARAM_TEXT);
+    $catAndCont = explode(',', $catAndCont);
 
     $sql = "SELECT q.*,
                    qc.id as category,
@@ -472,7 +472,12 @@ function loadMoodleQuestions(array $categoryList) : array {
                 ON qc.id = qbe.questioncategoryid
               JOIN {block_exaquestquestionstatus} qs 
                 ON qbe.id = qs.questionbankentryid
-              WHERE qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED . " AND qc.id = " . $catAndCont[0];
+              WHERE qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED . " AND qc.id = " . $catAndCont[0] . "
+              AND qv.version = (SELECT MAX(v.version)
+                                                     FROM {question_versions} v
+                                                              JOIN {question_bank_entries} be
+                                                                   ON be.id = v.questionbankentryid
+                                                     WHERE be.id = qbe.id)";
 
 
     // Load the questions.
