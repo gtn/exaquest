@@ -56,6 +56,9 @@ class exaquest_filters extends condition {
         switch ($this->filterstatus) {
             case BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS:
                 break;
+            case BLOCK_EXAQUEST_FILTERSTATUS_ALL_NEW_QUESTIONS:
+                $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_NEW;
+                break;
             case BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS:
                 $this->where = "qbe.ownerid = " . $USER->id;
                 break;
@@ -113,7 +116,7 @@ class exaquest_filters extends condition {
     public function display_options_adv() {
         global $PAGE, $COURSE;
 
-        $selected = array_fill(0, 10, '');
+        $selected = array_fill(0, 11, '');
         $selected[$this->filterstatus] = 'selected="selected"';
 
         $html =
@@ -123,6 +126,9 @@ class exaquest_filters extends condition {
                 BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS . '">' . get_string('show_all_questions', 'block_exaquest') . '</option>';
         }
         $html .= '    <optgroup label="' . get_string('created', 'block_exaquest') . '">';
+        $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_NEW_QUESTIONS] . ' value="' .
+            BLOCK_EXAQUEST_FILTERSTATUS_ALL_NEW_QUESTIONS . '">' . get_string('show_all_new_questions', 'block_exaquest') .
+            '</option>';
         $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS] . ' value="' .
             BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS . '">' . get_string('show_my_created_questions', 'block_exaquest') .
             '</option>';

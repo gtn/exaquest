@@ -68,7 +68,7 @@ const BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH = 1;
  */
 const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS = 0;
 const BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS = 1;
-const BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS_TO_SUBMIT = 2; // created but not submitted for review/assessment
+const BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS_TO_SUBMIT = 2; // MY questions created but not submitted for review/assessment
 const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW = 3;
 const BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW = 4;
 const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVISE = 5;
@@ -76,6 +76,7 @@ const BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE = 6;
 const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE = 7;
 const BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_RELEASE = 8; // 2023.02.28: there is no difference between "for me to release" "all to release" for now
 const BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS = 9;
+const BLOCK_EXAQUEST_FILTERSTATUS_ALL_NEW_QUESTIONS = 10; // all questions that are created but not submitted for review
 
 function block_exaquest_init_js_css() {
     global $PAGE, $CFG;
@@ -404,6 +405,47 @@ function block_exaquest_get_questionbankentries_to_be_reviewed_count($coursecate
         array("coursecategoryid" => $coursecategoryid, "fachlichreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE,
             "formalreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE,
             "toassess" => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS)));
+
+    return $questions;
+
+}
+
+
+/**
+ * Returns count of
+ *
+ * @param $coursecategoryid
+ * @return array
+ */
+function block_exaquest_get_questionbankentries_to_be_revised_count($coursecategoryid) {
+    global $DB;
+    $sql = "SELECT qs.id
+			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
+			WHERE qs.coursecategoryid = :coursecategoryid
+			AND qs.status = :questionstatus";
+
+    $questions = count($DB->get_records_sql($sql,
+        array("coursecategoryid" => $coursecategoryid, "questionstatus" => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE)));
+
+    return $questions;
+
+}
+
+/**
+ * Returns count of
+ *
+ * @param $coursecategoryid
+ * @return array
+ */
+function block_exaquest_get_questionbankentries_new_count($coursecategoryid) {
+    global $DB;
+    $sql = "SELECT qs.id
+			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
+			WHERE qs.coursecategoryid = :coursecategoryid
+			AND qs.status = :questionstatus";
+
+    $questions = count($DB->get_records_sql($sql,
+        array("coursecategoryid" => $coursecategoryid, "questionstatus" => BLOCK_EXAQUEST_QUESTIONSTATUS_NEW)));
 
     return $questions;
 
@@ -1241,7 +1283,7 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
 }
 
 // this is used to get the contexts of the category in the questionbank
-// TODO why $contexts[2]?
+
 function get_question_category_and_context_of_course($courseid = null) {
     global $COURSE, $DB;
     if ($courseid == null) {
@@ -1254,7 +1296,7 @@ function get_question_category_and_context_of_course($courseid = null) {
     $category =
         end($questioncategory); // an actual array, not a returnvalue of a function has to be passed, since it sets the internal pointer of the array, so there has to be a real array
     if ($category) {
-        return [$category->id, $contexts[2]];
+        return [$category->id, $contexts[2]]; // TODO why $contexts[2]? That should give the same as $category->contextid but $category->contextid seems safer
     } else {
         return false;
     }

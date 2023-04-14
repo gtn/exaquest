@@ -95,8 +95,10 @@ $string['todos_title'] = 'TODOs';
 $string['statistics_title'] = 'STATISTICS';
 
 $string['questions_overall_count'] = 'questions overall';
+$string['questions_new_count'] = 'questions that have been created but not yet sent to review';
 $string['questions_reviewed_count'] = 'questions are finalised / reviewed';
 $string['questions_to_review_count'] = 'questions have to be reviewed';
+$string['questions_to_revise_count'] = 'questions have to be revised';
 $string['questions_fachlich_reviewed_count'] = 'Fachlich reviewed questions';
 $string['questions_formal_reviewed_count'] = 'Formal reviewed questions';
 $string['questions_finalised_count'] = 'questions finalised';
@@ -121,6 +123,7 @@ $string['exams_for_me_to_create'] = 'Exams for me to create';
 //Questionbank
 
 $string['show_all_questions'] = 'Show all questions';
+$string['show_all_new_questions'] = 'Show all new questions';
 $string['show_my_created_questions'] = 'Show my created questions';
 $string['show_my_created_questions_to_submit'] = 'Show my created questions that I still have to submit';
 $string['show_all_qustions_to_review'] = 'Show all qustions to review';

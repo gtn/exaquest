@@ -105,8 +105,10 @@ $string['todos_title'] = 'TODOs';
 $string['statistics_title'] = 'STATISTIKEN';
 
 $string['questions_overall_count'] = 'Fragen insgesamt';
+$string['questions_new_count'] = 'Neue Fragen welche noch nicht zur Begutachtung freigegeben wurden';
 $string['questions_reviewed_count'] = 'Begutachtete Fragen';
-$string['questions_to_review_count'] = 'Fragen zu Begutachten';
+$string['questions_to_review_count'] = 'Fragen zu begutachten';
+$string['questions_to_revise_count'] = 'Fragen zu überarbeiten';
 $string['questions_fachlich_reviewed_count'] = 'Nur fachlich begutachtete Fragen';
 $string['questions_formal_reviewed_count'] = 'Nur formal begutachtete Fragen';
 $string['questions_finalised_count'] = 'Finalisierte Fragen';
@@ -133,6 +135,7 @@ $string['exams_for_me_to_create'] = 'Prüfungen soll ich erstellen';
 //Questionbank
 
 $string['show_all_questions'] = 'Alle Fragen anzeigen';
+$string['show_all_new_questions'] = 'Alle neuen Fragen, welche noch nicht veröffentlich wurden anzeigen';
 $string['show_my_created_questions'] = 'Meine erstelleten Fragen anzeigen';
 $string['show_my_created_questions_to_submit'] = 'Meine erstelleten Fragen die ich noch veröffentlichen muss anzeigen';
 $string['show_all_qustions_to_review'] = 'Fragen zur Begutachtung anzeigen';
