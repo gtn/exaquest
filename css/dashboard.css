@@ -62,3 +62,27 @@
   color: #fff;
   background-color: #6c757d;
 }
+
+#dashboard_create_questions_div .singlebutton,
+#exaquest-similarity-comparison > div {
+  width: 100% !important;
+}
+
+.exaquest-dashboard-card #dashboard_create_questions_div .singlebutton .btn-secondary,
+.exaquest-dashboard-card #exaquest-similarity-comparison .btn-secondary {
+  color: #fff;
+  background-color: #0f47ad;
+  border-color: #0f47ad;
+}
+
+.exaquest-dashboard-card #dashboard_create_questions_div .singlebutton .btn-secondary:hover,
+.exaquest-dashboard-card #exaquest-similarity-comparison .btn-secondary:hover {
+  color: #fff;
+  background-color: #0c398a;
+  border-color: #0b347e;
+}
+
+#dashboard_create_questions_div .singlebutton .btn-secondary,
+#exaquest-similarity-comparison .btn-secondary {
+  width: 100% !important;
+}

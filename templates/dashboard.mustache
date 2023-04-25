@@ -57,14 +57,14 @@
                                         questions_for_me_to_release, block_exaquest {{/str}}</span>
                                 </a>
                             {{/viewquestionstorelease}}
-                            {{#releasequestion}}
-                                {{#request_questions_popup}}
-                                    <div class="card-footer">
-                                        {{>block_exaquest/popup_request_questions}}
-                                    </div>
-                                {{/request_questions_popup}}
-                            {{/releasequestion}}
                         </div>
+                        {{#releasequestion}}
+                            {{#request_questions_popup}}
+                                <div class="card-footer">
+                                    {{>block_exaquest/popup_request_questions}}
+                                </div>
+                            {{/request_questions_popup}}
+                        {{/releasequestion}}
                     </div>
                 </div>
                 <div class="col mb-4">
@@ -78,13 +78,12 @@
                                     {{>block_exaquest/popup_exams_for_me_to_create}}
                                 {{/exams_for_me_to_create_popup}}
                             {{/fachlicherpruefer}}
-                            <p></p>
-                            {{#request_exams_popup}}
-                                <div class="card-footer">
-                                    {{>block_exaquest/popup_request_exams}}
-                                </div>
-                            {{/request_exams_popup}}
                         </div>
+                        {{#request_exams_popup}}
+                            <div class="card-footer">
+                                {{>block_exaquest/popup_request_exams}}
+                            </div>
+                        {{/request_exams_popup}}
                     </div>
                 </div>
             </div>
@@ -219,27 +218,25 @@
                             <span class="flex-grow-1"> {{#str}}
                                 my_questions_finalised_count, block_exaquest {{/str}}</span>
                         </a>
-
-                        {{#createquestion}}
-                            <div class="card-footer">
-                                <div id="dashboard_create_questions_div"></div>
-                            </div>
-                            <!-- createquestions is a key in the capabilities array.. if it is false: don't show, if it is true: show-->
-                        {{/createquestion}}
                     </div>
+                    {{#createquestion}}
+                        <div class="card-footer">
+                            <div id="dashboard_create_questions_div"></div>
+                        </div>
+                        <!-- createquestions is a key in the capabilities array.. if it is false: don't show, if it is true: show-->
+                    {{/createquestion}}
                 </div>
             </div>
-
-
+            
             <!--    Statistik-->
             {{#viewexamstatistics}}
                 <div class="col mb-4">
                     <div class="card dashboard-card exaquest-dashboard-card h-100">
                         <div class="card-body">
                             <h3 class="mb-3">{{#str}}statistics_title, block_exaquest {{/str}}</h3>
-                            <div class="card-footer">
-                                {{>block_exaquest/compare_questions}}
-                            </div>
+                        </div>
+                        <div class="card-footer">
+                            {{>block_exaquest/compare_questions}}
                         </div>
                     </div>
                 </div>
