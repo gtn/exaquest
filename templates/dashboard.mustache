@@ -1,157 +1,250 @@
 <!--fontaweseome icons: https://moodleigh.gnomio.com/mod/book/view.php?id=634&chapterid=117-->
-
-<!--writing #capabilities here pulls out all the capabilities ==> easier to read mustache file-->
 {{#capabilities}}
-    <div id="exaquest">
-        <!--    TODOs-->
-        <div class="dashboardcard">
-            <p>{{#str}}todos_title, block_exaquest {{/str}}</p>
-            <p>{{#str}}questions_overview_title, block_exaquest {{/str}}</p>
-            <ul>
-                {{#fragenersteller}}
-                    <li>
-                        {{#questions_for_me_to_create_popup}}
-                            {{>block_exaquest/popup_questions_for_me_to_create}}
-                        {{/questions_for_me_to_create_popup}}
-                    </li>
-                {{/fragenersteller}}
-                {{#createquestion}}
-                    <li>
-                        <a class="link"
-                           href={{my_questions_to_submit_link}}> {{my_questions_to_submit_count}} {{#str}}
-                            questions_for_me_to_submit, block_exaquest {{/str}}</a>
-                    </li>
-                {{/createquestion}}
-                {{#viewquestionstoreview}}
-                    <li>
-                        <a class="link"
-                           href={{questions_for_me_to_review_link}}> {{questions_for_me_to_review_count}} {{#str}}
-                            questions_for_me_to_review, block_exaquest {{/str}}</a>
-                    </li>
-                {{/viewquestionstoreview}}
-                {{#viewquestionstorevise}}
-                    <li>
-                        <a class="link"
-                           href={{questions_for_me_to_revise_link}}> {{questions_for_me_to_revise_count}} {{#str}}
-                            questions_for_me_to_revise, block_exaquest {{/str}}</a>
-                    </li>
-                {{/viewquestionstorevise}}
-                {{#viewquestionstorelease}}
-                    <li>
-                        <a class="link"
-                           href={{questions_for_me_to_release_link}}> {{questions_finalised_count}} {{#str}}
-                            questions_for_me_to_release, block_exaquest {{/str}}</a>
-                    </li>
-                {{/viewquestionstorelease}}
-            </ul>
-            {{#releasequestion}}
-                {{#request_questions_popup}}
-                    {{>block_exaquest/popup_request_questions}}
-                {{/request_questions_popup}}
-            {{/releasequestion}}
-            {{#show_exams_heading}}
-                <p></p>
-                <p>{{#str}}exams_overview_title, block_exaquest {{/str}}</p>
-            {{/show_exams_heading}}
-            {{#fachlicherpruefer}}
-                <li>
-                    {{#exams_for_me_to_create_popup}}
-                        {{>block_exaquest/popup_exams_for_me_to_create}}
-                    {{/exams_for_me_to_create_popup}}
-                </li>
-            {{/fachlicherpruefer}}
-            <p></p>
-            {{#request_exams_popup}}
-                {{>block_exaquest/popup_request_exams}}
-            {{/request_exams_popup}}
+    <div id="block_exaquest">
+        <!--fontaweseome icons: https://moodleigh.gnomio.com/mod/book/view.php?id=634&chapterid=117-->
+        <!--writing #capabilities here pulls out all the capabilities ==> easier to read mustache file-->
+
+        <div id="exaquest" class="exaquest-dashboard">
+            <!--    TODOs-->
+            <h2 class="mt-4 mb-3">{{#str}}todos_title, block_exaquest {{/str}}</h2>
+            <div class="row row-cols-1 row-cols-md-1 row-cols-lg-2">
+                <div class="col mb-4">
+                    <div class="card dashboard-card exaquest-dashboard-card h-100">
+                        <div class="card-body">
+                            <h3 class="mb-3">{{#str}}questions_overview_title, block_exaquest {{/str}}</h3>
+                            {{#fragenersteller}}
+                                {{#questions_for_me_to_create_popup}}
+                                    {{>block_exaquest/popup_questions_for_me_to_create}}
+                                {{/questions_for_me_to_create_popup}}
+                            {{/fragenersteller}}
+                            {{#createquestion}}
+                                <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
+                                   href={{my_questions_to_submit_link}}>
+                                            <span class="badge-outer text-center">
+                                                <span class="badge badge-primary">{{my_questions_to_submit_count}}</span>
+                                            </span>
+                                    <span class="flex-grow-1"> {{#str}}
+                                        questions_for_me_to_submit, block_exaquest {{/str}}</span>
+                                </a>
+                            {{/createquestion}}
+                            {{#viewquestionstoreview}}
+                                <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
+                                   href={{questions_for_me_to_review_link}}>
+                                            <span class="badge-outer text-center">
+                                                <span class="badge badge-primary">{{questions_for_me_to_review_count}}</span>
+                                            </span>
+                                    <span class="flex-grow-1"> {{#str}}
+                                        questions_for_me_to_review, block_exaquest {{/str}}</span>
+                                </a>
+                            {{/viewquestionstoreview}}
+                            {{#viewquestionstorevise}}
+                                <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
+                                   href={{questions_for_me_to_revise_link}}>
+                                            <span class="badge-outer text-center">
+                                                <span class="badge badge-primary">{{questions_for_me_to_revise_count}}</span>
+                                            </span>
+                                    <span class="flex-grow-1"> {{#str}}
+                                        questions_for_me_to_revise, block_exaquest {{/str}}</span>
+                                </a>
+                            {{/viewquestionstorevise}}
+                            {{#viewquestionstorelease}}
+                                <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
+                                   href={{questions_for_me_to_release_link}}>
+                                            <span class="badge-outer text-center">
+                                                <span class="badge badge-primary">{{questions_finalised_count}}</span>
+                                            </span>
+                                    <span class="flex-grow-1"> {{#str}}
+                                        questions_for_me_to_release, block_exaquest {{/str}}</span>
+                                </a>
+                            {{/viewquestionstorelease}}
+                            {{#releasequestion}}
+                                {{#request_questions_popup}}
+                                    <div class="card-footer">
+                                        {{>block_exaquest/popup_request_questions}}
+                                    </div>
+                                {{/request_questions_popup}}
+                            {{/releasequestion}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col mb-4">
+                    <div class="card dashboard-card exaquest-dashboard-card h-100">
+                        <div class="card-body">
+                            {{#show_exams_heading}}
+                                <h3 class="mb-3">{{#str}}exams_overview_title, block_exaquest {{/str}}</h3>
+                            {{/show_exams_heading}}
+                            {{#fachlicherpruefer}}
+                                {{#exams_for_me_to_create_popup}}
+                                    {{>block_exaquest/popup_exams_for_me_to_create}}
+                                {{/exams_for_me_to_create_popup}}
+                            {{/fachlicherpruefer}}
+                            <p></p>
+                            {{#request_exams_popup}}
+                                <div class="card-footer">
+                                    {{>block_exaquest/popup_request_exams}}
+                                </div>
+                            {{/request_exams_popup}}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!--    General Information-->
-        <div class="dashboardcard">
-            <p>{{#str}}questions_overview_title, block_exaquest {{/str}}</p>
-            <ul>
-                <li>
-                    <a class="link"
-                       href={{questions_overall_link}}>{{questions_count}} {{#str}}
-                        questions_overall_count, block_exaquest {{/str}}</a>
-                </li>
-                <li>
-                    <a class="link"
-                       href={{questions_new_link}}>{{questions_new_count}} {{#str}}
-                        questions_new_count, block_exaquest {{/str}}</a>
-                </li>
-                <li>
-                    <a class="link"
-                       href={{questions_to_review_link}}>{{questions_to_review_count}} {{#str}}
-                        questions_to_review_count, block_exaquest {{/str}}</a>
-                </li>
-                <li>
-                    <a class="link"
-                       href={{questions_to_revise_link}}>{{questions_to_revise_count}} {{#str}}
-                        questions_to_revise_count, block_exaquest {{/str}}</a>
-                </li>
-                <li>
-                    <a class="link"
-                       href={{questions_fachlich_reviewed_link}}>{{questions_fachlich_reviewed_count}} {{#str}}
-                        questions_fachlich_reviewed_count, block_exaquest {{/str}}</a>
-                </li>
-                <li>
-                    <a class="link"
-                       href={{questions_formal_reviewed_link}}>{{questions_formal_reviewed_count}} {{#str}}
-                        questions_formal_reviewed_count, block_exaquest {{/str}}</a>
-                </li>
-                <li>
-                    <a class="link"
-                       href={{questions_finalised_link}}>{{questions_finalised_count}} {{#str}}
-                        questions_reviewed_count, block_exaquest {{/str}}</a>
-                </li>
-                <li>
-                    <a class="link"
-                       href={{questions_released_link}}>{{questions_released_count}} {{#str}}
-                        questions_released_count, block_exaquest {{/str}}</a>
-                </li>
-                <li>
-                    <!--                There is no link for that, because there is no filter for that... but maybe in the future-->
-<!--                    TODO: this is never used. Released questions are sent to be revised. Should we change that and use LOCKED status?-->
-                    {{questions_released_and_to_review_count}} {{#str}}
-                    questions_released_and_to_review_count, block_exaquest {{/str}}
-                </li>
+        <h2 class="mt-4 mb-3">{{#str}}overview, block_exaquest{{/str}}</h2>
+        <div class="row row-cols-1 row-cols-md-1 row-cols-lg-2">
+            <div class="col mb-4">
+                <div class="card dashboard-card exaquest-dashboard-card h-100">
+                    <div class="card-body">
+                        <h3 class="mb-3">{{#str}}questions_overview_title, block_exaquest {{/str}}</h3>
+                        <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
+                           href={{questions_overall_link}}>
+                                            <span class="badge-outer text-center">
+                                                <span class="badge badge-primary">{{questions_finalised_count}}</span>
+                                            </span>
+                            <span class="flex-grow-1"> {{#str}}
+                                questions_overall_count, block_exaquest {{/str}}</span>
+                        </a>
 
 
-            </ul>
-        </div>
+                        <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
+                           href={{questions_new_link}}>
+                                            <span class="badge-outer text-center">
+                                                <span class="badge badge-primary">{{questions_new_count}}</span>
+                                            </span>
+                            <span class="flex-grow-1"> {{#str}}
+                                questions_new_count, block_exaquest {{/str}}</span>
+                        </a>
 
-        <!--    Meine Fragen-->
-        <div class="dashboardcard" id="my_questions_dashboardcard">
-            <p>{{#str}}my_questions_title, block_exaquest {{/str}}</p>
-            <ul>
-                <li>
-                    {{my_questions_count}} {{#str}}my_questions_count, block_exaquest {{/str}}
-                </li>
-                <li>
-                    {{my_questions_to_review_count}} {{#str}}my_questions_to_review_count, block_exaquest {{/str}}
-                </li>
-                <li>
-                    {{my_questions_finalised_count}} {{#str}}my_questions_finalised_count, block_exaquest {{/str}}
-                </li>
-            </ul>
 
-            {{#createquestions}}
-                <!-- createquestions is a key in the capabilities array.. if it is false: don't show, if it is true: show-->
-                <div id="dashboard_create_questions_div"></div>
-            {{/createquestions}}
+                        <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
+                           href={{questions_to_review_link}}>
+                                            <span class="badge-outer text-center">
+                                                <span class="badge badge-primary">{{questions_to_review_count}}</span>
+                                            </span>
+                            <span class="flex-grow-1"> {{#str}}
+                                questions_to_review_count, block_exaquest {{/str}}</span>
+                        </a>
 
-        </div>
 
-        <!--    Statistik-->
-        {{#viewexamstatistics}}
-            <div class="dashboardcard">
-                <p>{{#str}}statistics_title, block_exaquest {{/str}}</p>
-                <p>{{#str}}compare_questions, block_exaquest {{/str}}</p>
-                {{>block_exaquest/compare_questions}}
+                        <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
+                           href={{questions_to_revise_link}}>
+                                            <span class="badge-outer text-center">
+                                                <span class="badge badge-primary">{{questions_to_revise_count}}</span>
+                                            </span>
+                            <span class="flex-grow-1"> {{#str}}
+                                questions_to_revise_count, block_exaquest {{/str}}</span>
+                        </a>
+
+
+                        <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
+                           href={{questions_fachlich_reviewed_link}}>
+                                            <span class="badge-outer text-center">
+                                                <span class="badge badge-primary">{{questions_fachlich_reviewed_count}}</span>
+                                            </span>
+                            <span class="flex-grow-1"> {{#str}}
+                                questions_fachlich_reviewed_count, block_exaquest {{/str}}</span>
+                        </a>
+
+
+                        <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
+                           href={{questions_formal_reviewed_link}}>
+                                            <span class="badge-outer text-center">
+                                                <span class="badge badge-primary">{{questions_formal_reviewed_count}}</span>
+                                            </span>
+                            <span class="flex-grow-1"> {{#str}}
+                                questions_formal_reviewed_count, block_exaquest {{/str}}</span>
+                        </a>
+
+
+                        <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
+                           href={{questions_finalised_link}}>
+                                            <span class="badge-outer text-center">
+                                                <span class="badge badge-primary">{{questions_finalised_count}}</span>
+                                            </span>
+                            <span class="flex-grow-1"> {{#str}}
+                                questions_reviewed_count, block_exaquest {{/str}}</span>
+                        </a>
+
+
+                        <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
+                           href={{questions_released_link}}>
+                                            <span class="badge-outer text-center">
+                                                <span class="badge badge-primary">{{questions_released_count}}</span>
+                                            </span>
+                            <span class="flex-grow-1"> {{#str}}
+                                questions_released_count, block_exaquest {{/str}}</span>
+                        </a>
+
+
+                        <!--                There is no link for that, because there is no filter for that... but maybe in the future-->
+                        <!--                    TODO: this is never used. Released questions are sent to be revised. Should we change that and use LOCKED status?-->
+                        <a class="btn btn-light w-100 d-flex justify-content-between align-items-center disabled"
+                           href={{questions_released_and_to_review_link}}>
+                                            <span class="badge-outer text-center">
+                                                <span class="badge badge-primary">{{questions_released_and_to_review_count}}</span>
+                                            </span>
+                            <span class="flex-grow-1"> {{#str}}
+                                questions_released_and_to_review_count, block_exaquest {{/str}}</span>
+                        </a>
+                    </div>
+                </div>
             </div>
-        {{/viewexamstatistics}}
 
+            <!--    Meine Fragen-->
+            <div class="col mb-4">
+                <div class="card dashboard-card exaquest-dashboard-card h-100" id="my_questions_dashboardcard">
+                    <div class="card-body">
+                        <h3 class="mb-3">{{#str}}my_questions_title, block_exaquest {{/str}}</h3>
+
+                        <a href=""
+                           class="btn btn-light w-100 d-flex justify-content-between align-items-center disabled">
+                            <span class="badge-outer text-center"><span
+                                    class="badge badge-primary">{{my_questions_count}}</span></span>
+                            <span class="flex-grow-1"> {{#str}}my_questions_count, block_exaquest {{/str}}</span>
+                        </a>
+
+                        <a href=""
+                           class="btn btn-light w-100 d-flex justify-content-between align-items-center disabled">
+                            <span class="badge-outer text-center"><span
+                                    class="badge badge-primary">{{my_questions_to_review_count}}</span></span>
+                            <span class="flex-grow-1"> {{#str}}
+                                my_questions_to_review_count, block_exaquest {{/str}}</span>
+                        </a>
+
+                        <a href=""
+                           class="btn btn-light w-100 d-flex justify-content-between align-items-center disabled">
+                            <span class="badge-outer text-center"><span
+                                    class="badge badge-primary">{{my_questions_finalised_count}}</span></span>
+                            <span class="flex-grow-1"> {{#str}}
+                                my_questions_finalised_count, block_exaquest {{/str}}</span>
+                        </a>
+
+                        {{#createquestion}}
+                            <div class="card-footer">
+                                <div id="dashboard_create_questions_div"></div>
+                            </div>
+                            <!-- createquestions is a key in the capabilities array.. if it is false: don't show, if it is true: show-->
+                        {{/createquestion}}
+                    </div>
+                </div>
+            </div>
+
+
+            <!--    Statistik-->
+            {{#viewexamstatistics}}
+                <div class="col mb-4">
+                    <div class="card dashboard-card exaquest-dashboard-card h-100">
+                        <div class="card-body">
+                            <h3 class="mb-3">{{#str}}statistics_title, block_exaquest {{/str}}</h3>
+                            <div class="card-footer">
+                                {{>block_exaquest/compare_questions}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {{/viewexamstatistics}}
+        </div>
     </div>
 {{/capabilities}}
 

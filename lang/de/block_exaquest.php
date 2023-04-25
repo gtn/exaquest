@@ -103,6 +103,7 @@ $string['my_questions_title'] = 'MEINE FRAGEN';
 $string['examinations_title'] = 'PRÜFUNGEN';
 $string['todos_title'] = 'TODOs';
 $string['statistics_title'] = 'STATISTIKEN';
+$string['overview'] = 'Überblick';
 
 $string['questions_overall_count'] = 'Fragen insgesamt';
 $string['questions_new_count'] = 'Neue Fragen welche noch nicht zur Begutachtung freigegeben wurden';

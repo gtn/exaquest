@@ -93,6 +93,7 @@ $string['my_questions_title'] = 'MY QUESTIONS';
 $string['examinations_title'] = 'EXAMINATIONS';
 $string['todos_title'] = 'TODOs';
 $string['statistics_title'] = 'STATISTICS';
+$string['overview'] = 'Overview';
 
 $string['questions_overall_count'] = 'questions overall';
 $string['questions_new_count'] = 'questions that have been created but not yet sent to review';

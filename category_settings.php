@@ -91,7 +91,7 @@ if( $action == "submit"){
 
 // RENDER:
 $capabilities = [];
-$capabilities["createquestions"] = is_enrolled($context, $USER, "block/exaquest:createquestion");
+$capabilities["createquestion"] = is_enrolled($context, $USER, "block/exaquest:createquestion");
 
 $exams = new \block_exaquest\output\category_settings($USER->id, $courseid, $capabilities);
 echo $output->render($exams);
