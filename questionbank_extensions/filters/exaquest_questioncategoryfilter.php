@@ -132,7 +132,7 @@ class exaquest_questioncategoryfilter extends condition {
         global $PAGE, $COURSE, $DB;
 
         $html =
-            '<div style="height:50px"><div style="padding:5.5px;float:left">Select Fragencharakter:</div><select class="select custom-select searchoptions custom-select" id="id_filterstatus" style="margin-left:5px;margin-bottom:50px" name="fragencharakter">';
+            '<div class="form-group row"><label class="col-sm-2 col-form-label">Select Fragencharakter:</label><div class="col-sm-10"><select class="form-control select searchoptions" name="fragencharakter">';
         $html .= '<option value="-1"></option>';
         $qcats = $DB->get_records("block_exaquestcategories", array("coursecategoryid" => $COURSE->category));
         $questcats = [];
@@ -152,9 +152,9 @@ class exaquest_questioncategoryfilter extends condition {
             }
         }
 
-        $html .= '</select></div>';
+        $html .= '</select></div></div>';
 
-        $html .= '<div style="height:50px"><div style="padding:5.5px;float:left">Select Klassifikation:</div><select class="select custom-select searchoptions custom-select" id="id_filterstatus" style="margin-left:5px;margin-bottom:50px" name="klassifikation">';
+        $html .= '<div class="form-group row"><label class="col-sm-2 col-form-label">Select Klassifikation:</label><div class="col-sm-10"><select class="form-control select searchoptions" id="id_filterstatus" name="klassifikation">';
         $html .= '<option value="-1"></option>';
         if ($questcats) {
             foreach ($questcats[1] as $cat) {
@@ -167,9 +167,9 @@ class exaquest_questioncategoryfilter extends condition {
                 }
             }
         }
-        $html .= '</select></div>';
+        $html .= '</select></div></div>';
 
-        $html .= '<div style="height:50px"><div style="padding:5.5px;float:left">Select Fragefach:</div><select class="select custom-select searchoptions custom-select" id="id_filterstatus" style="margin-left:5px;margin-bottom:50px" name="fragefach">';
+        $html .= '<div class="form-group row"><label class="col-sm-2 col-form-label">Select Fragefach:</label><div class="col-sm-10"><select class="form-control select  searchoptions" id="id_filterstatus" name="fragefach">';
         $html .= '<option value="-1"></option>';
         if ($questcats) {
             foreach ($questcats[2] as $cat) {
@@ -182,9 +182,9 @@ class exaquest_questioncategoryfilter extends condition {
                 }
             }
         }
-        $html .= '</select></div>';
+        $html .= '</select></div></div>';
 
-        $html .= '<div style="height:50px"><div style="padding:5.5px;float:left">Select Lehrinhalt:</div><select class="select custom-select searchoptions custom-select" id="id_filterstatus" style="margin-left:5px;margin-bottom:50px" name="lehrinhalt">';
+        $html .= '<div class="form-group row"><label class="col-sm-2 col-form-label">Select Lehrinhalt:</label><div class="col-sm-10"><select class="form-control select searchoptions" id="id_filterstatus" name="lehrinhalt">';
         $html .= '<option value="-1"></option>';
         if ($questcats) {
             foreach ($questcats[3] as $cat) {
@@ -196,7 +196,7 @@ class exaquest_questioncategoryfilter extends condition {
             }
         }
 
-        $html .= '</select></div>';
+        $html .= '</select></div></div>';
 
         return $html;
     }

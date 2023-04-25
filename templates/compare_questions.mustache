@@ -81,15 +81,17 @@
         {{#isHeader}}
             <table class="exaquest-similarity-comparison-table table-responsive table table-striped table-hover"
                 data-target="{{ uniqid }}-{{ id }}">
-                <tr class="exaquest-similarity-comparison-table-header">
-                    <th class="col-qid1">{{col_qid1}}</th>
-                    <th class="col-qid2">{{col_qid2}}</th>
-                    <th class="col-issimilar">{{col_issimilar}}</th>
-                    <th class="col-similarity">{{col_similarity}}</th>
-                    <th class="col-timestamp">{{col_timestamp}}</th>
-                    <th class="col-threshold">{{col_threshold}}</th>
-                    <th class="col-algorithm">{{col_algorithm}}</th>
-                </tr>
+                <thead>
+                    <tr class="exaquest-similarity-comparison-table-header">
+                        <th class="col-qid1">{{col_qid1}}</th>
+                        <th class="col-qid2">{{col_qid2}}</th>
+                        <th class="col-issimilar">{{col_issimilar}}</th>
+                        <th class="col-similarity">{{col_similarity}}</th>
+                        <th class="col-timestamp">{{col_timestamp}}</th>
+                        <th class="col-threshold">{{col_threshold}}</th>
+                        <th class="col-algorithm">{{col_algorithm}}</th>
+                    </tr>
+                </thead>
                 {{#similarityrecords}}
                     {{^isHeader}}
                         {{#hightlightClass}}
@@ -114,7 +116,7 @@
                                         {{col_qid2}}
                                     {{/edit_q2_button}}
                                 </td>
-                                <td class="col-issimilar">{{col_issimilar}}</td>
+                                <td class="col-issimilar"><span class="badge badge-primary">{{col_issimilar}}</span></td>
                                 <td class="col-similarity">{{col_similarity}}</td>
                                 <td class="col-timestamp">{{{col_timestamp}}}</td>
                                 <td class="col-threshold">{{col_threshold}}</td>

@@ -120,7 +120,7 @@ class exaquest_filters extends condition {
         $selected[$this->filterstatus] = 'selected="selected"';
 
         $html =
-            '<div><div style="padding:5.5px;float:left">Select Questions:</div><select class="select custom-select searchoptions custom-select" id="id_filterstatus" style="margin-left:5px;margin-bottom:50px" name="filterstatus">';
+            '<div class="form-group row"><label class="col-sm-2 col-form-label">Select Questions:</label><div class="col-sm-10"><select class="form-control select searchoptions" id="id_filterstatus" name="filterstatus">';
         if (has_capability('block/exaquest:readallquestions', \context_course::instance($COURSE->id))) {
             $html .= '<option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS] . ' value="' .
                 BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS . '">' . get_string('show_all_questions', 'block_exaquest') . '</option>';
@@ -161,7 +161,7 @@ class exaquest_filters extends condition {
             BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS . '">' .
             get_string('show_all_released_questions', 'block_exaquest') . '</option>';
         $html .= '    </optgroup>';
-        $html .= '</select></div>';
+        $html .= '</select></div></div>';
 
         return $html;
     }
