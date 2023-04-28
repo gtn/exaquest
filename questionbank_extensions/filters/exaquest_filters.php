@@ -139,7 +139,7 @@ class exaquest_filters extends condition {
         $html .= '    <optgroup label="' . get_string('review', 'block_exaquest') . '">';
         $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW] . ' value="' .
             BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW . '">' .
-            get_string('show_all_qustions_to_review', 'block_exaquest') . '</option>';
+            get_string('show_all_questions_to_review', 'block_exaquest') . '</option>';
         $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW] . ' value="' .
             BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW . '">' .
             get_string('show_questions_for_me_to_review', 'block_exaquest') . '</option>';
