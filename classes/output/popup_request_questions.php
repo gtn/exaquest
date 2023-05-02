@@ -49,7 +49,7 @@ class popup_request_questions implements renderable, templatable {
         foreach ($data->fragenersteller as $fragenersteller) {
             $autocompleteoptions[$fragenersteller->id] = $fragenersteller->firstname . ' ' . $fragenersteller->lastname;
         }
-        $fragenersteller_autocomplete_html = $mform->create_autocomplete_html($autocompleteoptions);
+        $fragenersteller_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions);
         $data->fragenersteller_autocomplete_html = $fragenersteller_autocomplete_html;
 
         $data->action =

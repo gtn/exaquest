@@ -206,6 +206,11 @@ function block_exaquest_request_revision($userfrom, $userto, $comment, $question
         "Revise", $messageobject->url);
 }
 
+//function block_exaquest_notify_mover_of_finalised_question($userfrom, $userto, $comment, $questionbankentryid, $questionname, $catAndCont,
+//    $courseid) {
+// TODO
+//}
+
 function block_exaquest_send_moodle_notification($notificationtype, $userfrom, $userto, $subject, $message, $context,
     $contexturl = null, $courseid = 0, $customdata = null, $messageformat = FORMAT_HTML) {
     global $CFG, $DB;
