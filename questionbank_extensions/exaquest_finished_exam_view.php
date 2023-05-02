@@ -256,6 +256,8 @@ class exaquest_finished_exam_view extends exaquest_exam_view
                 //array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
                 array_unshift($this->searchconditions, new \core_question\bank\search\in_quiz_filter($filterstatus));
                 array_unshift($this->searchconditions, new \core_question\bank\search\only_released_questions());
+                array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_category_condition(
+                    $cat, $recurse, $editcontexts, $this->baseurl, $this->course));
 
                 //array_unshift($this->searchconditions, new \core_question\bank\search\category_condition_exaquest($cat, $recurse, $editcontexts, $this->baseurl, $this->course));
             }

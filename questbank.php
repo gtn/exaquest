@@ -18,6 +18,7 @@ $fragencharakter = optional_param('fragencharakter',-1, PARAM_INT);
 $klassifikation = optional_param('klassifikation',-1, PARAM_INT);
 $fragefach = optional_param('fragefach',-1, PARAM_INT);
 $lehrinhalt = optional_param('lehrinhalt',-1, PARAM_INT);
+$category = optional_param('category','', PARAM_TEXT);
 
 require_login($courseid);
 require_capability('block/exaquest:viewquestionbanktab', context_course::instance($courseid));
@@ -27,6 +28,7 @@ $pagevars['fragencharakter'] = $fragencharakter;
 $pagevars['klassifikation'] = $klassifikation;
 $pagevars['fragefach'] = $fragefach;
 $pagevars['lehrinhalt'] = $lehrinhalt;
+//$pagevars['cat'] = $category;
 
 $page_params = array('courseid' => $courseid);
 

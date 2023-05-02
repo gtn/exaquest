@@ -1295,6 +1295,7 @@ function get_question_category_and_context_of_course($courseid = null) {
     $questioncategory = $DB->get_records('question_categories', ['contextid' => $contexts[2]]);
     $category =
         end($questioncategory); // an actual array, not a returnvalue of a function has to be passed, since it sets the internal pointer of the array, so there has to be a real array
+
     if ($category) {
         return [$category->id, $contexts[2]]; // TODO why $contexts[2]? That should give the same as $category->contextid but $category->contextid seems safer
     } else {
