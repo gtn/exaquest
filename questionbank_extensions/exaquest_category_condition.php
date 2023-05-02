@@ -24,4 +24,17 @@ class exaquest_category_condition extends category_condition {
         return '';
     }
 
+    /**
+     * Displays the recursion checkbox GUI.
+     * question_bank_view places this within the section that is hidden by default
+     */
+    public function display_options_adv() {
+        global $PAGE;
+        $displaydata = [];
+        if ($this->recurse) {
+            $displaydata['checked'] = 'checked';
+        }
+        return '';
+    }
+
 }
