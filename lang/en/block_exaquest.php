@@ -18,10 +18,12 @@ $string['todos_are_open'] = ' TODOs are open.';
 $string['request_questions'] = 'Request new questions';
 $string['request_questions_label'] = 'Request new questions from ...';
 $string['request_questions_comment_placeholder'] = 'Which kind of question is needed? Comment mandatory';
+$string['comment_placeholder_mandatory'] = 'Comment mandatory';
 $string['request_questions_button'] = 'Request';
 $string['revise_questions_label'] = 'The following questions are marked for revision: ';
 $string['formal_review_questions_label'] = 'The following questions are marked for formal finalisation: ';
 $string['fachlich_review_questions_label'] = 'The following questions are marked for specialist finalisation: ';
+$string['write_a_comment'] = 'Write a comment:';
 
 $string['request_exams'] = 'Request new exams';
 $string['request_exams_label'] = 'Request new exams from ...';

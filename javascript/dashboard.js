@@ -95,8 +95,10 @@ $(document).on('click', '.mark-exam-request-as-done-button', function () {
 $(document).ready(function () {
     $('#requestquestionsform').on('submit', function () {
         let $selecteduser = $('#id_selectedusers').val();
-        if ($selecteduser && $selecteduser.length == 0) {
-            alert("Es muss mindestens ein Fragenersteller ausgewählt sein");
+        let textarea_value = $('.requestquestionscomment').val();
+        debugger
+        if ($selecteduser && $selecteduser.length == 0 || textarea_value == '') {
+            alert("Es muss mindestens ein Fragenersteller ausgewählt sein und ein Kommentar eingegeben werden.");
             return false;
         } else {
             return true;
@@ -113,12 +115,12 @@ $(document).ready(function () {
     //     }
     // });
 
-    $('.requestquestionscomment').on('keyup', function () {
-        var textarea_value = $('.requestquestionscomment').val();
-        if (textarea_value != '') {
-            $('.requestquestionssubmit').attr('disabled', false);
-        } else {
-            $('.requestquestionssubmit').attr('disabled', true);
-        }
-    });
+    // $('.requestquestionscomment').on('keyup', function () {
+    //     var textarea_value = $('.requestquestionscomment').val();
+    //     if (textarea_value != '') {
+    //         $('.requestquestionssubmit').attr('disabled', false);
+    //     } else {
+    //         $('.requestquestionssubmit').attr('disabled', true);
+    //     }
+    // });
 });
