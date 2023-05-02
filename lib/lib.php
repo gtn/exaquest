@@ -77,6 +77,8 @@ const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE = 7;
 const BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_RELEASE = 8; // 2023.02.28: there is no difference between "for me to release" "all to release" for now
 const BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS = 9;
 const BLOCK_EXAQUEST_FILTERSTATUS_ALL_NEW_QUESTIONS = 10; // all questions that are created but not submitted for review
+const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FACHLICH_REVIEWED = 11;
+const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FORMAL_REVIEWED = 12;
 
 function block_exaquest_init_js_css() {
     global $PAGE, $CFG;
@@ -204,6 +206,11 @@ function block_exaquest_request_revision($userfrom, $userto, $comment, $question
         "Revise", $messageobject->url);
 }
 
+//function block_exaquest_notify_mover_of_finalised_question($userfrom, $userto, $comment, $questionbankentryid, $questionname, $catAndCont,
+//    $courseid) {
+// TODO
+//}
+
 function block_exaquest_send_moodle_notification($notificationtype, $userfrom, $userto, $subject, $message, $context,
     $contexturl = null, $courseid = 0, $customdata = null, $messageformat = FORMAT_HTML) {
     global $CFG, $DB;
@@ -281,7 +288,7 @@ function block_exaquest_get_reviewer_by_courseid($courseid) {
  * @param $userid
  * @return array
  */
-function block_exaquest_get_questionbankentries_to_formal_review_count($courseid,
+function block_exaquest_get_questionbankentries_to_formal_review_count($coursecategoryid,
     $userid) { // TODO change to coursecategoryid and use it in query
     global $DB;
     $sql = "SELECT q.*
@@ -409,7 +416,6 @@ function block_exaquest_get_questionbankentries_to_be_reviewed_count($coursecate
     return $questions;
 
 }
-
 
 /**
  * Returns count of
@@ -1297,7 +1303,8 @@ function get_question_category_and_context_of_course($courseid = null) {
         end($questioncategory); // an actual array, not a returnvalue of a function has to be passed, since it sets the internal pointer of the array, so there has to be a real array
 
     if ($category) {
-        return [$category->id, $contexts[2]]; // TODO why $contexts[2]? That should give the same as $category->contextid but $category->contextid seems safer
+        return [$category->id,
+            $contexts[2]]; // TODO why $contexts[2]? That should give the same as $category->contextid but $category->contextid seems safer
     } else {
         return false;
     }

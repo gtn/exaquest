@@ -99,7 +99,7 @@
                         <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
                            href={{questions_overall_link}}>
                                             <span class="badge-outer text-center">
-                                                <span class="badge badge-primary">{{questions_finalised_count}}</span>
+                                                <span class="badge badge-primary">{{questions_count}}</span>
                                             </span>
                             <span class="flex-grow-1"> {{#str}}
                                 questions_overall_count, block_exaquest {{/str}}</span>
@@ -127,16 +127,6 @@
 
 
                         <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
-                           href={{questions_to_revise_link}}>
-                                            <span class="badge-outer text-center">
-                                                <span class="badge badge-primary">{{questions_to_revise_count}}</span>
-                                            </span>
-                            <span class="flex-grow-1"> {{#str}}
-                                questions_to_revise_count, block_exaquest {{/str}}</span>
-                        </a>
-
-
-                        <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
                            href={{questions_fachlich_reviewed_link}}>
                                             <span class="badge-outer text-center">
                                                 <span class="badge badge-primary">{{questions_fachlich_reviewed_count}}</span>
@@ -153,6 +143,15 @@
                                             </span>
                             <span class="flex-grow-1"> {{#str}}
                                 questions_formal_reviewed_count, block_exaquest {{/str}}</span>
+                        </a>
+
+                        <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
+                           href={{questions_to_revise_link}}>
+                                            <span class="badge-outer text-center">
+                                                <span class="badge badge-primary">{{questions_to_revise_count}}</span>
+                                            </span>
+                            <span class="flex-grow-1"> {{#str}}
+                                questions_to_revise_count, block_exaquest {{/str}}</span>
                         </a>
 
 
@@ -227,7 +226,7 @@
                     {{/createquestion}}
                 </div>
             </div>
-            
+
             <!--    Statistik-->
             {{#viewexamstatistics}}
                 <div class="col mb-4">

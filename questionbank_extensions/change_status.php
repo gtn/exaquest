@@ -44,7 +44,6 @@ class change_status extends column_base {
         $questioncreator->id = $question->createdby;
         $questioncreators = array($questioncreator);
 
-
         switch (intval($question->teststatus)) {
 
             case BLOCK_EXAQUEST_QUESTIONSTATUS_NEW:
@@ -146,10 +145,12 @@ class change_status extends column_base {
                     debugger
                     //let changestatus_value = $(".changestatus<?php //echo $question->questionbankentryid; ?>//").val();
                     let changestatus_value = e.currentTarget.value;
-                    if (changestatus_value == 'revise_question' || changestatus_value == 'open_question_for_review'){
+                    let textarea_value = $('.commenttext<?php echo $question->questionbankentryid; ?>').val();
+                    debugger
+                    if (changestatus_value == 'revise_question' || changestatus_value == 'open_question_for_review') {
                         let $selecteduser = $('#id_selectedusers<?php echo $question->questionbankentryid; ?>').val();
-                        if ($selecteduser && $selecteduser.length == 0) {
-                            alert("Es muss mindestens eine Person ausgewählt sein");
+                        if ($selecteduser && $selecteduser.length == 0 || textarea_value == '') {
+                            alert("Es muss mindestens eine Person ausgewählt sein und ein Kommentar eingegeben werden");
                             return false;
                         }
                     }
@@ -184,17 +185,17 @@ class change_status extends column_base {
                     });
                 });
 
-                $(".disable<?php echo $question->questionbankentryid; ?>").attr('disabled', true);
-
-                $('.commenttext<?php echo $question->questionbankentryid; ?>').on('keyup', function () {
-                    var textarea_value = $('.commenttext<?php echo $question->questionbankentryid; ?>').val();
-
-                    if (textarea_value != '') {
-                        $(".disable<?php echo $question->questionbankentryid; ?>").attr('disabled', false);
-                    } else {
-                        $(".disable<?php echo $question->questionbankentryid; ?>").attr('disabled', true);
-                    }
-                });
+                //$(".disable<?php //echo $question->questionbankentryid; ?>//").attr('disabled', true);
+                //
+                //$('.commenttext<?php //echo $question->questionbankentryid; ?>//').on('keyup', function () {
+                //    var textarea_value = $('.commenttext<?php //echo $question->questionbankentryid; ?>//').val();
+                //
+                //    if (textarea_value != '') {
+                //        $(".disable<?php //echo $question->questionbankentryid; ?>//").attr('disabled', false);
+                //    } else {
+                //        $(".disable<?php //echo $question->questionbankentryid; ?>//").attr('disabled', true);
+                //    }
+                //});
 
                 // $('.requestquestionscomment').on('keyup', function () {
                 //     var textarea_value = $('.requestquestionscomment').val();

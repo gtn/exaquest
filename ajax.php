@@ -79,8 +79,13 @@ switch ($action) {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED;
             // delete the entry in exaquestreviewassign, since no review has to be done anymore once it is finalized. If it somehow gets reassigned again, a new entry has to be created
             $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN, ['questionbankentryid' => $questionbankentryid]);
+            // send notification and reviewassign for releasing to the mover
+            //block_exaquest_request_review($USER, $user->id, $commenttext, $questionbankentryid, $questionname, $coursecategoryid,
+            //    $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FORMAL);
+            // TODO
         } else {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE;
+            $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN, ['questionbankentryid' => $questionbankentryid, 'reviewtype' => BLOCK_EXAQUEST_REVIEWTYPE_FORMAL]);
         }
         $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
         break;
@@ -94,8 +99,13 @@ switch ($action) {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED;
             // delete the entry in exaquestreviewassign, since no review has to be done anymore once it is finalized. If it somehow gets reassigned again, a new entry has to be created
             $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN, ['questionbankentryid' => $questionbankentryid]);
+            // send notification and reviewassign for releasing to the mover
+            //block_exaquest_request_review($USER, $user->id, $commenttext, $questionbankentryid, $questionname, $coursecategoryid,
+            //    $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FORMAL);
+            // TODO
         } else {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE;
+            $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN, ['questionbankentryid' => $questionbankentryid, 'reviewtype' => BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH]);
         }
         $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
         break;
