@@ -99,7 +99,6 @@ class dashboard implements renderable, templatable {
                 "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE));
         $data->questions_for_me_to_release_link = $data->questions_for_me_to_release_link->raw_out(false);
 
-
         $data->questions_overall_link = new moodle_url('/blocks/exaquest/questbank.php',
             array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
                 "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS));
@@ -162,11 +161,9 @@ class dashboard implements renderable, templatable {
             $data->show_exams_heading = true;
         }
 
-        if ($this->capabilities["fachlicherpruefer"]) {;
+        if ($this->capabilities["fachlicherpruefer"]) {
             $data->show_exams_heading = true;
         }
-
-
 
         $data->questions_for_me_to_create_popup = $this->questions_for_me_to_create_popup->export_for_template($output);
         $data->exams_for_me_to_create_popup = $this->exams_for_me_to_create_popup->export_for_template($output);

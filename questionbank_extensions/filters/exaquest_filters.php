@@ -71,6 +71,12 @@ class exaquest_filters extends condition {
                     " OR qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE .
                     " OR qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE;
                 break;
+            case BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FACHLICH_REVIEWED:
+                $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE;
+                break;
+            case BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FORMAL_REVIEWED:
+                $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE;
+                break;
             case BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW:
                 $this->where = "(qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS .
                     " OR qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE .
@@ -116,7 +122,7 @@ class exaquest_filters extends condition {
     public function display_options_adv() {
         global $PAGE, $COURSE;
 
-        $selected = array_fill(0, 11, '');
+        $selected = array_fill(0, 13, '');
         $selected[$this->filterstatus] = 'selected="selected"';
 
         $html =
@@ -140,6 +146,12 @@ class exaquest_filters extends condition {
         $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW] . ' value="' .
             BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW . '">' .
             get_string('show_all_questions_to_review', 'block_exaquest') . '</option>';
+        $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FACHLICH_REVIEWED] . ' value="' .
+            BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FACHLICH_REVIEWED . '">' .
+            get_string('show_all_fachlich_reviewed_questions_to_review', 'block_exaquest') . '</option>';
+        $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FORMAL_REVIEWED] . ' value="' .
+            BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FORMAL_REVIEWED . '">' .
+            get_string('show_all_formal_reviewed_questions_to_review', 'block_exaquest') . '</option>';
         $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW] . ' value="' .
             BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW . '">' .
             get_string('show_questions_for_me_to_review', 'block_exaquest') . '</option>';
