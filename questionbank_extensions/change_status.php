@@ -145,7 +145,7 @@ class change_status extends column_base {
                     debugger
                     //let changestatus_value = $(".changestatus<?php //echo $question->questionbankentryid; ?>//").val();
                     let changestatus_value = e.currentTarget.value;
-                    let textarea_value = $('.commenttext').val();
+                    let textarea_value = $('.commenttext<?php echo $question->questionbankentryid; ?>').val();
                     debugger
                     if (changestatus_value == 'revise_question' || changestatus_value == 'open_question_for_review') {
                         let $selecteduser = $('#id_selectedusers<?php echo $question->questionbankentryid; ?>').val();
