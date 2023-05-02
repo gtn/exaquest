@@ -112,7 +112,6 @@ class exaquest_filters extends condition {
                 }
             }
         }
-
         return $this->where;
     }
 

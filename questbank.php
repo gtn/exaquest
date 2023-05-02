@@ -28,7 +28,8 @@ $pagevars['fragencharakter'] = $fragencharakter;
 $pagevars['klassifikation'] = $klassifikation;
 $pagevars['fragefach'] = $fragefach;
 $pagevars['lehrinhalt'] = $lehrinhalt;
-//$pagevars['cat'] = $category;
+$catAndCont = get_question_category_and_context_of_course();
+$pagevars['cat'] = $catAndCont[0] . ',' . $catAndCont[1];
 
 $page_params = array('courseid' => $courseid);
 
