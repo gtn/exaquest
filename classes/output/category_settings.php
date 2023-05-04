@@ -19,12 +19,12 @@ class category_settings implements renderable, templatable {
     private $request_questions_popup;
 
     public function __construct($userid, $courseid, $capabilities) {
-        global $DB;
+        global $DB, $COURSE;
 
         $this->courseid = $courseid;
         $this->capabilities = $capabilities;
         $this->userid = $userid;
-        $records = $DB->get_records("block_exaquestcategories");
+        $records = $DB->get_records("block_exaquestcategories", array("coursecategoryid" => $COURSE->category));
         $categories = array();
         foreach($records as $key => $record){
                 $categories[$record->categorytype][] = $record->categoryname . "\n";
