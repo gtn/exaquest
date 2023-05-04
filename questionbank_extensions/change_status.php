@@ -38,11 +38,8 @@ class change_status extends column_base {
         global $USER, $DB, $COURSE, $PAGE;
         //echo '<div class="container"><div class="row"><div class="col-md-12 text-right">';
         $output = $PAGE->get_renderer('block_exaquest');
-        $questioncreator = new \stdClass();
-        $questioncreator->firstname = $question->creatorfirstname;
-        $questioncreator->lastname = $question->creatorlastname;
-        $questioncreator->id = $question->createdby;
-        $questioncreators = array($questioncreator);
+
+        $fragenersteller = block_exaquest_get_fragenersteller_by_courseid($COURSE->id);
 
         switch (intval($question->teststatus)) {
 
@@ -63,7 +60,7 @@ class change_status extends column_base {
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS:
                 if (has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
-                    echo $output->render(new \block_exaquest\output\popup_change_status($questioncreators, 'revise_question',
+                    echo $output->render(new \block_exaquest\output\popup_change_status($fragenersteller, 'revise_question',
                         get_string('revise_question', 'block_exaquest'), $question->questionbankentryid));
                     if (has_capability('block/exaquest:dofachlichreview', \context_course::instance($COURSE->id))) {
                         echo '<button href="#" class="changestatus' . $question->questionbankentryid .
@@ -84,7 +81,7 @@ class change_status extends column_base {
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE:
                 if (has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
-                    echo $output->render(new \block_exaquest\output\popup_change_status($questioncreators, 'revise_question',
+                    echo $output->render(new \block_exaquest\output\popup_change_status($fragenersteller, 'revise_question',
                         get_string('revise_question', 'block_exaquest'), $question->questionbankentryid));
                 }
                 if (has_capability('block/exaquest:dofachlichreview', \context_course::instance($COURSE->id))) {
@@ -100,7 +97,7 @@ class change_status extends column_base {
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE:
                 if (has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
-                    echo $output->render(new \block_exaquest\output\popup_change_status($questioncreators, 'revise_question',
+                    echo $output->render(new \block_exaquest\output\popup_change_status($fragenersteller, 'revise_question',
                         get_string('revise_question', 'block_exaquest'), $question->questionbankentryid));
                     if (has_capability('block/exaquest:doformalreview', \context_course::instance($COURSE->id))) {
                         echo '<button href="#" class="changestatus' . $question->questionbankentryid .
@@ -121,13 +118,13 @@ class change_status extends column_base {
                         get_string('release_question', 'block_exaquest') . '</button>';
                 }
                 if (has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
-                    echo $output->render(new \block_exaquest\output\popup_change_status($questioncreators, 'revise_question',
+                    echo $output->render(new \block_exaquest\output\popup_change_status($fragenersteller, 'revise_question',
                         get_string('revise_question', 'block_exaquest'), $question->questionbankentryid));
                 }
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED:
                 if (has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
-                    echo $output->render(new \block_exaquest\output\popup_change_status($questioncreators, 'revise_question',
+                    echo $output->render(new \block_exaquest\output\popup_change_status($fragenersteller, 'revise_question',
                         get_string('revise_question', 'block_exaquest'), $question->questionbankentryid));
                 }
                 break;

@@ -260,7 +260,10 @@ function block_exaquest_send_moodle_notification($notificationtype, $userfrom, $
  */
 function block_exaquest_get_fragenersteller_by_courseid($courseid) {
     $context = context_course::instance($courseid);
-    return get_enrolled_users($context, 'block/exaquest:fragenersteller');
+    $userarray = array();
+    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fragenersteller'));
+    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fragenerstellerlight'));
+    return $userarray;
 }
 
 /**
@@ -299,6 +302,7 @@ function block_exaquest_get_reviewer_by_courseid($courseid) {
     $userarray = array();
     //$userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:modulverantwortlicher'));
     $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fachlfragenreviewer'));
+    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fachlfragenreviewerlight'));
     //$userarray = array_merge($userarray, get_enrolled_users($context,
     //    'block/exaquest:pruefungskoordination')); // according to 20230112 Feedbackliste. But should they really have the right to review? nope, they should not be here, as told in later feedbackliste 20230323
     $userarray = array_unique($userarray, SORT_REGULAR); // to remove users who have multiple roles
