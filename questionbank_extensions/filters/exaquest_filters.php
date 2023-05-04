@@ -102,13 +102,23 @@ class exaquest_filters extends condition {
         }
         //this is for restricing view of questions for new fragenersteller light role
         if (!has_capability('block/exaquest:readallquestions', \context_course::instance($COURSE->id))) {
-
-            if ($this->filterstatus != BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS &&
-                $this->filterstatus != BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS_TO_SUBMIT) {
-                if ($this->filterstatus == BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS) {
-                    $this->where = "qbe.ownerid = " . $USER->id;
-                } else {
-                    $this->where .= " AND qbe.ownerid = " . $USER->id;
+            if (!has_capability('block/exaquest:fachlfragenreviewerlight', \context_course::instance($COURSE->id))) {
+                if ($this->filterstatus != BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS &&
+                    $this->filterstatus != BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS_TO_SUBMIT) {
+                    if ($this->filterstatus == BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS) {
+                        $this->where = "qbe.ownerid = " . $USER->id;
+                    } else {
+                        $this->where .= " AND qbe.ownerid = " . $USER->id;
+                    }
+                }
+            } else {
+                if ($this->filterstatus != BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS &&
+                    $this->filterstatus != BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS_TO_SUBMIT) {
+                    if ($this->filterstatus == BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS) {
+                        $this->where = "qra.reviewerid = " . $USER->id;
+                    } else {
+                        $this->where .= " AND qra.reviewerid = " . $USER->id;
+                    }
                 }
             }
         }
