@@ -23,8 +23,9 @@ switch ($action) {
         //$DB->record_exists(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, array("questionbankentryid" => $questionbankentryid));
 
         // if there is a reviseassign entry ==> delete that, since it is now revised
-        $oldstatus = $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'status', array("questionbankentryid" => $questionbankentryid));
-        if($oldstatus == BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE){
+        $oldstatus =
+            $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'status', array("questionbankentryid" => $questionbankentryid));
+        if ($oldstatus == BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE) {
             $DB->delete_records(BLOCK_EXAQUEST_DB_REVISEASSIGN, ['questionbankentryid' => $questionbankentryid]);
         }
 
@@ -45,10 +46,11 @@ switch ($action) {
             }
         }
         // get the PKs, which are the ones that should be assigned to do the formal review
-        $formalreviewusers =  block_exaquest_get_pruefungskoodrination_by_courseid($courseid);
+        $formalreviewusers = block_exaquest_get_pruefungskoodrination_by_courseid($courseid);
         if ($formalreviewusers != null) {
             foreach ($formalreviewusers as $user) {
-                block_exaquest_request_review($USER, $user->id, $commenttext, $questionbankentryid, $questionname, $coursecategoryid,
+                block_exaquest_request_review($USER, $user->id, $commenttext, $questionbankentryid, $questionname,
+                    $coursecategoryid,
                     $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FORMAL);
             }
         }
@@ -79,8 +81,13 @@ switch ($action) {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED;
             // delete the entry in exaquestreviewassign, since no review has to be done anymore once it is finalized. If it somehow gets reassigned again, a new entry has to be created
             $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN, ['questionbankentryid' => $questionbankentryid]);
+            // send notification for releasing to the mover
+            $questionname = $DB->get_record('question', array('id' => $questionid))->name;
+            block_exaquest_notify_mover_of_finalised_question($USER, $questionbankentryid, $questionname, $courseid);
         } else {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE;
+            $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN,
+                ['questionbankentryid' => $questionbankentryid, 'reviewtype' => BLOCK_EXAQUEST_REVIEWTYPE_FORMAL]);
         }
         $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
         break;
@@ -94,8 +101,13 @@ switch ($action) {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED;
             // delete the entry in exaquestreviewassign, since no review has to be done anymore once it is finalized. If it somehow gets reassigned again, a new entry has to be created
             $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN, ['questionbankentryid' => $questionbankentryid]);
+            // send notification for releasing to the mover
+            $questionname = $DB->get_record('question', array('id' => $questionid))->name;
+            block_exaquest_notify_mover_of_finalised_question($USER, $questionbankentryid, $questionname, $courseid);
         } else {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE;
+            $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN,
+                ['questionbankentryid' => $questionbankentryid, 'reviewtype' => BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH]);
         }
         $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
         break;
@@ -138,7 +150,8 @@ switch ($action) {
             $coursecategoryid = $course->category;
             if ($users != null) {
                 foreach ($users as $user) {
-                    block_exaquest_request_revision($USER, $user, $commenttext, $questionbankentryid, $questionname, $coursecategoryid,
+                    block_exaquest_request_revision($USER, $user, $commenttext, $questionbankentryid, $questionname,
+                        $coursecategoryid,
                         $courseid);
                 }
             }

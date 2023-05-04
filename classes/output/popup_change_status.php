@@ -49,14 +49,16 @@ class popup_change_status implements renderable, templatable {
             $data->require = true;
             $data->text = get_string('revise_text', 'block_exaquest');
             $data->title = get_string('revise_title', 'block_exaquest');
-            $data->selectusers = $DB->get_records_sql('SELECT u.id, u.firstname, u.lastname
+            $data->commentplaceholder = get_string('comment_placeholder_mandatory', 'block_exaquest');
+            $data->selectusers = array_merge($data->selectusers, $DB->get_records_sql('SELECT DISTINCT u.id, u.firstname, u.lastname
                                                FROM {question_versions} qv
                                                JOIN {question} q ON qv.questionid = q.id
                                                JOIN {user} u ON q.createdby = u.id
-                                               WHERE qv.questionbankentryid = '.$this->questionbankentryid);
+                                               WHERE qv.questionbankentryid = '.$this->questionbankentryid));
         } else {
             $data->text = get_string('open_for_review_text', 'block_exaquest');
             $data->title = get_string('open_for_review_title', 'block_exaquest');
+            $data->commentplaceholder = get_string('comment_placeholder', 'block_exaquest');
             $data->send_to_pk_text = get_string('notification_will_be_sent_to_pk', 'block_exaquest');
         }
 
@@ -67,7 +69,12 @@ class popup_change_status implements renderable, templatable {
         foreach ($data->selectusers as $selectuser) {
             $autocompleteoptions[$selectuser->id] = $selectuser->firstname . ' ' . $selectuser->lastname;
         }
-        $selectusers_autocomplete_html = $mform->create_autocomplete_html($autocompleteoptions, $this->questionbankentryid);
+        if ($this->action == 'open_question_for_review') {
+            $selectusers_autocomplete_html = $mform->create_autocomplete_single_select_html($autocompleteoptions, $this->questionbankentryid);
+        }else{
+            $selectusers_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, $this->questionbankentryid);
+        }
+
         $data->selectusers_autocomplete_html = $selectusers_autocomplete_html;
 
         $data->action = $this->action;

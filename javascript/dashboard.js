@@ -19,6 +19,7 @@ $(document).on('click', '.selectallornone-userselection', function () {
     }
 });
 
+debugger
 // This is the hacky but simple solution to getting the button to where it belongs. The buttion is rendered using functions from moodle-core which use echo.
 // This cannot be included nicely into mustache ==> after rendering, put the button to the correct position with javascript.
 $("#createnewquestion_button").appendTo("#dashboard_create_questions_div");
@@ -93,10 +94,11 @@ $(document).on('click', '.mark-exam-request-as-done-button', function () {
 
 $(document).ready(function () {
     $('#requestquestionsform').on('submit', function () {
-        debugger
         let $selecteduser = $('#id_selectedusers').val();
-        if ($selecteduser.length == 0) {
-            alert("Es muss mindestens ein Fragenersteller ausgewählt sein");
+        let textarea_value = $('.requestquestionscomment').val();
+        debugger
+        if ($selecteduser && $selecteduser.length == 0 || textarea_value == '') {
+            alert("Es muss mindestens ein Fragenersteller ausgewählt sein und ein Kommentar eingegeben werden.");
             return false;
         } else {
             return true;
@@ -113,12 +115,12 @@ $(document).ready(function () {
     //     }
     // });
 
-    $('.requestquestionscomment').on('keyup', function () {
-        var textarea_value = $('.requestquestionscomment').val();
-        if (textarea_value != '') {
-            $('.requestquestionssubmit').attr('disabled', false);
-        } else {
-            $('.requestquestionssubmit').attr('disabled', true);
-        }
-    });
+    // $('.requestquestionscomment').on('keyup', function () {
+    //     var textarea_value = $('.requestquestionscomment').val();
+    //     if (textarea_value != '') {
+    //         $('.requestquestionssubmit').attr('disabled', false);
+    //     } else {
+    //         $('.requestquestionssubmit').attr('disabled', true);
+    //     }
+    // });
 });

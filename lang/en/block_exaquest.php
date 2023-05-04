@@ -18,10 +18,13 @@ $string['todos_are_open'] = ' TODOs are open.';
 $string['request_questions'] = 'Request new questions';
 $string['request_questions_label'] = 'Request new questions from ...';
 $string['request_questions_comment_placeholder'] = 'Which kind of question is needed? Comment mandatory';
+$string['comment_placeholder_mandatory'] = 'Comment mandatory';
+$string['comment_placeholder'] = 'Comment';
 $string['request_questions_button'] = 'Request';
 $string['revise_questions_label'] = 'The following questions are marked for revision: ';
 $string['formal_review_questions_label'] = 'The following questions are marked for formal finalisation: ';
 $string['fachlich_review_questions_label'] = 'The following questions are marked for specialist finalisation: ';
+$string['write_a_comment'] = 'Write a comment:';
 
 $string['request_exams'] = 'Request new exams';
 $string['request_exams_label'] = 'Request new exams from ...';
@@ -45,6 +48,11 @@ $string['please_create_new_exams_subject'] = 'Please create new exams in {$a->fu
 $string['messageprovider:revisequestion'] = 'Questions have been assigned for revision';
 $string['please_revise_question'] = 'Please revise question <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['please_revise_question_subject'] = 'Please revise question {$a->fullname}';
+
+$string['messageprovider:releasequestion'] = 'Questions are finlaized and can be released';
+$string['please_release_question'] = 'Please release question <a href="{$a->url}">{$a->fullname}</a>.';
+$string['please_release_question_subject'] = 'Please release question {$a->fullname}';
+
 
 $string['messageprovider:reviewquestion'] = 'Questions have been assigned for review';
 $string['please_review_question'] = 'Please review question <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
@@ -93,10 +101,13 @@ $string['my_questions_title'] = 'MY QUESTIONS';
 $string['examinations_title'] = 'EXAMINATIONS';
 $string['todos_title'] = 'TODOs';
 $string['statistics_title'] = 'STATISTICS';
+$string['overview'] = 'Overview';
 
 $string['questions_overall_count'] = 'questions overall';
+$string['questions_new_count'] = 'questions that have been created but not yet sent to review';
 $string['questions_reviewed_count'] = 'questions are finalised / reviewed';
 $string['questions_to_review_count'] = 'questions have to be reviewed';
+$string['questions_to_revise_count'] = 'questions have to be revised';
 $string['questions_fachlich_reviewed_count'] = 'Fachlich reviewed questions';
 $string['questions_formal_reviewed_count'] = 'Formal reviewed questions';
 $string['questions_finalised_count'] = 'questions finalised';
@@ -121,9 +132,12 @@ $string['exams_for_me_to_create'] = 'Exams for me to create';
 //Questionbank
 
 $string['show_all_questions'] = 'Show all questions';
+$string['show_all_new_questions'] = 'Show all new questions';
 $string['show_my_created_questions'] = 'Show my created questions';
 $string['show_my_created_questions_to_submit'] = 'Show my created questions that I still have to submit';
-$string['show_all_qustions_to_review'] = 'Show all qustions to review';
+$string['show_all_questions_to_review'] = 'Show all questions to review';
+$string['show_all_fachlich_reviewed_questions_to_review'] = 'Show all questions that are fachlich reviewed and need to be formally reviewed';
+$string['show_all_formal_reviewed_questions_to_review'] = 'Show all questions that are formal reviewed and need to be fachlich reviewed';
 $string['show_questions_for_me_to_review'] = 'Show questions for me to review';
 $string['show_questions_to_revise'] = 'Show questions to revise';
 $string['show_questions_for_me_to_revise'] = 'Show questions for me to revise';

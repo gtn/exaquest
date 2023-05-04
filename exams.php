@@ -33,7 +33,7 @@ echo $output->header($context, $courseid, get_string('exams_overview', 'block_ex
 
 // RENDER:
 $capabilities = [];
-$capabilities["createquestions"] = is_enrolled($context, $USER, "block/exaquest:createquestion");
+$capabilities["createquestion"] = is_enrolled($context, $USER, "block/exaquest:createquestion");
 $capabilities["viewnewexams"] = is_enrolled($context, $USER, "block/exaquest:viewnewexams");
 $capabilities["viewcreatedexams"] = is_enrolled($context, $USER, "block/exaquest:viewcreatedexams");
 $capabilities["viewreleasedexams"] = is_enrolled($context, $USER, "block/exaquest:viewreleasedexams");

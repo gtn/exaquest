@@ -45,6 +45,13 @@ $messageproviders = array (
             'email' => MESSAGE_PERMITTED,
         ],
     ),
+    // Notify modulverantwortlicher that they should release a question
+    'releasequestion' => array (
+        'defaults' => [
+            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+            'email' => MESSAGE_PERMITTED,
+        ],
+    ),
     // Notify modulverantwortlicher and fachlicherfragenreviewer that they should review a question
     'dailytodos' => array (
         'defaults' => [

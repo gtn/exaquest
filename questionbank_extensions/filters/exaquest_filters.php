@@ -56,6 +56,9 @@ class exaquest_filters extends condition {
         switch ($this->filterstatus) {
             case BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS:
                 break;
+            case BLOCK_EXAQUEST_FILTERSTATUS_ALL_NEW_QUESTIONS:
+                $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_NEW;
+                break;
             case BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS:
                 $this->where = "qbe.ownerid = " . $USER->id;
                 break;
@@ -67,6 +70,12 @@ class exaquest_filters extends condition {
                 $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS .
                     " OR qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE .
                     " OR qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE;
+                break;
+            case BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FACHLICH_REVIEWED:
+                $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE;
+                break;
+            case BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FORMAL_REVIEWED:
+                $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE;
                 break;
             case BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW:
                 $this->where = "(qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS .
@@ -93,17 +102,26 @@ class exaquest_filters extends condition {
         }
         //this is for restricing view of questions for new fragenersteller light role
         if (!has_capability('block/exaquest:readallquestions', \context_course::instance($COURSE->id))) {
-
-            if ($this->filterstatus != BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS &&
-                $this->filterstatus != BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS_TO_SUBMIT) {
-                if ($this->filterstatus == BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS) {
-                    $this->where = "qbe.ownerid = " . $USER->id;
-                } else {
-                    $this->where .= " AND qbe.ownerid = " . $USER->id;
+            if (!has_capability('block/exaquest:fachlfragenreviewerlight', \context_course::instance($COURSE->id))) {
+                if ($this->filterstatus != BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS &&
+                    $this->filterstatus != BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS_TO_SUBMIT) {
+                    if ($this->filterstatus == BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS) {
+                        $this->where = "qbe.ownerid = " . $USER->id;
+                    } else {
+                        $this->where .= " AND qbe.ownerid = " . $USER->id;
+                    }
+                }
+            } else {
+                if ($this->filterstatus != BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS &&
+                    $this->filterstatus != BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS_TO_SUBMIT) {
+                    if ($this->filterstatus == BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS) {
+                        $this->where = "qra.reviewerid = " . $USER->id;
+                    } else {
+                        $this->where .= " AND qra.reviewerid = " . $USER->id;
+                    }
                 }
             }
         }
-
         return $this->where;
     }
 
@@ -113,16 +131,19 @@ class exaquest_filters extends condition {
     public function display_options_adv() {
         global $PAGE, $COURSE;
 
-        $selected = array_fill(0, 10, '');
+        $selected = array_fill(0, 13, '');
         $selected[$this->filterstatus] = 'selected="selected"';
 
         $html =
-            '<div><div style="padding:5.5px;float:left">Select Questions:</div><select class="select custom-select searchoptions custom-select" id="id_filterstatus" style="margin-left:5px;margin-bottom:50px" name="filterstatus">';
+            '<div class="form-group row"><label class="col-sm-2 col-form-label">Select Questions:</label><div class="col-sm-10"><select class="form-control select searchoptions" id="id_filterstatus" name="filterstatus">';
         if (has_capability('block/exaquest:readallquestions', \context_course::instance($COURSE->id))) {
             $html .= '<option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS] . ' value="' .
                 BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS . '">' . get_string('show_all_questions', 'block_exaquest') . '</option>';
         }
         $html .= '    <optgroup label="' . get_string('created', 'block_exaquest') . '">';
+        $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_NEW_QUESTIONS] . ' value="' .
+            BLOCK_EXAQUEST_FILTERSTATUS_ALL_NEW_QUESTIONS . '">' . get_string('show_all_new_questions', 'block_exaquest') .
+            '</option>';
         $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS] . ' value="' .
             BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS . '">' . get_string('show_my_created_questions', 'block_exaquest') .
             '</option>';
@@ -133,7 +154,13 @@ class exaquest_filters extends condition {
         $html .= '    <optgroup label="' . get_string('review', 'block_exaquest') . '">';
         $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW] . ' value="' .
             BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW . '">' .
-            get_string('show_all_qustions_to_review', 'block_exaquest') . '</option>';
+            get_string('show_all_questions_to_review', 'block_exaquest') . '</option>';
+        $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FACHLICH_REVIEWED] . ' value="' .
+            BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FACHLICH_REVIEWED . '">' .
+            get_string('show_all_fachlich_reviewed_questions_to_review', 'block_exaquest') . '</option>';
+        $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FORMAL_REVIEWED] . ' value="' .
+            BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FORMAL_REVIEWED . '">' .
+            get_string('show_all_formal_reviewed_questions_to_review', 'block_exaquest') . '</option>';
         $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW] . ' value="' .
             BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW . '">' .
             get_string('show_questions_for_me_to_review', 'block_exaquest') . '</option>';
@@ -150,12 +177,15 @@ class exaquest_filters extends condition {
         $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE] . ' value="' .
             BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE . '">' .
             get_string('show_questions_to_release', 'block_exaquest') . '</option>';
-        //$html.= '        <option '.$selected[BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_RELEASE].' value="'.BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_RELEASE.'">'.get_string('show_questions_for_me_to_release', 'block_exaquest').'</option>';
+        //$html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_RELEASE] . ' value="' .
+        //    BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_RELEASE . '">' .
+        //    get_string('show_questions_for_me_to_release', 'block_exaquest') . '</option>';
+        // TODO
         $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS] . ' value="' .
             BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS . '">' .
             get_string('show_all_released_questions', 'block_exaquest') . '</option>';
         $html .= '    </optgroup>';
-        $html .= '</select></div>';
+        $html .= '</select></div></div>';
 
         return $html;
     }

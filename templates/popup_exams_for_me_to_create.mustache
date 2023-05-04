@@ -4,8 +4,14 @@
 <!--&lt;!&ndash;    <i class="icon fa fa-plus fa-fw "></i>&ndash;&gt;-->
 <!--</button>-->
 
-<a class="link" data-toggle="modal" data-target="#examsForMeToCreateModal"> {{exams_for_me_to_create_count}} {{#str}}
-    exams_for_me_to_create, block_exaquest {{/str}}</a>
+<a class="btn btn-light w-100 d-flex justify-content-between align-items-center" data-toggle="modal"
+   data-target="#examsForMeToCreateModal">
+    <span class="badge-outer text-center">
+        <span class="badge badge-primary">{{exams_for_me_to_create_count}}</span>
+    </span>
+    <span class="flex-grow-1"> {{#str}}
+        exams_for_me_to_create, block_exaquest {{/str}}</span>
+</a>
 
 <div class="modal fade" id="examsForMeToCreateModal" tabindex="-1"
      aria-labelledby="examsForMeToCreateModalLabel"

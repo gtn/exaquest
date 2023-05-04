@@ -20,10 +20,13 @@ $string['todos_are_open'] = ' TODOs sind offen.';
 $string['request_questions'] = 'Neue Frage anfordern';
 $string['request_questions_label'] = 'Neue Frage anforderen von ...';
 $string['request_questions_comment_placeholder'] = 'Welche Art von Frage wird benötigt? Verpflichtendes Feld.';
+$string['comment_placeholder_mandatory'] = 'Kommentar. Verpflichtendes Feld.';
+$string['comment_placeholder'] = 'Kommentar.';
 $string['request_questions_button'] = 'Anfordern';
 $string['revise_questions_label'] = 'Folgende Fragen sind zur Überabeitung markiert:';
 $string['formal_review_questions_label'] = 'Folgende Fragen sind zur formalen Finalisierung markiert:';
 $string['fachlich_review_questions_label'] = 'Folgende Fragen sind zur fachlichen Finalisierung markiert:';
+$string['write_a_comment'] = 'Schreiben Sie einen Kommentar:';
 
 $string['request_exams'] = 'Neue Prüfung anfordern';
 $string['request_exams_label'] = 'Neue Prüfung anforderen von ...';
@@ -48,6 +51,10 @@ $string['please_create_new_exams_subject'] = 'Bitte erstellen Sie eine neue Prü
 $string['messageprovider:revisequestion'] = 'Fragen wurden zur Überarbeitung zugeteilt';
 $string['please_revise_question'] = 'Bitte überarbeiten Sie die Frage <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
 $string['please_revise_question_subject'] = 'Bitte überarbeiten Sie die Frage {$a->fullname}';
+
+$string['messageprovider:releasequestion'] = 'Fragen wurden begutachtet und können freigegeben werden';
+$string['please_release_question'] = 'Bitte geben Sie die Frage <a href="{$a->url}">{$a->fullname}</a> frei.';
+$string['please_release_question_subject'] = 'Bitte geben Sie die Frage {$a->fullname} frei.';
 
 
 $string['messageprovider:reviewquestion'] = 'Fragen wurden zum Beurteilen zugeteilt';
@@ -103,12 +110,15 @@ $string['my_questions_title'] = 'MEINE FRAGEN';
 $string['examinations_title'] = 'PRÜFUNGEN';
 $string['todos_title'] = 'TODOs';
 $string['statistics_title'] = 'STATISTIKEN';
+$string['overview'] = 'Überblick';
 
 $string['questions_overall_count'] = 'Fragen insgesamt';
-$string['questions_reviewed_count'] = 'Begutachtete Fragen';
-$string['questions_to_review_count'] = 'Fragen zu Begutachten';
-$string['questions_fachlich_reviewed_count'] = 'Nur fachlich begutachtete Fragen';
-$string['questions_formal_reviewed_count'] = 'Nur formal begutachtete Fragen';
+$string['questions_new_count'] = 'Neue Fragen welche noch nicht zur Begutachtung freigegeben wurden';
+$string['questions_reviewed_count'] = 'Vollständig begutachtete Fragen';
+$string['questions_to_review_count'] = 'Fragen zu begutachten';
+$string['questions_to_revise_count'] = 'Fragen zu überarbeiten';
+$string['questions_fachlich_reviewed_count'] = 'Nur fachlich begutachtete Fragen. Formal noch zu begutachten';
+$string['questions_formal_reviewed_count'] = 'Nur formal begutachtete Fragen. Fachlich noch zu begutachten';
 $string['questions_finalised_count'] = 'Finalisierte Fragen';
 $string['questions_released_count'] = 'Freigegebene Fragen';
 $string['questions_released_and_to_review_count'] = 'Freigegebene Fragen die überarbeitet werden müssen';
@@ -133,9 +143,12 @@ $string['exams_for_me_to_create'] = 'Prüfungen soll ich erstellen';
 //Questionbank
 
 $string['show_all_questions'] = 'Alle Fragen anzeigen';
+$string['show_all_new_questions'] = 'Alle neuen Fragen, welche noch nicht veröffentlich wurden anzeigen';
 $string['show_my_created_questions'] = 'Meine erstelleten Fragen anzeigen';
 $string['show_my_created_questions_to_submit'] = 'Meine erstelleten Fragen die ich noch veröffentlichen muss anzeigen';
-$string['show_all_qustions_to_review'] = 'Fragen zur Begutachtung anzeigen';
+$string['show_all_questions_to_review'] = 'Fragen zur Begutachtung anzeigen';
+$string['show_all_fachlich_reviewed_questions_to_review'] = 'Fachlich begutachtete Fragen anzeigen. Formal noch zu begutachten';
+$string['show_all_formal_reviewed_questions_to_review'] = 'Formal begutachtete Fragen anzeigen. Fachlich noch zu begutachten';
 $string['show_questions_for_me_to_review'] = 'Meine Fragen zur Begutachtung anzeigen';
 $string['show_questions_to_revise'] = 'Fragen zur Überabeitung anzeigen';
 $string['show_questions_for_me_to_revise'] = 'Meine Fragen zur Überabeitung anzeigen';

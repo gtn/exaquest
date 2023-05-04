@@ -52,6 +52,10 @@ class dashboard implements renderable, templatable {
         $data->questions_released_count = block_exaquest_get_released_questionbankentries_count($this->coursecategoryid);
         $data->questions_released_and_to_review_count =
             block_exaquest_get_released_and_to_review_questionbankentries_count($this->coursecategoryid);
+        $data->questions_to_revise_count =
+            block_exaquest_get_questionbankentries_to_be_revised_count($this->coursecategoryid);
+        $data->questions_new_count =
+            block_exaquest_get_questionbankentries_new_count($this->coursecategoryid);
 
         $data->questions_for_me_to_create_count =
             block_exaquest_get_questions_for_me_to_create_count($this->coursecategoryid, $this->userid);
@@ -95,7 +99,6 @@ class dashboard implements renderable, templatable {
                 "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE));
         $data->questions_for_me_to_release_link = $data->questions_for_me_to_release_link->raw_out(false);
 
-
         $data->questions_overall_link = new moodle_url('/blocks/exaquest/questbank.php',
             array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
                 "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS));
@@ -121,6 +124,21 @@ class dashboard implements renderable, templatable {
                 "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE));
         $data->questions_finalised_link = $data->questions_finalised_link->raw_out(false);
 
+        $data->questions_released_link = new moodle_url('/blocks/exaquest/questbank.php',
+            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS));
+        $data->questions_released_link = $data->questions_released_link->raw_out(false);
+
+        $data->questions_to_revise_link = new moodle_url('/blocks/exaquest/questbank.php',
+            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVISE));
+        $data->questions_to_revise_link = $data->questions_to_revise_link->raw_out(false);
+
+        $data->questions_new_link = new moodle_url('/blocks/exaquest/questbank.php',
+            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_NEW_QUESTIONS));
+        $data->questions_new_link = $data->questions_new_link->raw_out(false);
+
         //$data->questions_released_link = new moodle_url('/blocks/exaquest/questbank.php',
         //    array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
         //        "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW));
@@ -143,16 +161,21 @@ class dashboard implements renderable, templatable {
             $data->show_exams_heading = true;
         }
 
-        if ($this->capabilities["fachlicherpruefer"]) {;
+        if ($this->capabilities["fachlicherpruefer"]) {
             $data->show_exams_heading = true;
         }
-
-
 
         $data->questions_for_me_to_create_popup = $this->questions_for_me_to_create_popup->export_for_template($output);
         $data->exams_for_me_to_create_popup = $this->exams_for_me_to_create_popup->export_for_template($output);
 
         // similarity comparison button
+        $data->buttons = [
+            compare_questions::createShowOverviewButton(new moodle_url('/blocks/exaquest/similarity_comparison.php',
+                array('courseid' => $this->courseid,
+                    'substituteid' => 0, 'hidepreviousq' => 0, 'sort' => 0, 'category' => $catAndCont[0] . ',' . $catAndCont[1])),
+                $this->courseid)
+        ];
+
         $data->buttons = [
             compare_questions::createShowOverviewButton(new moodle_url('/blocks/exaquest/similarity_comparison.php',
                 array('courseid' => $this->courseid,

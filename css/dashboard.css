@@ -8,3 +8,81 @@
 #exaquest .modalbutton {
     cursor: pointer;
 }
+
+
+#exaquest .dashboardcard {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px;
+}
+
+#exaquest .modalbutton {
+    cursor: pointer;
+}
+
+.exaquest-dashboard h2 {
+    font-size: 1.6rem;
+}
+
+.exaquest-dashboard-card h3 {
+    font-size: 1.3rem;
+}
+
+.exaquest-dashboard-card .btn {
+    margin-bottom: .5rem;
+}
+
+.exaquest-dashboard-card .btn.btn-light {
+    fftext-align: left;
+}
+
+.exaquest-dashboard-card .btn.btn-light .badge {
+    min-width: 20px;
+}
+
+.exaquest-dashboard-card .btn.btn-light span:not(.badge, .badge-outer) {
+    text-align: left;
+}
+
+.exaquest-dashboard-card .btn.btn-light .badge-outer {
+    min-width: 50px;
+}
+
+.exaquest-dashboard-card .btn.btn-light.disabled {
+    font-style: normal;
+}
+
+.exaquest-dashboard-card .card-footer {
+    background-color: transparent;
+    border-top: 0;
+    padding-top: 0;
+}
+
+.exaquest-dashboard-card .badge-secondary {
+  color: #fff;
+  background-color: #6c757d;
+}
+
+#dashboard_create_questions_div .singlebutton,
+#exaquest-similarity-comparison > div {
+  width: 100% !important;
+}
+
+.exaquest-dashboard-card #dashboard_create_questions_div .singlebutton .btn-secondary,
+.exaquest-dashboard-card #exaquest-similarity-comparison .btn-secondary {
+  color: #fff;
+  background-color: #0f47ad;
+  border-color: #0f47ad;
+}
+
+.exaquest-dashboard-card #dashboard_create_questions_div .singlebutton .btn-secondary:hover,
+.exaquest-dashboard-card #exaquest-similarity-comparison .btn-secondary:hover {
+  color: #fff;
+  background-color: #0c398a;
+  border-color: #0b347e;
+}
+
+#dashboard_create_questions_div .singlebutton .btn-secondary,
+#exaquest-similarity-comparison .btn-secondary {
+  width: 100% !important;
+}

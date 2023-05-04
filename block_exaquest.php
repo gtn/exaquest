@@ -14,7 +14,7 @@ class block_exaquest extends block_list {
         //$context = context_system::instance(); // todo: system? or block? think of dashboard. for now solved with viewdashboardoutsidecourse cap
 
         // get all courses where exaquest is added as a block:
-        $courseids = block_exaquest_get_courseids_for_user($USER->id);
+        $courseids = block_exaquest_get_courseids_of_relevant_courses_for_user($USER->id);
         $hascapability_in_some_course = false;
         foreach ($courseids as $courseid) {
             if (has_capability('block/exaquest:viewdashboardoutsidecourse', context_course::instance($courseid))) {
@@ -59,18 +59,25 @@ class block_exaquest extends block_list {
                 //$this->content->items[] = editquestion_helper::create_new_question_button(2, array('courseid' => $COURSE->id), true);
                 $this->content->items[] = html_writer::tag('a', get_string('dashboard', 'block_exaquest'),
                     array('href' => $CFG->wwwroot . '/blocks/exaquest/dashboard.php?courseid=' . $COURSE->id));
-                $this->content->items[] = html_writer::tag('a', get_string('get_questionbank', 'block_exaquest'),
-                    array('href' => $CFG->wwwroot . '/blocks/exaquest/questbank.php?courseid=' . $COURSE->id . '&category=' .
-                        $catAndCont[0] . '%2C' . $catAndCont[1]));
-                // TODO: add custom plugin here
-                $this->content->items[] = html_writer::tag('a', get_string('similarity', 'block_exaquest'),
-                    array('href' => $CFG->wwwroot . '/blocks/exaquest/similarity_comparison.php?courseid=' . $COURSE->id .
-                        '&category=' .
-                        $catAndCont[0] . '%2C' . $catAndCont[1]));
-                $this->content->items[] = html_writer::tag('a', get_string('exams', 'block_exaquest'),
-                    array('href' => $CFG->wwwroot . '/blocks/exaquest/exams.php?courseid=' . $COURSE->id));
-                $this->content->items[] = html_writer::tag('a', get_string('category_settings', 'block_exaquest'),
-                    array('href' => $CFG->wwwroot . '/blocks/exaquest/category_settings.php?courseid=' . $COURSE->id));
+                if (has_capability('block/exaquest:viewquestionbanktab', \context_course::instance($COURSE->id))) {
+                    $this->content->items[] = html_writer::tag('a', get_string('get_questionbank', 'block_exaquest'),
+                        array('href' => $CFG->wwwroot . '/blocks/exaquest/questbank.php?courseid=' . $COURSE->id . '&category=' .
+                            $catAndCont[0] . '%2C' . $catAndCont[1]));
+                }
+                if (has_capability('block/exaquest:viewsimilaritytab', \context_course::instance($COURSE->id))) {
+                    $this->content->items[] = html_writer::tag('a', get_string('similarity', 'block_exaquest'),
+                        array('href' => $CFG->wwwroot . '/blocks/exaquest/similarity_comparison.php?courseid=' . $COURSE->id .
+                            '&category=' .
+                            $catAndCont[0] . '%2C' . $catAndCont[1]));
+                }
+                if (has_capability('block/exaquest:viewexamstab', \context_course::instance($COURSE->id))) {
+                    $this->content->items[] = html_writer::tag('a', get_string('exams', 'block_exaquest'),
+                        array('href' => $CFG->wwwroot . '/blocks/exaquest/exams.php?courseid=' . $COURSE->id));
+                }
+                if (has_capability('block/exaquest:viewcategorytab', \context_course::instance($COURSE->id))) {
+                    $this->content->items[] = html_writer::tag('a', get_string('category_settings', 'block_exaquest'),
+                        array('href' => $CFG->wwwroot . '/blocks/exaquest/category_settings.php?courseid=' . $COURSE->id));
+                }
             }
         } else {
             return null;

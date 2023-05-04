@@ -149,7 +149,11 @@ $capabilities = array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
     ),
-    'block/exaquest:technicalreview' => array(
+    'block/exaquest:doformalreview' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+    ),
+    'block/exaquest:dofachlichreview' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
     ),
@@ -292,6 +296,10 @@ $capabilities = array(
         'contextlevel' => CONTEXT_COURSE,
     ),
     'block/exaquest:exaquestuser' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+    ),
+    'block/exaquest:viewquestionstorevise' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
     ),

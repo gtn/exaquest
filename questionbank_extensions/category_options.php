@@ -66,6 +66,12 @@ class category_options extends column_base {
             $options[$categoryoption->categorytype][] = $categoryoption->categoryname;
         }
 
+        for ($k = 0; $k <= 3; $k++) {
+            if (!is_array($options[$k])) {
+                $options[$k][] = ' ';
+            }
+        }
+
         $html = '<div class="container">
   <div class="row">
     <div class="col-sm-6 bg-secondary text-white rounded">

@@ -13,10 +13,10 @@ require_once('plugin_feature.php');
 require_once('edit_action_column_exaquest.php');
 require_once('filters/exaquest_filters.php');
 require_once('filters/exaquest_questioncategoryfilter.php');
-require_once('filters/category_condition_exaquest.php');
 require_once('edit_action_column_exaquest.php');
 require_once('delete_action_column_exaquest.php');
 require_once('history_action_column_exaquest.php');
+require_once('exaquest_category_condition.php');
 
 
 use core_plugin_manager;
@@ -163,7 +163,7 @@ class exaquest_view extends view {
 
         $editcontexts = $this->contexts->having_one_edit_tab_cap($tabname);
 
-
+        //var_dump($cat);
         // Show the filters and search options.
         $this->wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus, $fragencharakter, $klassifikation, $fragefach,  $lehrinhalt);
 
@@ -189,10 +189,7 @@ class exaquest_view extends view {
         list(, $contextid) = explode(',', $cat);
         $catcontext = \context::instance_by_id($contextid);
         $thiscontext = $this->get_most_specific_context();
-        //var_dump($catcontext);
-        //echo("---------------");
-        //var_dump($thiscontext);
-        //die;
+
         // Category selection form.
         $this->display_question_bank_header();
         //edited:
@@ -211,7 +208,8 @@ class exaquest_view extends view {
                 //array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
                 array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_filters($filterstatus));
                 array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_questioncategoryfilter($fragencharakter, $klassifikation, $fragefach,  $lehrinhalt));
-                //array_unshift($this->searchconditions, new \core_question\bank\search\category_condition_exaquest($cat, $recurse, $editcontexts, $this->baseurl, $this->course));
+                array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_category_condition(
+                    $cat, $recurse, $editcontexts, $this->baseurl, $this->course));
             }
         }
         $this->display_options_form($showquestiontext);
