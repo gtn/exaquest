@@ -147,10 +147,19 @@ class change_status extends column_base {
                     let changestatus_value = e.currentTarget.value;
                     let textarea_value = $('.commenttext<?php echo $question->questionbankentryid; ?>').val();
                     debugger
-                    if (changestatus_value == 'revise_question' || changestatus_value == 'open_question_for_review') {
+                    if (changestatus_value == 'revise_question') {
                         let $selecteduser = $('#id_selectedusers<?php echo $question->questionbankentryid; ?>').val();
                         if ($selecteduser && $selecteduser.length == 0 || textarea_value == '') {
-                            alert("Es muss mindestens eine Person ausgewählt sein und ein Kommentar eingegeben werden");
+                            alert("Es muss mindestens eine Person ausgewählt sein und ein Kommentar eingegeben werden!");
+                            return false;
+                        }
+                    }
+                    debugger
+                    if (changestatus_value == 'open_question_for_review') {
+                        debugger
+                        let $selecteduser = $('#id_selectedusers<?php echo $question->questionbankentryid; ?>').val();
+                        if ($selecteduser == "") {
+                            alert("Es muss mindestens eine Person ausgewählt sein!");
                             return false;
                         }
                     }
