@@ -176,7 +176,7 @@ function block_exaquest_request_review($userfrom, $userto, $comment, $questionba
         "Review", $messageobject->url);
 }
 
-function block_exaquest_request_revision($userfrom, $userto, $comment, $questionbankentryid, $questionname, $catAndCont,
+function block_exaquest_request_revision($userfrom, $userto, $comment, $questionbankentryid, $questionname, $coursecategoryid,
     $courseid) {
     global $DB, $COURSE;
     // enter data into the exaquest tables
@@ -206,10 +206,23 @@ function block_exaquest_request_revision($userfrom, $userto, $comment, $question
         "Revise", $messageobject->url);
 }
 
-//function block_exaquest_notify_mover_of_finalised_question($userfrom, $userto, $comment, $questionbankentryid, $questionname, $catAndCont,
-//    $courseid) {
-// TODO
-//}
+function block_exaquest_notify_mover_of_finalised_question($userfrom, $questionbankentryid, $questionname, $courseid) {
+    // create the message
+    $messageobject = new stdClass;
+    $messageobject->fullname = $questionname;
+    $messageobject->url = new moodle_url('/blocks/exaquest/questbank.php',
+        array('courseid' => $courseid, 'filterstatus' => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE));
+    $messageobject->url = $messageobject->url->raw_out(false);
+    $message = get_string('please_release_question', 'block_exaquest', $messageobject);
+    $subject = get_string('please_release_question_subject', 'block_exaquest', $messageobject);
+    // get the movers
+    $movers = block_exaquest_get_modulverantwortliche_by_courseid($courseid);
+    foreach ($movers as $mover) {
+        block_exaquest_send_moodle_notification("releasequestion", $userfrom->id, $mover->id, $subject, $message, "Release",
+            $messageobject->url);
+    }
+
+}
 
 function block_exaquest_send_moodle_notification($notificationtype, $userfrom, $userto, $subject, $message, $context,
     $contexturl = null, $courseid = 0, $customdata = null, $messageformat = FORMAT_HTML) {
@@ -260,6 +273,18 @@ function block_exaquest_get_fragenersteller_by_courseid($courseid) {
 function block_exaquest_get_fachlichepruefer_by_courseid($courseid) {
     $context = context_course::instance($courseid);
     return get_enrolled_users($context, 'block/exaquest:fachlicherpruefer');
+}
+
+/**
+ *
+ * Returns all modulverantwortliche of this course
+ *
+ * @param $courseid
+ * @return array
+ */
+function block_exaquest_get_modulverantwortliche_by_courseid($courseid) {
+    $context = context_course::instance($courseid);
+    return get_enrolled_users($context, 'block/exaquest:modulverantwortlicher');
 }
 
 /**

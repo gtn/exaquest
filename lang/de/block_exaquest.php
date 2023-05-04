@@ -51,6 +51,10 @@ $string['messageprovider:revisequestion'] = 'Fragen wurden zur Überarbeitung zu
 $string['please_revise_question'] = 'Bitte überarbeiten Sie die Frage <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
 $string['please_revise_question_subject'] = 'Bitte überarbeiten Sie die Frage {$a->fullname}';
 
+$string['messageprovider:releasequestion'] = 'Fragen wurden begutachtet und können freigegeben werden';
+$string['please_release_question'] = 'Bitte geben Sie die Frage <a href="{$a->url}">{$a->fullname}</a> frei.';
+$string['please_release_question_subject'] = 'Bitte geben Sie die Frage {$a->fullname} frei.';
+
 
 $string['messageprovider:reviewquestion'] = 'Fragen wurden zum Beurteilen zugeteilt';
 $string['please_review_question'] = 'Bitte beurteilen Sie die Frage in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';

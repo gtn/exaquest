@@ -48,6 +48,11 @@ $string['messageprovider:revisequestion'] = 'Questions have been assigned for re
 $string['please_revise_question'] = 'Please revise question <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['please_revise_question_subject'] = 'Please revise question {$a->fullname}';
 
+$string['messageprovider:releasequestion'] = 'Questions are finlaized and can be released';
+$string['please_release_question'] = 'Please release question <a href="{$a->url}">{$a->fullname}</a>.';
+$string['please_release_question_subject'] = 'Please release question {$a->fullname}';
+
+
 $string['messageprovider:reviewquestion'] = 'Questions have been assigned for review';
 $string['please_review_question'] = 'Please review question <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['please_review_question_subject'] = 'Please review question {$a->fullname}';

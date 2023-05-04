@@ -163,7 +163,7 @@ class exaquest_view extends view {
 
         $editcontexts = $this->contexts->having_one_edit_tab_cap($tabname);
 
-        var_dump($cat);
+        //var_dump($cat);
         // Show the filters and search options.
         $this->wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus, $fragencharakter, $klassifikation, $fragefach,  $lehrinhalt);
 
