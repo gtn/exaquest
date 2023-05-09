@@ -11,11 +11,9 @@ global $CFG;
 require_once($CFG->dirroot . '/blocks/exaquest/classes/form/autofill_helper_form.php');
 
 class popup_assign_addquestions implements renderable, templatable {
-    public function __construct($persons, $assign_button_string) {
-        //$this->pmw = block_exaquest_get_pmw_by_courseid($courseid);
-        //$this->fp = block_exaquest_get_fachlichepruefer_by_courseid($courseid);
-        $this->persons = $persons;
-        $this->assign_button_string = $assign_button_string;
+    public function __construct($courseid) {
+        $this->pmw = block_exaquest_get_pmw_by_courseid($courseid);
+        $this->fp = block_exaquest_get_fachlichepruefer_by_courseid($courseid);
     }
 
     /**
@@ -27,34 +25,32 @@ class popup_assign_addquestions implements renderable, templatable {
         global $PAGE, $COURSE, $CFG, $OUTPUT;
         $data = new stdClass();
 
-        //$data->pmw = $this->pmw;
-        //$data->fp = $this->fp;
-        $data->persons = $this->persons;
-        $data->assign_string = $this->assign_button_string;
+        $data->pmw = $this->pmw;
+        $data->fp = $this->fp;
 
         // create the fp autocomplete field with the help of an mform
-        $mform = new autofill_helper_form($data->persons);
+        $mform = new autofill_helper_form($data->fp);
         // the choosable options need to be an array of strings
         $autocompleteoptions = [];
-        foreach ($data->persons as $person) {
-            $autocompleteoptions[$person->id] = $person->firstname . ' ' . $person->lastname;
+        foreach ($data->fp as $fp) {
+            $autocompleteoptions[$fp->id] = $fp->firstname . ' ' . $fp->lastname;
         }
-        $autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions);
-        $data->autocomplete_html = $autocomplete_html;
+        $fp_autocomplete_html = $mform->create_autocomplete_single_select_html($autocompleteoptions, "fp");
+        $data->fp_autocomplete_html = $fp_autocomplete_html;
 
-        //// create the pmw autocomplete field with the help of an mform
-        //$mformpmw = new autofill_helper_form($data->pmw);
-        //// the choosable options need to be an array of strings
-        //$autocompleteoptionspmw = [];
-        //foreach ($data->pmw as $pmw) {
-        //    $autocompleteoptionspmw[$pmw->id] = $pmw->firstname . ' ' . $pmw->lastname;
-        //}
-        //$pmw_autocomplete_html = $mformpmw->create_autocomplete_multi_select_html($autocompleteoptionspmw);
-        //$data->pmw_autocomplete_html = $pmw_autocomplete_html;
+        // create the pmw autocomplete field with the help of an mform
+        $mform = new autofill_helper_form($data->pmw);
+        // the choosable options need to be an array of strings
+        $autocompleteoptions = [];
+        foreach ($data->pmw as $pmw) {
+            $autocompleteoptions[$pmw->id] = $pmw->firstname . ' ' . $pmw->lastname;
+        }
+        $pmw_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, "pmw");
+        $data->pmw_autocomplete_html = $pmw_autocomplete_html;
 
 
         $data->action =
-            $PAGE->url->out(false, array('action' => 'request_questions', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
+            $PAGE->url->out(false, array('action' => 'assign_quiz_addquestions', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
         $data->sesskey = sesskey();
 
 

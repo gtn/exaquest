@@ -6,8 +6,6 @@ global $DB, $CFG, $COURSE, $PAGE, $OUTPUT, $USER;
 require_once($CFG->dirroot . '/question/editlib.php');
 require_once(__DIR__ . '/questionbank_extensions/exaquest_view.php');
 
-
-
 $courseid = required_param('courseid', PARAM_INT);
 $action = optional_param('action', '', PARAM_TEXT);
 $name = optional_param('name', '', PARAM_TEXT);
@@ -30,6 +28,38 @@ block_exaquest_init_js_css();
 $output = $PAGE->get_renderer('block_exaquest');
 
 echo $output->header($context, $courseid, get_string('exams_overview', 'block_exaquest'));
+
+$action = optional_param('action', "", PARAM_ALPHAEXT);
+if ($action == 'assign_quiz_addquestions') {
+    // TODO: finish this
+    if (array_key_exists("selectedusersfp", $_POST)) {
+        $selectedfp = clean_param($_POST["selectedusersfp"], PARAM_INT);
+        block_exaquest_assign_quiz_addquestions($courseid, $USER,$selectedfp);
+    }
+    if (array_key_exists("selecteduserspmw", $_POST)) {
+        $selectedpmw = clean_param_array($_POST["selecteduserspmw"], PARAM_INT);
+        foreach ($selectedpmw as $pmw) {
+            block_exaquest_assign_quiz_addquestions($courseid, $USER, $pmw);
+        }
+    }
+
+    //$allfragenersteller = block_exaquest_get_fragenersteller_by_courseid($courseid); // TODO by courseid or coursecategoryid?
+    //if (array_key_exists("selectedusers", $_POST)) {
+    //    if (is_array($_POST["selectedusers"])) {
+    //        $selectedfragenersteller = clean_param_array($_POST["selectedusers"], PARAM_INT);
+    //    } else {
+    //        $selectedfragenersteller = clean_param($_POST["selectedusers"], PARAM_INT);
+    //    }
+    //    $requestcomment = clean_param($_POST["requestcomment"], PARAM_TEXT);
+    //
+    //    if ($selectedfragenersteller) {
+    //        $fragenersteller = array_intersect_key($allfragenersteller, array_flip($selectedfragenersteller));
+    //        foreach ($fragenersteller as $ersteller) {
+    //            block_exaquest_request_question($USER->id, $ersteller->id, $requestcomment);
+    //        }
+    //    }
+    //}
+}
 
 // RENDER:
 $capabilities = [];

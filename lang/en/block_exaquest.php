@@ -34,9 +34,8 @@ $string['request_exams_button'] = 'Request';
 $string['mark_as_done'] = 'Mark as done';
 $string['mark_selected_as_done_button'] = 'Mark selected requests as done';
 
-$string['assign_addquestions_fp'] = 'Fachlichen Prüfer zuweisen';
-$string['assign_addquestions_pmw'] = 'Prüfungsmitwirkdende zuweisen';
-$string['assign_addquestions_label'] = 'Fragenzuweisung anfordern von ...';
+$string['assign_addquestions'] = 'Fragen zuweisung anfordern';
+$string['assign_addquestions_label'] = 'Fragen zuweisung anfordern von ...';
 
 // Messages
 $string['messageprovider:newquestionsrequest'] = 'New questions have been requested';

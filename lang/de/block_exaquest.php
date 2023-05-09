@@ -34,8 +34,7 @@ $string['request_exams_button'] = 'Anfordern';
 $string['mark_as_done'] = 'Als erledigt markieren';
 $string['mark_selected_as_done_button'] = 'Selektierte Anfragen als erledigt markieren';
 
-$string['assign_addquestions_fp'] = 'Fachlichen Prüfer zuweisen';
-$string['assign_addquestions_pmw'] = 'Prüfungsmitwirkdende zuweisen';
+$string['assign_addquestions'] = 'Fragenzuweisung anfordern';
 $string['assign_addquestions_label'] = 'Fragenzuweisung anfordern von ...';
 
 // Messages
