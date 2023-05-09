@@ -408,7 +408,7 @@ function xmldb_block_exaquest_upgrade($oldversion) {
         $table->add_field('reviserid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
         $table->add_field('coursecategoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
 
-        // Adding keys to table block_exaquestreviewassign.
+        // Adding keys to table block_exaquestreviseassign.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
         $table->add_key('questionbankentryid', XMLDB_KEY_FOREIGN, ['questionbankentryid'], 'question_bank_entries', ['id']);
         $table->add_key('reviserid', XMLDB_KEY_FOREIGN, ['reviserid'], 'user', ['id']);
@@ -433,6 +433,80 @@ function xmldb_block_exaquest_upgrade($oldversion) {
         // Exaquest savepoint reached.
         upgrade_block_savepoint(true, 2023041901, 'exaquest');
     }
+
+    if ($oldversion < 2023050900) {
+        // create new table block_exaquestquizassign
+        $table = new xmldb_table('block_exaquestquizassign');
+
+        // Adding fields to table block_exaquestquizassign.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('quizid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('assigneeid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('assigntype', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table block_exaquestreviseassign.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('quizid', XMLDB_KEY_FOREIGN, ['quizid'], 'quiz', ['id']);
+        $table->add_key('assigneeid', XMLDB_KEY_FOREIGN, ['assigneeid'], 'user', ['id']);
+
+        // Conditionally launch create table for block_exaquestquizassign.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // create new table block_exaquestquizcommment
+        $table = new xmldb_table('block_exaquestquizcommment');
+
+        // Adding fields to table block_exaquestquizcommment.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('quizid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('commentorid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('quizassignid', XMLDB_TYPE_INTEGER, '10');
+        $table->add_field('comment', XMLDB_TYPE_CHAR, '100');
+        $table->add_field('timestamp', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table block_exaquestquizcommment.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('quizid', XMLDB_KEY_FOREIGN, ['quizid'], 'quiz', ['id']);
+        $table->add_key('commentorid', XMLDB_KEY_FOREIGN, ['commentorid'], 'user', ['id']);
+        $table->add_key('quizassignid', XMLDB_KEY_FOREIGN, ['quizassignid'], 'block_exaquestquizassign', ['id']);
+
+        // Conditionally launch create table for block_exaquestquizcommment.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        upgrade_block_savepoint(true, 2023050900, 'exaquest');
+    }
+
+    //if ($oldversion < 2023050901) {
+    //    // add field subject and field neededpoints to block_exaquestquizassign
+    //    // todo: needepoints vs neededquestions. subject? what is that?
+    //    $table = new xmldb_table('block_exaquestquizassign');
+    //    $field = new xmldb_field('subject', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null,
+    //        0); // 0 because non-empty table already exists so it cannot be null
+    //    $dbman->add_field($table, $field);
+    //
+    //    upgrade_block_savepoint(true, 2023050901, 'exaquest');
+    //}
+
+    if ($oldversion < 2023050901) {
+        // rename fields of table block_exaquestquizassign
+        $table = new xmldb_table('block_exaquestquizassign');
+        $field = new xmldb_field('reviewerid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->rename_field($table, $field, 'assigneeid');
+        }
+
+        $field = new xmldb_field('reviewtype', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->rename_field($table, $field, 'assigntype');
+        }
+
+        upgrade_block_savepoint(true, 2023050901, 'exaquest');
+    }
+
+
 
     return $return_result;
 }

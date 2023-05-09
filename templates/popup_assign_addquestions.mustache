@@ -1,0 +1,35 @@
+<!-- using bootstrap modals to do the popups https://getbootstrap.com/docs/4.6/components/modal/ -->
+
+<button class="btn btn-primary w-100" data-toggle="modal" data-target="#createQuestionModal">
+    {{{assign_string}}}
+    <!--    <i class="icon fa fa-plus fa-fw "></i>-->
+</button>
+<div class="modal fade" id="createQuestionModal" tabindex="-1"
+     aria-labelledby="createQuestionModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{{assign_string}}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" action="{{action}}" id="requestquestionsform">
+                <div class="modal-body">
+                    <div class="form-group">{{#str}}
+                        assign_addquestions_label, block_exaquest {{/str}}
+                        {{{ autocomplete_html }}}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit"
+                           value="{{#str}} request_questions_button, block_exaquest {{/str}}"
+                           class="btn btn-primary requestquestionssubmit">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

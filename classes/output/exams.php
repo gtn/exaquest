@@ -16,7 +16,8 @@ class exams implements renderable, templatable {
     /**
      * @var popup_request_questions
      */
-    private $request_questions_popup;
+    private $popup_assign_addquestions;
+    private $popup_assign_addquestions2;
 
     public function __construct($userid, $courseid, $capabilities) {
         global $DB, $COURSE;
@@ -36,6 +37,8 @@ class exams implements renderable, templatable {
         $this->finished_exams = block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_FINISHED);
         $this->grading_released_exams =
             block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED);
+        $this->popup_assign_addquestions_fp = new popup_assign_addquestions(block_exaquest_get_fachlichepruefer_by_courseid($courseid), get_string('assign_addquestions_fp', 'block_exaquest'));
+        $this->popup_assign_addquestions_pmw = new popup_assign_addquestions(block_exaquest_get_pmw_by_courseid($courseid), get_string('assign_addquestions_pmw', 'block_exaquest'));
     }
 
     /**
@@ -69,6 +72,14 @@ class exams implements renderable, templatable {
         $data->create_exam_link = new moodle_url('/course/modedit.php',
             array('add' => 'quiz', 'course' => $COURSE->id, 'section' => 0, 'return' => 0, 'sr' => 0));
         $data->create_exam_link = $data->create_exam_link->raw_out(false);
+
+
+
+        //if ($this->capabilities["releasequestion"]) {
+        //    $data->request_exams_popup = $this->popup_assign_addquestions->export_for_template($output);
+        //}
+        $data->popup_assign_addquestions_fp = $this->popup_assign_addquestions_fp->export_for_template($output);
+        $data->popup_assign_addquestions_pmw = $this->popup_assign_addquestions_pmw->export_for_template($output);
 
         return $data;
     }

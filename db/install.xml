@@ -1,130 +1,211 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <XMLDB PATH="blocks/exaquest/db" VERSION="20220629" COMMENT="XMLDB file for Moodle blocks/exaquest"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
     <TABLES>
         <TABLE NAME="block_exaquestquestionstatus" COMMENT="Status of questions">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id"/>
-                <FIELD NAME="questionbankentryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="questionbankentryid"/>
+                <FIELD NAME="questionbankentryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="questionbankentryid"/>
                 <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="status"/>
-                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="coursecategoryid"/>
+                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="coursecategoryid"/>
                 <FIELD NAME="timestamp" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-                <KEY NAME="questionbankentryid" TYPE="foreign" FIELDS="questionbankentryid" REFTABLE="question_bank_entries" REFFIELDS="id"/>
-                <KEY NAME="coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories" REFFIELDS="id"/>
+                <KEY NAME="questionbankentryid" TYPE="foreign" FIELDS="questionbankentryid"
+                     REFTABLE="question_bank_entries" REFFIELDS="id"/>
+                <KEY NAME="coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories"
+                     REFFIELDS="id"/>
             </KEYS>
         </TABLE>
-        <TABLE NAME="block_exaquestreviewassign" COMMENT="Assignment of reviews. Questions are assigned to persons that should do fachlich or formal review.">
+        <TABLE NAME="block_exaquestreviewassign"
+               COMMENT="Assignment of reviews. Questions are assigned to persons that should do fachlich or formal review.">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id"/>
-                <FIELD NAME="questionbankentryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="questionbankentryid"/>
-                <FIELD NAME="reviewerid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="the assigned reviewer"/>
-                <FIELD NAME="reviewtype" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="type of the review 0=formal, 1=fachlich"/>
-                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="coursecategoryid"/>
+                <FIELD NAME="questionbankentryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="questionbankentryid"/>
+                <FIELD NAME="reviewerid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="the assigned reviewer"/>
+                <FIELD NAME="reviewtype" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="type of the review 0=formal, 1=fachlich"/>
+                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="coursecategoryid"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-                <KEY NAME="questionbankentryid" TYPE="foreign" FIELDS="questionbankentryid" REFTABLE="question_bank_entries" REFFIELDS="id"/>
+                <KEY NAME="questionbankentryid" TYPE="foreign" FIELDS="questionbankentryid"
+                     REFTABLE="question_bank_entries" REFFIELDS="id"/>
                 <KEY NAME="reviewerid" TYPE="foreign" FIELDS="reviewerid" REFTABLE="user" REFFIELDS="id"/>
-                <KEY NAME="coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories" REFFIELDS="id"/>
+                <KEY NAME="coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories"
+                     REFFIELDS="id"/>
             </KEYS>
         </TABLE>
-        <TABLE NAME="block_exaquest_similarity" COMMENT="This table is used as persistence store for the gtn-jku-similarity-comparison extension, see https://gitea.swerk.priv.at/stefan/gtn-jku-similarity-comparison">
-          <FIELDS>
-            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-            <FIELD NAME="question_id1" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The first question ID for the similarity comparison (foreign key)."/>
-            <FIELD NAME="question_id2" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The second question id for the similarity comparison"/>
-            <FIELD NAME="is_similar" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Boolean value, 0 &amp;lt;=&amp;gt; not similar, 1&amp;lt;=&amp;gt; is similar"/>
-            <FIELD NAME="similarity" TYPE="number" LENGTH="20" NOTNULL="false" SEQUENCE="false" DECIMALS="19" COMMENT="Normalized similarity value between [0.0-1.0]"/>
-            <FIELD NAME="timestamp_calculation" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The UNIX timestamp when this similarity value was calculated."/>
-            <FIELD NAME="threshold" TYPE="number" LENGTH="20" NOTNULL="false" SEQUENCE="false" DECIMALS="19" COMMENT="The threshold/cutoff value for determining similarity, range [0.0 - 1.0]"/>
-            <FIELD NAME="algorithm" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="The similarity algorithm or metric that was utilized for computing the similarity distance."/>
-          </FIELDS>
-          <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-            <KEY NAME="fk_questionid_1" TYPE="foreign" FIELDS="question_id1" REFTABLE="question" REFFIELDS="id" COMMENT="Foreign key to the first question ID."/>
-            <KEY NAME="fk_questionid_2" TYPE="foreign" FIELDS="question_id2" REFTABLE="question" REFFIELDS="id" COMMENT="Foreign key to the second question ID."/>
-          </KEYS>
+        <TABLE NAME="block_exaquest_similarity"
+               COMMENT="This table is used as persistence store for the gtn-jku-similarity-comparison extension, see https://gitea.swerk.priv.at/stefan/gtn-jku-similarity-comparison">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="question_id1" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="The first question ID for the similarity comparison (foreign key)."/>
+                <FIELD NAME="question_id2" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="The second question id for the similarity comparison"/>
+                <FIELD NAME="is_similar" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"
+                       COMMENT="Boolean value, 0 &amp;lt;=&amp;gt; not similar, 1&amp;lt;=&amp;gt; is similar"/>
+                <FIELD NAME="similarity" TYPE="number" LENGTH="20" NOTNULL="false" SEQUENCE="false" DECIMALS="19"
+                       COMMENT="Normalized similarity value between [0.0-1.0]"/>
+                <FIELD NAME="timestamp_calculation" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"
+                       COMMENT="The UNIX timestamp when this similarity value was calculated."/>
+                <FIELD NAME="threshold" TYPE="number" LENGTH="20" NOTNULL="false" SEQUENCE="false" DECIMALS="19"
+                       COMMENT="The threshold/cutoff value for determining similarity, range [0.0 - 1.0]"/>
+                <FIELD NAME="algorithm" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"
+                       COMMENT="The similarity algorithm or metric that was utilized for computing the similarity distance."/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="fk_questionid_1" TYPE="foreign" FIELDS="question_id1" REFTABLE="question" REFFIELDS="id"
+                     COMMENT="Foreign key to the first question ID."/>
+                <KEY NAME="fk_questionid_2" TYPE="foreign" FIELDS="question_id2" REFTABLE="question" REFFIELDS="id"
+                     COMMENT="Foreign key to the second question ID."/>
+            </KEYS>
         </TABLE>
         <TABLE NAME="block_exaquestcategories" COMMENT="Stores all categories of questions for each course category">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id"/>
-                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="coursecategoryid"/>
-                <FIELD NAME="categoryname" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="name of queston category in exaquest"/>
-                <FIELD NAME="categorytype" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="type of queston category in exaquest"/>
+                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="coursecategoryid"/>
+                <FIELD NAME="categoryname" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"
+                       COMMENT="name of queston category in exaquest"/>
+                <FIELD NAME="categorytype" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="type of queston category in exaquest"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-                <KEY NAME="coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories" REFFIELDS="id"/>
+                <KEY NAME="coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories"
+                     REFFIELDS="id"/>
             </KEYS>
         </TABLE>
         <TABLE NAME="block_exaquestquestcat_mm" COMMENT="Stores all categories of questions for each course category">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id"/>
                 <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="questionid"/>
-                <FIELD NAME="exaquestcategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="exaquestcategoryid"/>
+                <FIELD NAME="exaquestcategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="exaquestcategoryid"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
                 <KEY NAME="questionid" TYPE="foreign" FIELDS="questionid" REFTABLE="question" REFFIELDS="id"/>
-                <KEY NAME="exaquestcategoryid" TYPE="foreign" FIELDS="exaquestcategoryid" REFTABLE="exaquestcategories" REFFIELDS="id"/>
+                <KEY NAME="exaquestcategoryid" TYPE="foreign" FIELDS="exaquestcategoryid" REFTABLE="exaquestcategories"
+                     REFFIELDS="id"/>
             </KEYS>
         </TABLE>
         <TABLE NAME="block_exaquestquizstatus" COMMENT="Status of quiz / pruefung">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id"/>
-                <FIELD NAME="quizid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the quiz table"/>
+                <FIELD NAME="quizid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="id of the quiz table"/>
                 <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="status"/>
-                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="coursecategoryid"/>
+                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="coursecategoryid"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
                 <KEY NAME="fk_quizid" TYPE="foreign" FIELDS="quizid" REFTABLE="quiz" REFFIELDS="id"/>
-                <KEY NAME="fk_coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories" REFFIELDS="id"/>
+                <KEY NAME="fk_coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories"
+                     REFFIELDS="id"/>
             </KEYS>
         </TABLE>
-        <TABLE NAME="block_exaquestrequestquest" COMMENT="Questions that a user has to create E.g. Modulverantwortlicher tells Fragenersteller to create 3 questions.">
+        <TABLE NAME="block_exaquestrequestquest"
+               COMMENT="Questions that a user has to create E.g. Modulverantwortlicher tells Fragenersteller to create 3 questions.">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id"/>
                 <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the user"/>
-                <FIELD NAME="comment" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="Question description, e.g. 'a simple question'"/>
-                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="coursecategoryid"/>
+                <FIELD NAME="comment" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"
+                       COMMENT="Question description, e.g. 'a simple question'"/>
+                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="coursecategoryid"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
                 <KEY NAME="fk_userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
-                <KEY NAME="fk_coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories" REFFIELDS="id"/>
+                <KEY NAME="fk_coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories"
+                     REFFIELDS="id"/>
             </KEYS>
         </TABLE>
-        <TABLE NAME="block_exaquestrequestexam" COMMENT="Exams that a user has to create E.g. Modulverantwortlicher tells Fachlicherpruefer to create 3 exams.">
+        <TABLE NAME="block_exaquestrequestexam"
+               COMMENT="Exams that a user has to create E.g. Modulverantwortlicher tells Fachlicherpruefer to create 3 exams.">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id"/>
                 <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the user"/>
-                <FIELD NAME="comment" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="Question description, e.g. 'a simple question'"/>
-                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="coursecategoryid"/>
+                <FIELD NAME="comment" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"
+                       COMMENT="Question description, e.g. 'a simple question'"/>
+                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="coursecategoryid"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
                 <KEY NAME="fk_userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
-                <KEY NAME="fk_coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories" REFFIELDS="id"/>
+                <KEY NAME="fk_coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories"
+                     REFFIELDS="id"/>
             </KEYS>
         </TABLE>
-        <TABLE NAME="block_exaquestreviseassign" COMMENT="Assignment of revisions. Questions are assigned to persons that should revise that question.">
+        <TABLE NAME="block_exaquestreviseassign"
+               COMMENT="Assignment of revisions. Questions are assigned to persons that should revise that question.">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id"/>
-                <FIELD NAME="questionbankentryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="questionbankentryid"/>
-                <FIELD NAME="reviserid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="the assigned reviewer"/>
-                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="coursecategoryid"/>
+                <FIELD NAME="questionbankentryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="questionbankentryid"/>
+                <FIELD NAME="reviserid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="the assigned reviewer"/>
+                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="coursecategoryid"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-                <KEY NAME="questionbankentryid" TYPE="foreign" FIELDS="questionbankentryid" REFTABLE="question_bank_entries" REFFIELDS="id"/>
+                <KEY NAME="questionbankentryid" TYPE="foreign" FIELDS="questionbankentryid"
+                     REFTABLE="question_bank_entries" REFFIELDS="id"/>
                 <KEY NAME="reviserid" TYPE="foreign" FIELDS="reviserid" REFTABLE="user" REFFIELDS="id"/>
-                <KEY NAME="coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories" REFFIELDS="id"/>
+                <KEY NAME="coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories"
+                     REFFIELDS="id"/>
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="block_exaquestquizassign"
+               COMMENT="Assignment of reviews of quizzes. Quizzes are assigned to persons that should do fachlich or formal or any other kind of review.">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id"/>
+                <FIELD NAME="quizid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="quizid"/>
+                <FIELD NAME="assigneeid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="the assigned person"/>
+                <FIELD NAME="assigntype" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="type of the assignment, e.g. addquestions"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="quizid" TYPE="foreign" FIELDS="quizid" REFTABLE="quiz" REFFIELDS="id"/>
+                <KEY NAME="assigneeid" TYPE="foreign" FIELDS="assigneeid" REFTABLE="user" REFFIELDS="id"/>
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="block_exaquestquizcommment"
+               COMMENT="Comments made to a quiz. During the whole process, people can comment on quizzes e.g. 'this need to be revised because of xxx'">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id"/>
+                <FIELD NAME="quizid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="quizid"/>
+                <FIELD NAME="commentorid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="the id of the commentor"/>
+                <FIELD NAME="quizassignid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"
+                       COMMENT="the id of the related quizassign entry, IF there is one. There can be free comments or comments that are attached to an assignment"/>
+                <FIELD NAME="comment" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"
+                       COMMENT="Any comment to a quiz"/>
+                <FIELD NAME="timestamp" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="quizid" TYPE="foreign" FIELDS="quizid" REFTABLE="quiz" REFFIELDS="id"/>
+                <KEY NAME="commentorid" TYPE="foreign" FIELDS="commentorid" REFTABLE="user" REFFIELDS="id"/>
+                <KEY NAME="quizassignid" TYPE="foreign" FIELDS="quizassignid" REFTABLE="block_exaquestquizassign"
+                     REFFIELDS="id"/>
             </KEYS>
         </TABLE>
     </TABLES>

@@ -34,6 +34,10 @@ $string['request_exams_button'] = 'Request';
 $string['mark_as_done'] = 'Mark as done';
 $string['mark_selected_as_done_button'] = 'Mark selected requests as done';
 
+$string['assign_addquestions_fp'] = 'Fachlichen Prüfer zuweisen';
+$string['assign_addquestions_pmw'] = 'Prüfungsmitwirkdende zuweisen';
+$string['assign_addquestions_label'] = 'Fragenzuweisung anfordern von ...';
+
 // Messages
 $string['messageprovider:newquestionsrequest'] = 'New questions have been requested';
 $string['please_create_new_questions'] =
@@ -53,7 +57,6 @@ $string['messageprovider:releasequestion'] = 'Questions are finlaized and can be
 $string['please_release_question'] = 'Please release question <a href="{$a->url}">{$a->fullname}</a>.';
 $string['please_release_question_subject'] = 'Please release question {$a->fullname}';
 
-
 $string['messageprovider:reviewquestion'] = 'Questions have been assigned for review';
 $string['please_review_question'] = 'Please review question <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['please_review_question_subject'] = 'Please review question {$a->fullname}';
@@ -64,11 +67,11 @@ $string['dailytodos_subject'] = 'Exaquest TODOs';
 $string['todos_in_course'] = '{$a->todoscount} TODOs in course <a href="{$a->url}">{$a->fullname}</a><br>';
 
 $string['messageprovider:daily_released_questions'] = 'Daily released questions message';
-$string['daily_released_questions'] = 'Questions have been released the following courses: <br> {$a->daily_released_questions_message}';
+$string['daily_released_questions'] =
+    'Questions have been released the following courses: <br> {$a->daily_released_questions_message}';
 $string['daily_released_questions_subject'] = 'Exaquest questions released';
-$string['daily_released_questions_in_course'] = '{$a->daily_released_questions} questions released in course <a href="{$a->url}">{$a->fullname}</a><br>';
-
-
+$string['daily_released_questions_in_course'] =
+    '{$a->daily_released_questions} questions released in course <a href="{$a->url}">{$a->fullname}</a><br>';
 
 // Roles and Capabilities
 $string['exaquest:fragenersteller'] = 'Create questions in Exaquest block';
@@ -92,7 +95,6 @@ $string['add_questions_to_these_exams'] = 'Add questions to these exams';
 $string['usage_check_column'] = 'Usage checker';
 $string['check_added_questions'] = 'Check added questions';
 $string['remove_from_quiz'] = 'Remove question from exam';
-
 
 // Dasboardcard
 $string['questions_overview_title'] = 'QUESTIONS';
@@ -136,8 +138,10 @@ $string['show_all_new_questions'] = 'Show all new questions';
 $string['show_my_created_questions'] = 'Show my created questions';
 $string['show_my_created_questions_to_submit'] = 'Show my created questions that I still have to submit';
 $string['show_all_questions_to_review'] = 'Show all questions to review';
-$string['show_all_fachlich_reviewed_questions_to_review'] = 'Show all questions that are fachlich reviewed and need to be formally reviewed';
-$string['show_all_formal_reviewed_questions_to_review'] = 'Show all questions that are formal reviewed and need to be fachlich reviewed';
+$string['show_all_fachlich_reviewed_questions_to_review'] =
+    'Show all questions that are fachlich reviewed and need to be formally reviewed';
+$string['show_all_formal_reviewed_questions_to_review'] =
+    'Show all questions that are formal reviewed and need to be fachlich reviewed';
 $string['show_questions_for_me_to_review'] = 'Show questions for me to review';
 $string['show_questions_to_revise'] = 'Show questions to revise';
 $string['show_questions_for_me_to_revise'] = 'Show questions for me to revise';
@@ -159,7 +163,8 @@ $string['skip_and_release_question'] = 'Skip and release question';
 $string['release_question_warning'] = 'Are you sure you want to skip the review and release the question right away?';
 $string['release_question_warning_title'] = 'Warning';
 $string['change_status'] = 'change status';
-$string['notification_will_be_sent_to_pk'] = 'The Prüfungskoordination will also get a notification that the formal review should be done.';
+$string['notification_will_be_sent_to_pk'] =
+    'The Prüfungskoordination will also get a notification that the formal review should be done.';
 
 $string['open_for_review_text'] = 'Assign review to..';
 $string['revise_text'] = 'Assign revision to..';
@@ -304,9 +309,9 @@ $string['exaquest:viewgradesreleasedexams'] = 'View released exams in exaquest';
 $string['exaquest:viewnewexams'] = 'View new exams in exaquest';
 $string['exaquest:viewgradesreleasedexams'] = 'View exams where grades have been released in exaquest';
 
-
 // tasks
 $string['check_active_exams'] = 'Check status of active Exaquest quizzes and update if finished.';
-$string['clean_up_tables'] = 'Clean up Exaquest tables, e.g. delete questionstatus entries where there is no questionbankentryid related.';
+$string['clean_up_tables'] =
+    'Clean up Exaquest tables, e.g. delete questionstatus entries where there is no questionbankentryid related.';
 $string['create_daily_notifications'] = 'Create daily Exaquest notifications.';
 $string['set_up_roles'] = 'Set up roles for Exaquest.';

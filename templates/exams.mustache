@@ -3,7 +3,7 @@
     {{#viewnewexams}}
             <a href="{{create_exam_link}}" type="submit" class="btn
             btn-secondary"
-            value="">{{#str}}create_new_exam_button, block_exaquest {{/str}}</a>
+               value="">{{#str}}create_new_exam_button, block_exaquest {{/str}}</a>
             <div class="examcard">
                 <h4>{{#str}}new_exams, block_exaquest {{/str}}</h4>
                 <p>{{#str}}add_questions_to_these_exams, block_exaquest {{/str}}</p>
@@ -31,6 +31,19 @@
                                 <button type="submit" class="btn btn-primary change-exam-status-button"
                                         value="create_exam" quizid={{quizid}}>Prüfung zur Begutachtung schicken
                                 </button>
+                            </td>
+                            <td>
+                                {{#popup_assign_addquestions_fp}}
+                                    {{>block_exaquest/popup_assign_addquestions}}
+                                {{/popup_assign_addquestions_fp}}
+                                <!--                                <button type="submit" class="btn btn-primary change-exam-status-button"-->
+                                <!--                                        value="assign_fp_and_pmw" quizid={{quizid}}>Fachlichen Prüfer und Prüfungsmitwirkende hinzufügen-->
+                                <!--                                </button>-->
+                            </td>
+                            <td>
+                                {{#popup_assign_addquestions_pmw}}
+                                    {{>block_exaquest/popup_assign_addquestions}}
+                                {{/popup_assign_addquestions_pmw}}
                             </td>
                         </tr>
                     {{/new_exams}}

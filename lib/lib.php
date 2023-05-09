@@ -31,7 +31,7 @@ const BLOCK_EXAQUEST_DB_REQUESTQUEST = 'block_exaquestrequestquest';
 const BLOCK_EXAQUEST_DB_REQUESTEXAM = 'block_exaquestrequestexam';
 const BLOCK_EXAQUEST_DB_QUIZSTATUS = 'block_exaquestquizstatus';
 const BLOCK_EXAQUEST_DB_REVISEASSIGN = 'block_exaquestreviseassign';
-
+const BLOCK_EXAQUEST_DB_QUIZASSIGN= 'block_exaquestquizassign';
 /**
  * Question Status
  */
@@ -62,6 +62,7 @@ const BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED = 6; // grades released
 const BLOCK_EXAQUEST_REVIEWTYPE_FORMAL = 0;
 const BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH = 1;
 //const BLOCK_EXAQUEST_REVIEWTYPE_REVISE = 2;
+const BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS = 3;
 
 /**
  * Filter Status
@@ -263,6 +264,20 @@ function block_exaquest_get_fragenersteller_by_courseid($courseid) {
     $userarray = array();
     $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fragenersteller'));
     $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fragenerstellerlight'));
+    return $userarray;
+}
+
+/**
+ *
+ * Returns all pmw of this course
+ *
+ * @param $courseid
+ * @return array
+ */
+function block_exaquest_get_pmw_by_courseid($courseid) {
+    $context = context_course::instance($courseid);
+    $userarray = array();
+    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:pruefungsmitwirkende'));
     return $userarray;
 }
 
@@ -1505,6 +1520,8 @@ function block_exaquest_exams_set_status($quizid, $status) {
     $DB->update_record('block_exaquestquizstatus', $record);
 }
 
+
+
 function is_exaquest_active_in_course() {
     global $COURSE, $PAGE, $CFG;
 
@@ -1765,4 +1782,27 @@ function block_exaquest_clean_up_tables() {
         BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE . ' OR status = ' . BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE .
         ')';
     $DB->execute($sql);
+}
+
+function block_exaquest_assign_quiz_addquestions($userfrom, $userto, $comment, $quizid, $quizname, $assigntype) {
+    global $DB, $COURSE;
+    // enter data into the exaquest tables
+    $assigndata = new stdClass;
+    $assigndata->quizid = $quizid;
+    $assigndata->asigneeid = $userto;
+    $assigndata->assigntype = $assigntype;
+    $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
+
+    // create the message
+    //$messageobject = new stdClass;
+    //$messageobject->fullname = $questionname;
+    ////$messageobject->url = new moodle_url('/blocks/exaquest/questbank.php', array('courseid' => $courseid, 'category' => $catAndCont[0] . ',' . $catAndCont[1]));
+    //$messageobject->url = new moodle_url('/blocks/exaquest/questbank.php',
+    //    array('courseid' => $courseid, 'filterstatus' => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW));
+    //$messageobject->url = $messageobject->url->raw_out(false);
+    //$messageobject->requestcomment = $comment;
+    //$message = get_string('please_review_question', 'block_exaquest', $messageobject);
+    //$subject = get_string('please_review_question_subject', 'block_exaquest', $messageobject);
+    //block_exaquest_send_moodle_notification("reviewquestion", $userfrom->id, $userto, $subject, $message,
+    //    "Review", $messageobject->url);
 }
