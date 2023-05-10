@@ -1784,12 +1784,12 @@ function block_exaquest_clean_up_tables() {
     $DB->execute($sql);
 }
 
-function block_exaquest_assign_quiz_addquestions($userfrom, $userto, $comment, $quizid, $quizname, $assigntype) {
+function block_exaquest_assign_quiz_addquestions($userto, $comment, $quizid, $quizname=null, $assigntype) {
     global $DB, $COURSE;
     // enter data into the exaquest tables
     $assigndata = new stdClass;
     $assigndata->quizid = $quizid;
-    $assigndata->asigneeid = $userto;
+    $assigndata->assigneeid = $userto;
     $assigndata->assigntype = $assigntype;
     $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
 

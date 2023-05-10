@@ -11,9 +11,10 @@ global $CFG;
 require_once($CFG->dirroot . '/blocks/exaquest/classes/form/autofill_helper_form.php');
 
 class popup_assign_addquestions implements renderable, templatable {
-    public function __construct($courseid) {
+    public function __construct($courseid, $quizid) {
         $this->pmw = block_exaquest_get_pmw_by_courseid($courseid);
         $this->fp = block_exaquest_get_fachlichepruefer_by_courseid($courseid);
+        $this->quizid = $quizid;
     }
 
     /**
@@ -27,6 +28,7 @@ class popup_assign_addquestions implements renderable, templatable {
 
         $data->pmw = $this->pmw;
         $data->fp = $this->fp;
+        $data->quizid = $this->quizid;
 
         // create the fp autocomplete field with the help of an mform
         $mform = new autofill_helper_form($data->fp);
@@ -35,7 +37,7 @@ class popup_assign_addquestions implements renderable, templatable {
         foreach ($data->fp as $fp) {
             $autocompleteoptions[$fp->id] = $fp->firstname . ' ' . $fp->lastname;
         }
-        $fp_autocomplete_html = $mform->create_autocomplete_single_select_html($autocompleteoptions, "fp");
+        $fp_autocomplete_html = $mform->create_autocomplete_single_select_html($autocompleteoptions, "fp".$data->quizid);
         $data->fp_autocomplete_html = $fp_autocomplete_html;
 
         // create the pmw autocomplete field with the help of an mform
@@ -45,7 +47,7 @@ class popup_assign_addquestions implements renderable, templatable {
         foreach ($data->pmw as $pmw) {
             $autocompleteoptions[$pmw->id] = $pmw->firstname . ' ' . $pmw->lastname;
         }
-        $pmw_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, "pmw");
+        $pmw_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, "pmw".$data->quizid);
         $data->pmw_autocomplete_html = $pmw_autocomplete_html;
 
 

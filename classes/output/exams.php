@@ -13,10 +13,6 @@ class exams implements renderable, templatable {
     private $capabilities;
     private $courseid;
     private $userid;
-    /**
-     * @var popup_request_questions
-     */
-    private $popup_assign_addquestions;
 
     public function __construct($userid, $courseid, $capabilities) {
         global $DB, $COURSE;
@@ -36,7 +32,6 @@ class exams implements renderable, templatable {
         $this->finished_exams = block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_FINISHED);
         $this->grading_released_exams =
             block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED);
-        $this->popup_assign_addquestions = new popup_assign_addquestions($courseid);
     }
 
     /**
@@ -59,6 +54,13 @@ class exams implements renderable, templatable {
             array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1]));
         $data->go_to_exam_questionbank = $data->go_to_exam_questionbank->raw_out(false);
         $data->new_exams = array_values($this->new_exams);
+        // add the assignment popups for every new_exam:
+        foreach ($data->new_exams as $new_exam){
+            $popup = new popup_assign_addquestions($this->courseid, $new_exam->quizid);
+            $new_exam->popup_assign_addquestions = $popup->export_for_template($output);
+        }
+
+
         $data->created_exams =
             array_values($this->created_exams); // TODO rw: test if they are shown with current mustache (no way to create them in moodle yet --> create one manually)
         $data->fachlich_released_exams = array_values($this->fachlich_released_exams);
@@ -76,7 +78,7 @@ class exams implements renderable, templatable {
         //if ($this->capabilities["releasequestion"]) {
         //    $data->request_exams_popup = $this->popup_assign_addquestions->export_for_template($output);
         //}
-        $data->popup_assign_addquestions = $this->popup_assign_addquestions->export_for_template($output);
+        //$data->popup_assign_addquestions = $this->popup_assign_addquestions->export_for_template($output);
 
         return $data;
     }

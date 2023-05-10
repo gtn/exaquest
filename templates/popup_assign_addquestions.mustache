@@ -1,10 +1,10 @@
 <!-- using bootstrap modals to do the popups https://getbootstrap.com/docs/4.6/components/modal/ -->
 
-<button class="btn btn-primary w-100" data-toggle="modal" data-target="#assignQuizModal">
+<button class="btn btn-primary w-100" data-toggle="modal" data-target="#assignQuizModal{{quizid}}">
     {{#str}}assign_addquestions, block_exaquest {{/str}}
     <!--    <i class="icon fa fa-plus fa-fw "></i>-->
 </button>
-<div class="modal fade" id="assignQuizModal" tabindex="-1"
+<div class="modal fade" id="assignQuizModal{{quizid}}" tabindex="-1"
      aria-labelledby="assignQuizModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
@@ -15,7 +15,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" action="{{action}}" id="requestquestionsform">
+            <form method="post" action="{{action}}" id="assignaddquestionsform{{quizid}}">
+                <input type="hidden" id="quizid" name="quizid" value={{quizid}}>
                 <div class="modal-body">
                     <div class="form-group">{{#str}}
                         assign_addquestions_label, block_exaquest {{/str}}
@@ -31,7 +32,7 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <input type="submit"
                            value="{{#str}} request_questions_button, block_exaquest {{/str}}"
-                           class="btn btn-primary requestquestionssubmit">
+                           class="btn btn-primary assignaddquestionssubmit">
                 </div>
             </form>
         </div>

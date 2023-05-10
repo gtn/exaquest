@@ -32,14 +32,15 @@ echo $output->header($context, $courseid, get_string('exams_overview', 'block_ex
 $action = optional_param('action', "", PARAM_ALPHAEXT);
 if ($action == 'assign_quiz_addquestions') {
     // TODO: finish this
-    if (array_key_exists("selectedusersfp", $_POST)) {
-        $selectedfp = clean_param($_POST["selectedusersfp"], PARAM_INT);
-        block_exaquest_assign_quiz_addquestions($courseid, $USER,$selectedfp);
+    $quizid = required_param('quizid', PARAM_INT);
+    if (array_key_exists("selectedusersfp".$quizid, $_POST)) {
+        $selectedfp = clean_param($_POST["selectedusersfp".$quizid], PARAM_INT);
+        block_exaquest_assign_quiz_addquestions($selectedfp, null, $quizid, null, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
     }
-    if (array_key_exists("selecteduserspmw", $_POST)) {
-        $selectedpmw = clean_param_array($_POST["selecteduserspmw"], PARAM_INT);
+    if (array_key_exists("selecteduserspmw".$quizid, $_POST)) {
+        $selectedpmw = clean_param_array($_POST["selecteduserspmw".$quizid], PARAM_INT);
         foreach ($selectedpmw as $pmw) {
-            block_exaquest_assign_quiz_addquestions($courseid, $USER, $pmw);
+            block_exaquest_assign_quiz_addquestions($pmw, null, $quizid, null, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
         }
     }
 
