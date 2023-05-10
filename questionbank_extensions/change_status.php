@@ -139,11 +139,11 @@ class change_status extends column_base {
         <script type="text/javascript">
             $(document).ready(function () {
                 $(".changestatus<?php echo $question->questionbankentryid; ?>").click(function (e) {
-                    debugger
+
                     //let changestatus_value = $(".changestatus<?php //echo $question->questionbankentryid; ?>//").val();
                     let changestatus_value = e.currentTarget.value;
                     let textarea_value = $('.commenttext<?php echo $question->questionbankentryid; ?>').val();
-                    debugger
+
                     if (changestatus_value == 'revise_question') {
                         let $selecteduser = $('#id_selectedusers<?php echo $question->questionbankentryid; ?>').val();
                         if ($selecteduser && $selecteduser.length == 0 || textarea_value == '') {
@@ -151,9 +151,9 @@ class change_status extends column_base {
                             return false;
                         }
                     }
-                    debugger
+
                     if (changestatus_value == 'open_question_for_review') {
-                        debugger
+
                         let $selecteduser = $('#id_selectedusers<?php echo $question->questionbankentryid; ?>').val();
                         if ($selecteduser == "") {
                             alert("Es muss mindestens eine Person ausgewählt sein!");

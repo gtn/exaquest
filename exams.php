@@ -13,7 +13,6 @@ require_login($courseid);
 
 //$course = $DB->get_record('course', array('id' => $courseid));
 $context = context_course::instance($courseid);
-
 require_capability('block/exaquest:viewexamstab', $context);
 
 $page_params = array('courseid' => $courseid);
@@ -71,6 +70,9 @@ $capabilities["viewreleasedexams"] = is_enrolled($context, $USER, "block/exaques
 $capabilities["viewactiveexams"] = is_enrolled($context, $USER, "block/exaquest:viewactiveexams");
 $capabilities["viewfinishedexams"] = is_enrolled($context, $USER, "block/exaquest:viewfinishedexams");
 $capabilities["viewgradesreleasedexams"] = is_enrolled($context, $USER, "block/exaquest:viewgradesreleasedexams");
+$capabilities["viewgradesreleasedexams"] = is_enrolled($context, $USER, "block/exaquest:viewgradesreleasedexams");
+$capabilities["addquestiontoexam"] = has_capability('block/exaquest:addquestiontoexam', $context); // has_capability actually makes more sense than is_enrolled, even though the outcome is the same
+$capabilities["assignaddquestions"] = has_capability('block/exaquest:assignaddquestions', $context); // has_capability actually makes more sense than is_enrolled, even though the outcome is the same
 
 $exams = new \block_exaquest\output\exams($USER->id, $courseid, $capabilities);
 echo $output->render($exams);

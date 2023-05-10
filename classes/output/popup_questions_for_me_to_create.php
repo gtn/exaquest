@@ -38,6 +38,7 @@ class popup_questions_for_me_to_create implements renderable, templatable {
         $data->action =
             $PAGE->url->out(false, array('action' => 'mark_as_done', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
         $data->sesskey = sesskey();
+        $data->courseid = $COURSE->id;
         return $data;
     }
 }

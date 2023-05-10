@@ -5,14 +5,17 @@ global $DB, $CFG, $COURSE, $USER;
 
 $action = required_param('action', PARAM_TEXT);
 $quizid = required_param('quizid', PARAM_INT);
+$courseid = required_param('courseid', PARAM_INT);
 
-
-require_login($COURSE->id);
-require_capability('block/exaquest:viewexamstab', context_course::instance($COURSE->id));
+require_login($courseid);
+$context = context_course::instance($COURSE->id);
+require_capability('block/exaquest:viewexamstab', $context);
 
 switch ($action) {
     case ('create_exam'):
         block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
+        // remove entries in exaquestquizassign
+        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, ['quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS]);
         break;
     //case ('assign_fp_and_pmw'):
     //    block_exaquest_assign_quiz_addquestions($quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);

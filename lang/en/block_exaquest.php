@@ -129,6 +129,7 @@ $string['questions_for_me_to_revise'] = 'Questions for me to revise';
 $string['questions_for_me_to_release'] = 'Questions for me to release';
 $string['compare_questions'] = 'Compare questions';
 $string['exams_for_me_to_create'] = 'Exams for me to create';
+$string['quizzes_for_me_to_fill'] = 'Exams for me to fill with questions';
 
 //Questionbank
 

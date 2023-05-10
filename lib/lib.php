@@ -31,7 +31,7 @@ const BLOCK_EXAQUEST_DB_REQUESTQUEST = 'block_exaquestrequestquest';
 const BLOCK_EXAQUEST_DB_REQUESTEXAM = 'block_exaquestrequestexam';
 const BLOCK_EXAQUEST_DB_QUIZSTATUS = 'block_exaquestquizstatus';
 const BLOCK_EXAQUEST_DB_REVISEASSIGN = 'block_exaquestreviseassign';
-const BLOCK_EXAQUEST_DB_QUIZASSIGN= 'block_exaquestquizassign';
+const BLOCK_EXAQUEST_DB_QUIZASSIGN = 'block_exaquestquizassign';
 /**
  * Question Status
  */
@@ -654,6 +654,31 @@ function block_exaquest_get_my_finalised_questionbankentries_count($coursecatego
     return $questions;
 }
 
+function block_exaquest_get_quizzes_for_me_to_fill_count($userid) {
+    return count(block_exaquest_get_quizzes_for_me_to_fill($userid));
+}
+
+function block_exaquest_get_quizzes_for_me_to_fill($userid) {
+    global $DB, $USER;
+
+    if (!$userid) {
+        $userid = $USER->id;
+    }
+    // questionbankentryid DISTINCT to not count twice
+    $sql = 'SELECT DISTINCT qa.quizid as quizid, q.name as name,  cm.id as coursemoduleid
+			FROM {' . BLOCK_EXAQUEST_DB_QUIZASSIGN . '} qa
+			JOIN {quiz} q on q.id = qa.quizid 
+			JOIN {course_modules} cm on cm.instance = q.id
+			JOIN {modules} m on m.id = cm.module
+			WHERE qa.assigneeid = :userid
+			AND qa.assigntype = ' . BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS . '
+            AND m. name = "quiz"';
+
+    $quizzes = $DB->get_records_sql($sql,
+        array('userid' => $userid));
+    return $quizzes;
+}
+
 //-----------
 
 /**
@@ -938,6 +963,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:doformalreview', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:assignaddquestions', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
         $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '', 'manager');
@@ -1015,6 +1041,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:dofachlichreview', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:doformalreview', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:assignaddquestions', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fragenersteller'])) {
         $roleid = create_role('Fragenersteller', 'fragenersteller', '', 'manager');
@@ -1133,6 +1160,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsmitwirkende'])) {
         $roleid = create_role('Prüfungsmitwirkende', 'pruefungsmitwirkende', '', 'manager');
@@ -1159,6 +1187,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlicherzweitpruefer'])) {
         $roleid = create_role('Fachlicher Zweitprüfer', 'fachlicherzweitpruefer', '', 'manager');
@@ -1520,8 +1549,6 @@ function block_exaquest_exams_set_status($quizid, $status) {
     $DB->update_record('block_exaquestquizstatus', $record);
 }
 
-
-
 function is_exaquest_active_in_course() {
     global $COURSE, $PAGE, $CFG;
 
@@ -1784,7 +1811,7 @@ function block_exaquest_clean_up_tables() {
     $DB->execute($sql);
 }
 
-function block_exaquest_assign_quiz_addquestions($userto, $comment, $quizid, $quizname=null, $assigntype) {
+function block_exaquest_assign_quiz_addquestions($userto, $comment, $quizid, $quizname = null, $assigntype = null) {
     global $DB, $COURSE;
     // enter data into the exaquest tables
     $assigndata = new stdClass;

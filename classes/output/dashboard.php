@@ -139,6 +139,12 @@ class dashboard implements renderable, templatable {
                 "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_NEW_QUESTIONS));
         $data->questions_new_link = $data->questions_new_link->raw_out(false);
 
+        // links for the exams todos:
+        $data->quizzes_for_me_to_fill_link = new moodle_url('/blocks/exaquest/exams.php',
+            array('courseid' => $this->courseid));
+        $data->quizzes_for_me_to_fill_link = $data->quizzes_for_me_to_fill_link->raw_out(false);
+        $data->quizzes_for_me_to_fill_count = block_exaquest_get_quizzes_for_me_to_fill_count($this->userid);
+
         //$data->questions_released_link = new moodle_url('/blocks/exaquest/questbank.php',
         //    array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
         //        "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW));

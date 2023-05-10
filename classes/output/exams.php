@@ -22,7 +22,16 @@ class exams implements renderable, templatable {
         $this->capabilities = $capabilities;
         $this->userid = $userid;
         //$this->exams = $DB->get_records("quiz", array("course" => $COURSE->id));
-        $this->new_exams = block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_NEW);
+        if ($capabilities["viewnewexams"]){
+            $this->new_exams = block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_NEW);
+        }else if ($capabilities["addquestiontoexam"]){
+            // new exams can only be seen by PK and Mover, except if you are specifically assigned to an exam, e.g. as a FP or PMW
+            // ==> give the viewnewexams capability to all users who are assigned to an exam, but filter the newexams according to users role
+            $this->new_exams = block_exaquest_get_quizzes_for_me_to_fill($userid);
+            if($this->new_exams){
+                $this->capabilities["viewnewexams"] = true;
+            }
+        }
         $this->created_exams = block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
         $this->fachlich_released_exams =
             block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_FACHLICH_RELEASED);
@@ -61,6 +70,8 @@ class exams implements renderable, templatable {
         }
 
 
+
+
         $data->created_exams =
             array_values($this->created_exams); // TODO rw: test if they are shown with current mustache (no way to create them in moodle yet --> create one manually)
         $data->fachlich_released_exams = array_values($this->fachlich_released_exams);
@@ -79,6 +90,8 @@ class exams implements renderable, templatable {
         //    $data->request_exams_popup = $this->popup_assign_addquestions->export_for_template($output);
         //}
         //$data->popup_assign_addquestions = $this->popup_assign_addquestions->export_for_template($output);
+
+        $data->courseid = $this->courseid;
 
         return $data;
     }

@@ -78,12 +78,23 @@
                                     {{>block_exaquest/popup_exams_for_me_to_create}}
                                 {{/exams_for_me_to_create_popup}}
                             {{/fachlicherpruefer}}
+                            {{#addquestiontoexam}}
+                                <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
+                                   href={{quizzes_for_me_to_fill_link}}>
+                                            <span class="badge-outer text-center">
+                                                <span class="badge badge-primary">{{quizzes_for_me_to_fill_count}}</span>
+                                            </span>
+                                    <span class="flex-grow-1"> {{#str}}
+                                        quizzes_for_me_to_fill, block_exaquest {{/str}}</span>
+                                </a>
+                            {{/addquestiontoexam}}
                         </div>
                         {{#request_exams_popup}}
                             <div class="card-footer">
                                 {{>block_exaquest/popup_request_exams}}
                             </div>
                         {{/request_exams_popup}}
+
                     </div>
                 </div>
             </div>
