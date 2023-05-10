@@ -28,9 +28,9 @@ class dashboard implements renderable, templatable {
         //$this->fragenersteller = $fragenersteller; // not needed here, since it is given to popup_request_questions and only needed there
         $this->request_questions_popup = new popup_request_questions($fragenersteller);
         $this->questions_for_me_to_create_popup = new popup_questions_for_me_to_create($questions_to_create);
-        $this->exams_for_me_to_create_popup = new popup_exams_for_me_to_create($exams_to_create);
+        //$this->exams_for_me_to_create_popup = new popup_exams_for_me_to_create($exams_to_create);
         $this->coursecategoryid = $coursecategoryid;
-        $this->request_exams_popup = new popup_request_exams($fachlichepruefer);
+        //$this->request_exams_popup = new popup_request_exams($fachlichepruefer);
     }
 
     /**
@@ -162,17 +162,17 @@ class dashboard implements renderable, templatable {
         }
 
         $data->show_exams_heading = false;
-        if ($this->capabilities["releasequestion"]) {
-            $data->request_exams_popup = $this->request_exams_popup->export_for_template($output);
-            $data->show_exams_heading = true;
-        }
+        //if ($this->capabilities["releasequestion"]) {
+        //    $data->request_exams_popup = $this->request_exams_popup->export_for_template($output);
+        //    $data->show_exams_heading = true;
+        //}
 
         if ($this->capabilities["fachlicherpruefer"]) {
             $data->show_exams_heading = true;
         }
 
         $data->questions_for_me_to_create_popup = $this->questions_for_me_to_create_popup->export_for_template($output);
-        $data->exams_for_me_to_create_popup = $this->exams_for_me_to_create_popup->export_for_template($output);
+        //$data->exams_for_me_to_create_popup = $this->exams_for_me_to_create_popup->export_for_template($output);
 
         // similarity comparison button
         $data->buttons = [

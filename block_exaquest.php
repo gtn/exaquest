@@ -31,9 +31,11 @@ class block_exaquest extends block_list {
             //$PAGE->requires->js("/blocks/exaquest/javascript/block_exaquest.js", true);
 
             $this->content = new stdClass;
+            //$this->content->body = html_writer::tag('div', '', array('id' => 'block_exaquest block list_block mb-3'));
             $this->content->items = array();
             $this->content->icons = array();
             $this->content->footer = '';
+
 
             if ($PAGE->pagelayout == "mydashboard") {
                 // get all courses where exaquest is added as a blocK:
@@ -43,14 +45,17 @@ class block_exaquest extends block_list {
                     $coursename = $course->fullname;
                     $todocount = block_exaquest_get_todo_count($USER->id, $course->category, context_course::instance($courseid));
                     if ($todocount) {
-                        $todocountmesssage = ' ... ' . $todocount . get_string('todos_are_open', 'block_exaquest');
+                        $todocountmesssage = '<span class="badge badge-primary ml-3 badge-lg">' .
+                            $todocount . get_string('todos_are_open', 'block_exaquest') . ' </span>';
                     } else {
                         $todocountmesssage = '';
                     }
 
-                    $this->content->items[] =
+                    $combinedmessage =
                         html_writer::tag('a', get_string('dashboard_of_course', 'block_exaquest', $coursename) . $todocountmesssage,
                             array('href' => $CFG->wwwroot . '/blocks/exaquest/dashboard.php?courseid=' . $courseid));
+                    $combinedmessage = html_writer::tag('div', $combinedmessage, array('class' => 'mb-2'));
+                    $this->content->items[] = $combinedmessage;
                 }
             } else {
                 // this is used to get the contexts of the category in the questionbank
