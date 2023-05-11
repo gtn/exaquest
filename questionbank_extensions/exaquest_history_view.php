@@ -128,16 +128,16 @@ class exaquest_history_view extends question_history_view {
             }
         }
 
-        // New plugins added at the end of the array, will change in sorting feature.
-        foreach ($newpluginclasscolumns as $key => $newpluginclasscolumn) {
-            $questionbankclasscolumns[$key] = $newpluginclasscolumn;
-        }
-
-        // Check if qbank_columnsortorder is enabled.
-        if (array_key_exists('columnsortorder', core_plugin_manager::instance()->get_enabled_plugins('qbank'))) {
-            $columnorder = new column_manager();
-            $questionbankclasscolumns = $columnorder->get_sorted_columns($questionbankclasscolumns);
-        }
+        //// New plugins added at the end of the array, will change in sorting feature.
+        //foreach ($newpluginclasscolumns as $key => $newpluginclasscolumn) {
+        //    $questionbankclasscolumns[$key] = $newpluginclasscolumn;
+        //}
+        //
+        //// Check if qbank_columnsortorder is enabled.
+        //if (array_key_exists('columnsortorder', core_plugin_manager::instance()->get_enabled_plugins('qbank'))) {
+        //    $columnorder = new column_manager();
+        //    $questionbankclasscolumns = $columnorder->get_sorted_columns($questionbankclasscolumns);
+        //}
 
         // Mitigate the error in case of any regression.
         foreach ($questionbankclasscolumns as $shortname => $questionbankclasscolumn) {

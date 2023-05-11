@@ -43,6 +43,12 @@ function block_exaquest_coursemodule_definition_after_data($formwrapper, $mform)
     return;
 }
 
+
+function block_exaquest_extend_question_definition(){
+    global $CFG, $COURSE;
+    return;
+}
+
 /**
  * Inject the exaquest element into all moodle module settings forms.
  *
