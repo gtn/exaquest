@@ -206,8 +206,8 @@ class exaquest_view extends view {
                 }
             } else {
                 if ($CFG->usetags) {
-                    //   array_unshift($this->searchconditions,
-                    //     new \core_question\bank\search\tag_condition([$catcontext, $thiscontext], $tagids));
+                       array_unshift($this->searchconditions,
+                         new \core_question\bank\search\tag_condition([$catcontext, $thiscontext], $tagids));
                 }
 
                 //array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
