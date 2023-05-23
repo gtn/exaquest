@@ -308,6 +308,17 @@ $string['exaquest:viewfinishedexams'] = 'View finished exams in exaquest';
 $string['exaquest:viewgradesreleasedexams'] = 'View released exams in exaquest';
 $string['exaquest:viewnewexams'] = 'View new exams in exaquest';
 $string['exaquest:viewgradesreleasedexams'] = 'View exams where grades have been released in exaquest';
+$string['exaquest:assignaddquestions'] = 'Assign user to add questions to exams';
+$string['exaquest:createexam'] = 'Create exams in exaquest';
+$string['exaquest:dofachlichreview'] = 'Do fachlich review';
+$string['exaquest:doformalreview'] = 'Do formal review';
+$string['exaquest:exaquestuser'] = 'Is an exaquest user';
+$string['exaquest:viewactiveexams'] = 'View active exams in exaquest';
+$string['exaquest:viewownquestions'] = 'View own questions in exaquest';
+$string['exaquest:viewreleasedexams'] = 'View released exams in exaquest';
+
+
+
 
 // tasks
 $string['check_active_exams'] = 'Check status of active Exaquest quizzes and update if finished.';

@@ -25,6 +25,9 @@
 /**
  * DATABSE TABLE NAMES
  */
+
+use qbank_managecategories\helper;
+
 const BLOCK_EXAQUEST_DB_QUESTIONSTATUS = 'block_exaquestquestionstatus';
 const BLOCK_EXAQUEST_DB_REVIEWASSIGN = 'block_exaquestreviewassign';
 const BLOCK_EXAQUEST_DB_REQUESTQUEST = 'block_exaquestrequestquest';
@@ -1198,7 +1201,6 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:assignaddquestions', CAP_ALLOW, $roleid, $context);
 
-
     if (!$DB->record_exists('role', ['shortname' => 'fachlicherzweitpruefer'])) {
         $roleid = create_role('Fachlicher Zweitprüfer', 'fachlicherzweitpruefer', '', 'manager');
         $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
@@ -1337,6 +1339,8 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
     //$isStudent = has_capability('block/exacomp:student', $context) && $courseid != 1 && !has_capability('block/exacomp:admin', $context);
     //$isTeacherOrStudent = $isTeacher || $isStudent;
     $catAndCont = get_question_category_and_context_of_course();
+    //var_dump($catAndCont);
+    //die;
 
     $rows[] = new tabobject('tab_dashboard',
         new moodle_url('/blocks/exaquest/dashboard.php', array("courseid" => $courseid)),
@@ -1371,7 +1375,7 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
     return $rows;
 }
 
-// this is used to get the contexts of the category in the questionbank
+// this is used to get the contexts of the category in the questionbank. The default question category of the coursecategory is used.
 
 function get_question_category_and_context_of_course($courseid = null) {
     global $COURSE, $DB;
@@ -1379,18 +1383,75 @@ function get_question_category_and_context_of_course($courseid = null) {
         $courseid = $COURSE->id;
     }
     // this is used to get the contexts of the category in the questionbank
-    $context = context_course::instance($courseid);
-    $contexts = explode('/', $context->path);
-    $questioncategory = $DB->get_records('question_categories', ['contextid' => $contexts[2]]);
-    $category =
-        end($questioncategory); // an actual array, not a returnvalue of a function has to be passed, since it sets the internal pointer of the array, so there has to be a real array
+    //
+    //
+    //// different way of getting question category and context of course:
+    //$context = context_course::instance($courseid);
+    //
+    //// get the course:
+    //$course = $DB->get_record('course', ['id' => $courseid]);
+    //// get the question category for the default question category of the course:
+    ////$questioncategory = $DB->get_record('question_categories', ['id' => $course->defaultquestioncategory]);
+    //
+    //list($thispageurl, $contexts, $cmid, $cm, $module, $pagevars) =
+    //    question_edit_setup('questions', '/question/edit.php');
 
-    if ($category) {
-        return [$category->id,
-            $contexts[2]]; // TODO why $contexts[2]? That should give the same as $category->contextid but $category->contextid seems safer
-    } else {
-        return false;
+
+    // get coursecontext and coursecategory context
+    $coursecontext = context_course::instance($courseid);
+    $course = $DB->get_record('course', ['id' => $courseid]);
+    $coursecategorycontext = context_coursecat::instance($course->category);
+
+    // put them into $contexts so the get_categories_for_contexts function can use them
+    $contexts = [$coursecontext, $coursecategorycontext];
+    // get the categories for the contexts
+    $pcontexts = [];
+    foreach ($contexts as $context) {
+        $pcontexts[] = $context->id;
     }
+    $contextslist = join(', ', $pcontexts);
+    $categories = helper::get_categories_for_contexts($contextslist, 'id', false);
+    // find the category that is not for the course, but for the coursecategory. There can be different questioncategories for one coursecategory
+    // ==> take the first one (except top, which is not returned by get_categories_for_contexts) which is the default questioncategory
+    foreach ($categories as $category) {
+        if ($category->contextid == $coursecategorycontext->id) {
+            $categoryid = $category->id;
+            $contextid = $category->contextid;
+            break;
+        }
+    }
+
+    // explanation for what categoryid and contextid is and how context works in this case:
+    // categoryid is the id of the questioncategory in the question_categories table, which is what we need
+    // contextid is the contextid saved in the questioncategory table. This contextid is the id in the context table.
+    // in the context table the instanceid is the id of the coursecategory
+    // this way, the questioncontext for the coursecategory of the current course can be found.
+
+    return [$categoryid, $contextid];
+
+
+
+
+    ////$catmenu = helper::question_category_options($contexts, true, 0,
+    ////    true, -1, false);
+    //
+    //$context = context_course::instance($courseid);
+    ////var_dump($context);
+    ////die;
+    //$contexts = explode('/', $context->path);
+    //$questioncategory = $DB->get_records('question_categories',
+    //    ['contextid' => $contexts[2]]); // hardcoded contexts[2] leads to problems when the path has a different depth than expected
+    //$category =
+    //    end($questioncategory); // an actual array, not a returnvalue of a function has to be passed, since it sets the internal pointer of the array, so there has to be a real array
+    //
+    //if ($category) {
+    //    //var_dump([$category->id, $contexts[2]]);
+    //    //die;
+    //    return [$category->id,
+    //        $contexts[2]]; // TODO why $contexts[2]? That should give the same as $category->contextid but $category->contextid seems safer
+    //} else {
+    //    return false;
+    //}
 
 }
 
@@ -1640,7 +1701,8 @@ function block_exaquest_get_capabilities($context) {
     //$capabilities["viewstatistic"] = is_enrolled($context, $USER, "block/exaquest:viewstatistic");
     $capabilities["viewquestionstorelease"] = is_enrolled($context, $USER, "block/exaquest:viewquestionstorelease");
     $capabilities["viewquestionstorevise"] = is_enrolled($context, $USER, "block/exaquest:viewquestionstorevise");
-    $capabilities["createexam"] = has_capability("block/exaquest:viewquestionstorevise", $context, $USER); // has_capability better than is_enrolled in this case, todo: change above
+    $capabilities["createexam"] = has_capability("block/exaquest:viewquestionstorevise", $context,
+        $USER); // has_capability better than is_enrolled in this case, todo: change above
 
     return $capabilities;
 }
