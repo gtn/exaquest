@@ -265,8 +265,8 @@ function block_exaquest_send_moodle_notification($notificationtype, $userfrom, $
 function block_exaquest_get_fragenersteller_by_courseid($courseid) {
     $context = context_course::instance($courseid);
     $userarray = array();
-    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fragenersteller'));
-    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fragenerstellerlight'));
+    $userarray = array_replace($userarray, get_enrolled_users($context, 'block/exaquest:fragenerstellerlight'));
+    $userarray = array_replace($userarray, get_enrolled_users($context, 'block/exaquest:fragenersteller'));
     return $userarray;
 }
 

@@ -73,9 +73,9 @@ $(document).on('click', '.mark-question-request-as-done-button', function () {
     if (confirm("Wirklich als erledigt markieren?")) {
         let requests = this.parentElement.parentElement.getElementsByClassName("request-comment");
         if (requests != undefined) {
-            document.getElementById("modal-body-requests").removeChild(document.getElementById("request-comment-p-" + this.getAttribute("requestid")));
-            // remove that entry from the database with ajax
             debugger
+            document.getElementById("requests").removeChild(document.getElementById("request-comment-li-" + this.getAttribute("requestid")));
+            // remove that entry from the database with ajax
             mark_request_as_done(this.getAttribute("requestid"), 'question', this.attributes.courseid.value);
         }
     }
@@ -86,7 +86,7 @@ $(document).on('click', '.mark-exam-request-as-done-button', function () {
     if (confirm("Wirklich als erledigt markieren?")) {
         let requests = this.parentElement.parentElement.getElementsByClassName("request-comment");
         if (requests != undefined) {
-            document.getElementById("modal-body-requests").removeChild(document.getElementById("request-comment-p-" + this.getAttribute("requestid")));
+            document.getElementById("requests").removeChild(document.getElementById("request-comment-p-" + this.getAttribute("requestid")));
             // remove that entry from the database with ajax
             mark_request_as_done(this.getAttribute("requestid"), 'exam', this.attributes.courseid.value);
         }
