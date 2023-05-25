@@ -69,9 +69,6 @@ class exams implements renderable, templatable {
             $new_exam->popup_assign_addquestions = $popup->export_for_template($output);
         }
 
-
-
-
         $data->created_exams =
             array_values($this->created_exams); // TODO rw: test if they are shown with current mustache (no way to create them in moodle yet --> create one manually)
         $data->fachlich_released_exams = array_values($this->fachlich_released_exams);
@@ -84,12 +81,12 @@ class exams implements renderable, templatable {
             array('add' => 'quiz', 'course' => $COURSE->id, 'section' => 0, 'return' => 0, 'sr' => 0));
         $data->create_exam_link = $data->create_exam_link->raw_out(false);
 
-
-
         //if ($this->capabilities["releasequestion"]) {
         //    $data->request_exams_popup = $this->popup_assign_addquestions->export_for_template($output);
         //}
         //$data->popup_assign_addquestions = $this->popup_assign_addquestions->export_for_template($output);
+
+        $data->popup_setquizquestioncount = new popup_setquizquestioncount($this->courseid);
 
         $data->courseid = $this->courseid;
 

@@ -31,6 +31,9 @@ $string['request_exams_label'] = 'Neue Prüfung anforderen von ...';
 $string['request_exams_comment_placeholder'] = 'Welche Art von Prüfung wird benötigt? Optional.';
 $string['request_exams_button'] = 'Anfordern';
 
+
+$string['set_quizquestioncount'] = 'Benötigte Fragenanzahl pro Fragefach festlegen';
+
 $string['mark_as_done'] = 'Als erledigt markieren';
 $string['mark_selected_as_done_button'] = 'Selektierte Anfragen als erledigt markieren';
 

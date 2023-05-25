@@ -35,6 +35,8 @@ const BLOCK_EXAQUEST_DB_REQUESTEXAM = 'block_exaquestrequestexam';
 const BLOCK_EXAQUEST_DB_QUIZSTATUS = 'block_exaquestquizstatus';
 const BLOCK_EXAQUEST_DB_REVISEASSIGN = 'block_exaquestreviseassign';
 const BLOCK_EXAQUEST_DB_QUIZASSIGN = 'block_exaquestquizassign';
+const BLOCK_EXAQUEST_DB_CATEGORIES = 'block_exaquestcategories';
+const BLOCK_EXAQUEST_DB_QUIZQCOUNT = 'block_exaquestquizqcount';
 /**
  * Question Status
  */
@@ -58,6 +60,14 @@ const BLOCK_EXAQUEST_QUIZSTATUS_FORMAL_RELEASED = 3; // MUSSS released it
 const BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE = 4; // ongoing exam?
 const BLOCK_EXAQUEST_QUIZSTATUS_FINISHED = 5; // exam finished
 const BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED = 6; // grades released
+
+/**
+ * Categorytype for the exaquest categories
+ */
+const BLOCK_EXAQUEST_CATEGORYTYPE_FRAGENCHARACTER = 0;
+const BLOCK_EXAQUEST_CATEGORYTYPE_KLASSIFIKATION = 1;
+const BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH = 2;
+const BLOCK_EXAQUEST_CATEGORYTYPE_LEHRINHALT = 3;
 
 /**
  * Misc
@@ -968,6 +978,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:assignaddquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:createexam', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:setquestioncount', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
         $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '', 'manager');
@@ -1051,6 +1062,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:assignaddquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:createexam', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:setquestioncount', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fragenersteller'])) {
         $roleid = create_role('Fragenersteller', 'fragenersteller', '', 'manager');
@@ -1396,7 +1408,6 @@ function get_question_category_and_context_of_course($courseid = null) {
     //list($thispageurl, $contexts, $cmid, $cm, $module, $pagevars) =
     //    question_edit_setup('questions', '/question/edit.php');
 
-
     // get coursecontext and coursecategory context
     $coursecontext = context_course::instance($courseid);
     $course = $DB->get_record('course', ['id' => $courseid]);
@@ -1428,9 +1439,6 @@ function get_question_category_and_context_of_course($courseid = null) {
     // this way, the questioncontext for the coursecategory of the current course can be found.
 
     return [$categoryid, $contextid];
-
-
-
 
     ////$catmenu = helper::question_category_options($contexts, true, 0,
     ////    true, -1, false);
@@ -1703,6 +1711,7 @@ function block_exaquest_get_capabilities($context) {
     $capabilities["viewquestionstorevise"] = is_enrolled($context, $USER, "block/exaquest:viewquestionstorevise");
     $capabilities["createexam"] = has_capability("block/exaquest:viewquestionstorevise", $context,
         $USER); // has_capability better than is_enrolled in this case, todo: change above
+    $capabilities["setquestioncount"] = has_capability("block/exaquest:setquestioncount", $context, $USER);
 
     return $capabilities;
 }
@@ -1905,4 +1914,20 @@ function block_exaquest_assign_quiz_addquestions($userto, $comment, $quizid, $qu
     //$subject = get_string('please_review_question_subject', 'block_exaquest', $messageobject);
     //block_exaquest_send_moodle_notification("reviewquestion", $userfrom->id, $userto, $subject, $message,
     //    "Review", $messageobject->url);
+}
+
+function block_exaquest_get_fragefaecher_by_courseid($courseid) {
+    global $DB;
+
+    // get course
+    $course = $DB->get_record('course', array('id' => $courseid));
+
+    $sql = 'SELECT DISTINCT cat.fragefach
+            FROM {' . BLOCK_EXAQUEST_DB_CATEGORIES . '} cat
+            WHERE cat.coursecategoryid = :coursecategoryid
+            AND cat.fragefach = {' . BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH . '}';
+
+    $fragefaecher = $DB->get_records_sql($sql, array('coursecategoryid' => $course->category));
+    return $fragefaecher;
+
 }

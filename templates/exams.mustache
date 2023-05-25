@@ -42,6 +42,13 @@
                                     {{/popup_assign_addquestions}}
                                 </td>
                             {{/assignaddquestions}}
+                            {{#setquestioncount}}
+                                <td>
+                                    {{#popup_assign_addquestions}}
+                                        {{>block_exaquest/popup_setquizquestioncount}}
+                                    {{/popup_assign_addquestions}}
+                                </td>
+                            {{/setquestioncount}}
                         </tr>
                     {{/new_exams}}
                     </tbody>

@@ -74,6 +74,7 @@ $capabilities["viewgradesreleasedexams"] = is_enrolled($context, $USER, "block/e
 $capabilities["addquestiontoexam"] = has_capability('block/exaquest:addquestiontoexam', $context); // has_capability actually makes more sense than is_enrolled, even though the outcome is the same
 $capabilities["assignaddquestions"] = has_capability('block/exaquest:assignaddquestions', $context);
 $capabilities["createexam"] = has_capability('block/exaquest:createexam', $context);
+$capabilities["setquestioncount"] = has_capability('block/exaquest:setquestioncount', $context);
 
 $exams = new \block_exaquest\output\exams($USER->id, $courseid, $capabilities);
 echo $output->render($exams);

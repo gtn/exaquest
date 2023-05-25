@@ -31,6 +31,9 @@ $string['request_exams_label'] = 'Request new exams from ...';
 $string['request_exams_comment_placeholder'] = 'Which kind of exam is needed? Optional';
 $string['request_exams_button'] = 'Request';
 
+
+$string['set_quizquestioncount'] = 'Request';
+
 $string['mark_as_done'] = 'Mark as done';
 $string['mark_selected_as_done_button'] = 'Mark selected requests as done';
 
@@ -329,8 +332,6 @@ $string['exaquest:exaquestuser'] = 'Is an exaquest user';
 $string['exaquest:viewactiveexams'] = 'View active exams in exaquest';
 $string['exaquest:viewownquestions'] = 'View own questions in exaquest';
 $string['exaquest:viewreleasedexams'] = 'View released exams in exaquest';
-
-
 
 
 // tasks

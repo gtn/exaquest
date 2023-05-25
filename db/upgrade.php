@@ -517,6 +517,38 @@ function xmldb_block_exaquest_upgrade($oldversion) {
         upgrade_block_savepoint(true, 2023052300, 'exaquest');
     }
 
+    if ($oldversion < 2023052500) {
+        // create the table block_exaquestquizqcount.
+        $table = new xmldb_table('block_exaquestquizqcount');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('quizid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('exaquestcategoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('questioncount', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table block_exaquestreviseassign.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('quizid', XMLDB_KEY_FOREIGN, ['quizid'], 'quiz', ['id']);
+        $table->add_key('exaquestcategoryid', XMLDB_KEY_FOREIGN, ['exaquestcategoryid'], 'block_exaquestcategories', ['id']);
+
+        // Conditionally launch create table for block_exaquestquizassign.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        if ($oldversion < 2023052501) {
+            // Creating roles and assigning capabilities
+            // Done as a task AFTER the installation, because the capabilities only exist at the end/after the installation.
+            // create the instance
+            $setuptask = new \block_exaquest\task\set_up_roles();
+            // queue it
+            \core\task\manager::queue_adhoc_task($setuptask);
+            // Exaquest savepoint reached.
+            upgrade_block_savepoint(true, 2023052501, 'exaquest');
+        }
+
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2023052500, 'exaquest');
+    }
 
 
     return $return_result;
