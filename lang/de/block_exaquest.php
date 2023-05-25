@@ -127,7 +127,7 @@ $string['create_new_exam_button'] = 'Neue Prüfung erstellen';
 
 $string['questions_for_me_to_review'] = 'Fragen soll ich begutachten';
 $string['questions_for_me_to_submit'] = 'Fragen soll ich einreichen';
-$string['questions_for_me_to_create'] = 'Fragen soll ich erstellen';
+$string['questions_for_me_to_create'] = 'Folgende Fragen sind noch zu erstellen';
 $string['questions_for_me_to_revise'] = 'Fragen soll ich überarbeiten';
 $string['questions_for_me_to_release'] = 'Fragen soll ich freigeben';
 $string['compare_questions'] = 'Fragen vergleichen';
