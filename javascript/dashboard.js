@@ -73,7 +73,6 @@ $(document).on('click', '.mark-question-request-as-done-button', function () {
     if (confirm("Wirklich als erledigt markieren?")) {
         let requests = this.parentElement.parentElement.getElementsByClassName("request-comment");
         if (requests != undefined) {
-            debugger
             document.getElementById("requests").removeChild(document.getElementById("request-comment-li-" + this.getAttribute("requestid")));
             // remove that entry from the database with ajax
             mark_request_as_done(this.getAttribute("requestid"), 'question', this.attributes.courseid.value);

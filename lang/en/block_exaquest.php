@@ -125,6 +125,7 @@ $string['create_new_exam_button'] = 'create new exam';
 $string['questions_for_me_to_review'] = 'Questions for me to review';
 $string['questions_for_me_to_submit'] = 'Questions for me to submit';
 $string['questions_for_me_to_create'] = 'Questions for me to create';
+$string['questions_for_me_to_create_title'] = 'Questions for me to create';
 $string['questions_for_me_to_revise'] = 'Questions for me to revise';
 $string['questions_for_me_to_release'] = 'Questions for me to release';
 $string['compare_questions'] = 'Compare questions';
