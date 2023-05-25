@@ -168,6 +168,11 @@ $string['change_status'] = 'Status verändern';
 $string['notification_will_be_sent_to_pk'] =
     'Die Prüfungskoordination wird auch eine Benachrichtigung erhalten, die formale Begutachtung durchzuführen.';
 
+$string['question_id'] = 'Fragen ID';
+$string['ownername'] = 'Erstellt von';
+$string['lastchanged'] = 'Zuletzt verändert';
+
+
 $string['open_for_review_text'] = 'Begutachtung zuteilen zu..';
 $string['revise_text'] = 'Überarbeitung zuteilen zu..';
 $string['open_for_review_title'] = 'Begutachtung';

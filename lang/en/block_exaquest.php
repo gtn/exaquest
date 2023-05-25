@@ -165,6 +165,9 @@ $string['release_question_warning_title'] = 'Warning';
 $string['change_status'] = 'change status';
 $string['notification_will_be_sent_to_pk'] =
     'The Prüfungskoordination will also get a notification that the formal review should be done.';
+$string['question_id'] = 'Question ID';
+$string['ownername'] = 'Created by';
+$string['lastchanged'] = 'Last changed';
 
 $string['open_for_review_text'] = 'Assign review to..';
 $string['revise_text'] = 'Assign revision to..';

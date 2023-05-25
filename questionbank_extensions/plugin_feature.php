@@ -30,7 +30,10 @@ class plugin_feature extends \core_question\local\bank\plugin_features_base {
             new add_to_quiz($qbank),
             new usage_check_column($qbank),
             new category_options($qbank),
-            new remove_from_quiz($qbank)
+            new remove_from_quiz($qbank),
+            new question_id_column($qbank),
+            new owner_column($qbank),
+            new last_changed_column($qbank)
         ];
     }
 }

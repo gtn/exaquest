@@ -186,6 +186,7 @@ table.exaquest-similarity-comparison-table .col-threshold {
 #block_exaquest #categoryquestions th .title,
 #block_exaquest #categoryquestions th.editmenu,
 #block_exaquest #categoryquestions th.commentcount,
+#block_exaquest #categoryquestions th.questionid,
 #block_exaquest #categoryquestions th.changestatus {
     font-weight: 700;
 }
