@@ -17,6 +17,11 @@ require_once('edit_action_column_exaquest.php');
 require_once('delete_action_column_exaquest.php');
 require_once('history_action_column_exaquest.php');
 require_once('exaquest_category_condition.php');
+require_once('question_id_column.php');
+require_once('owner_column.php');
+require_once('last_changed_column.php');
+require_once('status_column.php');
+
 
 
 use core_plugin_manager;
@@ -63,7 +68,7 @@ class exaquest_view extends view
             //'export_xml_action_column',
             // 'question_status_column',
             //'version_number_column',
-            'creator_name_column',
+            //'creator_name_column',
             'comment_count_column'
         ];
         if (question_get_display_preference('qbshowtext', 0, PARAM_BOOL, new \moodle_url(''))) {
@@ -136,6 +141,10 @@ class exaquest_view extends view
 
         $specialpluginentrypointobject = new \qbank_openquestionforreview\plugin_feature();
         $specialplugincolumnobjects = $specialpluginentrypointobject->get_question_columns($this);
+        $questionbankclasscolumns["question_id_column"] = $specialplugincolumnobjects[8];
+        $questionbankclasscolumns["owner_column"] = $specialplugincolumnobjects[9];
+        $questionbankclasscolumns["last_changed_column"] = $specialplugincolumnobjects[10];
+        $questionbankclasscolumns["status_column"] = $specialplugincolumnobjects[11];
         $questionbankclasscolumns["change_status"] = $specialplugincolumnobjects[0];
         $questionbankclasscolumns["edit_action_column"] = $specialplugincolumnobjects[1];
         $questionbankclasscolumns["delete_action_column"] = $specialplugincolumnobjects[2];

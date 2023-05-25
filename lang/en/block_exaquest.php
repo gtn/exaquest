@@ -166,6 +166,18 @@ $string['change_status'] = 'change status';
 $string['notification_will_be_sent_to_pk'] =
     'The Prüfungskoordination will also get a notification that the formal review should be done.';
 
+$string['new_question'] = 'Newly created';
+$string['to_revise'] = 'To revise';
+$string['to_assess'] = 'To assess';
+$string['formal_done'] = 'Formally finalized';
+$string['fachlich_done'] = 'Fachlich finalized';
+$string['finalised'] = 'Finalized';
+$string['released'] = 'Released';
+
+$string['question_id'] = 'Question ID';
+$string['ownername'] = 'Created by';
+$string['lastchanged'] = 'Last changed';
+
 $string['open_for_review_text'] = 'Assign review to..';
 $string['revise_text'] = 'Assign revision to..';
 $string['open_for_review_title'] = 'Review';
