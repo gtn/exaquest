@@ -168,6 +168,14 @@ $string['change_status'] = 'Status verändern';
 $string['notification_will_be_sent_to_pk'] =
     'Die Prüfungskoordination wird auch eine Benachrichtigung erhalten, die formale Begutachtung durchzuführen.';
 
+$string['new_question'] = 'Neu erstellt';
+$string['to_revise'] = 'Zu überabeiten';
+$string['to_assess'] = 'Zu begutachten';
+$string['formal_done'] = 'Formal finalisiert';
+$string['fachlich_done'] = 'Fachlich finalisiert';
+$string['finalised'] = 'Finalisiert';
+$string['released'] = 'Freigegeben';
+
 $string['question_id'] = 'Fragen ID';
 $string['ownername'] = 'Erstellt von';
 $string['lastchanged'] = 'Zuletzt verändert';

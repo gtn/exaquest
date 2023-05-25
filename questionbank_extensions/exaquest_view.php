@@ -20,6 +20,8 @@ require_once('exaquest_category_condition.php');
 require_once('question_id_column.php');
 require_once('owner_column.php');
 require_once('last_changed_column.php');
+require_once('status_column.php');
+
 
 
 use core_plugin_manager;
@@ -140,6 +142,7 @@ class exaquest_view extends view {
         $questionbankclasscolumns["question_id_column"] = $specialplugincolumnobjects[8];
         $questionbankclasscolumns["owner_column"] = $specialplugincolumnobjects[9];
         $questionbankclasscolumns["last_changed_column"] = $specialplugincolumnobjects[10];
+        $questionbankclasscolumns["status_column"] = $specialplugincolumnobjects[11];
         $questionbankclasscolumns["change_status"] = $specialplugincolumnobjects[0];
         $questionbankclasscolumns["edit_action_column"] = $specialplugincolumnobjects[1];
         $questionbankclasscolumns["delete_action_column"] = $specialplugincolumnobjects[2];
