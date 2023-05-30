@@ -534,22 +534,20 @@ function xmldb_block_exaquest_upgrade($oldversion) {
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
-
-        if ($oldversion < 2023052501) {
-            // Creating roles and assigning capabilities
-            // Done as a task AFTER the installation, because the capabilities only exist at the end/after the installation.
-            // create the instance
-            $setuptask = new \block_exaquest\task\set_up_roles();
-            // queue it
-            \core\task\manager::queue_adhoc_task($setuptask);
-            // Exaquest savepoint reached.
-            upgrade_block_savepoint(true, 2023052501, 'exaquest');
-        }
-
         // Exaquest savepoint reached.
         upgrade_block_savepoint(true, 2023052500, 'exaquest');
     }
 
+    if ($oldversion < 2023053000) {
+        // Creating roles and assigning capabilities
+        // Done as a task AFTER the installation, because the capabilities only exist at the end/after the installation.
+        // create the instance
+        $setuptask = new \block_exaquest\task\set_up_roles();
+        // queue it
+        \core\task\manager::queue_adhoc_task($setuptask);
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2023053000, 'exaquest');
+    }
 
     return $return_result;
 }

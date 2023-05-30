@@ -1,10 +1,10 @@
 <!-- using bootstrap modals to do the popups https://getbootstrap.com/docs/4.6/components/modal/ -->
 
-<button class="btn btn-primary w-100" data-toggle="modal" data-target="#createQuestionModal">
+<button class="btn btn-primary w-100" data-toggle="modal" data-target="#setquizquestioncountmodal{{quizid}}">
     {{#str}}set_quizquestioncount, block_exaquest {{/str}}
     <!--    <i class="icon fa fa-plus fa-fw "></i>-->
 </button>
-<div class="modal fade" id="createQuestionModal" tabindex="-1"
+<div class="modal fade" id="setquizquestioncountmodal{{quizid}}" tabindex="-1"
      aria-labelledby="createQuestionModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
@@ -16,26 +16,29 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" action="{{action}}" id="requestquestionsform">
+            <form method="post" action="{{action}}" id="setquizquestioncountform{{quizid}}">
+                <input type="hidden" id="quizid" name="quizid" value={{quizid}}>
                 <div class="modal-body">
                     <table>
                         <tr>
                             <th>Fragefach</th>
                             <th>Anzahl der benötigten Fragen</th>
                         </tr>
-                        {{#fragefaecher}}
-                            <tr>
-                                <td>{{name}} </td>
-                                <td><input type="number" name="{{id}}"></td>
-                            </tr>
-                        {{/fragefaecher}}
+                        <fieldset>
+                            {{#fragefaecher}}
+                                <tr>
+                                    <td>{{categoryname}} </td>
+                                    <td><input id="{{id}}" type="number" name="fragefaecher[{{id}}]" value={{questioncount}}></td>
+                                </tr>
+                            {{/fragefaecher}}
+                        <fieldset>
                     </table>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <input type="submit"
-                           value="{{#str}} request_questions_button, block_exaquest {{/str}}"
-                           class="btn btn-primary requestquestionssubmit">
+                           value="{{#str}} set_quizquestioncount, block_exaquest {{/str}}"
+                           class="btn btn-primary setquizquestioncountsubmit">
                 </div>
             </form>
         </div>

@@ -22,13 +22,13 @@ class exams implements renderable, templatable {
         $this->capabilities = $capabilities;
         $this->userid = $userid;
         //$this->exams = $DB->get_records("quiz", array("course" => $COURSE->id));
-        if ($capabilities["viewnewexams"]){
+        if ($capabilities["viewnewexams"]) {
             $this->new_exams = block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_NEW);
-        }else if ($capabilities["addquestiontoexam"]){
+        } else if ($capabilities["addquestiontoexam"]) {
             // new exams can only be seen by PK and Mover, except if you are specifically assigned to an exam, e.g. as a FP or PMW
             // ==> give the viewnewexams capability to all users who are assigned to an exam, but filter the newexams according to users role
             $this->new_exams = block_exaquest_get_quizzes_for_me_to_fill($userid);
-            if($this->new_exams){
+            if ($this->new_exams) {
                 $this->capabilities["viewnewexams"] = true;
             }
         }
@@ -41,6 +41,7 @@ class exams implements renderable, templatable {
         $this->finished_exams = block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_FINISHED);
         $this->grading_released_exams =
             block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED);
+
     }
 
     /**
@@ -64,7 +65,7 @@ class exams implements renderable, templatable {
         $data->go_to_exam_questionbank = $data->go_to_exam_questionbank->raw_out(false);
         $data->new_exams = array_values($this->new_exams);
         // add the assignment popups for every new_exam:
-        foreach ($data->new_exams as $new_exam){
+        foreach ($data->new_exams as $new_exam) {
             $popup = new popup_assign_addquestions($this->courseid, $new_exam->quizid);
             $new_exam->popup_assign_addquestions = $popup->export_for_template($output);
         }
@@ -86,7 +87,12 @@ class exams implements renderable, templatable {
         //}
         //$data->popup_assign_addquestions = $this->popup_assign_addquestions->export_for_template($output);
 
-        $data->popup_setquizquestioncount = new popup_setquizquestioncount($this->courseid);
+        foreach ($data->new_exams as $new_exam) {
+            $popup = new popup_assign_addquestions($this->courseid, $new_exam->quizid);
+            $new_exam->popup_assign_addquestions = $popup->export_for_template($output);
+            $popup = new popup_setquizquestioncount($this->courseid, $new_exam->quizid);
+            $new_exam->popup_setquizquestioncount = $popup->export_for_template($output);
+        }
 
         $data->courseid = $this->courseid;
 

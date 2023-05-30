@@ -42,23 +42,14 @@ if ($action == 'assign_quiz_addquestions') {
             block_exaquest_assign_quiz_addquestions($pmw, null, $quizid, null, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
         }
     }
-
-    //$allfragenersteller = block_exaquest_get_fragenersteller_by_courseid($courseid); // TODO by courseid or coursecategoryid?
-    //if (array_key_exists("selectedusers", $_POST)) {
-    //    if (is_array($_POST["selectedusers"])) {
-    //        $selectedfragenersteller = clean_param_array($_POST["selectedusers"], PARAM_INT);
-    //    } else {
-    //        $selectedfragenersteller = clean_param($_POST["selectedusers"], PARAM_INT);
-    //    }
-    //    $requestcomment = clean_param($_POST["requestcomment"], PARAM_TEXT);
-    //
-    //    if ($selectedfragenersteller) {
-    //        $fragenersteller = array_intersect_key($allfragenersteller, array_flip($selectedfragenersteller));
-    //        foreach ($fragenersteller as $ersteller) {
-    //            block_exaquest_request_question($USER->id, $ersteller->id, $requestcomment);
-    //        }
-    //    }
-    //}
+}else if ($action == 'set_questioncount_per_quiz_and_fragefach'){
+    $quizid = required_param('quizid', PARAM_INT);
+    if (array_key_exists("fragefaecher", $_POST)) {
+        $fragefaecher = clean_param_array($_POST["fragefaecher"], PARAM_INT);
+        foreach ($fragefaecher as $exaquestcategoryid => $count) {
+            block_exaquest_set_questioncount_for_exaquestcategory($quizid, $exaquestcategoryid, $count);
+        }
+    }
 }
 
 // RENDER:

@@ -1916,18 +1916,40 @@ function block_exaquest_assign_quiz_addquestions($userto, $comment, $quizid, $qu
     //    "Review", $messageobject->url);
 }
 
-function block_exaquest_get_fragefaecher_by_courseid($courseid) {
+function block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid) {
     global $DB;
 
     // get course
     $course = $DB->get_record('course', array('id' => $courseid));
 
-    $sql = 'SELECT DISTINCT cat.fragefach
+    $sql = 'SELECT cat.*, qc.questioncount, qc.quizid
             FROM {' . BLOCK_EXAQUEST_DB_CATEGORIES . '} cat
+            LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZQCOUNT . '} qc ON qc.exaquestcategoryid = cat.id AND qc.quizid = :quizid
             WHERE cat.coursecategoryid = :coursecategoryid
-            AND cat.fragefach = {' . BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH . '}';
+            AND cat.categorytype = ' . BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH;
 
-    $fragefaecher = $DB->get_records_sql($sql, array('coursecategoryid' => $course->category));
+    $fragefaecher = $DB->get_records_sql($sql, array('coursecategoryid' => $course->category, 'quizid' => $quizid));
+
+
     return $fragefaecher;
 
+}
+
+function block_exaquest_set_questioncount_for_exaquestcategory($quizid, $exaquestcategoryid, $count){
+    global $DB;
+
+    // get the current questioncount for this quiz and exaquestcategory
+    $quizqcount = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZQCOUNT, array('quizid' => $quizid, 'exaquestcategoryid' => $exaquestcategoryid));
+
+    // if it exists: update, else: create new
+    if ($quizqcount) {
+        $quizqcount->questioncount = $count;
+        $DB->update_record(BLOCK_EXAQUEST_DB_QUIZQCOUNT, $quizqcount);
+    } else {
+        $quizqcount = new stdClass;
+        $quizqcount->quizid = $quizid;
+        $quizqcount->exaquestcategoryid = $exaquestcategoryid;
+        $quizqcount->questioncount = $count;
+        $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZQCOUNT, $quizqcount);
+    }
 }

@@ -10,8 +10,9 @@ use stdClass;
 global $CFG;
 
 class popup_setquizquestioncount implements renderable, templatable {
-    public function __construct($courseid) {
-        $this->fragefaecher = block_exaquest_get_fragefaecher_by_courseid($courseid);
+    public function __construct($courseid, $quizid) {
+        $this->fragefaecher = block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid);
+        $this->quizid = $quizid;
     }
 
     /**
@@ -22,11 +23,11 @@ class popup_setquizquestioncount implements renderable, templatable {
     public function export_for_template(renderer_base $output) {
         global $PAGE, $COURSE, $CFG, $OUTPUT;
         $data = new stdClass();
-
-        $data->fragefaecher = $this->fragefaecher;
+        $data->fragefaecher = array_values($this->fragefaecher);
         $data->action =
-            $PAGE->url->out(false, array('action' => 'assign_quiz_addquestions', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
+            $PAGE->url->out(false, array('action' => 'set_questioncount_per_quiz_and_fragefach', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
         $data->sesskey = sesskey();
+        $data->quizid = $this->quizid;
         return $data;
     }
 }
