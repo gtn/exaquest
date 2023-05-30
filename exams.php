@@ -36,7 +36,8 @@ if ($action == 'assign_quiz_addquestions') {
         $selectedfp = clean_param($_POST["selectedusersfp".$quizid], PARAM_INT);
         block_exaquest_assign_quiz_addquestions($selectedfp, null, $quizid, null, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
     }
-    if (array_key_exists("selecteduserspmw".$quizid, $_POST)) {
+    // check if selecteduserspmw is set and an array
+    if (array_key_exists("selecteduserspmw".$quizid, $_POST) && is_array($_POST["selecteduserspmw".$quizid])) {
         $selectedpmw = clean_param_array($_POST["selecteduserspmw".$quizid], PARAM_INT);
         foreach ($selectedpmw as $pmw) {
             block_exaquest_assign_quiz_addquestions($pmw, null, $quizid, null, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
