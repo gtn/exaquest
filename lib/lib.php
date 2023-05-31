@@ -818,6 +818,18 @@ function block_exaquest_get_exams_for_me_to_fill($courseid, $userid = 0) {
     return $exams;
 }
 
+
+/**
+ * Returns
+ *
+ * @param $courseid
+ * @return array
+ */
+function block_exaquest_get_exams_for_me_to_fill_count($courseid, $userid = 0) {
+    return count(block_exaquest_get_exams_for_me_to_fill($courseid, $userid));
+}
+
+
 /**
  * Returns count of questionbankentries that have to be revised of this course of this user
  * used e.g. for the fragenersteller to see which questions they should revise
@@ -1571,10 +1583,12 @@ function block_exaquest_get_todo_count($userid, $coursecategoryid, $context) {
 
     $my_questions_to_submit_count =
         block_exaquest_get_my_questionbankentries_to_submit_count($coursecategoryid, $userid);
-    $exams_for_me_to_create_count =
-        block_exaquest_get_exams_for_me_to_create_count($coursecategoryid, $userid);
+    //$exams_for_me_to_create_count =
+    //    block_exaquest_get_exams_for_me_to_create_count($coursecategoryid, $userid);
+    $exams_for_me_to_fill_count = block_exaquest_get_exams_for_me_to_fill_count($coursecategoryid, $userid);
+
     return $questions_for_me_to_create_count + $questions_for_me_to_review_count + $questions_for_me_to_revise_count +
-        $questions_finalised_count + $exams_for_me_to_create_count + $my_questions_to_submit_count;
+        $questions_finalised_count + $exams_for_me_to_fill_count + $my_questions_to_submit_count;
 }
 
 function block_exaquest_is_user_in_course($userid, $courseid) {
