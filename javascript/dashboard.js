@@ -19,7 +19,7 @@ $(document).on('click', '.selectallornone-userselection', function () {
     }
 });
 
-debugger
+
 // This is the hacky but simple solution to getting the button to where it belongs. The buttion is rendered using functions from moodle-core which use echo.
 // This cannot be included nicely into mustache ==> after rendering, put the button to the correct position with javascript.
 $("#createnewquestion_button").appendTo("#dashboard_create_questions_div");
@@ -37,18 +37,21 @@ $(document).on('click', '#popup_create_questions_div', function () {
 });
 
 
-function mark_request_as_done(requestid, requesttype) {
+function mark_request_as_done(requestid, requesttype, courseid) {
     console.log('mark_request_as_done', requestid);
     let action = '';
     if (requesttype == 'exam') {
         action = 'mark_exam_request_as_done';
+    } else if (requesttype == 'fill-exam') {
+        action = 'mark_fill_exam_request_as_done';
     } else {
         action = 'mark_question_request_as_done';
     }
 
     let data = {
         requestid: requestid,
-        action: action
+        action: action,
+        courseid: courseid
     };
 
     $.ajax({
@@ -72,9 +75,9 @@ $(document).on('click', '.mark-question-request-as-done-button', function () {
     if (confirm("Wirklich als erledigt markieren?")) {
         let requests = this.parentElement.parentElement.getElementsByClassName("request-comment");
         if (requests != undefined) {
-            document.getElementById("modal-body-requests").removeChild(document.getElementById("request-comment-p-" + this.getAttribute("requestid")));
+            document.getElementById("requests").removeChild(document.getElementById("request-comment-li-" + this.getAttribute("requestid")));
             // remove that entry from the database with ajax
-            mark_request_as_done(this.getAttribute("requestid"), 'question');
+            mark_request_as_done(this.getAttribute("requestid"), 'question', this.attributes.courseid.value);
         }
     }
 });
@@ -84,9 +87,21 @@ $(document).on('click', '.mark-exam-request-as-done-button', function () {
     if (confirm("Wirklich als erledigt markieren?")) {
         let requests = this.parentElement.parentElement.getElementsByClassName("request-comment");
         if (requests != undefined) {
-            document.getElementById("modal-body-requests").removeChild(document.getElementById("request-comment-p-" + this.getAttribute("requestid")));
+            document.getElementById("requests").removeChild(document.getElementById("request-comment-p-" + this.getAttribute("requestid")));
             // remove that entry from the database with ajax
-            mark_request_as_done(this.getAttribute("requestid"), 'exam');
+            mark_request_as_done(this.getAttribute("requestid"), 'exam', this.attributes.courseid.value);
+        }
+    }
+});
+
+$(document).on('click', '.mark-fill-exam-request-as-done-button', function () {
+    if (confirm("Wirklich als erledigt markieren?")) {
+        debugger
+        let requests = this.parentElement.parentElement.getElementsByClassName("fill-exam-request-comment");
+        if (requests != undefined) {
+            document.getElementById("requests").removeChild(document.getElementById("fill-exam-request-comment-li-" + this.getAttribute("requestid")));
+            // remove that entry from the database with ajax
+            mark_request_as_done(this.getAttribute("requestid"), 'fill-exam', this.attributes.courseid.value);
         }
     }
 });
@@ -96,7 +111,7 @@ $(document).ready(function () {
     $('#requestquestionsform').on('submit', function () {
         let $selecteduser = $('#id_selectedusers').val();
         let textarea_value = $('.requestquestionscomment').val();
-        debugger
+
         if ($selecteduser && $selecteduser.length == 0 || textarea_value == '') {
             alert("Es muss mindestens ein Fragenersteller ausgewählt sein und ein Kommentar eingegeben werden.");
             return false;
@@ -106,7 +121,7 @@ $(document).ready(function () {
     });
 
     // $('.form-autocomplete-selection').on('keypress', function () {
-    //     debugger
+    //
     //     var textarea_value = $('.requestquestionscomment').val();
     //     if (textarea_value != '') {
     //         $('.requestquestionssubmit').attr('disabled', false);

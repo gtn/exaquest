@@ -78,12 +78,18 @@
                                     {{>block_exaquest/popup_exams_for_me_to_create}}
                                 {{/exams_for_me_to_create_popup}}
                             {{/fachlicherpruefer}}
+                            {{#addquestiontoexam}}
+                                {{#popup_exams_for_me_to_fill}}
+                                    {{>block_exaquest/popup_exams_for_me_to_fill}}
+                                {{/popup_exams_for_me_to_fill}}
+                            {{/addquestiontoexam}}
                         </div>
                         {{#request_exams_popup}}
                             <div class="card-footer">
                                 {{>block_exaquest/popup_request_exams}}
                             </div>
                         {{/request_exams_popup}}
+
                     </div>
                 </div>
             </div>

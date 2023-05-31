@@ -15,8 +15,6 @@ $string['category_settings'] = 'Kategorieeinstellungen';
 $string['save_and_return'] = 'Speichern und zu Exaquest';
 $string['todos_are_open'] = ' TODOs sind offen.';
 
-
-
 $string['request_questions'] = 'Neue Frage anfordern';
 $string['request_questions_label'] = 'Neue Frage anforderen von ...';
 $string['request_questions_comment_placeholder'] = 'Welche Art von Frage wird benötigt? Verpflichtendes Feld.';
@@ -34,31 +32,43 @@ $string['request_exams_comment_placeholder'] = 'Welche Art von Prüfung wird ben
 $string['request_exams_button'] = 'Anfordern';
 
 
+$string['set_quizquestioncount'] = 'Benötigte Fragenanzahl pro Fragefach festlegen';
+
 $string['mark_as_done'] = 'Als erledigt markieren';
 $string['mark_selected_as_done_button'] = 'Selektierte Anfragen als erledigt markieren';
 
-
+$string['assign_addquestions'] = 'Fragenzuweisung anfordern';
+$string['assign_addquestions_label'] = 'Fragenzuweisung anfordern von ...';
+$string['assign_addquestions_comment_placeholder'] = 'Kommentar an die ausgewählten Personen';
 
 // Messages
-$string['messageprovider:newquestionsrequest'] = 'Neue Fragen wurden angefordert';
-$string['please_create_new_questions'] = 'Bitte erstellen Sie eine neue Frage in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
+$string['messageprovider:fillexam'] = 'Neue Fragen wurden angefordert';
+$string['please_create_new_questions'] =
+    'Bitte erstellen Sie eine neue Frage in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
 $string['please_create_new_questions_subject'] = 'Bitte erstellen Sie eine neue Frage in {$a->fullname}';
 
+$string['messageprovider:fillexam'] = 'Eine Prüfung soll befüllt werden';
+$string['please_fill_exam'] =
+    'Bitte befüllen Sie die Prüfung <a href="{$a->url}">{$a->fullname}</a> mit Fragen. Kommentar: {$a->requestcomment}';
+$string['please_fill_exam_subject'] = 'Bitte befüllen Sie die Prüfung {$a->fullname} mit Fragen';
+
 $string['messageprovider:newexamsrequest'] = 'Neue Prüfungen wurden angefordert';
-$string['please_create_new_exams'] = 'Bitte erstellen Sie eine neue Prüfung in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
+$string['please_create_new_exams'] =
+    'Bitte erstellen Sie eine neue Prüfung in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
 $string['please_create_new_exams_subject'] = 'Bitte erstellen Sie eine neue Prüfung in {$a->fullname}';
 
 $string['messageprovider:revisequestion'] = 'Fragen wurden zur Überarbeitung zugeteilt';
-$string['please_revise_question'] = 'Bitte überarbeiten Sie die Frage <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
+$string['please_revise_question'] =
+    'Bitte überarbeiten Sie die Frage <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
 $string['please_revise_question_subject'] = 'Bitte überarbeiten Sie die Frage {$a->fullname}';
 
 $string['messageprovider:releasequestion'] = 'Fragen wurden begutachtet und können freigegeben werden';
 $string['please_release_question'] = 'Bitte geben Sie die Frage <a href="{$a->url}">{$a->fullname}</a> frei.';
 $string['please_release_question_subject'] = 'Bitte geben Sie die Frage {$a->fullname} frei.';
 
-
 $string['messageprovider:reviewquestion'] = 'Fragen wurden zum Beurteilen zugeteilt';
-$string['please_review_question'] = 'Bitte beurteilen Sie die Frage in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
+$string['please_review_question'] =
+    'Bitte beurteilen Sie die Frage in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
 $string['please_review_question_subject'] = 'Bitte beurteilen Sie die Frage {$a->fullname}';
 
 $string['messageprovider:dailytodos'] = 'Tägliche todo Nachricht';
@@ -67,19 +77,16 @@ $string['dailytodos_subject'] = 'Exaquest TODOs';
 $string['todos_in_course'] = '{$a->todoscount} TODOs in Kurs <a href="{$a->url}">{$a->fullname}</a><br>';
 
 $string['messageprovider:daily_released_questions'] = 'Gestern veröffentlichte Fragen';
-$string['daily_released_questions'] = 'Es wurden gestern Fragen in folgenden Kursen veröffentlicht: <br> {$a->daily_released_questions_message}';
+$string['daily_released_questions'] =
+    'Es wurden gestern Fragen in folgenden Kursen veröffentlicht: <br> {$a->daily_released_questions_message}';
 $string['daily_released_questions_subject'] = 'Exaquest veröffentlichte Fragen';
-$string['daily_released_questions_in_course'] = '{$a->daily_released_questions} Fragen wurden gestern in  <a href="{$a->url}">{$a->fullname}</a> veröffentlicht.<br>';
-
-
-
-
+$string['daily_released_questions_in_course'] =
+    '{$a->daily_released_questions} Fragen wurden gestern in  <a href="{$a->url}">{$a->fullname}</a> veröffentlicht.<br>';
 
 // Roles and Capabilities
 $string['exaquest:fragenersteller'] = 'Erstellen von Fragen in Exaquest';
 $string['exaquest:modulverantwortlicher'] = 'Verantwortlich für ein Modul';
 $string['setuproles'] = 'Erstellen von Rollen und Erlaubnissen';
-
 
 // Exams
 
@@ -99,9 +106,6 @@ $string['add_questions_to_these_exams'] = 'Fügen Sie Fragen zu folgenden Prüfu
 $string['usage_check_column'] = 'Verwendungsüberprüfung';
 $string['check_added_questions'] = 'Zugeordnete Fragen überprüfen';
 $string['remove_from_quiz'] = 'Frage von Prüfung entfernen';
-
-
-
 
 // Dasboardcard
 $string['questions_overview_title'] = 'FRAGEN';
@@ -127,18 +131,19 @@ $string['my_questions_count'] = 'Fragen von mir erstellt';
 $string['my_questions_finalised_count'] = 'Meine begutachteten Fragen';
 $string['my_questions_to_review_count'] = 'Meine Fragen zu begutachten';
 
-
 $string['list_of_exams_with_status'] = 'Liste von Prüfungen mit Status:';
 $string['create_new_exam_button'] = 'Neue Prüfung erstellen';
 
-
 $string['questions_for_me_to_review'] = 'Fragen soll ich begutachten';
 $string['questions_for_me_to_submit'] = 'Fragen soll ich einreichen';
-$string['questions_for_me_to_create'] = 'Fragen soll ich erstellen';
+$string['questions_for_me_to_create'] = 'Folgende Fragen sind noch zu erstellen';
+$string['questions_for_me_to_create_title'] = 'Fragen die ich erstellen soll';
 $string['questions_for_me_to_revise'] = 'Fragen soll ich überarbeiten';
 $string['questions_for_me_to_release'] = 'Fragen soll ich freigeben';
 $string['compare_questions'] = 'Fragen vergleichen';
 $string['exams_for_me_to_create'] = 'Prüfungen soll ich erstellen';
+$string['exams_for_me_to_fill'] = 'Prüfungen soll ich mit Fragen befüllen';
+$string['exams_for_me_to_fill_title'] = 'Prüfungen die ich mit Fragen befüllen soll';
 
 //Questionbank
 
@@ -167,24 +172,36 @@ $string['fachlich_review_done'] = 'Fachlich finalisieren';
 $string['revise_question'] = 'Frage zur Überarbeitung schicken';
 $string['release_question'] = 'Frage freigeben';
 $string['skip_and_release_question'] = 'Überspringen und Freigeben';
-$string['release_question_warning'] = 'Sind Sie sicher, dass Sie die Begutachtung überspringen und die Frage direkt freigeben wollen?';
+$string['release_question_warning'] =
+    'Sind Sie sicher, dass Sie die Begutachtung überspringen und die Frage direkt freigeben wollen?';
 $string['release_question_warning_title'] = 'Warnung';
 $string['change_status'] = 'Status verändern';
-$string['notification_will_be_sent_to_pk'] = 'Die Prüfungskoordination wird auch eine Benachrichtigung erhalten, die formale Begutachtung durchzuführen.';
+$string['notification_will_be_sent_to_pk'] =
+    'Die Prüfungskoordination wird auch eine Benachrichtigung erhalten, die formale Begutachtung durchzuführen.';
+
+$string['new_question'] = 'Neu erstellt';
+$string['to_revise'] = 'Zu überabeiten';
+$string['to_assess'] = 'Zu begutachten';
+$string['formal_done'] = 'Formal finalisiert';
+$string['fachlich_done'] = 'Fachlich finalisiert';
+$string['finalised'] = 'Finalisiert';
+$string['released'] = 'Freigegeben';
+
+$string['question_id'] = 'Fragen ID';
+$string['ownername'] = 'Erstellt von';
+$string['lastchanged'] = 'Zuletzt verändert';
+
 
 $string['open_for_review_text'] = 'Begutachtung zuteilen zu..';
 $string['revise_text'] = 'Überarbeitung zuteilen zu..';
 $string['open_for_review_title'] = 'Begutachtung';
 $string['revise_title'] = 'Überarbeitung';
 
-
 //Category Settings
 $string['settings_title'] = 'Kategorieeinstellungen';
 $string['settings_description'] = 'Bitte nur eine Kategorie pro Zeile einfügen';
 
 $string['category_options'] = 'Fragekategorien';
-
-
 
 // Similarity Comparison
 $string['exaquest:similarity_title'] = 'Ähnlichkeitsvergleich';
@@ -222,11 +239,14 @@ $string['exaquest:similarity_settings_algorithm_desc'] = 'Similarity Comparison 
 $string['exaquest:similarity_settings_algorithm_jarowinkler'] = 'Jaro Winkler';
 $string['exaquest:similarity_settings_algorithm_smithwaterman'] = 'Smith Waterman Gotoh';
 $string['exaquest:similarity_settings_threshold'] = 'Threshold [0.0-1.0]';
-$string['exaquest:similarity_settings_threshold_desc'] = 'Defines the threshold for considering two questions similar, range [0.0-1.0]';
+$string['exaquest:similarity_settings_threshold_desc'] =
+    'Defines the threshold for considering two questions similar, range [0.0-1.0]';
 $string['exaquest:similarity_settings_jwminprefixlength'] = 'Jaro Winkler - Minimum Prefix Length';
-$string['exaquest:similarity_settings_jwminprefixlength_desc'] = 'Jaro–Winkler similarity uses a prefix scale p which gives more favorable ratings to strings that match from the beginning for a set prefix length';
+$string['exaquest:similarity_settings_jwminprefixlength_desc'] =
+    'Jaro–Winkler similarity uses a prefix scale p which gives more favorable ratings to strings that match from the beginning for a set prefix length';
 $string['exaquest:similarity_settings_jwprefixscale'] = 'Jaro Winkler - Minimum Prefix Scale';
-$string['exaquest:similarity_settings_jwprefixscale_desc'] = 'The prefix scale should not exceed 1/minPrefixLength, otherwise the similarity may be greater than 1, i.e. for a prefix length of 4, the scale should not exceed 0.25';
+$string['exaquest:similarity_settings_jwprefixscale_desc'] =
+    'The prefix scale should not exceed 1/minPrefixLength, otherwise the similarity may be greater than 1, i.e. for a prefix length of 4, the scale should not exceed 0.25';
 $string['exaquest:similarity_settings_swgmatchmalue'] = 'Smith Waterman Gotoh - Match Value';
 $string['exaquest:similarity_settings_swgmatchmalue_desc'] = 'value when characters are equal (must be greater than mismatchValue)';
 $string['exaquest:similarity_settings_swgmismatchvalue'] = 'Smith Waterman Gotoh - Mismatch Value';
@@ -234,60 +254,70 @@ $string['exaquest:similarity_settings_swgmismatchvalue_desc'] = 'penalty when ch
 $string['exaquest:similarity_settings_swggapvalue'] = 'Smith Waterman Gotoh - Gap Value';
 $string['exaquest:similarity_settings_swggapvalue_desc'] = 'a non-positive gap penalty';
 $string['exaquest:similarity_settings_nrofthreads'] = 'Number of threads';
-$string['exaquest:similarity_settings_nrofthreads_desc'] = 'if this value is greater than 1, it will utilize a multi-threaded implementation to compute the similarity, which should be much more performant for greater datasets';
-
+$string['exaquest:similarity_settings_nrofthreads_desc'] =
+    'if this value is greater than 1, it will utilize a multi-threaded implementation to compute the similarity, which should be much more performant for greater datasets';
 
 // capabilites
 $string['exaquest:myaddinstance'] = 'myaddinstance';
-$string['exaquest:addinstance'] =   'addinstance';
+$string['exaquest:addinstance'] = 'addinstance';
 
 $string['exaquest:fragenersteller'] = 'Fragenersteller';
 $string['exaquest:modulverantwortlicher'] = 'Modulverantwortlicher';
-$string['exaquest:admintechnpruefungsdurchf'] ='Admintechnischeprüfungsdurchführung';
-$string['exaquest:pruefungskoordination'] ='Prüfungskoordination';
-$string['exaquest:pruefungsstudmis'] ='Prüfungsstudentischermitarbeiter';
-$string['exaquest:fachlfragenreviewer'] ='Fachlicherfragenreviewer';
-$string['exaquest:beurteilungsmitwirkende'] ='Beurteilungsmitwirkende';
-$string['exaquest:fachlicherpruefer'] ='Fachlicherprüfer';
-$string['exaquest:pruefungsmitwirkende'] ='Prüfungsmitwirkende';
-$string['exaquest:fachlicherzweitpruefer'] ='Fachlicherzweitprüfer';
-$string['exaquest:fachlfragenreviewerlight'] ='Fachlfragenreviewerlight';
-$string['exaquest:fragenerstellerlight'] ='Fragenerstellerlight';
+$string['exaquest:admintechnpruefungsdurchf'] = 'Admintechnischeprüfungsdurchführung';
+$string['exaquest:pruefungskoordination'] = 'Prüfungskoordination';
+$string['exaquest:pruefungsstudmis'] = 'Prüfungsstudentischermitarbeiter';
+$string['exaquest:fachlfragenreviewer'] = 'Fachlicherfragenreviewer';
+$string['exaquest:beurteilungsmitwirkende'] = 'Beurteilungsmitwirkende';
+$string['exaquest:fachlicherpruefer'] = 'Fachlicherprüfer';
+$string['exaquest:pruefungsmitwirkende'] = 'Prüfungsmitwirkende';
+$string['exaquest:fachlicherzweitpruefer'] = 'Fachlicherzweitprüfer';
+$string['exaquest:fachlfragenreviewerlight'] = 'Fachlfragenreviewerlight';
+$string['exaquest:fragenerstellerlight'] = 'Fragenerstellerlight';
 
 $string['exaquest:readallquestions'] = 'Lesen aller Fragen im freigegebene Fragenpool des zugeordneten Moduls (Module)';
 $string['exaquest:readquestionstatistics'] = 'Fragenstatistik abfragen (Anzahl Fragen je Status, je Kategorie, je QS-Kennzahl...)';
-$string['exaquest:changestatusofreleasedquestions'] = 'Kommentar / Markierung von freigegebenen fremden Fragen im Fragenpool (zB Status-Änderung auf "Qualitätsprüfung erforderlich" Kommentar hier verpflichtend – Frage wird aus Fragenpool entfernt, kann nicht mehr zur Prüfung verwendet werden, bis wieder "Frage freigegeben"). ';
+$string['exaquest:changestatusofreleasedquestions'] =
+    'Kommentar / Markierung von freigegebenen fremden Fragen im Fragenpool (zB Status-Änderung auf "Qualitätsprüfung erforderlich" Kommentar hier verpflichtend – Frage wird aus Fragenpool entfernt, kann nicht mehr zur Prüfung verwendet werden, bis wieder "Frage freigegeben"). ';
 $string['exaquest:createquestion'] = 'Erstellen einer neuen Frage';
-$string['exaquest:setstatustoreview'] = 'Neue / geänderte eigene Frage zum Review freigeben (Status "zum Review": fachlichen Reviewer eintragen, automatisch auch zur Prüfungskoordination) (Eventuell optional ZML klärt mit MOVER)';
+$string['exaquest:setstatustoreview'] =
+    'Neue / geänderte eigene Frage zum Review freigeben (Status "zum Review": fachlichen Reviewer eintragen, automatisch auch zur Prüfungskoordination) (Eventuell optional ZML klärt mit MOVER)';
 $string['exaquest:reviseownquestion'] = 'Überarbeitung der eigenen Fragen';
 $string['exaquest:setstatustofinalised'] = 'Eigene Frage für Fragenpool freigeben (Status "Frage finalisiert")';
 $string['exaquest:viewownrevisedquestions'] = 'Anzeige der begutachteten eigenen Fragen im Dashboard ';
-$string['exaquest:viewquestionstoreview'] = 'Anzeige zum Review zugeordnete Fragen (nur vom Modul, wo Zugriff besteht) im Dashboard';
-$string['exaquest:editquestiontoreview'] = 'Zum Review zugeordnete Fragen bearbeiten (neue Version erstellen) und/oder kommentieren  (Status: "Frage begutachtet" - dann automatisch zurück zum Fragenersteller – wenn keine Änderungen/Kommentar dann Status: "Frage finalisiert" – dann automatisch zum MOVE)';
+$string['exaquest:viewquestionstoreview'] =
+    'Anzeige zum Review zugeordnete Fragen (nur vom Modul, wo Zugriff besteht) im Dashboard';
+$string['exaquest:editquestiontoreview'] =
+    'Zum Review zugeordnete Fragen bearbeiten (neue Version erstellen) und/oder kommentieren  (Status: "Frage begutachtet" - dann automatisch zurück zum Fragenersteller – wenn keine Änderungen/Kommentar dann Status: "Frage finalisiert" – dann automatisch zum MOVE)';
 $string['exaquest:viewfinalisedquestions'] = 'Anzeige der finalisierten Fragen im Dashboard';
-$string['exaquest:viewquestionstorevise'] = 'Anzeige der zur Begutachtung markierten Fragen ("Qualitätsprüfung erforderlich") im Dashboard';
+$string['exaquest:viewquestionstorevise'] =
+    'Anzeige der zur Begutachtung markierten Fragen ("Qualitätsprüfung erforderlich") im Dashboard';
 $string['exaquest:releasequestion'] = 'Frage in Fragenpool aufnehmen (Status "Frage freigegeben")';
 $string['exaquest:editallquestions'] = 'Überarbeitung aller Fragen im zugeordneten Fragenpool inkl. Statusänderung';
 $string['exaquest:addquestiontoexam'] = 'Frage einer Prüfung zuordnen (Status "Frage zur Prüfung zugeordnet")';
 $string['exaquest:releaseexam'] = 'Prüfung zur Durchführung freigeben (Status "Prüfung freigegeben")';
 $string['exaquest:technicalreview'] = 'Formale Prüfung (existiert bereits) (Status: "Prüfung formal freigegeben"';
-$string['exaquest:executeexam'] = 'Prüfung durchführen - Passwort vergeben/bekannt geben, Prüfung sichtbar stellen, Dauer einstellen - automatische Abgabe (Status: "Prüfung in Durchführung")';
+$string['exaquest:executeexam'] =
+    'Prüfung durchführen - Passwort vergeben/bekannt geben, Prüfung sichtbar stellen, Dauer einstellen - automatische Abgabe (Status: "Prüfung in Durchführung")';
 $string['exaquest:assignsecondexaminator'] = 'Zweitprüfer für kommissionelle Prüfung festlegen (zwei Zweitprüfer)';
 $string['exaquest:definequestionblockingtime'] = 'Zeitraum für Fragensperre festlegen (default 1 Jahr)';
 $string['exaquest:viewexamresults'] = 'Prüfungsergebnisse einsehen (Status: "Prüfung abgeschlossen")';
 $string['exaquest:gradeexam'] = 'Prüfung beurteilen (Status "Prüfung beurteilt")';
 $string['exaquest:createexamstatistics'] = '(Qualitäts-)Statistik zur Prüfung und der verwendeten Fragen generieren';
 $string['exaquest:viewexamstatistics'] = '(Qualitäts-)Statistik zur Prüfung und der verwendeten Fragen ansehen';
-$string['exaquest:correctexam'] = 'Prüfung korrigieren (Fragen aus der Beurteilung nehmen – Zweitprüfer festlegen: Eine Person) (Status Prüfung: "Beurteilung geändert")';
+$string['exaquest:correctexam'] =
+    'Prüfung korrigieren (Fragen aus der Beurteilung nehmen – Zweitprüfer festlegen: Eine Person) (Status Prüfung: "Beurteilung geändert")';
 $string['exaquest:acknowledgeexamcorrection'] = 'Korrigierte Prüfung bestätigen (Status Prüfung; "Beurteilungsänderung bestätigt")';
 $string['exaquest:releaseexamgrade'] = 'Beurteilung freigeben (Status "Prüfungsbeurteilung freigegeben")';
-$string['exaquest:releasecommissionalexamgrade'] = 'Beurteilung kommissioneller Prüfung freigeben (Status "Kommissionelle Prüfungsbeurteilung freigegeben") VERPFLICHTEND von 3 Personen';
+$string['exaquest:releasecommissionalexamgrade'] =
+    'Beurteilung kommissioneller Prüfung freigeben (Status "Kommissionelle Prüfungsbeurteilung freigegeben") VERPFLICHTEND von 3 Personen';
 $string['exaquest:exportgradestokusss'] = 'Notenexport ins KUSSS';
 $string['exaquest:executeexamreview'] = 'Prüfungseinsicht durchführen';
 $string['exaquest:addparticipanttomodule'] = 'Personen einem Modul zuordnen';
 $string['exaquest:assignroles'] = 'Rollen zuordnen';
-$string['exaquest:changerolecapabilities'] = 'Rechte in den Rollen ändern (doppelte Anmeldung: neue Nutzerdatenanmeldung, um nicht versehentlich etwas zu ändern)';
-$string['exaquest:createroles'] = 'Neue Rolle anlegen und Rechte zuweisen (doppelte Anmeldung: neue Nutzerdatenanmeldung, um nicht versehentlich etwas zu ändern)';
+$string['exaquest:changerolecapabilities'] =
+    'Rechte in den Rollen ändern (doppelte Anmeldung: neue Nutzerdatenanmeldung, um nicht versehentlich etwas zu ändern)';
+$string['exaquest:createroles'] =
+    'Neue Rolle anlegen und Rechte zuweisen (doppelte Anmeldung: neue Nutzerdatenanmeldung, um nicht versehentlich etwas zu ändern)';
 
 // Defined during development
 $string['exaquest:viewstatistic'] = 'View statistics tab in exaquest';
@@ -304,11 +334,18 @@ $string['exaquest:viewfinishedexams'] = 'View finished exams in exaquest';
 $string['exaquest:viewgradesreleasedexams'] = 'View released exams in exaquest';
 $string['exaquest:viewnewexams'] = 'View new exams in exaquest';
 $string['exaquest:viewgradesreleasedexams'] = 'View exams where grades have been released in exaquest';
-
-
+$string['exaquest:assignaddquestions'] = 'Assign user to add questions to exams';
+$string['exaquest:createexam'] = 'Create exams in exaquest';
+$string['exaquest:dofachlichreview'] = 'Do fachlich review';
+$string['exaquest:doformalreview'] = 'Do formal review';
+$string['exaquest:exaquestuser'] = 'Is an exaquest user';
+$string['exaquest:viewactiveexams'] = 'View active exams in exaquest';
+$string['exaquest:viewownquestions'] = 'View own questions in exaquest';
+$string['exaquest:viewreleasedexams'] = 'View released exams in exaquest';
 
 // tasks
-$string['check_active_exams'] = 'Update alle bereits beendeten Prüfungen welche den Status "aktiv" in Exaquest haben, und aktualisiere den Status.';
+$string['check_active_exams'] =
+    'Update alle bereits beendeten Prüfungen welche den Status "aktiv" in Exaquest haben, und aktualisiere den Status.';
 $string['clean_up_tables'] = 'Säubere die Exaquest Tabellen, falls fehlerhafte Daten bestehen.';
 $string['create_daily_notifications'] = 'Erstelle die täglichen Exaquest-Nachrichten.';
 $string['set_up_roles'] = 'Rollen für Exaquest aufsetzen.';

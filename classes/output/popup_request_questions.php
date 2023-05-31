@@ -55,6 +55,7 @@ class popup_request_questions implements renderable, templatable {
         $data->action =
             $PAGE->url->out(false, array('action' => 'request_questions', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
         $data->sesskey = sesskey();
+
         return $data;
     }
 }

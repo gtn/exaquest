@@ -196,15 +196,15 @@ class exaquest_finished_exam_view extends exaquest_exam_view
         }
 
 
-        // New plugins added at the end of the array, will change in sorting feature.
-        foreach ($newpluginclasscolumns as $key => $newpluginclasscolumn) {
-            $questionbankclasscolumns[$key] = $newpluginclasscolumn;
-        }
-        // Check if qbank_columnsortorder is enabled.
-        if (array_key_exists('columnsortorder', core_plugin_manager::instance()->get_enabled_plugins('qbank'))) {
-            $columnorder = new column_manager();
-            $questionbankclasscolumns = $columnorder->get_sorted_columns($questionbankclasscolumns);
-        }
+        //// New plugins added at the end of the array, will change in sorting feature.
+        //foreach ($newpluginclasscolumns as $key => $newpluginclasscolumn) {
+        //    $questionbankclasscolumns[$key] = $newpluginclasscolumn;
+        //}
+        //// Check if qbank_columnsortorder is enabled.
+        //if (array_key_exists('columnsortorder', core_plugin_manager::instance()->get_enabled_plugins('qbank'))) {
+        //    $columnorder = new column_manager();
+        //    $questionbankclasscolumns = $columnorder->get_sorted_columns($questionbankclasscolumns);
+        //}
 
         // Mitigate the error in case of any regression.
         foreach ($questionbankclasscolumns as $shortname => $questionbankclasscolumn) {
@@ -249,8 +249,8 @@ class exaquest_finished_exam_view extends exaquest_exam_view
                 }
             } else {
                 if ($CFG->usetags) {
-                    //   array_unshift($this->searchconditions,
-                    //     new \core_question\bank\search\tag_condition([$catcontext, $thiscontext], $tagids));
+                       array_unshift($this->searchconditions,
+                         new \core_question\bank\search\tag_condition([$catcontext, $thiscontext], $tagids));
                 }
 
                 //array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));

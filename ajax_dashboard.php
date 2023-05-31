@@ -4,13 +4,17 @@ require __DIR__ . '/inc.php';
 global $DB, $CFG, $COURSE, $USER;
 
 $action = required_param('action', PARAM_TEXT);
-
-require_login($COURSE->id);
+$courseid = required_param('courseid', PARAM_INT);
+require_login($courseid);
 
 switch ($action) {
     case ('mark_exam_request_as_done'):
         $requestid = required_param('requestid', PARAM_INT);
         $DB->delete_records(BLOCK_EXAQUEST_DB_REQUESTEXAM, array('id' => $requestid));
+        break;
+    case ('mark_fill_exam_request_as_done'):
+        $requestid = required_param('requestid', PARAM_INT);
+        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $requestid));
         break;
     case ('mark_question_request_as_done'):
         $requestid = required_param('requestid', PARAM_INT);

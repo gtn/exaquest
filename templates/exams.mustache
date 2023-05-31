@@ -3,7 +3,7 @@
     {{#viewnewexams}}
             <a href="{{create_exam_link}}" type="submit" class="btn
             btn-secondary"
-            value="">{{#str}}create_new_exam_button, block_exaquest {{/str}}</a>
+               value="">{{#str}}create_new_exam_button, block_exaquest {{/str}}</a>
             <div class="examcard">
                 <h4>{{#str}}new_exams, block_exaquest {{/str}}</h4>
                 <p>{{#str}}add_questions_to_these_exams, block_exaquest {{/str}}</p>
@@ -27,11 +27,28 @@
                                 <a href="{{got_to_exam_view}}&quizid={{quizid}}" type="submit" class="btn btn-primary"
                                 value="">{{#str}}check_added_questions, block_exaquest {{/str}}</a>
                             </td>
-                            <td>
-                                <button type="submit" class="btn btn-primary change-exam-status-button"
-                                        value="create_exam" quizid={{quizid}}>Prüfung zur Begutachtung schicken
-                                </button>
-                            </td>
+                            {{#createexam}}
+                                <td>
+                                    <button type="submit" class="btn btn-primary change-exam-status-button"
+                                            value="create_exam" quizid={{quizid}} courseid={{courseid}}>Prüfung zur
+                                        Begutachtung schicken
+                                    </button>
+                                </td>
+                            {{/createexam}}
+                            {{#assignaddquestions}}
+                                <td>
+                                    {{#popup_assign_addquestions}}
+                                        {{>block_exaquest/popup_assign_addquestions}}
+                                    {{/popup_assign_addquestions}}
+                                </td>
+                            {{/assignaddquestions}}
+                            {{#setquestioncount}}
+                                <td>
+                                    {{#popup_setquizquestioncount}}
+                                        {{>block_exaquest/popup_setquizquestioncount}}
+                                    {{/popup_setquizquestioncount}}
+                                </td>
+                            {{/setquestioncount}}
                         </tr>
                     {{/new_exams}}
                     </tbody>
@@ -55,19 +72,21 @@
                                 {{name}} </a>
                             </td>
                             <td>
-                                <a href="{{got_to_exam_view}}&quizid={{quizid}}" type="submit" class="btn btn-primary"
+                                <a href="{{got_to_exam_view}}&quizid={{quizid}}" type="submit" class="btn
+                                btn-primary"
                                 value="">{{#str}}check_added_questions, block_exaquest {{/str}}</a>
                             </td>
                             <td>
                                 <!--                    <input type="submit" class="btn btn-primary" value="Prüfung fachlich freigeben">-->
                                 <button type="submit" class="btn btn-primary change-exam-status-button"
-                                        value="fachlich_release_exam" quizid={{quizid}}>Prüfung
+                                        value="fachlich_release_exam" quizid={{quizid}}  courseid={{courseid}}>Prüfung
                                     fachlich freigeben
                                 </button>
                             </td>
                             <td>
                                 <button type="submit" class="btn btn-primary change-exam-status-button"
-                                        value="request_revision" quizid={{quizid}}>Prüfung zur Überarbeitung
+                                        value="request_revision" quizid={{quizid}} courseid={{courseid}}>Prüfung zur
+                                    Überarbeitung
                                     zurückschicken
                                 </button>
                             </td>
@@ -94,12 +113,14 @@
                                 {{name}} </a>
                             </td>
                             <td>
-                                <a href="{{got_to_exam_view}}&quizid={{quizid}}" type="submit" class="btn btn-primary"
+                                <a href="{{got_to_exam_view}}&quizid={{quizid}}" type="submit" class="btn
+                                btn-primary"
                                 value="">{{#str}}check_added_questions, block_exaquest {{/str}}</a>
                             </td>
                             <td>
                                 <button type="submit" class="btn btn-primary change-exam-status-button"
-                                        value="formal_release_exam" quizid={{quizid}}>Prüfung formal freigeben
+                                        value="formal_release_exam" quizid={{quizid}} courseid={{courseid}}>Prüfung
+                                    formal freigeben
                                 </button>
                             </td>
                         </tr>
@@ -114,7 +135,8 @@
 
             <div class="examcard">
                 <h4>{{#str}}formal_released_exams, block_exaquest {{/str}}</h4>
-                <p>Diese Prüfungen wurden fachlich und formal begutachtet. Freigabe zur Durchführung notwendig.</p>
+                <p>Diese Prüfungen wurden fachlich und formal begutachtet. Freigabe zur Durchführung
+                    notwendig.</p>
                 <table>
                     <thead></thead>
                     <tbody>
@@ -128,12 +150,14 @@
                                 {{name}} </a>
                             </td>
                             <td>
-                                <a href="{{got_to_exam_view}}&quizid={{quizid}}" type="submit" class="btn btn-primary"
+                                <a href="{{got_to_exam_view}}&quizid={{quizid}}" type="submit" class="btn
+                                btn-primary"
                                 value="">{{#str}}check_added_questions, block_exaquest {{/str}}</a>
                             </td>
                             <td>
                                 <button type="submit" class="btn btn-primary change-exam-status-button"
-                                        value="release_exam" quizid={{quizid}}>Zur Durchführung freigeben
+                                        value="release_exam" quizid={{quizid}} courseid={{courseid}}>Zur Durchführung
+                                    freigeben
                                 </button>
                             </td>
                         </tr>
@@ -164,7 +188,7 @@
                             </td>
                             <td>
                                 <button type="submit" class="btn btn-primary change-exam-status-button"
-                                        value="finish_exam" quizid={{quizid}}>Prüfung beenden
+                                        value="finish_exam" quizid={{quizid}} courseid={{courseid}}>Prüfung beenden
                                 </button>
                             </td>
                         </tr>
@@ -192,7 +216,9 @@
                             </td>
                             <td>
                                 <button type="submit" class="btn btn-primary change-exam-status-button"
-                                        value="release_grades" quizid={{quizid}}>Noten freigeben (TODO: was soll hier
+                                        value="release_grades" quizid={{quizid}} courseid={{courseid}}>Noten freigeben
+                                    (TODO: was soll
+                                    hier
                                     passieren?)
                                 </button>
                             </td>

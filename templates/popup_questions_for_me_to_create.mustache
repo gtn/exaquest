@@ -20,39 +20,42 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">{{#str}}
-                    questions_for_me_to_create, block_exaquest {{/str}}</h5>
+                    questions_for_me_to_create_title, block_exaquest {{/str}}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" id="modal-body-requests">
-            <p>{{#str}}
-                questions_for_me_to_create, block_exaquest {{/str}}
-                <br>
-                {{#questions_to_create}}
+            <div class="modal-body">
 
-                    <!--                        <br>-->
-                    <!--                        <input type="checkbox" id={{id}} class="userselectioncheckbox"-->
-                    <!--                               name="selectedusers[{{id}}]" value={{id}}>-->
-                    <!--                        <label for="selectedusers[{{id}}]">{{comment}}</label>-->
-
-
-                    <p class="request-comment" id="request-comment-p-{{id}}">
-                        - {{comment}}
-                        <a id="request-comment-a-{{id}}" class="mark-question-request-as-done-button"
-                           href="#"
-                           title="{{#str}} mark_as_done, block_exaquest {{/str}}"
-                           requestid= {{id}}
-                                   role="button"
-                           aria-label="{{#str}} mark_as_done, block_exaquest {{/str}}">
-                            <span class="normal-icon">{{#pix}} t/markasread, core {{/pix}}</span>
-                        </a>
-                    </p>
-
-                    <!--                        <a href="#" class="mark-request-as-done-button">{{#pix}} t/markasread, core, mark as done {{/pix}}</a>-->
-                {{/questions_to_create}}
                 <div id="popup_create_questions_div"></div>
                 </p>
+
+                <p>{{#str}}
+                    questions_for_me_to_create, block_exaquest {{/str}}
+                    <br>
+                <ul class="list-group list-todo-request-quest" id="requests">
+                    {{#questions_to_create}}
+                        <li class="list-group-item d-flex justify-content-between align-items-start request-comment"
+                            id="request-comment-li-{{id}}">
+                            <span class="flex-grow-1">{{comment}}</span>
+                            <button id="request-comment-button-{{id}}"
+                                    class="mark-question-request-as-done-button btn btn-light btn-sm ml-2"
+                                    requestid= {{id}}
+                                    courseid={{courseid}}>
+                                <i class="icon fa fa-times fa-fw mr-1"></i> Erledigt
+                            </button>
+                            <!--                            <a id="request-comment-a-{{id}}" class="mark-question-request-as-done-button"
+                               href="#"
+                               title="{{#str}} mark_as_done, block_exaquest {{/str}}"
+                               courseid={{courseid}}
+                               requestid= {{id}}
+                                       role="button"
+                               aria-label="{{#str}} mark_as_done, block_exaquest {{/str}}">
+                                <button class="btn btn-light btn-sm ml-2"><i class="icon fa fa-times fa-fw mr-1"></i> Erledigt</button>
+                            </a>-->
+                        </li>
+                    {{/questions_to_create}}
+                </ul>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

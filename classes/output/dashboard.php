@@ -18,7 +18,7 @@ class dashboard implements renderable, templatable {
     private $coursecategoryid;
 
     public function __construct($userid, $courseid, $capabilities, $fragenersteller, $questions_to_create, $coursecategoryid,
-        $fachlichepruefer, $exams_to_create) {
+        $fachlichepruefer, $exams_to_fill) {
         $this->courseid = $courseid;
         $this->capabilities = $capabilities;
         $this->userid = $userid;
@@ -28,9 +28,11 @@ class dashboard implements renderable, templatable {
         //$this->fragenersteller = $fragenersteller; // not needed here, since it is given to popup_request_questions and only needed there
         $this->request_questions_popup = new popup_request_questions($fragenersteller);
         $this->questions_for_me_to_create_popup = new popup_questions_for_me_to_create($questions_to_create);
-        $this->exams_for_me_to_create_popup = new popup_exams_for_me_to_create($exams_to_create);
+        //$this->exams_for_me_to_create_popup = new popup_exams_for_me_to_create($exams_to_create);
         $this->coursecategoryid = $coursecategoryid;
-        $this->request_exams_popup = new popup_request_exams($fachlichepruefer);
+        //$this->request_exams_popup = new popup_request_exams($fachlichepruefer);
+        $this->popup_exams_for_me_to_fill = new popup_exams_for_me_to_fill($exams_to_fill);
+        $this->exams_for_me_to_fill_count = count($exams_to_fill);
     }
 
     /**
@@ -139,6 +141,12 @@ class dashboard implements renderable, templatable {
                 "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_NEW_QUESTIONS));
         $data->questions_new_link = $data->questions_new_link->raw_out(false);
 
+        // links for the exams todos:
+        $data->quizzes_for_me_to_fill_link = new moodle_url('/blocks/exaquest/exams.php',
+            array('courseid' => $this->courseid));
+        $data->quizzes_for_me_to_fill_link = $data->quizzes_for_me_to_fill_link->raw_out(false);
+        $data->quizzes_for_me_to_fill_count = block_exaquest_get_quizzes_for_me_to_fill_count($this->userid);
+
         //$data->questions_released_link = new moodle_url('/blocks/exaquest/questbank.php',
         //    array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
         //        "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW));
@@ -156,17 +164,19 @@ class dashboard implements renderable, templatable {
         }
 
         $data->show_exams_heading = false;
-        if ($this->capabilities["releasequestion"]) {
-            $data->request_exams_popup = $this->request_exams_popup->export_for_template($output);
-            $data->show_exams_heading = true;
-        }
+        //if ($this->capabilities["releasequestion"]) {
+        //    $data->request_exams_popup = $this->request_exams_popup->export_for_template($output);
+        //    $data->show_exams_heading = true;
+        //}
 
         if ($this->capabilities["fachlicherpruefer"]) {
             $data->show_exams_heading = true;
         }
 
         $data->questions_for_me_to_create_popup = $this->questions_for_me_to_create_popup->export_for_template($output);
-        $data->exams_for_me_to_create_popup = $this->exams_for_me_to_create_popup->export_for_template($output);
+        $data->popup_exams_for_me_to_fill = $this->popup_exams_for_me_to_fill->export_for_template($output);
+        //$data->exams_for_me_to_create_popup = $this->exams_for_me_to_create_popup->export_for_template($output);
+        $data->exams_for_me_to_fill_count = $this->exams_for_me_to_fill_count;
 
         // similarity comparison button
         $data->buttons = [

@@ -1,7 +1,8 @@
 $(document).on('click', '.change-exam-status-button', function () {
     let data = {
         action: this.value,
-        quizid: this.attributes.quizid.value
+        quizid: this.attributes.quizid.value,
+        courseid: this.attributes.courseid.value
     };
 
     $.ajax({
