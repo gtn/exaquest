@@ -48,6 +48,12 @@
     min-width: 50px;
 }
 
+/* make the badge-primary*/
+.exaquest-dashboard-card .btn.btn-light .badge-outer .tododoscounter:not(.badge-primary) {
+    background-color: gray;
+    color: white;
+}
+
 .exaquest-dashboard-card .btn.btn-light.disabled {
     font-style: normal;
 }
