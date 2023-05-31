@@ -549,5 +549,16 @@ function xmldb_block_exaquest_upgrade($oldversion) {
         upgrade_block_savepoint(true, 2023053000, 'exaquest');
     }
 
+
+    if ($oldversion < 2023053101) {
+        // rename table exaquestquizcommment to exaquestquizcomment
+        $table = new xmldb_table('block_exaquestquizcommment');
+        if ($dbman->table_exists($table)) {
+            $dbman->rename_table($table, 'block_exaquestquizcomment');
+        }
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2023053101, 'exaquest');
+    }
+
     return $return_result;
 }

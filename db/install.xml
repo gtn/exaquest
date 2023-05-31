@@ -187,7 +187,7 @@
                 <KEY NAME="assigneeid" TYPE="foreign" FIELDS="assigneeid" REFTABLE="user" REFFIELDS="id"/>
             </KEYS>
         </TABLE>
-        <TABLE NAME="block_exaquestquizcommment"
+        <TABLE NAME="block_exaquestquizcomment"
                COMMENT="Comments made to a quiz. During the whole process, people can comment on quizzes e.g. 'this need to be revised because of xxx'">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id"/>

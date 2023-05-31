@@ -18,7 +18,7 @@ class dashboard implements renderable, templatable {
     private $coursecategoryid;
 
     public function __construct($userid, $courseid, $capabilities, $fragenersteller, $questions_to_create, $coursecategoryid,
-        $fachlichepruefer, $exams_to_create) {
+        $fachlichepruefer, $exams_to_fill) {
         $this->courseid = $courseid;
         $this->capabilities = $capabilities;
         $this->userid = $userid;
@@ -31,6 +31,8 @@ class dashboard implements renderable, templatable {
         //$this->exams_for_me_to_create_popup = new popup_exams_for_me_to_create($exams_to_create);
         $this->coursecategoryid = $coursecategoryid;
         //$this->request_exams_popup = new popup_request_exams($fachlichepruefer);
+        $this->popup_exams_for_me_to_fill = new popup_exams_for_me_to_fill($exams_to_fill);
+        $this->exams_for_me_to_fill_count = count($exams_to_fill);
     }
 
     /**
@@ -172,7 +174,9 @@ class dashboard implements renderable, templatable {
         }
 
         $data->questions_for_me_to_create_popup = $this->questions_for_me_to_create_popup->export_for_template($output);
+        $data->popup_exams_for_me_to_fill = $this->popup_exams_for_me_to_fill->export_for_template($output);
         //$data->exams_for_me_to_create_popup = $this->exams_for_me_to_create_popup->export_for_template($output);
+        $data->exams_for_me_to_fill_count = $this->exams_for_me_to_fill_count;
 
         // similarity comparison button
         $data->buttons = [

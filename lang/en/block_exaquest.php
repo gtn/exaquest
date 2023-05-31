@@ -47,6 +47,11 @@ $string['please_create_new_questions'] =
     'Please create new questions in <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['please_create_new_questions_subject'] = 'Please create new questions in {$a->fullname}';
 
+$string['messageprovider:fillexam'] = 'Eine Prüfung soll befüllt werden';
+$string['please_fill_exam'] =
+    'Bitte befüllen Sie die Prüfung <a href="{$a->url}">{$a->fullname}</a> mit Fragen. Kommentar: {$a->requestcomment}';
+$string['please_fill_exam_subject'] = 'Bitte befüllen Sie die Prüfung {$a->fullname} mit Fragen';
+
 $string['messageprovider:newexamsrequest'] = 'New exams have been requested';
 $string['please_create_new_exams'] =
     'Please create new exams in <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
@@ -134,7 +139,8 @@ $string['questions_for_me_to_revise'] = 'Questions for me to revise';
 $string['questions_for_me_to_release'] = 'Questions for me to release';
 $string['compare_questions'] = 'Compare questions';
 $string['exams_for_me_to_create'] = 'Exams for me to create';
-$string['quizzes_for_me_to_fill'] = 'Exams for me to fill with questions';
+$string['exams_for_me_to_fill'] = 'Exams for me to fill with questions';
+$string['exams_for_me_to_fill_title'] = 'Prüfungen die ich mit Fragen befüllen soll';
 
 //Questionbank
 

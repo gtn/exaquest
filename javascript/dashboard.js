@@ -42,6 +42,8 @@ function mark_request_as_done(requestid, requesttype, courseid) {
     let action = '';
     if (requesttype == 'exam') {
         action = 'mark_exam_request_as_done';
+    } else if (requesttype == 'fill-exam') {
+        action = 'mark_fill_exam_request_as_done';
     } else {
         action = 'mark_question_request_as_done';
     }
@@ -88,6 +90,18 @@ $(document).on('click', '.mark-exam-request-as-done-button', function () {
             document.getElementById("requests").removeChild(document.getElementById("request-comment-p-" + this.getAttribute("requestid")));
             // remove that entry from the database with ajax
             mark_request_as_done(this.getAttribute("requestid"), 'exam', this.attributes.courseid.value);
+        }
+    }
+});
+
+$(document).on('click', '.mark-fill-exam-request-as-done-button', function () {
+    if (confirm("Wirklich als erledigt markieren?")) {
+        debugger
+        let requests = this.parentElement.parentElement.getElementsByClassName("fill-exam-request-comment");
+        if (requests != undefined) {
+            document.getElementById("requests").removeChild(document.getElementById("fill-exam-request-comment-li-" + this.getAttribute("requestid")));
+            // remove that entry from the database with ajax
+            mark_request_as_done(this.getAttribute("requestid"), 'fill-exam', this.attributes.courseid.value);
         }
     }
 });

@@ -37,6 +37,7 @@ const BLOCK_EXAQUEST_DB_REVISEASSIGN = 'block_exaquestreviseassign';
 const BLOCK_EXAQUEST_DB_QUIZASSIGN = 'block_exaquestquizassign';
 const BLOCK_EXAQUEST_DB_CATEGORIES = 'block_exaquestcategories';
 const BLOCK_EXAQUEST_DB_QUIZQCOUNT = 'block_exaquestquizqcount';
+const BLOCK_EXAQUEST_DB_QUIZCOMMENT = 'block_exaquestquizcomment';
 /**
  * Question Status
  */
@@ -779,7 +780,6 @@ function block_exaquest_get_exams_for_me_to_create($coursecategoryid, $userid = 
         $userid = $USER->id;
     }
 
-    // questionbankentryid DISTINCT to not count twice
     $sql = 'SELECT *
 			FROM {' . BLOCK_EXAQUEST_DB_REQUESTEXAM . '} req
 			WHERE req.userid = :userid
@@ -789,6 +789,33 @@ function block_exaquest_get_exams_for_me_to_create($coursecategoryid, $userid = 
         array('userid' => $userid, 'coursecategoryid' => $coursecategoryid));
 
     return $questions;
+}
+
+/**
+ * Returns
+ *
+ * @param $courseid
+ * @return array
+ */
+function block_exaquest_get_exams_for_me_to_fill($courseid, $userid = 0) {
+    global $DB, $USER;
+
+    if (!$userid) {
+        $userid = $USER->id;
+    }
+
+    // get the exams that are assigned to me and that are in the course of the course
+    $sql = 'SELECT qa.*, q.name, qc.comment
+			FROM {' . BLOCK_EXAQUEST_DB_QUIZASSIGN . '} qa
+			JOIN {quiz} q on q.id = qa.quizid
+			JOIN {' . BLOCK_EXAQUEST_DB_QUIZCOMMENT .'} qc on qc.quizid = qa.quizid AND qc.quizassignid = qa.id
+			WHERE qa.assigneeid = :assigneeid
+            AND q.course = :courseid';
+
+    $exams = $DB->get_records_sql($sql,
+        array('assigneeid' => $userid, 'courseid' => $courseid));
+
+    return $exams;
 }
 
 /**
@@ -1893,27 +1920,38 @@ function block_exaquest_clean_up_tables() {
     $DB->execute($sql);
 }
 
-function block_exaquest_assign_quiz_addquestions($userto, $comment, $quizid, $quizname = null, $assigntype = null) {
+function block_exaquest_assign_quiz_addquestions($courseid, $userfrom, $userto, $comment, $quizid, $quizname = null, $assigntype = null) {
     global $DB, $COURSE;
+
+    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that exact quizid, assigneeid and assigntype. ? TODO: what to do if 2 requests are made... for now keep them both
     // enter data into the exaquest tables
     $assigndata = new stdClass;
     $assigndata->quizid = $quizid;
     $assigndata->assigneeid = $userto;
     $assigndata->assigntype = $assigntype;
-    $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
+    $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
+
+    // insert comment into BLOCK_EXAQUEST_DB_QUIZCOMMENT
+    if ($comment != '') {
+        $commentdata = new stdClass;
+        $commentdata->quizid = $quizid;
+        $commentdata->commentorid = $userfrom->id;
+        $commentdata->quizassignid = $quizassignid;
+        $commentdata->comment = $comment;
+        $commentdata->timestamp = time();
+        $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZCOMMENT, $commentdata);
+    }
 
     // create the message
-    //$messageobject = new stdClass;
-    //$messageobject->fullname = $questionname;
-    ////$messageobject->url = new moodle_url('/blocks/exaquest/questbank.php', array('courseid' => $courseid, 'category' => $catAndCont[0] . ',' . $catAndCont[1]));
-    //$messageobject->url = new moodle_url('/blocks/exaquest/questbank.php',
-    //    array('courseid' => $courseid, 'filterstatus' => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW));
-    //$messageobject->url = $messageobject->url->raw_out(false);
-    //$messageobject->requestcomment = $comment;
-    //$message = get_string('please_review_question', 'block_exaquest', $messageobject);
-    //$subject = get_string('please_review_question_subject', 'block_exaquest', $messageobject);
-    //block_exaquest_send_moodle_notification("reviewquestion", $userfrom->id, $userto, $subject, $message,
-    //    "Review", $messageobject->url);
+    $messageobject = new stdClass;
+    $messageobject->fullname = $quizname;
+    $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
+    $messageobject->url = $messageobject->url->raw_out(false);
+    $messageobject->requestcomment = $comment;
+    $message = get_string('please_fill_exam', 'block_exaquest', $messageobject);
+    $subject = get_string('please_fill_exam_subject', 'block_exaquest', $messageobject);
+    block_exaquest_send_moodle_notification("fillexam", $userfrom->id, $userto, $subject, $message,
+        "fillexam", $messageobject->url);
 }
 
 function block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid) {

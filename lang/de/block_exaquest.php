@@ -42,10 +42,15 @@ $string['assign_addquestions_label'] = 'Fragenzuweisung anfordern von ...';
 $string['assign_addquestions_comment_placeholder'] = 'Kommentar an die ausgewählten Personen';
 
 // Messages
-$string['messageprovider:newquestionsrequest'] = 'Neue Fragen wurden angefordert';
+$string['messageprovider:fillexam'] = 'Neue Fragen wurden angefordert';
 $string['please_create_new_questions'] =
     'Bitte erstellen Sie eine neue Frage in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
 $string['please_create_new_questions_subject'] = 'Bitte erstellen Sie eine neue Frage in {$a->fullname}';
+
+$string['messageprovider:fillexam'] = 'Eine Prüfung soll befüllt werden';
+$string['please_fill_exam'] =
+    'Bitte befüllen Sie die Prüfung <a href="{$a->url}">{$a->fullname}</a> mit Fragen. Kommentar: {$a->requestcomment}';
+$string['please_fill_exam_subject'] = 'Bitte befüllen Sie die Prüfung {$a->fullname} mit Fragen';
 
 $string['messageprovider:newexamsrequest'] = 'Neue Prüfungen wurden angefordert';
 $string['please_create_new_exams'] =
@@ -137,7 +142,8 @@ $string['questions_for_me_to_revise'] = 'Fragen soll ich überarbeiten';
 $string['questions_for_me_to_release'] = 'Fragen soll ich freigeben';
 $string['compare_questions'] = 'Fragen vergleichen';
 $string['exams_for_me_to_create'] = 'Prüfungen soll ich erstellen';
-$string['quizzes_for_me_to_fill'] = 'Prüfungen soll ich mit Fragen befüllen';
+$string['exams_for_me_to_fill'] = 'Prüfungen soll ich mit Fragen befüllen';
+$string['exams_for_me_to_fill_title'] = 'Prüfungen die ich mit Fragen befüllen soll';
 
 //Questionbank
 

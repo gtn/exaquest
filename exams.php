@@ -30,17 +30,19 @@ echo $output->header($context, $courseid, get_string('exams_overview', 'block_ex
 
 $action = optional_param('action', "", PARAM_ALPHAEXT);
 if ($action == 'assign_quiz_addquestions') {
-    // TODO: finish this
+    $comment = optional_param('assignaddquestionscomment', '', PARAM_TEXT);
     $quizid = required_param('quizid', PARAM_INT);
+    // get quiz for quizname
+    $quizname = $DB->get_field('quiz', 'name', array('id' => $quizid));
     if (array_key_exists("selectedusersfp".$quizid, $_POST)) {
         $selectedfp = clean_param($_POST["selectedusersfp".$quizid], PARAM_INT);
-        block_exaquest_assign_quiz_addquestions($selectedfp, null, $quizid, null, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
+        block_exaquest_assign_quiz_addquestions($courseid, $USER, $selectedfp, $comment, $quizid, $quizname, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
     }
     // check if selecteduserspmw is set and an array
     if (array_key_exists("selecteduserspmw".$quizid, $_POST) && is_array($_POST["selecteduserspmw".$quizid])) {
         $selectedpmw = clean_param_array($_POST["selecteduserspmw".$quizid], PARAM_INT);
         foreach ($selectedpmw as $pmw) {
-            block_exaquest_assign_quiz_addquestions($pmw, null, $quizid, null, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
+            block_exaquest_assign_quiz_addquestions($courseid, $USER, $pmw, $comment, $quizid, $quizname, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
         }
     }
 }else if ($action == 'set_questioncount_per_quiz_and_fragefach'){
