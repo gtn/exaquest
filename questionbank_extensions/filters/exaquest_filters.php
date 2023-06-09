@@ -54,6 +54,9 @@ class exaquest_filters extends condition {
     public function where() {
         global $USER, $COURSE;
         switch ($this->filterstatus) {
+            case BLOCK_EXAQUEST_FILTERSTATUS_ALL_IMPORTED_QUESTIONS:
+                $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED;
+                break;
             case BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS:
                 break;
             case BLOCK_EXAQUEST_FILTERSTATUS_ALL_NEW_QUESTIONS:
@@ -131,12 +134,15 @@ class exaquest_filters extends condition {
     public function display_options_adv() {
         global $PAGE, $COURSE;
 
-        $selected = array_fill(0, 13, '');
+        $selected = array_fill(0, 14, '');
         $selected[$this->filterstatus] = 'selected="selected"';
 
         $html =
             '<div class="form-group row"><label class="col-sm-2 col-form-label">Select Questions:</label><div class="col-sm-10"><select class="form-control select searchoptions" id="id_filterstatus" name="filterstatus">';
         if (has_capability('block/exaquest:readallquestions', \context_course::instance($COURSE->id))) {
+            $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_IMPORTED_QUESTIONS] . ' value="' .
+                BLOCK_EXAQUEST_FILTERSTATUS_ALL_IMPORTED_QUESTIONS . '">' . get_string('show_all_imported_questions', 'block_exaquest') .
+                '</option>';
             $html .= '<option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS] . ' value="' .
                 BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS . '">' . get_string('show_all_questions', 'block_exaquest') . '</option>';
         }
