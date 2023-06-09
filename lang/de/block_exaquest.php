@@ -203,6 +203,10 @@ $string['settings_description'] = 'Bitte nur eine Kategorie pro Zeile einfügen'
 
 $string['category_options'] = 'Fragekategorien';
 
+$string['edit'] = "Bearbeiten";
+$string['submit'] = "Bestätigen";
+$string['add_category'] = "Kategorie hinzufügen";
+
 // Similarity Comparison
 $string['exaquest:similarity_title'] = 'Ähnlichkeitsvergleich';
 $string['exaquest:similarity_button_tooltip'] = "Zur Ähnlichkeitsvergleichsübersicht wechseln";
