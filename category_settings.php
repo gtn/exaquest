@@ -12,6 +12,10 @@ $fragencharakter  = optional_param('fragencharakter', null, PARAM_TEXT);
 $klassifikation  = optional_param('klassifikation', null, PARAM_TEXT);
 $fragefach  = optional_param('fragefach', null, PARAM_TEXT);
 $lehrinhalt  = optional_param('lehrinhalt', null, PARAM_TEXT);
+$editedName = optional_param('editedname', null, PARAM_TEXT);
+$editedNameId = optional_param('editednameid', null, PARAM_INT);
+$categorytype = optional_param('categorytype', null, PARAM_INT);
+$addcategory = optional_param('addcategory', null, PARAM_TEXT);
 require_login($courseid);
 require_capability('block/exaquest:viewexamstab', context_course::instance($courseid));
 
@@ -32,7 +36,26 @@ $output = $PAGE->get_renderer('block_exaquest');
 
 echo $output->header($context, $courseid, get_string('exams_overview', 'block_exaquest'));
 
-if( $action == "submit"){
+if( $action == "edit"){
+    $currcat = $DB->get_records("block_exaquestcategories", array("coursecategoryid" => $COURSE->category));
+    foreach($currcat as $cat){
+        if(strcmp($editedName[intval($cat->id)], $cat->categoryname)){
+            $obj = new stdClass();
+            $obj->categoryname = $editedName[$cat->id];
+            $obj->id = $cat->id;
+            $DB->update_record("block_exaquestcategories", $obj);
+            break;
+        }
+    }
+}
+
+if( $action == "add") {
+    if(! $DB->record_exists("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $addcategory, "categorytype"=> $categorytype))) {
+        $DB->insert_record("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $addcategory, "categorytype" => $categorytype));
+    }
+}
+
+    if( $action == "submit"){
     $check = $DB->get_fieldset_select("block_exaquestcategories", "categoryname", 'coursecategoryid = :coursecategoryid',
         ['coursecategoryid' => $COURSE->category]);
     if($fragencharakter != null){

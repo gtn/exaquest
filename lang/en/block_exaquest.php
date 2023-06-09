@@ -200,6 +200,10 @@ $string['settings_description'] = 'Please enter one category per row';
 
 $string['category_options'] = 'Category options';
 
+$string['edit'] = "Edit";
+$string['submit'] = "Submit";
+$string['add_category'] = "Add Category";
+
 // Similarity Comparison
 $string['exaquest:similarity_title'] = 'Similarity Comparison';
 $string['exaquest:similarity_button_tooltip'] = "Go to the Similarity Comparison overview";
