@@ -50,7 +50,7 @@ const BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE = 5;
 const BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED = 6;
 const BLOCK_EXAQUEST_QUESTIONSTATUS_IN_QUIZ = 7;
 const BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED = 8;
-
+const BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED = 9;
 /**
  * Quiz/Pruefung/Exam Status
  */
@@ -808,7 +808,7 @@ function block_exaquest_get_exams_for_me_to_fill($courseid, $userid = 0) {
     $sql = 'SELECT qa.*, q.name, qc.comment
 			FROM {' . BLOCK_EXAQUEST_DB_QUIZASSIGN . '} qa
 			JOIN {quiz} q on q.id = qa.quizid
-			JOIN {' . BLOCK_EXAQUEST_DB_QUIZCOMMENT .'} qc on qc.quizid = qa.quizid AND qc.quizassignid = qa.id
+			JOIN {' . BLOCK_EXAQUEST_DB_QUIZCOMMENT . '} qc on qc.quizid = qa.quizid AND qc.quizassignid = qa.id
 			WHERE qa.assigneeid = :assigneeid
             AND q.course = :courseid';
 
@@ -817,7 +817,6 @@ function block_exaquest_get_exams_for_me_to_fill($courseid, $userid = 0) {
 
     return $exams;
 }
-
 
 /**
  * Returns
@@ -828,7 +827,6 @@ function block_exaquest_get_exams_for_me_to_fill($courseid, $userid = 0) {
 function block_exaquest_get_exams_for_me_to_fill_count($courseid, $userid = 0) {
     return count(block_exaquest_get_exams_for_me_to_fill($courseid, $userid));
 }
-
 
 /**
  * Returns count of questionbankentries that have to be revised of this course of this user
@@ -1934,7 +1932,8 @@ function block_exaquest_clean_up_tables() {
     $DB->execute($sql);
 }
 
-function block_exaquest_assign_quiz_addquestions($courseid, $userfrom, $userto, $comment, $quizid, $quizname = null, $assigntype = null) {
+function block_exaquest_assign_quiz_addquestions($courseid, $userfrom, $userto, $comment, $quizid, $quizname = null,
+    $assigntype = null) {
     global $DB, $COURSE;
 
     // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that exact quizid, assigneeid and assigntype. ? TODO: what to do if 2 requests are made... for now keep them both
@@ -1982,16 +1981,16 @@ function block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quiz
 
     $fragefaecher = $DB->get_records_sql($sql, array('coursecategoryid' => $course->category, 'quizid' => $quizid));
 
-
     return $fragefaecher;
 
 }
 
-function block_exaquest_set_questioncount_for_exaquestcategory($quizid, $exaquestcategoryid, $count){
+function block_exaquest_set_questioncount_for_exaquestcategory($quizid, $exaquestcategoryid, $count) {
     global $DB;
 
     // get the current questioncount for this quiz and exaquestcategory
-    $quizqcount = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZQCOUNT, array('quizid' => $quizid, 'exaquestcategoryid' => $exaquestcategoryid));
+    $quizqcount =
+        $DB->get_record(BLOCK_EXAQUEST_DB_QUIZQCOUNT, array('quizid' => $quizid, 'exaquestcategoryid' => $exaquestcategoryid));
 
     // if it exists: update, else: create new
     if ($quizqcount) {
@@ -2003,5 +2002,42 @@ function block_exaquest_set_questioncount_for_exaquestcategory($quizid, $exaques
         $quizqcount->exaquestcategoryid = $exaquestcategoryid;
         $quizqcount->questioncount = $count;
         $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZQCOUNT, $quizqcount);
+    }
+}
+
+// this is the check, returns if imported, does not set any status
+function block_exaquest_check_if_question_is_imported($questionid) {
+    $handler = \qbank_customfields\customfield\question_handler::create();
+    $datas = $handler->get_instance_data($questionid);
+    // get the set customfields
+    // if there is a field from the type "exaquestcategory" that is set, then it is a question that has been created in exaquest (since these are mandatory fields)
+    // if there is a field from the type "exaquestcategory" that is NOT set, then it is a question that has been imported from exaquest (since these are mandatory fields)
+    // $data->get_field()->get("type")
+    $is_imported = false;
+    foreach ($datas as $data) {
+        // if it is not an exaquestcategory, then continue, since we are only interested in if exaquestcategories are set or not
+        if ($data->get_field()->get('type') != 'exaquestcategory') {
+            continue;
+        }
+        if ($data->get_value() == $data->get_default_value()) { // default value means nothing is set
+            // this question has been imported
+            $is_imported = true;
+            break; // as soon as we find one exaquestcategory that is not set, we can stop searching, as it must be imported
+        }
+    }
+    return $is_imported;
+}
+
+function block_exaquest_check_if_questions_imported($questionid, $questionbankentryid) {
+    global $DB;
+    $is_imported = block_exaquest_check_if_question_is_imported($questionid);
+    if ($is_imported) {
+        // it is imported --> set status to imported
+        $questionstatus = $DB->get_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, ["questionbankentryid" => $questionbankentryid]);
+        $questionstatus->status = BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED;
+        $questionstatus->is_imported = 1;
+        $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $questionstatus);
+    } else {
+        // it has been created manually --> everything can stay as it is
     }
 }

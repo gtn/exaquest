@@ -21,20 +21,21 @@ defined('MOODLE_INTERNAL') || die();
 require_once __DIR__ . '/../../inc.php';
 
 /**
- * Set up capabilities and roles. Capabilities are added at the end of the plugin installation and the task is scheduled during
- * installation. This is needed as a task because DURING installation, the capabilities do not exist yet.
+ * Check newly created questions if they are imported or created in exaquest. This has to be done here, because sometimes the customfield data is not available in the event observer.
  */
-class set_up_roles extends \core\task\adhoc_task {
+class check_if_questions_imported extends \core\task\adhoc_task {
     /**
      * Execute the task.
      */
     public function execute() {
-        block_exaquest_set_up_roles();
+        $customdata = $this->get_custom_data();
+        block_exaquest_check_if_questions_imported($customdata->questionid, $customdata->questionbankentryid);
     }
 
     public function get_name() {
         //return block_exacomp_trans(['en:Import Data with additional functionality', 'de:Daten Importieren mit zusätzlicher Funktionalität']);
-        return get_string('set_up_roles', 'block_exaquest');
+        return "Check if questions have been imported.";
+        //return get_string('set_up_roles', 'block_exaquest');
     }
 }
 
