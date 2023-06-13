@@ -64,7 +64,7 @@ class edit_action_column_exaquest extends edit_action_column {
     }
     // this lead to a problem in the question bank for showing the imported questions since customfield data does not exist for imported questiosn
     // solution: left join? or just put that into category_options.php where it belongs
-    //public function get_extra_joins(): array {
-    //    return ['cfd' => 'LEFT JOIN {customfield_data} cfd ON q.id = cfd.instanceid'];
-    //}
+    public function get_extra_joins(): array {
+        return ['cfd' => 'LEFT JOIN {customfield_data} cfd ON q.id = cfd.instanceid'];
+    }
 }
