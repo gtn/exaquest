@@ -42,7 +42,10 @@ class change_status extends column_base {
         $fragenersteller = block_exaquest_get_fragenersteller_by_courseid($COURSE->id);
 
         switch (intval($question->teststatus)) {
-
+            case BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED:
+                echo $output->render(new \block_exaquest\output\popup_change_status_warning('release_question',
+                    get_string('skip_and_release_question', 'block_exaquest'), $question));
+                break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_NEW:
             case BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE:
                 if (intval($question->ownerid) == $USER->id &&

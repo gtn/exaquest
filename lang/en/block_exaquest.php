@@ -145,6 +145,7 @@ $string['exams_for_me_to_fill_title'] = 'Prüfungen die ich mit Fragen befüllen
 //Questionbank
 
 $string['show_all_questions'] = 'Show all questions';
+$string['show_all_imported_questions'] = 'Show imported questions';
 $string['show_all_new_questions'] = 'Show all new questions';
 $string['show_my_created_questions'] = 'Show my created questions';
 $string['show_my_created_questions_to_submit'] = 'Show my created questions that I still have to submit';
@@ -184,6 +185,7 @@ $string['formal_done'] = 'Formally finalized';
 $string['fachlich_done'] = 'Fachlich finalized';
 $string['finalised'] = 'Finalized';
 $string['released'] = 'Released';
+$string['imported_question'] = 'Imported';
 
 $string['question_id'] = 'Question ID';
 $string['ownername'] = 'Created by';

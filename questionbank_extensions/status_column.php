@@ -26,7 +26,9 @@ class status_column extends column_base {
     protected function display_content($question, $rowclasses): void {
 
         switch (intval($question->teststatus)) {
-
+            case BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED:
+                echo get_string("imported_question","block_exaquest");
+                break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_NEW:
                 echo get_string("new_question","block_exaquest");
                 break;
