@@ -16,10 +16,11 @@ class popup_change_status implements renderable, templatable {
     var $questionbankentryid = null;
     var $action = null;
 
-    public function __construct($selectusers, $action, $name, $questionbankentryid) {
+    public function __construct($selectusers, $action, $name, $question) {
         $this->selectusers = $selectusers;
         $this->name = $name;
-        $this->questionbankentryid = $questionbankentryid;
+        $this->questionbankentryid = $question->questionbankentryid;
+        $this->questionname = $question->name;
         $this->action = $action;
     }
 
@@ -32,6 +33,7 @@ class popup_change_status implements renderable, templatable {
         global $PAGE, $COURSE, $DB;
         $data = new stdClass();
         $data->name = $this->name;
+        $data->questionname = $this->questionname;
         $readonlyusers = [];
         $context = \context_course::instance($COURSE->id);
         // this is NOT needed anymore. The modulverantwortlicher should not be selectable, the PK should also not be selectable ==> keep code in case later it will be needed after all
