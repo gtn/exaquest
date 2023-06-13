@@ -1920,6 +1920,26 @@ function block_exaquest_clean_up_tables() {
     WHERE questionbankentryid NOT IN (SELECT id FROM {question_bank_entries})';
     $DB->execute($sql);
 
+    // delete entries in exaquestquizstatus that have no quiz related
+    $sql = 'DELETE FROM {' . BLOCK_EXAQUEST_DB_QUIZSTATUS . '}
+    WHERE quizid NOT IN (SELECT id FROM {quiz})';
+    $DB->execute($sql);
+
+    // delete entries in exaquestquizassig that have no quiz related
+    $sql = 'DELETE FROM {' . BLOCK_EXAQUEST_DB_QUIZASSIGN . '}
+    WHERE quizid NOT IN (SELECT id FROM {quiz})';
+    $DB->execute($sql);
+
+    // delete entries in exaquestquizcomment that have no quiz related
+    $sql = 'DELETE FROM {' . BLOCK_EXAQUEST_DB_QUIZCOMMENT . '}
+    WHERE quizid NOT IN (SELECT id FROM {quiz})';
+    $DB->execute($sql);
+
+    // delete entries in exaquestquizqcount that have no quiz related
+    $sql = 'DELETE FROM {' . BLOCK_EXAQUEST_DB_QUIZQCOUNT . '}
+    WHERE quizid NOT IN (SELECT id FROM {quiz})';
+    $DB->execute($sql);
+
     // delete entries in exaquestreviewassign that have no questionbankentry related
     $sql = 'DELETE FROM {' . BLOCK_EXAQUEST_DB_REVIEWASSIGN . '}
     WHERE questionbankentryid NOT IN (SELECT id FROM {question_bank_entries})';
@@ -1969,16 +1989,18 @@ function block_exaquest_assign_quiz_addquestions($courseid, $userfrom, $userto, 
         "fillexam", $messageobject->url);
 }
 
-
-function block_exaquest_assign_quiz_fp($userto, $quizid, $assigntype = null) {
+function block_exaquest_assign_quiz_fp($userto, $quizid) {
     global $DB, $COURSE;
 
-    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that exact quizid, assigneeid and assigntype. ? TODO: what to do if 2 requests are made... for now keep them both
+    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that quizid and assigntype, as it should be overridden (there can only be one)
+    $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+        array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER));
+
     // enter data into the exaquest tables
     $assigndata = new stdClass;
     $assigndata->quizid = $quizid;
     $assigndata->assigneeid = $userto;
-    $assigndata->assigntype = $assigntype;
+    $assigndata->assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER;
     $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
 
     //// insert comment into BLOCK_EXAQUEST_DB_QUIZCOMMENT
@@ -2004,7 +2026,6 @@ function block_exaquest_assign_quiz_fp($userto, $quizid, $assigntype = null) {
     //    "fillexam", $messageobject->url);
 }
 
-
 function block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid) {
     global $DB;
 
@@ -2020,7 +2041,18 @@ function block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quiz
     $fragefaecher = $DB->get_records_sql($sql, array('coursecategoryid' => $course->category, 'quizid' => $quizid));
 
     return $fragefaecher;
+}
 
+function block_exaquest_get_assigned_fachlicherpruefer($quizid) {
+    global $DB;
+    $sql = 'SELECT qa.assigneeid
+			FROM {' . BLOCK_EXAQUEST_DB_QUIZASSIGN . '} qa
+			WHERE qa.quizid = :quizid
+			AND qa.assigntype = ' . BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER;
+
+    $fachlicherpreufer = $DB->get_record_sql($sql,
+        array('quizid' => $quizid));
+    return $fachlicherpreufer;
 }
 
 function block_exaquest_get_fragefaecher_by_courseid($courseid) {
