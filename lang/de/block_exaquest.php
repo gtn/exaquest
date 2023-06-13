@@ -198,6 +198,8 @@ $string['open_for_review_text'] = 'Begutachtung zuteilen zu..';
 $string['revise_text'] = 'Überarbeitung zuteilen zu..';
 $string['open_for_review_title'] = 'Begutachtung';
 $string['revise_title'] = 'Überarbeitung';
+$string['change_owner_title'] = 'Fragenersteller verändern';
+$string['change_owner_text'] = 'Fragenersteller verändern zu..';
 
 //Category Settings
 $string['settings_title'] = 'Kategorieeinstellungen';

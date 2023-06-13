@@ -19,6 +19,7 @@ namespace qbank_openquestionforreview;
 use core_question\local\bank\column_base;
 
 require_once(__DIR__ . '/../classes/output/popup_change_status.php');
+require_once(__DIR__ . '/../classes/output/popup_change_owner.php');
 require_once(__DIR__ . '/../classes/output/popup_change_status_warning.php');
 
 $PAGE->requires->js('/blocks/exaquest/javascript/jquery.js', true);
@@ -43,6 +44,8 @@ class change_status extends column_base {
 
         switch (intval($question->teststatus)) {
             case BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED:
+                echo $output->render(new \block_exaquest\output\popup_change_owner($fragenersteller, 'change_owner',
+                    get_string('open_question_for_review', 'block_exaquest'), $question));
                 echo $output->render(new \block_exaquest\output\popup_change_status_warning('release_question',
                     get_string('skip_and_release_question', 'block_exaquest'), $question));
                 break;
@@ -171,7 +174,7 @@ class change_status extends column_base {
                         //users: $('.userselectioncheckbox<?php //echo $question->questionbankentryid; ?>//:checkbox:checked').map(function () {
                         //    return $(this).val();
                         //}).get(), this was the code for the checkboxes, now we have a multiselect
-                        users: $('.form-autocomplete-selection').children().map(function () {
+                        users: $("#changeStatusModal<?php echo $question->questionbankentryid; ?>").find('.form-autocomplete-selection').children().map(function () {
                             return $(this).attr("data-value");
                         }).get(),
                         commenttext: $('.commenttext<?php echo $question->questionbankentryid; ?>').val(),

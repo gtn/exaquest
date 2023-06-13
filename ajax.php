@@ -168,5 +168,12 @@ switch ($action) {
         $quiz->questionsperpage = 1;
         $ret = quiz_add_quiz_question($questionid, $quiz, $page = 0, $maxmark = null);
         break;
-
+    case ('change_owner'):
+        if(is_array($users)){
+            $qbe = new stdClass();
+            $qbe->id = $questionbankentryid;
+            $qbe->ownerid = $users[0];
+            $DB->update_record("question_bank_entries", $qbe);
+        }
+        break;
 }

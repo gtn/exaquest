@@ -196,6 +196,8 @@ $string['open_for_review_text'] = 'Assign review to..';
 $string['revise_text'] = 'Assign revision to..';
 $string['open_for_review_title'] = 'Review';
 $string['revise_title'] = 'Revision';
+$string['change_owner_title'] = 'Change Creator';
+$string['change_owner_text'] = 'Change Creator to..';
 
 //Category Settings
 $string['settings_title'] = 'Category Settings';
