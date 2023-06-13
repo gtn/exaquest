@@ -13,6 +13,8 @@
                 <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
                        COMMENT="coursecategoryid"/>
                 <FIELD NAME="timestamp" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+                <FIELD NAME="is_imported" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"
+                       COMMENT="Boolean value, 0 = not imported, 1 = imported"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
