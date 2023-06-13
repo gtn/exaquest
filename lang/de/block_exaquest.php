@@ -31,7 +31,6 @@ $string['request_exams_label'] = 'Neue Prüfung anforderen von ...';
 $string['request_exams_comment_placeholder'] = 'Welche Art von Prüfung wird benötigt? Optional.';
 $string['request_exams_button'] = 'Anfordern';
 
-
 $string['set_quizquestioncount'] = 'Benötigte Fragenanzahl pro Fragefach festlegen';
 
 $string['mark_as_done'] = 'Als erledigt markieren';
@@ -195,7 +194,6 @@ $string['question_id'] = 'Fragen ID';
 $string['ownername'] = 'Erstellt von';
 $string['lastchanged'] = 'Zuletzt verändert';
 
-
 $string['open_for_review_text'] = 'Begutachtung zuteilen zu..';
 $string['revise_text'] = 'Überarbeitung zuteilen zu..';
 $string['open_for_review_title'] = 'Begutachtung';
@@ -357,3 +355,7 @@ $string['check_active_exams'] =
 $string['clean_up_tables'] = 'Säubere die Exaquest Tabellen, falls fehlerhafte Daten bestehen.';
 $string['create_daily_notifications'] = 'Erstelle die täglichen Exaquest-Nachrichten.';
 $string['set_up_roles'] = 'Rollen für Exaquest aufsetzen.';
+
+$string['points_per'] = 'Punkte für Fragefach ';
+$string['exaquest_settings'] = 'Exaquest Settings';
+

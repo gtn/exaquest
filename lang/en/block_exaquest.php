@@ -31,7 +31,6 @@ $string['request_exams_label'] = 'Request new exams from ...';
 $string['request_exams_comment_placeholder'] = 'Which kind of exam is needed? Optional';
 $string['request_exams_button'] = 'Request';
 
-
 $string['set_quizquestioncount'] = 'Request';
 
 $string['mark_as_done'] = 'Mark as done';
@@ -348,10 +347,12 @@ $string['exaquest:viewactiveexams'] = 'View active exams in exaquest';
 $string['exaquest:viewownquestions'] = 'View own questions in exaquest';
 $string['exaquest:viewreleasedexams'] = 'View released exams in exaquest';
 
-
 // tasks
 $string['check_active_exams'] = 'Check status of active Exaquest quizzes and update if finished.';
 $string['clean_up_tables'] =
     'Clean up Exaquest tables, e.g. delete questionstatus entries where there is no questionbankentryid related.';
 $string['create_daily_notifications'] = 'Create daily Exaquest notifications.';
 $string['set_up_roles'] = 'Set up roles for Exaquest.';
+
+$string['points_per'] = 'Points for Fragefach ';
+$string['exaquest_settings'] = 'Exaquest Einstellungen';

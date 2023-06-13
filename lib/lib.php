@@ -77,6 +77,7 @@ const BLOCK_EXAQUEST_REVIEWTYPE_FORMAL = 0;
 const BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH = 1;
 //const BLOCK_EXAQUEST_REVIEWTYPE_REVISE = 2;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS = 3;
+const BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER = 4; // this FP is responsible for the quiz
 
 /**
  * Filter Status
@@ -1968,6 +1969,42 @@ function block_exaquest_assign_quiz_addquestions($courseid, $userfrom, $userto, 
         "fillexam", $messageobject->url);
 }
 
+
+function block_exaquest_assign_quiz_fp($userto, $quizid, $assigntype = null) {
+    global $DB, $COURSE;
+
+    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that exact quizid, assigneeid and assigntype. ? TODO: what to do if 2 requests are made... for now keep them both
+    // enter data into the exaquest tables
+    $assigndata = new stdClass;
+    $assigndata->quizid = $quizid;
+    $assigndata->assigneeid = $userto;
+    $assigndata->assigntype = $assigntype;
+    $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
+
+    //// insert comment into BLOCK_EXAQUEST_DB_QUIZCOMMENT
+    //if ($comment != '') {
+    //    $commentdata = new stdClass;
+    //    $commentdata->quizid = $quizid;
+    //    $commentdata->commentorid = $userfrom->id;
+    //    $commentdata->quizassignid = $quizassignid;
+    //    $commentdata->comment = $comment;
+    //    $commentdata->timestamp = time();
+    //    $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZCOMMENT, $commentdata);
+    //}
+    //
+    //// create the message
+    //$messageobject = new stdClass;
+    //$messageobject->fullname = $quizname;
+    //$messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
+    //$messageobject->url = $messageobject->url->raw_out(false);
+    //$messageobject->requestcomment = $comment;
+    //$message = get_string('please_fill_exam', 'block_exaquest', $messageobject);
+    //$subject = get_string('please_fill_exam_subject', 'block_exaquest', $messageobject);
+    //block_exaquest_send_moodle_notification("fillexam", $userfrom->id, $userto, $subject, $message,
+    //    "fillexam", $messageobject->url);
+}
+
+
 function block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid) {
     global $DB;
 
@@ -1981,6 +2018,23 @@ function block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quiz
             AND cat.categorytype = ' . BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH;
 
     $fragefaecher = $DB->get_records_sql($sql, array('coursecategoryid' => $course->category, 'quizid' => $quizid));
+
+    return $fragefaecher;
+
+}
+
+function block_exaquest_get_fragefaecher_by_courseid($courseid) {
+    global $DB;
+
+    // get course
+    $course = $DB->get_record('course', array('id' => $courseid));
+
+    $sql = 'SELECT cat.*
+            FROM {' . BLOCK_EXAQUEST_DB_CATEGORIES . '} cat
+            WHERE cat.coursecategoryid = :coursecategoryid
+            AND cat.categorytype = ' . BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH;
+
+    $fragefaecher = $DB->get_records_sql($sql, array('coursecategoryid' => $course->category));
 
     return $fragefaecher;
 
