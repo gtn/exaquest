@@ -186,6 +186,8 @@ $string['fachlich_done'] = 'Fachlich finalized';
 $string['finalised'] = 'Finalized';
 $string['released'] = 'Released';
 $string['imported_question'] = 'Imported';
+$string['question'] = 'Question:';
+
 
 $string['question_id'] = 'Question ID';
 $string['ownername'] = 'Created by';

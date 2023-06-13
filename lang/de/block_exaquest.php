@@ -189,6 +189,8 @@ $string['finalised'] = 'Finalisiert';
 $string['released'] = 'Freigegeben';
 $string['imported_question'] = 'Importiert';
 
+$string['question'] = 'Frage:';
+
 $string['question_id'] = 'Fragen ID';
 $string['ownername'] = 'Erstellt von';
 $string['lastchanged'] = 'Zuletzt verändert';
