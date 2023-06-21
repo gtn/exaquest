@@ -1098,6 +1098,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:dofachlichreview', CAP_ALLOW, $roleid, $context);
     //Mover should not be able to do this : assign_capability('block/exaquest:doformalreview', CAP_ALLOW, $roleid, $context);
+    unassign_capability('block/exaquest:doformalreview', $roleid, $context->id); // accidentally added, should be deleted
     assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:assignaddquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:createexam', CAP_ALLOW, $roleid, $context);
