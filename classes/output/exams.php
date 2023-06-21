@@ -68,6 +68,8 @@ class exams implements renderable, templatable {
         foreach ($data->new_exams as $new_exam) {
             $popup = new popup_assign_addquestions($this->courseid, $new_exam->quizid);
             $new_exam->popup_assign_addquestions = $popup->export_for_template($output);
+            $new_exam->link_to_exam = new moodle_url('/course/modedit.php', array('update' => $new_exam->coursemoduleid, 'return' => '1'));
+            $new_exam->link_to_exam = $new_exam->link_to_exam->raw_out(false);
         }
 
         $data->created_exams =
