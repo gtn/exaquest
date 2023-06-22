@@ -17,7 +17,14 @@ class popup_change_status implements renderable, templatable {
     var $action = null;
 
     public function __construct($selectusers, $action, $name, $question) {
+        global $USER;
         $this->selectusers = $selectusers;
+        // you can never select yourself: remove yourself from the selectusers
+        foreach ($this->selectusers as $key => $user) {
+            if ($user->id == $USER->id) {
+                unset($this->selectusers[$key]);
+            }
+        }
         $this->name = $name;
         $this->questionbankentryid = $question->questionbankentryid;
         $this->questionname = $question->name;
