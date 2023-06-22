@@ -671,7 +671,7 @@ function block_exaquest_get_my_finalised_questionbankentries_count($coursecatego
 }
 
 function block_exaquest_get_quizzes_for_me_to_fill_count($userid) {
-    return count(block_exaquest_get_assigned_quizzes_by_assigntype($userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS, BLOCK_EXAQUEST_QUIZSTATUS_NEW));
+    return count(block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS, BLOCK_EXAQUEST_QUIZSTATUS_NEW));
 }
 
 function block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, $assigntype, $quizstatus) {
@@ -2155,6 +2155,6 @@ function block_exaquest_check_if_exam_is_ready($quizid){
         return true;
     }
 
-    // TODO: also check when all questions are added ? 
+    // TODO: also check when all questions are added ?
 
 }
