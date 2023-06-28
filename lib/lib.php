@@ -396,7 +396,8 @@ function block_exaquest_get_questionbankentries_by_coursecategoryid_count($cours
     global $DB;
     $sql = "SELECT qs.id
 			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
-			WHERE qs.coursecategoryid = :coursecategoryid";
+			WHERE qs.coursecategoryid = :coursecategoryid
+			AND qs.status != " . BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED; // "all" questions except imported ones that have not been released yet
 
     // we simply count the exaquestquestionstatus entries for this course, so we do not need to have the category, do not read unneccesary entries in the question_bank_entries etc
 
