@@ -58,6 +58,7 @@ class exaquest_filters extends condition {
                 $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED;
                 break;
             case BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS:
+                $this->where = "qs.status != " . BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED; // all except imported
                 break;
             case BLOCK_EXAQUEST_FILTERSTATUS_ALL_NEW_QUESTIONS:
                 $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_NEW;

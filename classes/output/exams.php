@@ -27,10 +27,31 @@ class exams implements renderable, templatable {
         } else if ($capabilities["addquestiontoexam"]) {
             // new exams can only be seen by PK and Mover, except if you are specifically assigned to an exam, e.g. as a FP or PMW
             // ==> give the viewnewexams capability to all users who are assigned to an exam, but filter the newexams according to users role
-            $this->new_exams = block_exaquest_get_quizzes_for_me_to_fill($userid);
+            $this->new_exams =
+                block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS,
+                    BLOCK_EXAQUEST_QUIZSTATUS_NEW);
+            // add the exams that have been assigned to the FP when creating the exam ( BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER)
+            $this->new_exams = array_merge($this->new_exams, block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
+                BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER, BLOCK_EXAQUEST_QUIZSTATUS_NEW));
+            // $this->new_exams is now an array filled with sdtClass objects
+            // filter new_exams so that every quizid is only once in the array (quizid is a property of the objects)
+            // it could otherwise happen, that a quiz is shown twice, because e.g. the fp is assigned as fp and also for adding questions
+            $this->new_exams = array_unique($this->new_exams, SORT_REGULAR);
             if ($this->new_exams) {
                 $this->capabilities["viewnewexams"] = true;
             }
+        }
+        if ($capabilities["viewcreatedexams"]) {
+            $this->created_exams = block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
+        } else {
+            $this->created_exams = $this->new_exams =
+                block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
+                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER,
+                    BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
+            if ($this->created_exams) {
+                $this->capabilities["viewcreatedexams"] = true;
+            }
+
         }
         $this->created_exams = block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
         $this->fachlich_released_exams =
@@ -68,7 +89,8 @@ class exams implements renderable, templatable {
         foreach ($data->new_exams as $new_exam) {
             $popup = new popup_assign_addquestions($this->courseid, $new_exam->quizid);
             $new_exam->popup_assign_addquestions = $popup->export_for_template($output);
-            $new_exam->link_to_exam = new moodle_url('/course/modedit.php', array('update' => $new_exam->coursemoduleid, 'return' => '1'));
+            $new_exam->link_to_exam =
+                new moodle_url('/course/modedit.php', array('update' => $new_exam->coursemoduleid, 'return' => '1'));
             $new_exam->link_to_exam = $new_exam->link_to_exam->raw_out(false);
         }
 

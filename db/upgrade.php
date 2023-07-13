@@ -35,6 +35,7 @@ function xmldb_block_exaquest_upgrade($oldversion) {
         // Exaquest savepoint reached.
         upgrade_block_savepoint(true, 2022060902, 'exaquest');
     }
+
     if ($oldversion < 2022062401) {
 
         // TODO add reference to block_exaquestquestionstatus ? or is it enough to have it in the install.xml?
@@ -569,6 +570,17 @@ function xmldb_block_exaquest_upgrade($oldversion) {
         }
         // Exaquest savepoint reached.
         upgrade_block_savepoint(true, 2023060700, 'exaquest');
+    }
+
+    if ($oldversion < 2023062103) {
+        // Creating roles and assigning capabilities
+        // Done as a task AFTER the installation/upgrade, because the capabilities only exist at the end/after the installation/upgrade.
+        // create the instance
+        $setuptask = new \block_exaquest\task\set_up_roles();
+        // queue it
+        \core\task\manager::queue_adhoc_task($setuptask);
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2023062103, 'exaquest');
     }
 
     return $return_result;
