@@ -132,11 +132,22 @@ class change_status extends column_base {
                 if (has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
                     echo $output->render(new \block_exaquest\output\popup_change_status($fragenersteller, 'revise_question',
                         get_string('revise_question', 'block_exaquest'), $question));
+                    echo '<button href="#" class="changestatus' . $question->questionbankentryid .
+                        ' btn btn-primary" role="button" value="lockquestion"> ' .
+                        get_string('lock_question', 'block_exaquest') . '</button>';
                 }
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_IN_QUIZ:
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED:
+                if (has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
+                    echo '<button href="#" class="changestatus' . $question->questionbankentryid .
+                        ' btn btn-primary" role="button" value="unlockquestion"> ' .
+                        get_string('unlock_question', 'block_exaquest') . '</button>';
+
+                    echo $output->render(new \block_exaquest\output\popup_change_status($fragenersteller, 'revise_question',
+                        get_string('revise_question', 'block_exaquest'), $question));
+                }
                 break;
         }
 

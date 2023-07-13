@@ -176,4 +176,18 @@ switch ($action) {
             $DB->update_record("question_bank_entries", $qbe);
         }
         break;
+    case ('unlockquestion'):
+        $data = new stdClass;
+        $data->id = $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'id', array("questionbankentryid" => $questionbankentryid));
+        $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED;
+        $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
+
+        break;
+    case ('lockquestion'):
+        $data = new stdClass;
+        $data->id = $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'id', array("questionbankentryid" => $questionbankentryid));
+        $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED;
+        $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
+
+        break;
 }

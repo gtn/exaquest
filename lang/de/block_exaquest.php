@@ -200,6 +200,8 @@ $string['open_for_review_title'] = 'Begutachtung';
 $string['revise_title'] = 'Überarbeitung';
 $string['change_owner_title'] = 'Fragenersteller verändern';
 $string['change_owner_text'] = 'Fragenersteller verändern zu..';
+$string['unlock_question'] = 'Entsperren';
+$string['unlock_question'] = 'Sperren';
 
 //Category Settings
 $string['settings_title'] = 'Kategorieeinstellungen';
