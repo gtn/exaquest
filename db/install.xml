@@ -82,6 +82,8 @@
                        COMMENT="name of queston category in exaquest"/>
                 <FIELD NAME="categorytype" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
                        COMMENT="type of queston category in exaquest"/>
+                <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"
+                       COMMENT="Boolean value, 0 = not deleted, 1 = deleted"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
