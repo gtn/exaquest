@@ -200,6 +200,7 @@ $string['change_owner_title'] = 'Change Creator';
 $string['change_owner_text'] = 'Change Creator to..';
 $string['unlock_question'] = 'Unlock';
 $string['lock_question'] = 'Lock Question';
+$string['locked'] = 'Locked';
 
 
 //Category Settings
@@ -211,6 +212,9 @@ $string['category_options'] = 'Category options';
 $string['edit'] = "Edit";
 $string['submit'] = "Submit";
 $string['add_category'] = "Add Category";
+$string['delete'] = "Delete";
+$string['delete_check'] = "I am certain that I want to delete this category.";
+
 
 // Similarity Comparison
 $string['exaquest:similarity_title'] = 'Similarity Comparison';

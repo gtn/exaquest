@@ -202,6 +202,7 @@ $string['change_owner_title'] = 'Fragenersteller verändern';
 $string['change_owner_text'] = 'Fragenersteller verändern zu..';
 $string['unlock_question'] = 'Entsperren';
 $string['unlock_question'] = 'Sperren';
+$string['locked'] = 'Gesperrt';
 
 //Category Settings
 $string['settings_title'] = 'Kategorieeinstellungen';
@@ -212,6 +213,8 @@ $string['category_options'] = 'Fragekategorien';
 $string['edit'] = "Bearbeiten";
 $string['submit'] = "Bestätigen";
 $string['add_category'] = "Kategorie hinzufügen";
+$string['delete'] = "Archivieren";
+$string['delete_check'] = "Ich bin mir sicher, dass ich diese Kategorie löschen möchte";
 
 // Similarity Comparison
 $string['exaquest:similarity_title'] = 'Ähnlichkeitsvergleich';

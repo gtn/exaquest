@@ -50,6 +50,9 @@ class status_column extends column_base {
             case BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED:
                 echo get_string("released","block_exaquest");
                 break;
+            case BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED:
+                echo get_string("locked","block_exaquest");
+                break;
         }
     }
 }
