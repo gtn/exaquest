@@ -78,7 +78,7 @@ class popup_change_status implements renderable, templatable {
         foreach ($data->selectusers as $selectuser) {
             $autocompleteoptions[$selectuser->id] = $selectuser->firstname . ' ' . $selectuser->lastname;
         }
-        if ($this->action == 'open_question_for_review') {
+        if ($this->action == 'open_question_for_review' || $this->action == 'revise_question') {
             $selectusers_autocomplete_html = $mform->create_autocomplete_single_select_html($autocompleteoptions, $this->questionbankentryid);
         }else{
             $selectusers_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, $this->questionbankentryid);
