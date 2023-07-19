@@ -1853,7 +1853,7 @@ function block_exaquest_create_daily_notifications() {
     // get the PK of all courses and send notification about released questions
     $pks = block_exaquest_get_all_pruefungskoordination_users();
     foreach ($pks as $pk) {
-        $courseids = block_exaquest_get_courseids_of_relevant_courses_for_user($user->id);
+        $courseids = block_exaquest_get_courseids_of_relevant_courses_for_user($pk->id);
         $daily_released_questions_message = '';
         foreach ($courseids as $courseid) {
             if (has_capability('block/exaquest:pruefungskoordination', \context_course::instance($courseid),
