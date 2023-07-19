@@ -1,7 +1,7 @@
 <?php
 require __DIR__ . '/inc.php';
 
-global $CFG, $COURSE, $PAGE, $OUTPUT;
+global $CFG, $COURSE, $PAGE, $OUTPUT, $SESSION;
 
 use core\event\question_category_viewed;
 
@@ -15,21 +15,36 @@ list($thispageurl, $contexts, $cmid, $cm, $module, $pagevars) =
 
 
 $courseid = required_param('courseid', PARAM_INT);
-$filterstatus = optional_param('filterstatus',0, PARAM_INT);
-$fragencharakter = optional_param('fragencharakter',-1, PARAM_INT);
-$klassifikation = optional_param('klassifikation',-1, PARAM_INT);
-$fragefach = optional_param('fragefach',-1, PARAM_INT);
-$lehrinhalt = optional_param('lehrinhalt',-1, PARAM_INT);
+$filterstatus = optional_param('filterstatus',-1, PARAM_INT);
+$fragencharakter = optional_param('fragencharakter',-2, PARAM_INT);
+$klassifikation = optional_param('klassifikation',-2, PARAM_INT);
+$fragefach = optional_param('fragefach',-2, PARAM_INT);
+$lehrinhalt = optional_param('lehrinhalt',-2, PARAM_INT);
 $category = optional_param('category','', PARAM_TEXT);
 
 require_login($courseid);
 require_capability('block/exaquest:viewquestionbanktab', context_course::instance($courseid));
 
-$pagevars['filterstatus'] = $filterstatus;
-$pagevars['fragencharakter'] = $fragencharakter;
-$pagevars['klassifikation'] = $klassifikation;
-$pagevars['fragefach'] = $fragefach;
-$pagevars['lehrinhalt'] = $lehrinhalt;
+
+if(!property_exists($SESSION, 'filterstatus')){
+    $SESSION->filterstatus = 0;
+}
+if($filterstatus != -1){
+    $SESSION->filterstatus = $filterstatus;
+}
+if($fragencharakter != -2) {
+    $SESSION->fragencharakter = $fragencharakter;
+}
+if($klassifikation != -2) {
+    $SESSION->klassifikation = $klassifikation;
+}
+if($fragefach != -2) {
+    $SESSION->fragefach = $fragefach;
+}
+if($lehrinhalt != -2) {
+    $SESSION->lehrinhalt = $lehrinhalt;
+}
+
 $catAndCont = get_question_category_and_context_of_course();
 $pagevars['cat'] = $catAndCont[0] . ',' . $catAndCont[1];
 

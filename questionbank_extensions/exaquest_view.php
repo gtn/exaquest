@@ -156,6 +156,7 @@ class exaquest_view extends view
 
     public function display($pagevars, $tabname): void
     {
+        global $SESSION;
 
         $page = $pagevars['qpage'];
         $perpage = $pagevars['qperpage'];
@@ -169,6 +170,11 @@ class exaquest_view extends view
         $klassifikation = array_key_exists('klassifikation', $pagevars) ? $pagevars['klassifikation'] : null;
         $fragefach = array_key_exists('fragefach', $pagevars) ? $pagevars['fragefach'] : null;
         $lehrinhalt = array_key_exists('lehrinhalt', $pagevars) ? $pagevars['lehrinhalt'] : null;
+        $filterstatus = $SESSION->filterstatus;
+        $fragencharakter = $SESSION->fragencharakter;
+        $klassifikation = $SESSION->klassifikation;
+        $fragefach = $SESSION->fragefach;
+        $lehrinhalt = $SESSION->lehrinhalt;
 
 
         if (!empty($pagevars['qtagids'])) {
@@ -418,7 +424,7 @@ class exaquest_view extends view
     {
         // Get the required tables and fields.
         $joins = [];
-        $fields = ['qv.status', 'qc.id as categoryid', 'qv.version', 'qv.id as versionid', 'qbe.id as questionbankentryid'];
+        $fields = [ 'qbe.id as questionbankentryid','qv.status', 'qc.id as categoryid', 'qv.version', 'qv.id as versionid'];
         if (!empty($this->requiredcolumns)) {
             foreach ($this->requiredcolumns as $column) {
                 $extrajoins = $column->get_extra_joins();
@@ -472,6 +478,8 @@ class exaquest_view extends view
             // No questions on this page. Reset to page 0.
             $questions = $DB->get_recordset_sql($this->loadsql, $this->sqlparams, 0, $perpage);
         }
+//        var_dump($this->loadsql);
+//        die;
         return $questions;
     }
 
