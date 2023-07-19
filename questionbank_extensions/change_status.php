@@ -44,10 +44,16 @@ class change_status extends column_base {
 
         switch (intval($question->teststatus)) {
             case BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED:
-                echo $output->render(new \block_exaquest\output\popup_change_owner($fragenersteller, 'change_owner',
-                    get_string('open_question_for_review', 'block_exaquest'), $question));
-                echo $output->render(new \block_exaquest\output\popup_change_status_warning('release_question',
-                    get_string('skip_and_release_question', 'block_exaquest'), $question));
+                if (has_capability('block/exaquest:changeowner', \context_course::instance($COURSE->id))) {
+                    echo $output->render(new \block_exaquest\output\popup_change_owner($fragenersteller, 'change_owner',
+                        get_string('open_question_for_review', 'block_exaquest'), $question));
+                }
+                if (has_capability('block/exaquest:modulverantwortlicher', \context_course::instance($COURSE->id)) ||
+                    has_capability('block/exaquest:pruefungskoordination', \context_course::instance($COURSE->id)) ||
+                    intval($question->ownerid) == $USER->id) {
+                    echo $output->render(new \block_exaquest\output\popup_change_status_warning('release_question',
+                        get_string('skip_and_release_question', 'block_exaquest'), $question));
+                }
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_NEW:
             case BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE:

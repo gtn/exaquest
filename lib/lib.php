@@ -1021,6 +1021,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:assignaddquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:createexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:setquestioncount', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:changeowner', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
         $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '', 'manager');
@@ -1108,6 +1109,8 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:assignaddquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:createexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:setquestioncount', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:changeowner', CAP_ALLOW, $roleid, $context);
+
 
     if (!$DB->record_exists('role', ['shortname' => 'fragenersteller'])) {
         $roleid = create_role('Fragenersteller', 'fragenersteller', '', 'manager');
@@ -1351,6 +1354,37 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewownquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
+
+    if (!$DB->record_exists('role', ['shortname' => 'sekretariat'])) {
+        $roleid = create_role('Sekretariat', 'sekretariat', '', 'manager');
+        $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
+        $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
+        $definitiontable->force_duplicate($archetype,
+            $options); // overwrites everything that is set in the options. The rest stays.
+        $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
+        $definitiontable->save_changes();
+        $sourcerole = new \stdClass();
+        $sourcerole->id = $archetype;
+        role_cap_duplicate($sourcerole, $roleid);
+    } else {
+        $roleid = $DB->get_record('role', ['shortname' => 'sekretariat'])->id;
+    }
+    assign_capability('block/exaquest:fragenersteller', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:createquestion', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:readallquestions', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:changestatusofreleasedquestions', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:setstatustoreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:reviseownquestion', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewownrevisedquestions', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
+    assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
+    //added during development:
+    assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:changeowner', CAP_ALLOW, $roleid, $context);
 
     //
     //role_assign($roleid, $USER->id, $contextid);
