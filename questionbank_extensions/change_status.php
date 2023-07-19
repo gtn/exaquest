@@ -163,7 +163,7 @@ class change_status extends column_base {
 
                     if (changestatus_value == 'revise_question') {
                         let $selecteduser = $('#id_selectedusers<?php echo $question->questionbankentryid; ?>').val();
-                        if ($selecteduser && $selecteduser.length == 0 || textarea_value == '') {
+                        if ($selecteduser == "" || $selecteduser && $selecteduser.length == 0 || textarea_value == '') {
                             alert("Es muss mindestens eine Person ausgewählt sein und ein Kommentar eingegeben werden!");
                             return false;
                         }
@@ -172,7 +172,7 @@ class change_status extends column_base {
                     if (changestatus_value == 'open_question_for_review') {
 
                         let $selecteduser = $('#id_selectedusers<?php echo $question->questionbankentryid; ?>').val();
-                        if ($selecteduser == "") {
+                        if ($selecteduser == "" || $selecteduser && $selecteduser.length == 0) {
                             alert("Es muss mindestens eine Person ausgewählt sein!");
                             return false;
                         }
