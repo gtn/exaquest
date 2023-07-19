@@ -73,9 +73,10 @@ if( $action == "delete"){
                                                                                               WHERE be.id = qbe.id)');
     foreach($questions as $question){
         if (in_array(strval($deleteid), explode(',',$question->value))){
+            $id = $DB->get_field("block_exaquestquestionstatus","id", array("questionbankentryid" => $question->qbeid));
             $obj = new stdClass();
             $obj->status = BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED;
-            $obj->id = $question->qbeid;
+            $obj->id = $id;
             $DB->update_record("block_exaquestquestionstatus",$obj);
         }
     }
