@@ -33,12 +33,12 @@ class autofill_helper_form extends \moodleform {
         // moodle/lib/form/autocomplete.php
         // if I keep 'selectedusers' for every mfrom it breaks. Only the first will be displayed correctly, the rest will show a simple select with options, without the added fields.
         // ==> needs to be unique
-        $newautocompleteoptions = array(0 => "");
+        $newautocompleteoptions = array("");
         foreach($autocompleteoptions as $key => $autocompleteoption){
             $newautocompleteoptions[$key] = $autocompleteoption;
         }
 
-        $element = $this->_form->addElement('autocomplete', 'selectedusers'.$id, 'Fragenersteller', $autocompleteoptions, $options);
+        $element = $this->_form->addElement('autocomplete', 'selectedusers'.$id, 'Fragenersteller', $newautocompleteoptions, $options);
         return $element->toHtml();
         // how to use example: enrol_users_form has this code:
     }
