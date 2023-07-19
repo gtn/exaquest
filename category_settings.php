@@ -30,8 +30,8 @@ $page_params = array('courseid' => $courseid);
 
 $url = new moodle_url('/blocks/exaquest/category_settings.php', $page_params);
 $PAGE->set_url($url);
-$PAGE->set_heading(get_string('category_settings', 'block_exaquest'));
-$PAGE->set_title(get_string('category_settings', 'block_exaquest'));
+$PAGE->set_heading(get_string('category_settings_of_course', 'block_exaquest', $COURSE->fullname));
+$PAGE->set_title(get_string('category_settings_of_course', 'block_exaquest', $COURSE->fullname));
 
 block_exaquest_init_js_css();
 

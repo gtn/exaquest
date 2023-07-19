@@ -7,7 +7,11 @@ $string['exaquest:view'] = 'Exaquest Block anzeigen.';
 
 // Block
 $string['dashboard'] = 'Übersicht';
-$string['dashboard_of_course'] = 'Übersicht Kurs "{$a}"';
+$string['dashboard_of_course'] = 'Übersicht - Kurs "{$a}"';
+$string['questionbank_of_course'] = 'Fragensammlung - Kurs "{$a}"';
+$string['similarity_of_course'] = 'Ähnlichkeitsvergleich - Kurs "{$a}"';
+$string['exams_of_course'] = 'Prüfungen - Kurs "{$a}"';
+$string['category_settings_of_course'] = 'Kategorieeinstellungen - Kurs "{$a}"';
 $string['get_questionbank'] = 'Fragensammlung';
 $string['similarity'] = 'Ähnlichkeitsübersicht';
 $string['exams'] = 'Prüfungen';

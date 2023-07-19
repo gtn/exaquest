@@ -12,6 +12,8 @@ require_once(__DIR__ . '/questionbank_extensions/exaquest_view.php');
 list($thispageurl, $contexts, $cmid, $cm, $module, $pagevars) =
     question_edit_setup('questions', '/question/edit.php');
 
+
+
 $courseid = required_param('courseid', PARAM_INT);
 $filterstatus = optional_param('filterstatus',0, PARAM_INT);
 $fragencharakter = optional_param('fragencharakter',-1, PARAM_INT);
@@ -36,10 +38,9 @@ $page_params = array('courseid' => $courseid);
 $url = new moodle_url('/blocks/exaquest/questbank.php', $page_params);
 
 $PAGE->set_url($url);
-$PAGE->set_heading('showQuestionBank');
-//$streditingquestions = get_string('editquestions', 'question');
-//$PAGE->set_title(block_exacomp_get_string($streditingquestions));
-$PAGE->set_title('showQuestionBank');
+$PAGE->set_heading(get_string('questionbank_of_course', 'block_exaquest', $COURSE->fullname));
+$PAGE->set_title(get_string('questionbank_of_course', 'block_exaquest', $COURSE->fullname));
+
 
 $context = context_course::instance($courseid);
 $output = $PAGE->get_renderer('block_exaquest');

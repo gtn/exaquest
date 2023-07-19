@@ -8,6 +8,10 @@ $string['exaquest:view'] = 'View the exaquest block';
 // Block
 $string['dashboard'] = 'Dashboard';
 $string['dashboard_of_course'] = 'Dashboard of course "{$a}"';
+$string['questionbank_of_course'] = 'Questionbank of course "{$a}"';
+$string['similarity_of_course'] = 'Similarity comparison of course "{$a}"';
+$string['exams_of_course'] = 'Exams of course "{$a}"';
+$string['category_settings_of_course'] = 'Category settings of course "{$a}"';
 $string['get_questionbank'] = 'Questionbank';
 $string['similarity'] = 'Similarity overview';
 $string['exams'] = 'Exams';
