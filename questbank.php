@@ -29,6 +29,19 @@ require_capability('block/exaquest:viewquestionbanktab', context_course::instanc
 if(!property_exists($SESSION, 'filterstatus')){
     $SESSION->filterstatus = 0;
 }
+if(!property_exists($SESSION, 'fragencharakter')){
+    $SESSION->fragencharakter = -1;
+}
+if(!property_exists($SESSION, 'klassifikation')){
+    $SESSION->klassifikation = -1;
+}
+if(!property_exists($SESSION, 'fragefach')){
+    $SESSION->fragefach = -1;
+}
+if(!property_exists($SESSION, 'lehrinhalt')){
+    $SESSION->lehrinhalt = -1;
+}
+
 if($filterstatus != -1){
     $SESSION->filterstatus = $filterstatus;
 }
@@ -44,6 +57,12 @@ if($fragefach != -2) {
 if($lehrinhalt != -2) {
     $SESSION->lehrinhalt = $lehrinhalt;
 }
+
+$pagevars['filterstatus'] = $SESSION->filterstatus;
+$pagevars['fragencharakter'] = $SESSION->fragencharakter;
+$pagevars['klassifikation'] = $SESSION->klassifikation;
+$pagevars['fragefach'] = $SESSION->fragefach;
+$pagevars['lehrinhalt'] = $SESSION->lehrinhalt;
 
 $catAndCont = get_question_category_and_context_of_course();
 $pagevars['cat'] = $catAndCont[0] . ',' . $catAndCont[1];

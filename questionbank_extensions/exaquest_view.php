@@ -4,7 +4,7 @@ namespace core_question\local\bank;
 
 defined('MOODLE_INTERNAL') || die();
 
-global $CFG;
+global $CFG, $SESSION;
 
 require_once($CFG->dirroot . '/question/editlib.php');
 
@@ -170,11 +170,6 @@ class exaquest_view extends view
         $klassifikation = array_key_exists('klassifikation', $pagevars) ? $pagevars['klassifikation'] : null;
         $fragefach = array_key_exists('fragefach', $pagevars) ? $pagevars['fragefach'] : null;
         $lehrinhalt = array_key_exists('lehrinhalt', $pagevars) ? $pagevars['lehrinhalt'] : null;
-        $filterstatus = $SESSION->filterstatus;
-        $fragencharakter = $SESSION->fragencharakter;
-        $klassifikation = $SESSION->klassifikation;
-        $fragefach = $SESSION->fragefach;
-        $lehrinhalt = $SESSION->lehrinhalt;
 
 
         if (!empty($pagevars['qtagids'])) {
