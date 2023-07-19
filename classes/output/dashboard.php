@@ -169,7 +169,7 @@ class dashboard implements renderable, templatable {
         //    $data->show_exams_heading = true;
         //}
 
-        if ($this->capabilities["fachlicherpruefer"]) {
+        if ($this->capabilities["fachlicherpruefer"] || $this->capabilities["modulverantwortlicher"] || $this->capabilities["pruefungskoordination"]) {
             $data->show_exams_heading = true;
         }
 
