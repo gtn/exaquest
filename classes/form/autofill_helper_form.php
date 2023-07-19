@@ -38,7 +38,7 @@ class autofill_helper_form extends \moodleform {
             $newautocompleteoptions[$key] = $autocompleteoption;
         }
 
-        $element = $this->_form->addElement('select', 'selectedusers'.$id, 'Fragenersteller', $newautocompleteoptions, array("class" => "custom-select"));
+        $element = $this->_form->addElement('autocomplete', 'selectedusers'.$id, 'Fragenersteller', $newautocompleteoptions, array("class" => "custom-select"));
         return $element->toHtml();
         // how to use example: enrol_users_form has this code:
     }
