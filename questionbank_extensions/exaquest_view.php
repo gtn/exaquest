@@ -419,7 +419,7 @@ class exaquest_view extends view
     {
         // Get the required tables and fields.
         $joins = [];
-        $fields = [ 'qbe.id as questionbankentryid','qv.status', 'qc.id as categoryid', 'qv.version', 'qv.id as versionid'];
+        $fields = [ 'qbe.id as questionbankentryid','qv.status', 'qc.id as categoryid', 'qv.version', 'qv.id as versionid', 'qrevisea.reviserid as reviserid'];
         if (!empty($this->requiredcolumns)) {
             foreach ($this->requiredcolumns as $column) {
                 $extrajoins = $column->get_extra_joins();

@@ -57,7 +57,8 @@ class change_status extends column_base {
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_NEW:
             case BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE:
-                if (intval($question->ownerid) == $USER->id &&
+                // the original owner and the assigned reviser can both revise the question
+                if ((intval($question->ownerid) == $USER->id || intval($question->reviserid) == $USER->id) &&
                     has_capability('block/exaquest:setstatustoreview', \context_course::instance($COURSE->id))) {
                     $usertoselect = block_exaquest_get_reviewer_by_courseid($COURSE->id);
                     echo $output->render(new \block_exaquest\output\popup_change_status($usertoselect, 'open_question_for_review',
@@ -266,6 +267,7 @@ class change_status extends column_base {
         return ['qs' => 'JOIN {block_exaquestquestionstatus} qs ON qbe.id = qs.questionbankentryid',
             'qra' => 'LEFT JOIN {block_exaquestreviewassign} qra ON qbe.id = qra.questionbankentryid',
             'qrevisea' => 'LEFT JOIN {block_exaquestreviseassign} qrevisea ON qbe.id = qrevisea.questionbankentryid'];
+        // if I want e.g. fields from the reviseassign table, I still have to add that in exaquest_view $fields = [ 'qbe. ....
     }
 
 }
