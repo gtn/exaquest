@@ -461,7 +461,7 @@ class exaquest_view extends view
         $sql = ' FROM {question} q ' . implode(' ', $joins);
         $sql .= ' WHERE ' . implode(' AND ', $tests);
         $this->countsql = 'SELECT count(DISTINCT qbe.id)' . $sql;
-        $this->loadsql = 'SELECT ' . implode(', ', $fields) . $sql . ' ORDER BY ' . implode(', ', $sorts);
+        $this->loadsql = 'SELECT DISTINCT ' . implode(', ', $fields) . $sql . ' ORDER BY ' . implode(', ', $sorts);
     }
 
     protected function load_page_questions($page, $perpage): \moodle_recordset
@@ -473,8 +473,6 @@ class exaquest_view extends view
             // No questions on this page. Reset to page 0.
             $questions = $DB->get_recordset_sql($this->loadsql, $this->sqlparams, 0, $perpage);
         }
-//        var_dump($this->loadsql);
-//        die;
         return $questions;
     }
 

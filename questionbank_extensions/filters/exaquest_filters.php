@@ -119,7 +119,7 @@ class exaquest_filters extends condition {
                 if ($this->filterstatus != BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS &&
                     $this->filterstatus != BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS_TO_SUBMIT) {
                     if ($this->filterstatus == BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS) {
-                        $this->where = "qra.reviewerid = " . $USER->id;
+                        $this->where = "AND qra.reviewerid = " . $USER->id;
                     } else {
                         $this->where .= " AND qra.reviewerid = " . $USER->id;
                     }
