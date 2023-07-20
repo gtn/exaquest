@@ -850,12 +850,13 @@ function block_exaquest_get_questions_for_me_to_revise_count($coursecategoryid, 
     $sql = 'SELECT qs.id
 			FROM {' . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . '} qs
 			JOIN {question_bank_entries} qe ON qs.questionbankentryid = qe.id
-			WHERE qe.ownerid = :ownerid
+			JOIN {' . BLOCK_EXAQUEST_DB_REVISEASSIGN . '} qra ON qra.questionbankentryid = qs.questionbankentryid
+			WHERE qra.reviserid = :reviserid
 			AND qs.status = :status
 			AND qs.coursecategoryid = :coursecategoryid';
 
     $questions =
-        count($DB->get_records_sql($sql, array('ownerid' => $userid, 'status' => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE,
+        count($DB->get_records_sql($sql, array('reviserid' => $userid, 'status' => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE,
             'coursecategoryid' => $coursecategoryid)));
 
     return $questions;
