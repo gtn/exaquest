@@ -1862,6 +1862,8 @@ function block_exaquest_create_daily_notifications() {
             $course = get_course($courseid);
             $context = \context_course::instance($courseid);
             $todocount = block_exaquest_get_todo_count($user->id, $course->category, $context);
+            // todo: only create a message, when the todos count differs from the message of the previous day. careful: if it is the first notification --> null problems
+
             if ($todocount) {
                 // create the message
                 $messageobject = new stdClass();
@@ -1895,6 +1897,8 @@ function block_exaquest_create_daily_notifications() {
                 $pk->id)) { // could have another role in this course ==> skip
                 $course = get_course($courseid);
                 $daily_released_questions = get_daily_released_questions($course->category);
+                // todo: only create a message, when the todos count differs from the message of the previous day. careful: if it is the first notification --> null problems
+
                 if ($daily_released_questions) {
                     // create the message
                     $messageobject = new stdClass();
