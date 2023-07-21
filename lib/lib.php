@@ -2214,3 +2214,30 @@ function block_exaquest_check_if_exam_is_ready($quizid){
     // TODO: also check when all questions are added ?
 
 }
+
+function block_exaquest_check_if_question_containes_categories($questionid){
+    global $DB;
+
+    $categoryoptionids = $DB->get_records_sql("SELECT cfd.value
+                                    FROM {question} q
+                                    JOIN {customfield_data} cfd ON q.id = cfd.instanceid
+                                   WHERE q.id = ?", array($questionid));
+
+    $categoryoptionidarray = array();
+    foreach($categoryoptionids as $categoryoptionid){
+        $mrg = explode(',',$categoryoptionid->value);
+        $categoryoptionidarray = array_merge($categoryoptionidarray, $mrg);
+    }
+    $query = "('". implode("','", $categoryoptionidarray) . "')";
+
+    $categoryoptions = $DB->get_records_sql("SELECT eqc.id, eqc.categoryname, eqc.categorytype
+                                    FROM {block_exaquestcategories} eqc
+                                   WHERE eqc.id IN ". $query);
+
+    $categorytypes = array();
+    foreach($categoryoptions as $categoryoption){
+        $categorytypes[] = intval($categoryoption->categorytype);
+    }
+    return in_array(0, $categorytypes) && in_array(1, $categorytypes) && in_array(2, $categorytypes) && in_array(3, $categorytypes);
+
+}

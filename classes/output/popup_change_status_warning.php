@@ -19,6 +19,7 @@ class popup_change_status_warning implements renderable, templatable {
         $this->questionbankentryid = $question->questionbankentryid;
         $this->action = $action;
         $this->questionname = $question->name;
+        $this->questionid = $question->id;
 
     }
 
@@ -35,6 +36,10 @@ class popup_change_status_warning implements renderable, templatable {
         $data->title = get_string('release_question_warning_title', 'block_exaquest');
         $data->questionbankentryid = $this->questionbankentryid;
         $data->questionname = $this->questionname;
+        $data->disabled = "";
+        if(!block_exaquest_check_if_question_containes_categories($this->questionid)){
+            $data->disabled = "disabled";
+        }
 
 
 
