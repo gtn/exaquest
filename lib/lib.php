@@ -348,20 +348,21 @@ function block_exaquest_get_reviewer_by_courseid($courseid) {
  * @param $userid
  * @return array
  */
-function block_exaquest_get_questionbankentries_to_formal_review_count($coursecategoryid,
-    $userid) { // TODO change to coursecategoryid and use it in query
-    global $DB;
-    $sql = "SELECT q.*
-			FROM {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} ra
-			JOIN {question_bank_entries} qe ON ra.questionbankentryid = qe.id
-			WHERE ra.reviewerid = :reviewerid
-			AND ra.reviewtype = :reviewtype";
-
-    $questions =
-        count($DB->get_records_sql($sql, array("reviewerid" => $userid, "reviewtype" => BLOCK_EXAQUEST_REVIEWTYPE_FORMAL)));
-
-    return $questions;
-}
+//Not used and outdated, would require questioncategoryid check
+//function block_exaquest_get_questionbankentries_to_formal_review_count($coursecategoryid,
+//    $userid) { // TODO change to coursecategoryid and use it in query
+//    global $DB;
+//    $sql = "SELECT q.*
+//			FROM {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} ra
+//			JOIN {question_bank_entries} qe ON ra.questionbankentryid = qe.id
+//			WHERE ra.reviewerid = :reviewerid
+//			AND ra.reviewtype = :reviewtype";
+//
+//    $questions =
+//        count($DB->get_records_sql($sql, array("reviewerid" => $userid, "reviewtype" => BLOCK_EXAQUEST_REVIEWTYPE_FORMAL)));
+//
+//    return $questions;
+//}
 
 /**
  * Returns count of questionbankentries that have to be fachlich reviewed
@@ -371,20 +372,21 @@ function block_exaquest_get_questionbankentries_to_formal_review_count($courseca
  * @param $userid
  * @return array
  */
-function block_exaquest_get_questionbankentries_to_fachlich_review_count($courseid,
-    $userid) { // TODO change to coursecategoryid and use it in query
-    global $DB;
-    $sql = "SELECT q.*
-			FROM {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} ra
-			JOIN {question_bank_entries} qe ON ra.questionbankentryid = qe.id
-			WHERE ra.reviewerid = :reviewerid
-			AND ra.reviewtype = :reviewtype";
-
-    $questions =
-        count($DB->get_records_sql($sql, array("reviewerid" => $userid, "reviewtype" => BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH)));
-
-    return $questions;
-}
+//Not used and outdated, would require questioncategoryid check
+//function block_exaquest_get_questionbankentries_to_fachlich_review_count($courseid,
+//    $userid) { // TODO change to coursecategoryid and use it in query
+//    global $DB;
+//    $sql = "SELECT q.*
+//			FROM {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} ra
+//			JOIN {question_bank_entries} qe ON ra.questionbankentryid = qe.id
+//			WHERE ra.reviewerid = :reviewerid
+//			AND ra.reviewtype = :reviewtype";
+//
+//    $questions =
+//        count($DB->get_records_sql($sql, array("reviewerid" => $userid, " reviewtype" => BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH)));
+//
+//    return $questions;
+//}
 
 /**
  * Returns count of all questionbankentries (all entries in exaquestqeustionstatus)
