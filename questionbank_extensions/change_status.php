@@ -147,10 +147,15 @@ class change_status extends column_base {
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED:
                 if (has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
-                    echo '<button href="#" class="changestatus' . $question->questionbankentryid .
-                        ' btn btn-primary" role="button" value="unlockquestion"> ' .
-                        get_string('unlock_question', 'block_exaquest') . '</button>';
-
+                    if(!block_exaquest_check_if_question_containes_categories($this->questionid)){
+                        echo '<button href="#" class="changestatus' . $question->questionbankentryid .
+                            ' btn btn-primary disabled" disabled role="button" value="unlockquestion"> ' .
+                            get_string('unlock_question', 'block_exaquest') . '</button>';
+                    } else {
+                        echo '<button href="#" class="changestatus' . $question->questionbankentryid .
+                            ' btn btn-primary" role="button" value="unlockquestion"> ' .
+                            get_string('unlock_question', 'block_exaquest') . '</button>';
+                    }
                     echo $output->render(new \block_exaquest\output\popup_change_status($fragenersteller, 'revise_question',
                         get_string('revise_question', 'block_exaquest'), $question));
                 }

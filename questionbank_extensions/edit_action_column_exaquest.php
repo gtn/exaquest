@@ -49,10 +49,10 @@ class edit_action_column_exaquest extends edit_action_column {
         $questionStatus = $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'status', array('questionbankentryid' => $question->questionbankentryid));
 
         if (question_has_capability_on($question, 'edit')
-            && ($questionStatus < BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED || $questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED)
+            && ($questionStatus < BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED || $questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED || $questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED)
             && (($question->ownerid == $USER->id
                     && has_capability('block/exaquest:setstatustoreview', \context_course::instance($COURSE->id))
-                    && ($questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_NEW || $questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE || $questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED))
+                    && ($questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_NEW || $questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE || $questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED || $questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED))
             || ((has_capability('block/exaquest:modulverantwortlicher', \context_course::instance($COURSE->id)))
                     || has_capability('block/exaquest:pruefungskoordination', \context_course::instance($COURSE->id))))
 
