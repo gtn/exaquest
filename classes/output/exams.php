@@ -63,6 +63,14 @@ class exams implements renderable, templatable {
         $this->grading_released_exams =
             block_exaquest_exams_by_status($this->coursecategoryid, BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED);
 
+        $this->add_link_to_quiz($this->created_exams);
+        $this->add_link_to_quiz($this->fachlich_released_exams);
+        $this->add_link_to_quiz($this->formal_released_exams);
+        $this->add_link_to_quiz($this->active_exams);
+        $this->add_link_to_quiz($this->finished_exams);
+        $this->add_link_to_quiz($this->grading_released_exams);
+
+
     }
 
     /**
@@ -94,8 +102,7 @@ class exams implements renderable, templatable {
             $new_exam->link_to_exam = $new_exam->link_to_exam->raw_out(false);
         }
 
-        $data->created_exams =
-            array_values($this->created_exams); // TODO rw: test if they are shown with current mustache (no way to create them in moodle yet --> create one manually)
+        $data->created_exams = array_values($this->created_exams); // TODO rw: test if they are shown with current mustache (no way to create them in moodle yet --> create one manually)
         $data->fachlich_released_exams = array_values($this->fachlich_released_exams);
         $data->formal_released_exams = array_values($this->formal_released_exams);
         $data->active_exams = array_values($this->active_exams);
@@ -122,4 +129,13 @@ class exams implements renderable, templatable {
 
         return $data;
     }
+
+    private function add_link_to_quiz($exams){
+        foreach ($exams as $exam) {
+            $exam->link_to_exam =
+                new moodle_url('/course/modedit.php', array('update' => $exam->coursemoduleid, 'return' => '1'));
+            $exam->link_to_exam = $exam->link_to_exam->raw_out(false);
+        }
+    }
+
 }
