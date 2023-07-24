@@ -8,6 +8,10 @@ $string['exaquest:view'] = 'View the exaquest block';
 // Block
 $string['dashboard'] = 'Dashboard';
 $string['dashboard_of_course'] = 'Dashboard of course "{$a}"';
+$string['questionbank_of_course'] = 'Questionbank of course "{$a}"';
+$string['similarity_of_course'] = 'Similarity comparison of course "{$a}"';
+$string['exams_of_course'] = 'Exams of course "{$a}"';
+$string['category_settings_of_course'] = 'Category settings of course "{$a}"';
 $string['get_questionbank'] = 'Questionbank';
 $string['similarity'] = 'Similarity overview';
 $string['exams'] = 'Exams';
@@ -30,7 +34,6 @@ $string['request_exams'] = 'Request new exams';
 $string['request_exams_label'] = 'Request new exams from ...';
 $string['request_exams_comment_placeholder'] = 'Which kind of exam is needed? Optional';
 $string['request_exams_button'] = 'Request';
-
 
 $string['set_quizquestioncount'] = 'Request';
 
@@ -122,6 +125,7 @@ $string['questions_fachlich_reviewed_count'] = 'Fachlich reviewed questions';
 $string['questions_formal_reviewed_count'] = 'Formal reviewed questions';
 $string['questions_finalised_count'] = 'questions finalised';
 $string['questions_released_count'] = 'questions released';
+$string['questions_locked_count'] = 'questions locked';
 $string['questions_released_and_to_review_count'] = 'questions are released and should be reviewed again';
 
 $string['my_questions_count'] = 'questions from me';
@@ -145,6 +149,7 @@ $string['exams_for_me_to_fill_title'] = 'Prüfungen die ich mit Fragen befüllen
 //Questionbank
 
 $string['show_all_questions'] = 'Show all questions';
+$string['show_all_imported_questions'] = 'Show imported questions';
 $string['show_all_new_questions'] = 'Show all new questions';
 $string['show_my_created_questions'] = 'Show my created questions';
 $string['show_my_created_questions_to_submit'] = 'Show my created questions that I still have to submit';
@@ -159,11 +164,13 @@ $string['show_questions_for_me_to_revise'] = 'Show questions for me to revise';
 $string['show_questions_to_release'] = 'Show questions to release';
 $string['show_questions_for_me_to_release'] = 'Show questions for me to release';
 $string['show_all_released_questions'] = 'Show all released questions';
+$string['show_all_locked_questions'] = 'Show all locked questions';
 
 $string['created'] = 'Created:';
 $string['review'] = 'Review:';
 $string['revise'] = 'Revise:';
 $string['release'] = 'Release:';
+$string['locked_filter'] = 'Locked:';
 
 $string['open_question_for_review'] = 'Open question for review';
 $string['formal_review_done'] = 'Finish formal review';
@@ -184,6 +191,9 @@ $string['formal_done'] = 'Formally finalized';
 $string['fachlich_done'] = 'Fachlich finalized';
 $string['finalised'] = 'Finalized';
 $string['released'] = 'Released';
+$string['imported_question'] = 'Imported';
+$string['question'] = 'Question:';
+
 
 $string['question_id'] = 'Question ID';
 $string['ownername'] = 'Created by';
@@ -193,12 +203,28 @@ $string['open_for_review_text'] = 'Assign review to..';
 $string['revise_text'] = 'Assign revision to..';
 $string['open_for_review_title'] = 'Review';
 $string['revise_title'] = 'Revision';
+$string['change_owner_title'] = 'Change Creator';
+$string['change_owner_text'] = 'Change Creator to..';
+$string['unlock_question'] = 'Unlock';
+$string['lock_question'] = 'Lock Question';
+$string['locked'] = 'Locked';
+$string['missing_category_tooltip'] = 'Not all categories are assigned to the quesiton';
+
+
 
 //Category Settings
 $string['settings_title'] = 'Category Settings';
 $string['settings_description'] = 'Please enter one category per row';
 
 $string['category_options'] = 'Category options';
+
+$string['edit'] = "Edit";
+$string['submit'] = "Submit";
+$string['add_category'] = "Add Category";
+$string['delete'] = "Delete";
+$string['delete_check'] = "I am certain that I want to delete this category.";
+$string['actions'] = "Actions";
+
 
 // Similarity Comparison
 $string['exaquest:similarity_title'] = 'Similarity Comparison';
@@ -270,6 +296,7 @@ $string['exaquest:pruefungsmitwirkende'] = 'Prüfungsmitwirkende';
 $string['exaquest:fachlicherzweitpruefer'] = 'Fachlicherzweitprüfer';
 $string['exaquest:fachlfragenreviewerlight'] = 'Fachlfragenreviewerlight';
 $string['exaquest:fragenerstellerlight'] = 'Fragenerstellerlight';
+$string['exaquest:sekretariat'] = 'Sekretariat';
 
 $string['exaquest:readallquestions'] = 'Lesen aller Fragen im freigegebene Fragenpool des zugeordneten Moduls (Module)';
 $string['exaquest:readquestionstatistics'] = 'Fragenstatistik abfragen (Anzahl Fragen je Status, je Kategorie, je QS-Kennzahl...)';
@@ -340,10 +367,12 @@ $string['exaquest:viewactiveexams'] = 'View active exams in exaquest';
 $string['exaquest:viewownquestions'] = 'View own questions in exaquest';
 $string['exaquest:viewreleasedexams'] = 'View released exams in exaquest';
 
-
 // tasks
 $string['check_active_exams'] = 'Check status of active Exaquest quizzes and update if finished.';
 $string['clean_up_tables'] =
     'Clean up Exaquest tables, e.g. delete questionstatus entries where there is no questionbankentryid related.';
 $string['create_daily_notifications'] = 'Create daily Exaquest notifications.';
 $string['set_up_roles'] = 'Set up roles for Exaquest.';
+
+$string['points_per'] = 'Points for Fragefach ';
+$string['exaquest_settings'] = 'Exaquest Einstellungen';

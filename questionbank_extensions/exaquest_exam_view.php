@@ -36,6 +36,7 @@ require_once('exaquest_view.php');
 require_once('plugin_feature.php');
 require_once('filters/added_to_quiz_condition.php');
 require_once('filters/only_released_questions.php');
+require_once('filters/exaquest_questioncategoryfilter.php');
 
 
 
@@ -50,9 +51,9 @@ class exaquest_exam_view extends exaquest_view {
      * Display the header element for the question bank.
      */
     protected function display_question_bank_header(): void {
-        global $OUTPUT, $DB;
+        global $OUTPUT, $DB, $SESSION;
 
-        $quizid = optional_param('quizid', null, PARAM_INT);
+        $quizid = $SESSION->quizid;
 
         if($quizid!=null){
             $quizname = $DB->get_field("quiz", "name", array("id"=>$quizid));
@@ -223,6 +224,7 @@ class exaquest_exam_view extends exaquest_view {
                 array_unshift($this->searchconditions, new \core_question\bank\search\only_released_questions());
                 array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_category_condition(
                     $cat, $recurse, $editcontexts, $this->baseurl, $this->course));
+                array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_questioncategoryfilter($fragencharakter, $klassifikation, $fragefach, $lehrinhalt));
             }
         }
         $this->display_options_form($showquestiontext);
@@ -239,4 +241,42 @@ class exaquest_exam_view extends exaquest_view {
         }
         return $questions;
     }
+
+    public function display($pagevars, $tabname): void
+    {
+        global $SESSION;
+
+        $page = $pagevars['qpage'];
+        $perpage = $pagevars['qperpage'];
+        $cat = $pagevars['cat'];
+        $recurse = $pagevars['recurse'];
+        $showhidden = $pagevars['showhidden'];
+        $showquestiontext = $pagevars['qbshowtext'];
+        $tagids = [];
+        $filterstatus = $pagevars['filterstatus'];
+        $fragencharakter = array_key_exists('fragencharakter', $pagevars) ? $pagevars['fragencharakter'] : null;
+        $klassifikation = array_key_exists('klassifikation', $pagevars) ? $pagevars['klassifikation'] : null;
+        $fragefach = array_key_exists('fragefach', $pagevars) ? $pagevars['fragefach'] : null;
+        $lehrinhalt = array_key_exists('lehrinhalt', $pagevars) ? $pagevars['lehrinhalt'] : null;
+
+
+        if (!empty($pagevars['qtagids'])) {
+            $tagids = $pagevars['qtagids'];
+        }
+
+        echo \html_writer::start_div('questionbankwindow boxwidthwide boxaligncenter');
+
+        $editcontexts = $this->contexts->having_one_edit_tab_cap($tabname);
+
+        //var_dump($cat);
+        // Show the filters and search options.
+        $this->wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus, $fragencharakter, $klassifikation, $fragefach, $lehrinhalt);
+
+        // Continues with list of questions.
+        $this->display_question_list($this->baseurl, $cat, null, $page, $perpage,
+            $this->contexts->having_cap('moodle/question:add'));
+        echo \html_writer::end_div();
+
+    }
+
 }

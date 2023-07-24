@@ -16,7 +16,7 @@ $courseid = required_param('courseid', PARAM_INT);
 $filterstatus = optional_param('filterstatus',0, PARAM_INT);
 
 require_login($courseid);
-require_capability('block/exaquest:viewcategorytab', context_course::instance($courseid));
+//require_capability('block/exaquest:viewcategorytab', context_course::instance($courseid));
 
 $pagevars['filterstatus'] = $filterstatus;
 $catAndCont = get_question_category_and_context_of_course();
@@ -24,7 +24,7 @@ $pagevars['cat'] = $catAndCont[0] . ',' . $catAndCont[1];
 
 $page_params = array('courseid' => $courseid);
 
-$url = new moodle_url('/blocks/exaquest/finished_exam_questbank.php', $page_params);
+$url = new moodle_url('/blocks/exaquest/finished_exam_questionbank.php', $page_params);
 
 $PAGE->set_url($url);
 $PAGE->set_heading('showQuestionBank');

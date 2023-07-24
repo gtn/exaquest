@@ -12,6 +12,13 @@ $fragencharakter  = optional_param('fragencharakter', null, PARAM_TEXT);
 $klassifikation  = optional_param('klassifikation', null, PARAM_TEXT);
 $fragefach  = optional_param('fragefach', null, PARAM_TEXT);
 $lehrinhalt  = optional_param('lehrinhalt', null, PARAM_TEXT);
+$editedName = optional_param('editedname', null, PARAM_TEXT);
+$editedNameId = optional_param('editednameid', null, PARAM_INT);
+$categorytype = optional_param('categorytype', null, PARAM_INT);
+$addcategory = optional_param('addcategory', null, PARAM_TEXT);
+$deleteid = optional_param('deleteid', null, PARAM_INT);
+
+
 require_login($courseid);
 require_capability('block/exaquest:viewexamstab', context_course::instance($courseid));
 
@@ -23,8 +30,8 @@ $page_params = array('courseid' => $courseid);
 
 $url = new moodle_url('/blocks/exaquest/category_settings.php', $page_params);
 $PAGE->set_url($url);
-$PAGE->set_heading(get_string('category_settings', 'block_exaquest'));
-$PAGE->set_title(get_string('category_settings', 'block_exaquest'));
+$PAGE->set_heading(get_string('category_settings_of_course', 'block_exaquest', $COURSE->fullname));
+$PAGE->set_title(get_string('category_settings_of_course', 'block_exaquest', $COURSE->fullname));
 
 block_exaquest_init_js_css();
 
@@ -32,59 +39,53 @@ $output = $PAGE->get_renderer('block_exaquest');
 
 echo $output->header($context, $courseid, get_string('exams_overview', 'block_exaquest'));
 
-if( $action == "submit"){
-    $check = $DB->get_fieldset_select("block_exaquestcategories", "categoryname", 'coursecategoryid = :coursecategoryid',
-        ['coursecategoryid' => $COURSE->category]);
-    if($fragencharakter != null){
-        $fragencharakterarray = explode(PHP_EOL, $fragencharakter);
-        if(end($fragencharakterarray) == ""){
-            array_pop($fragencharakterarray);
-        }
-        foreach($fragencharakterarray as $fragencharakter){
-            if(! $DB->record_exists("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $fragencharakter, "categorytype"=> 0))) {
-                $DB->insert_record("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $fragencharakter, "categorytype" => 0));
-            }
+if( $action == "edit"){
+    $currcat = $DB->get_records("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "deleted" => 0));
+    foreach($currcat as $cat){
+        if(strcmp($editedName[intval($cat->id)], $cat->categoryname)){
+            $obj = new stdClass();
+            $obj->categoryname = $editedName[$cat->id];
+            $obj->id = $cat->id;
+            $DB->update_record("block_exaquestcategories", $obj);
+            break;
         }
     }
-    if($klassifikation != null){
-        $klassifikationarray = explode(PHP_EOL, $klassifikation);
-        if(end($klassifikationarray) == ""){
-            array_pop($klassifikationarray);
-        }
-        foreach($klassifikationarray as $klassifikation){
-            if(! $DB->record_exists("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $klassifikation, "categorytype"=> 1))){
-                $DB->insert_record("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $klassifikation, "categorytype"=> 1));
-            }
-        }
-    }
-    if($fragefach != null){
-        $fragefacharray = explode(PHP_EOL, $fragefach);
-        if(end($fragefacharray) == ""){
-            array_pop($fragefacharray);
-        }
-        foreach($fragefacharray as $fragefach) {
-            if (!$DB->record_exists("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $fragefach, "categorytype" => 2))) {
-                $DB->insert_record("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $fragefach, "categorytype" => 2));
-            }
-        }
-    }
-    if($lehrinhalt != null){
-        $lehrinhaltarray = explode(PHP_EOL, $lehrinhalt);
-        if(end($lehrinhaltarray) == ""){
-            array_pop($lehrinhaltarray);
-        }
-        foreach($lehrinhaltarray as $lehrinhalt) {
-            if (!$DB->record_exists("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $lehrinhalt, "categorytype" => 3))) {
-                $DB->insert_record("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $lehrinhalt, "categorytype" => 3));
-            }
-        }
-    }
-    $newcontent = array_merge($fragencharakterarray, $klassifikationarray, $fragefacharray, $lehrinhaltarray);
+}
 
-    foreach($check as $cat){
-        if(!in_array($cat, $newcontent)){
-            $DB->delete_records("block_exaquestcategories", array("categoryname" => $cat));
+
+if( $action == "delete"){
+    $obj = new stdClass();
+    $obj->deleted = 1;
+    $obj->id = $deleteid;
+    $DB->update_record("block_exaquestcategories", $obj);
+
+    $cat = get_question_category_and_context_of_course($courseid)[0];
+
+    $questions = $DB->get_records_sql('SELECT cfd.id, qbe.id AS qbeid, cfd.value
+                                               FROM {question_versions} qv
+                                               JOIN {question} q ON qv.questionid = q.id
+                                               JOIN {customfield_data} cfd ON q.id = cfd.instanceid
+                                               JOIN {question_bank_entries} qbe ON qv.questionbankentryid = qbe.id
+                                               WHERE qbe.questioncategoryid = '.$cat.' AND qv.version =
+                                                                                                (SELECT MAX(v.version)
+                                                                                                FROM {question_versions} v
+                                                                                                JOIN {question_bank_entries} be ON be.id = v.questionbankentryid
+                                                                                              WHERE be.id = qbe.id)');
+    foreach($questions as $question){
+        if (in_array(strval($deleteid), explode(',',$question->value))){
+            $id = $DB->get_field("block_exaquestquestionstatus","id", array("questionbankentryid" => $question->qbeid));
+            $obj = new stdClass();
+            $obj->status = BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED;
+            $obj->id = $id;
+            $DB->update_record("block_exaquestquestionstatus",$obj);
         }
+    }
+
+}
+
+if( $action == "add") {
+    if(! $DB->record_exists("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $addcategory, "categorytype"=> $categorytype))) {
+        $DB->insert_record("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $addcategory, "categorytype" => $categorytype));
     }
 }
 

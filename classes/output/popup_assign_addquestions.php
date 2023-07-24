@@ -30,15 +30,15 @@ class popup_assign_addquestions implements renderable, templatable {
         $data->fp = $this->fp;
         $data->quizid = $this->quizid;
 
-        // create the fp autocomplete field with the help of an mform
-        $mform = new autofill_helper_form($data->fp);
-        // the choosable options need to be an array of strings
-        $autocompleteoptions = [];
-        foreach ($data->fp as $fp) {
-            $autocompleteoptions[$fp->id] = $fp->firstname . ' ' . $fp->lastname;
-        }
-        $fp_autocomplete_html = $mform->create_autocomplete_single_select_html($autocompleteoptions, "fp".$data->quizid);
-        $data->fp_autocomplete_html = $fp_autocomplete_html;
+        //// create the fp autocomplete field with the help of an mform
+        //$mform = new autofill_helper_form($data->fp);
+        //// the choosable options need to be an array of strings
+        //$autocompleteoptions = [];
+        //foreach ($data->fp as $fp) {
+        //    $autocompleteoptions[$fp->id] = $fp->firstname . ' ' . $fp->lastname;
+        //}
+        //$fp_autocomplete_html = $mform->create_autocomplete_single_select_html($autocompleteoptions, "fp".$data->quizid);
+        //$data->fp_autocomplete_html = $fp_autocomplete_html;
 
         // create the pmw autocomplete field with the help of an mform
         $mform = new autofill_helper_form($data->pmw);
@@ -46,6 +46,10 @@ class popup_assign_addquestions implements renderable, templatable {
         $autocompleteoptions = [];
         foreach ($data->pmw as $pmw) {
             $autocompleteoptions[$pmw->id] = $pmw->firstname . ' ' . $pmw->lastname;
+        }
+        // add the fp to this multiselect as well
+        foreach ($data->fp as $fp) {
+            $autocompleteoptions[$fp->id] = $fp->firstname . ' ' . $fp->lastname;
         }
         $pmw_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, "pmw".$data->quizid);
         $data->pmw_autocomplete_html = $pmw_autocomplete_html;

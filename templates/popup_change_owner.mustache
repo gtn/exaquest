@@ -1,7 +1,7 @@
 <!-- using bootstrap modals to do the popups https://getbootstrap.com/docs/4.6/components/modal/ -->
 <button type="button" class="btn btn-primary" data-toggle="modal"
         data-target="#changeStatusModal{{questionbankentryid}}">
-    {{name}}
+    {{title}}
 </button>
 
 <!-- Modal -->
@@ -20,15 +20,6 @@
                 <p>{{text}}</p>
                 <div class="form-check{{questionbankentryid}}">
                     {{{ selectusers_autocomplete_html }}}
-                </div>
-                <br>
-                <p>{{send_to_pk_text}}</p>
-                <br>
-                <div class="form-group">
-                    <label for="exampleFormControlTextarea1">{{#str}}write_a_comment, block_exaquest {{/str}}</label>
-                    <textarea class="form-control commenttext{{questionbankentryid}} commenttext" name="commenttext"
-                              id="texta" rows="3"
-                              placeholder="{{commentplaceholder}}"></textarea>
                 </div>
             </div>
             <div class="modal-footer">

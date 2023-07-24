@@ -41,7 +41,7 @@ switch ($action) {
         $coursecategoryid = $course->category;
         if ($users != null) {
             foreach ($users as $user) {
-                block_exaquest_request_review($USER, $user, $commenttext, $questionbankentryid, $questionname, $coursecategoryid,
+                block_exaquest_request_review($USER, $user, $commenttext, $questionbankentryid, $questionname,
                     $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH);
             }
         }
@@ -50,7 +50,6 @@ switch ($action) {
         if ($formalreviewusers != null) {
             foreach ($formalreviewusers as $user) {
                 block_exaquest_request_review($USER, $user->id, $commenttext, $questionbankentryid, $questionname,
-                    $coursecategoryid,
                     $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FORMAL);
             }
         }
@@ -146,12 +145,9 @@ switch ($action) {
         if ($users != null) {
             $questionname = $DB->get_record('question', array('id' => $questionid))->name;
             //$catAndCont = get_question_category_and_context_of_course($courseid);
-            $course = get_course($courseid);
-            $coursecategoryid = $course->category;
             if ($users != null) {
                 foreach ($users as $user) {
                     block_exaquest_request_revision($USER, $user, $commenttext, $questionbankentryid, $questionname,
-                        $coursecategoryid,
                         $courseid);
                 }
             }
@@ -168,5 +164,26 @@ switch ($action) {
         $quiz->questionsperpage = 1;
         $ret = quiz_add_quiz_question($questionid, $quiz, $page = 0, $maxmark = null);
         break;
+    case ('change_owner'):
+        if(is_array($users)){
+            $qbe = new stdClass();
+            $qbe->id = $questionbankentryid;
+            $qbe->ownerid = $users[0];
+            $DB->update_record("question_bank_entries", $qbe);
+        }
+        break;
+    case ('unlockquestion'):
+        $data = new stdClass;
+        $data->id = $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'id', array("questionbankentryid" => $questionbankentryid));
+        $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED;
+        $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
 
+        break;
+    case ('lockquestion'):
+        $data = new stdClass;
+        $data->id = $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'id', array("questionbankentryid" => $questionbankentryid));
+        $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED;
+        $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
+
+        break;
 }

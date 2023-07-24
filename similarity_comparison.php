@@ -66,8 +66,8 @@ require_login($courseID);
 [$thispageurl, $contexts, $cmid, $cm, $module, $pagevars] = question_edit_setup('questions', '/question/edit.php');
 $url = new moodle_url('/blocks/exaquest/similarity_comparison.php', array('courseid' => $courseID, "category" => $catAndCont));
 $PAGE->set_url($url);
-$PAGE->set_heading(get_string('exaquest:similarity_title', 'block_exaquest'));
-$PAGE->set_title(get_string('exaquest:similarity_title', 'block_exaquest'));
+$PAGE->set_heading(get_string('similarity_of_course', 'block_exaquest', $COURSE->fullname));
+$PAGE->set_title(get_string('similarity_of_course', 'block_exaquest', $COURSE->fullname));
 //$PAGE->requires->js_call_amd('block_exaquest/helloworld', 'init', [['courseid' => $courseID, 'sortby' => $sortBy]]); // include javascript within ./amd/src/
 
 $mform = new similarity_comparison_form($url, ["courseid" => $courseID, "sort" => $sortBy, "substituteid" => $substituteIDs, "hidepreviousq" => $hidePreviousQ]); // button array

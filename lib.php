@@ -27,24 +27,97 @@ require_once __DIR__ . '/inc.php';
 function block_exaquest_coursemodule_definition_after_data($formwrapper, $mform) {
     global $CFG, $COURSE, $DB, $PAGE;
 
-    // add button if exaquest is active in this course
-    if (is_exaquest_active_in_course() && $mform->_formName == 'mod_quiz_mod_form') {
-        ?>
-        <script type="text/javascript">
-            function changeFormActionExaquest() {
-                document.getElementsByClassName("mform")[0].action = "../blocks/exaquest/create_or_update_exam_redirect.php";
-            }
-        </script>
-        <?php
-        $mform->addElement('submit', 'saveandreturnexaquest', get_string('save_and_return', 'block_exaquest'),
-            'onClick="changeFormActionExaquest()"');
+    // only add the elements if the course module is a quiz
+    if (is_exaquest_active_in_course()) {
+        // add button to quiz
+        if ($mform->_formName == 'mod_quiz_mod_form') {
+            ?>
+            <script type="text/javascript">
+                function changeFormActionExaquest() {
+                    document.getElementsByClassName("mform")[0].action = "../blocks/exaquest/create_or_update_exam_redirect.php";
+                }
+            </script>
+            <?php
+            $mform->addElement('submit', 'saveandreturnexaquest', get_string('save_and_return', 'block_exaquest'),
+                'onClick="changeFormActionExaquest()"');
+        }
     }
 
     return;
 }
 
+function block_exaquest_coursemodule_standard_elements($formwrapper, $mform) {
+    global $CFG, $COURSE, $DB, $PAGE;
+    if (is_exaquest_active_in_course()) {
+        if ($mform->_formName == 'mod_quiz_mod_form') {
+            $quizid = $formwrapper->get_instance();
 
-function block_exaquest_extend_question_definition(){
+            $mform->addElement('header', 'exaquest_settings', get_string('exaquest_settings', 'block_exaquest'));
+            $mform->setExpanded('exaquest_settings');
+            // Add the fachlicherpruefer setting
+            $fachlichepruefer = block_exaquest_get_fachlichepruefer_by_courseid($COURSE->id);
+            if ($fachlichepruefer) {
+                $fachlichepruefer_options = array();
+                foreach ($fachlichepruefer as $fachlicherpruefer) {
+                    $fachlichepruefer_options[$fachlicherpruefer->id] =
+                        $fachlicherpruefer->firstname . ' ' . $fachlicherpruefer->lastname;
+                }
+                $mform->addElement('select', 'assignfachlicherpruefer', 'Fachlichen Prüfer auswählen', $fachlichepruefer_options);
+                if ($quizid) {
+                    // get the assigned fachlicherprüfer
+                    $assignedfachlicherpruefer = block_exaquest_get_assigned_fachlicherpruefer($quizid);
+                    $mform->setDefault('assignfachlicherpruefer', $assignedfachlicherpruefer->assigneeid);
+                }
+            }
+
+            // add the question count per quiz and fragefach settings
+            if ($quizid) {
+                $fragefaecher = block_exaquest_get_fragefaecher_by_courseid_and_quizid($COURSE->id, $quizid);
+            } else {
+                $fragefaecher = block_exaquest_get_fragefaecher_by_courseid($COURSE->id);
+            }
+
+            // Add the quiz questions count / points count settings
+            // for every fragefach, add one input
+            foreach ($fragefaecher as $fragefach) {
+                $mform->addElement('text', 'exaquestquestioncategoryid' . $fragefach->id,
+                    get_string('points_per', 'block_exaquest') . $fragefach->categoryname,
+                    array('size' => '10'));
+                $mform->setType('exaquestquestioncategoryid' . $fragefach->id, PARAM_INT);
+                if ($quizid) {
+                    $mform->setDefault('exaquestquestioncategoryid' . $fragefach->id, $fragefach->questioncount);
+                } else {
+                    $mform->setDefault('exaquestquestioncategoryid' . $fragefach->id, 0);
+                }
+            }
+        }
+    }
+}
+
+function block_exaquest_coursemodule_edit_post_actions($data, $course) {
+    global $CFG, $DB;
+    if (is_exaquest_active_in_course()) {
+        $quizid = $data->instance;
+
+        // set the question count per fragefach
+        $fragefaecher = block_exaquest_get_fragefaecher_by_courseid($course->id);
+        foreach ($fragefaecher as $fragefach) {
+            $setting = 'exaquestquestioncategoryid' . $fragefach->id;
+            if (isset($data->$setting)) {
+                block_exaquest_set_questioncount_for_exaquestcategory($quizid, $fragefach->id, $data->$setting);
+            }
+        }
+
+        // set the fachlicherprüfer
+        if ($data->assignfachlicherpruefer) {
+            block_exaquest_assign_quiz_fp($data->assignfachlicherpruefer, $quizid);
+        }
+    }
+
+    return $data;
+}
+
+function block_exaquest_extend_question_definition() {
     global $CFG, $COURSE;
     return;
 }

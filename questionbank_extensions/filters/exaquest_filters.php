@@ -54,7 +54,11 @@ class exaquest_filters extends condition {
     public function where() {
         global $USER, $COURSE;
         switch ($this->filterstatus) {
+            case BLOCK_EXAQUEST_FILTERSTATUS_ALL_IMPORTED_QUESTIONS:
+                $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED;
+                break;
             case BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS:
+                $this->where = "qs.status != " . BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED; // all except imported
                 break;
             case BLOCK_EXAQUEST_FILTERSTATUS_ALL_NEW_QUESTIONS:
                 $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_NEW;
@@ -99,6 +103,9 @@ class exaquest_filters extends condition {
             case BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS:
                 $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED;
                 break;
+            case BLOCK_EXAQUEST_FILTERSTATUS_ALL_LOCKED_QUESTIONS:
+                $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED;
+                break;
         }
         //this is for restricing view of questions for new fragenersteller light role
         if (!has_capability('block/exaquest:readallquestions', \context_course::instance($COURSE->id))) {
@@ -115,7 +122,7 @@ class exaquest_filters extends condition {
                 if ($this->filterstatus != BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS &&
                     $this->filterstatus != BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS_TO_SUBMIT) {
                     if ($this->filterstatus == BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS) {
-                        $this->where = "qra.reviewerid = " . $USER->id;
+                        $this->where = "AND qra.reviewerid = " . $USER->id;
                     } else {
                         $this->where .= " AND qra.reviewerid = " . $USER->id;
                     }
@@ -131,12 +138,15 @@ class exaquest_filters extends condition {
     public function display_options_adv() {
         global $PAGE, $COURSE;
 
-        $selected = array_fill(0, 13, '');
+        $selected = array_fill(0, 14, '');
         $selected[$this->filterstatus] = 'selected="selected"';
 
         $html =
             '<div class="form-group row"><label class="col-sm-2 col-form-label">Select Questions:</label><div class="col-sm-10"><select class="form-control select searchoptions" id="id_filterstatus" name="filterstatus">';
         if (has_capability('block/exaquest:readallquestions', \context_course::instance($COURSE->id))) {
+            $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_IMPORTED_QUESTIONS] . ' value="' .
+                BLOCK_EXAQUEST_FILTERSTATUS_ALL_IMPORTED_QUESTIONS . '">' . get_string('show_all_imported_questions', 'block_exaquest') .
+                '</option>';
             $html .= '<option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS] . ' value="' .
                 BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS . '">' . get_string('show_all_questions', 'block_exaquest') . '</option>';
         }
@@ -184,6 +194,10 @@ class exaquest_filters extends condition {
         $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS] . ' value="' .
             BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS . '">' .
             get_string('show_all_released_questions', 'block_exaquest') . '</option>';
+        $html .= '    <optgroup label="' . get_string('locked_filter', 'block_exaquest') . '">';
+        $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_LOCKED_QUESTIONS] . ' value="' .
+            BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED . '">' .
+            get_string('show_all_locked_questions', 'block_exaquest') . '</option>';
         $html .= '    </optgroup>';
         $html .= '</select></div></div>';
 

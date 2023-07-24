@@ -50,7 +50,7 @@ const BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE = 5;
 const BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED = 6;
 const BLOCK_EXAQUEST_QUESTIONSTATUS_IN_QUIZ = 7;
 const BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED = 8;
-
+const BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED = 9;
 /**
  * Quiz/Pruefung/Exam Status
  */
@@ -77,6 +77,7 @@ const BLOCK_EXAQUEST_REVIEWTYPE_FORMAL = 0;
 const BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH = 1;
 //const BLOCK_EXAQUEST_REVIEWTYPE_REVISE = 2;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS = 3;
+const BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER = 4; // this FP is responsible for the quiz
 
 /**
  * Filter Status
@@ -94,6 +95,8 @@ const BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS = 9;
 const BLOCK_EXAQUEST_FILTERSTATUS_ALL_NEW_QUESTIONS = 10; // all questions that are created but not submitted for review
 const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FACHLICH_REVIEWED = 11;
 const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FORMAL_REVIEWED = 12;
+const BLOCK_EXAQUEST_FILTERSTATUS_ALL_IMPORTED_QUESTIONS = 13;
+const BLOCK_EXAQUEST_FILTERSTATUS_ALL_LOCKED_QUESTIONS = 14;
 
 function block_exaquest_init_js_css() {
     global $PAGE, $CFG;
@@ -165,7 +168,7 @@ function block_exaquest_request_exam($userfrom, $userto, $comment) {
         "Prüfungserstellung", $messageobject->url);
 }
 
-function block_exaquest_request_review($userfrom, $userto, $comment, $questionbankentryid, $questionname, $coursecategoryid,
+function block_exaquest_request_review($userfrom, $userto, $comment, $questionbankentryid, $questionname,
     $courseid,
     $reviewtype) {
     global $DB, $COURSE;
@@ -174,7 +177,7 @@ function block_exaquest_request_review($userfrom, $userto, $comment, $questionba
     $assigndata->questionbankentryid = $questionbankentryid;
     $assigndata->reviewerid = $userto;
     $assigndata->reviewtype = $reviewtype;
-    $assigndata->coursecategoryid = $coursecategoryid;
+    //    $assigndata->coursecategoryid = $coursecategoryid;
     $DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
 
     // create the message
@@ -191,14 +194,14 @@ function block_exaquest_request_review($userfrom, $userto, $comment, $questionba
         "Review", $messageobject->url);
 }
 
-function block_exaquest_request_revision($userfrom, $userto, $comment, $questionbankentryid, $questionname, $coursecategoryid,
+function block_exaquest_request_revision($userfrom, $userto, $comment, $questionbankentryid, $questionname,
     $courseid) {
     global $DB, $COURSE;
     // enter data into the exaquest tables
     $assigndata = new stdClass;
     $assigndata->questionbankentryid = $questionbankentryid;
     $assigndata->reviserid = $userto;
-    $assigndata->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($courseid);
+    //    $assigndata->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($courseid);
     // I am assigning formal and fachlich review here... is this correct? --> NO, this would not make sense... The "request revision" should maybe change the owner? or add it to reviewassign but with 3rd value, not fachlich or formal review
     // created table like the reviewtable to assign revision
     //$assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FORMAL;
@@ -276,8 +279,11 @@ function block_exaquest_send_moodle_notification($notificationtype, $userfrom, $
 function block_exaquest_get_fragenersteller_by_courseid($courseid) {
     $context = context_course::instance($courseid);
     $userarray = array();
-    $userarray = array_replace($userarray, get_enrolled_users($context, 'block/exaquest:fragenerstellerlight'));
-    $userarray = array_replace($userarray, get_enrolled_users($context, 'block/exaquest:fragenersteller'));
+    $userarray = array_replace($userarray,
+        get_enrolled_users($context, 'block/exaquest:fragenerstellerlight', 0, 'u.*', null, 0, 0, true));
+
+    $userarray = array_replace($userarray,
+        get_enrolled_users($context, 'block/exaquest:fragenersteller', 0, 'u.*', null, 0, 0, true));
     return $userarray;
 }
 
@@ -291,7 +297,7 @@ function block_exaquest_get_fragenersteller_by_courseid($courseid) {
 function block_exaquest_get_pmw_by_courseid($courseid) {
     $context = context_course::instance($courseid);
     $userarray = array();
-    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:pruefungsmitwirkende'));
+    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:pruefungsmitwirkende', 0, 'u.*', null, 0, 0, true));
     return $userarray;
 }
 
@@ -304,7 +310,7 @@ function block_exaquest_get_pmw_by_courseid($courseid) {
  */
 function block_exaquest_get_fachlichepruefer_by_courseid($courseid) {
     $context = context_course::instance($courseid);
-    return get_enrolled_users($context, 'block/exaquest:fachlicherpruefer');
+    return get_enrolled_users($context, 'block/exaquest:fachlicherpruefer', 0, 'u.*', null, 0, 0, true);
 }
 
 /**
@@ -316,7 +322,7 @@ function block_exaquest_get_fachlichepruefer_by_courseid($courseid) {
  */
 function block_exaquest_get_modulverantwortliche_by_courseid($courseid) {
     $context = context_course::instance($courseid);
-    return get_enrolled_users($context, 'block/exaquest:modulverantwortlicher');
+    return get_enrolled_users($context, 'block/exaquest:modulverantwortlicher', 0, 'u.*', null, 0, 0, true);
 }
 
 /**
@@ -330,8 +336,8 @@ function block_exaquest_get_reviewer_by_courseid($courseid) {
     $context = context_course::instance($courseid);
     $userarray = array();
     //$userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:modulverantwortlicher'));
-    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fachlfragenreviewer'));
-    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fachlfragenreviewerlight'));
+    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fachlfragenreviewer', 0, 'u.*', null, 0, 0, true));
+    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fachlfragenreviewerlight', 0, 'u.*', null, 0, 0, true));
     //$userarray = array_merge($userarray, get_enrolled_users($context,
     //    'block/exaquest:pruefungskoordination')); // according to 20230112 Feedbackliste. But should they really have the right to review? nope, they should not be here, as told in later feedbackliste 20230323
     $userarray = array_unique($userarray, SORT_REGULAR); // to remove users who have multiple roles
@@ -346,20 +352,21 @@ function block_exaquest_get_reviewer_by_courseid($courseid) {
  * @param $userid
  * @return array
  */
-function block_exaquest_get_questionbankentries_to_formal_review_count($coursecategoryid,
-    $userid) { // TODO change to coursecategoryid and use it in query
-    global $DB;
-    $sql = "SELECT q.*
-			FROM {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} ra
-			JOIN {question_bank_entries} qe ON ra.questionbankentryid = qe.id
-			WHERE ra.reviewerid = :reviewerid
-			AND ra.reviewtype = :reviewtype";
-
-    $questions =
-        count($DB->get_records_sql($sql, array("reviewerid" => $userid, "reviewtype" => BLOCK_EXAQUEST_REVIEWTYPE_FORMAL)));
-
-    return $questions;
-}
+//Not used and outdated, would require questioncategoryid check
+//function block_exaquest_get_questionbankentries_to_formal_review_count($coursecategoryid,
+//    $userid) { // TODO change to coursecategoryid and use it in query
+//    global $DB;
+//    $sql = "SELECT q.*
+//			FROM {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} ra
+//			JOIN {question_bank_entries} qe ON ra.questionbankentryid = qe.id
+//			WHERE ra.reviewerid = :reviewerid
+//			AND ra.reviewtype = :reviewtype";
+//
+//    $questions =
+//        count($DB->get_records_sql($sql, array("reviewerid" => $userid, "reviewtype" => BLOCK_EXAQUEST_REVIEWTYPE_FORMAL)));
+//
+//    return $questions;
+//}
 
 /**
  * Returns count of questionbankentries that have to be fachlich reviewed
@@ -369,20 +376,21 @@ function block_exaquest_get_questionbankentries_to_formal_review_count($courseca
  * @param $userid
  * @return array
  */
-function block_exaquest_get_questionbankentries_to_fachlich_review_count($courseid,
-    $userid) { // TODO change to coursecategoryid and use it in query
-    global $DB;
-    $sql = "SELECT q.*
-			FROM {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} ra
-			JOIN {question_bank_entries} qe ON ra.questionbankentryid = qe.id
-			WHERE ra.reviewerid = :reviewerid
-			AND ra.reviewtype = :reviewtype";
-
-    $questions =
-        count($DB->get_records_sql($sql, array("reviewerid" => $userid, "reviewtype" => BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH)));
-
-    return $questions;
-}
+//Not used and outdated, would require questioncategoryid check
+//function block_exaquest_get_questionbankentries_to_fachlich_review_count($courseid,
+//    $userid) { // TODO change to coursecategoryid and use it in query
+//    global $DB;
+//    $sql = "SELECT q.*
+//			FROM {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} ra
+//			JOIN {question_bank_entries} qe ON ra.questionbankentryid = qe.id
+//			WHERE ra.reviewerid = :reviewerid
+//			AND ra.reviewtype = :reviewtype";
+//
+//    $questions =
+//        count($DB->get_records_sql($sql, array("reviewerid" => $userid, " reviewtype" => BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH)));
+//
+//    return $questions;
+//}
 
 /**
  * Returns count of all questionbankentries (all entries in exaquestqeustionstatus)
@@ -390,15 +398,18 @@ function block_exaquest_get_questionbankentries_to_fachlich_review_count($course
  * @param $coursecategoryid
  * @return array
  */
-function block_exaquest_get_questionbankentries_by_coursecategoryid_count($coursecategoryid) {
+function block_exaquest_get_questionbankentries_by_questioncategoryid_count($questioncategoryid) {
     global $DB;
     $sql = "SELECT qs.id
 			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
-			WHERE qs.coursecategoryid = :coursecategoryid";
+			JOIN {question_bank_entries} qbe ON qs.questionbankentryid = qbe.id
+			WHERE qbe.questioncategoryid = :questioncategoryid
+			AND qs.status != " .
+        BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED; // "all" questions except imported ones that have not been released yet
 
     // we simply count the exaquestquestionstatus entries for this course, so we do not need to have the category, do not read unneccesary entries in the question_bank_entries etc
 
-    $questions = count($DB->get_records_sql($sql, array("coursecategoryid" => $coursecategoryid)));
+    $questions = count($DB->get_records_sql($sql, array("questioncategoryid" => $questioncategoryid)));
 
     // TODO: check the questionlib for functions like get_question_bank_entry( that could be useful
 
@@ -411,7 +422,7 @@ function block_exaquest_get_questionbankentries_by_coursecategoryid_count($cours
  * @param $coursecategoryid
  * @return array
  */
-function block_exaquest_get_my_questionbankentries_count($coursecategoryid, $userid) {
+function block_exaquest_get_my_questionbankentries_count($questioncategoryid, $userid) {
     global $DB, $USER;
     if (!$userid) {
         $userid = $USER->id;
@@ -419,10 +430,10 @@ function block_exaquest_get_my_questionbankentries_count($coursecategoryid, $use
     $sql = "SELECT qs.id
               FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
               JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid 
-             WHERE qs.coursecategoryid = :coursecategoryid
+             WHERE qbe.questioncategoryid = :questioncategoryid
              AND qbe.ownerid = :ownerid";
 
-    $questions = count($DB->get_records_sql($sql, array("coursecategoryid" => $coursecategoryid, "ownerid" => $userid)));
+    $questions = count($DB->get_records_sql($sql, array("questioncategoryid" => $questioncategoryid, "ownerid" => $userid)));
 
     return $questions;
 }
@@ -433,7 +444,7 @@ function block_exaquest_get_my_questionbankentries_count($coursecategoryid, $use
  * @param $coursecategoryid
  * @return array
  */
-function block_exaquest_get_my_questionbankentries_to_submit_count($coursecategoryid, $userid) {
+function block_exaquest_get_my_questionbankentries_to_submit_count($questioncategoryid, $userid) {
     global $DB, $USER;
     if (!$userid) {
         $userid = $USER->id;
@@ -441,12 +452,13 @@ function block_exaquest_get_my_questionbankentries_to_submit_count($coursecatego
     $sql = "SELECT qs.id
               FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
               JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid 
-             WHERE qs.coursecategoryid = :coursecategoryid
+             WHERE qbe.questioncategoryid = :questioncategoryid
              AND qbe.ownerid = :ownerid
              AND qs.status = :newquestion";
 
     $questions = count($DB->get_records_sql($sql,
-        array("coursecategoryid" => $coursecategoryid, "ownerid" => $userid, "newquestion" => BLOCK_EXAQUEST_QUESTIONSTATUS_NEW)));
+        array("questioncategoryid" => $questioncategoryid, "ownerid" => $userid,
+            "newquestion" => BLOCK_EXAQUEST_QUESTIONSTATUS_NEW)));
 
     return $questions;
 }
@@ -457,17 +469,19 @@ function block_exaquest_get_my_questionbankentries_to_submit_count($coursecatego
  * @param $coursecategoryid
  * @return array
  */
-function block_exaquest_get_questionbankentries_to_be_reviewed_count($coursecategoryid) {
+function block_exaquest_get_questionbankentries_to_be_reviewed_count($questioncategoryid) {
     global $DB;
     $sql = "SELECT qs.id
 			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
-			WHERE qs.coursecategoryid = :coursecategoryid
+			JOIN {question_bank_entries} qbe ON qs.questionbankentryid = qbe.id
+			WHERE qbe.questioncategoryid = :questioncategoryid
 			AND (qs.status = :fachlichreviewdone
 			OR qs.status = :formalreviewdone
 			OR qs.status = :toassess)";
 
     $questions = count($DB->get_records_sql($sql,
-        array("coursecategoryid" => $coursecategoryid, "fachlichreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE,
+        array("questioncategoryid" => $questioncategoryid,
+            "fachlichreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE,
             "formalreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE,
             "toassess" => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS)));
 
@@ -481,15 +495,16 @@ function block_exaquest_get_questionbankentries_to_be_reviewed_count($coursecate
  * @param $coursecategoryid
  * @return array
  */
-function block_exaquest_get_questionbankentries_to_be_revised_count($coursecategoryid) {
+function block_exaquest_get_questionbankentries_to_be_revised_count($questioncategoryid) {
     global $DB;
     $sql = "SELECT qs.id
 			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
-			WHERE qs.coursecategoryid = :coursecategoryid
+			JOIN {question_bank_entries} qbe ON qs.questionbankentryid = qbe.id
+			WHERE qbe.questioncategoryid = :questioncategoryid
 			AND qs.status = :questionstatus";
 
     $questions = count($DB->get_records_sql($sql,
-        array("coursecategoryid" => $coursecategoryid, "questionstatus" => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE)));
+        array("questioncategoryid" => $questioncategoryid, "questionstatus" => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE)));
 
     return $questions;
 
@@ -501,15 +516,16 @@ function block_exaquest_get_questionbankentries_to_be_revised_count($coursecateg
  * @param $coursecategoryid
  * @return array
  */
-function block_exaquest_get_questionbankentries_new_count($coursecategoryid) {
+function block_exaquest_get_questionbankentries_new_count($questioncategoryid) {
     global $DB;
     $sql = "SELECT qs.id
 			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
-			WHERE qs.coursecategoryid = :coursecategoryid
+			JOIN {question_bank_entries} qbe ON qs.questionbankentryid = qbe.id
+			WHERE qbe.questioncategoryid = :questioncategoryid
 			AND qs.status = :questionstatus";
 
     $questions = count($DB->get_records_sql($sql,
-        array("coursecategoryid" => $coursecategoryid, "questionstatus" => BLOCK_EXAQUEST_QUESTIONSTATUS_NEW)));
+        array("questioncategoryid" => $questioncategoryid, "questionstatus" => BLOCK_EXAQUEST_QUESTIONSTATUS_NEW)));
 
     return $questions;
 
@@ -521,15 +537,17 @@ function block_exaquest_get_questionbankentries_new_count($coursecategoryid) {
  * @param $coursecategoryid
  * @return array
  */
-function block_exaquest_get_questionbankentries_formal_reviewed_count($coursecategoryid) {
+function block_exaquest_get_questionbankentries_formal_reviewed_count($questioncategoryid) {
     global $DB;
     $sql = "SELECT qs.id
 			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
-			WHERE qs.coursecategoryid = :coursecategoryid
+			JOIN {question_bank_entries} qbe ON qs.questionbankentryid = qbe.id
+			WHERE qbe.questioncategoryid = :questioncategoryid
 			AND qs.status = :formalreviewdone";
 
     $questions = count($DB->get_records_sql($sql,
-        array("coursecategoryid" => $coursecategoryid, "formalreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE)));
+        array("questioncategoryid" => $questioncategoryid,
+            "formalreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE)));
 
     return $questions;
 }
@@ -540,15 +558,16 @@ function block_exaquest_get_questionbankentries_formal_reviewed_count($coursecat
  * @param $coursecategoryid
  * @return array
  */
-function block_exaquest_get_questionbankentries_fachlich_reviewed_count($coursecategoryid) {
+function block_exaquest_get_questionbankentries_fachlich_reviewed_count($questioncategoryid) {
     global $DB;
     $sql = "SELECT qs.id
 			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
-			WHERE qs.coursecategoryid = :coursecategoryid
+			JOIN {question_bank_entries} qbe ON qs.questionbankentryid = qbe.id
+			WHERE qbe.questioncategoryid = :questioncategoryid
 			AND qs.status = :fachlichreviewdone";
 
     $questions = count($DB->get_records_sql($sql,
-        array("coursecategoryid" => $coursecategoryid,
+        array("questioncategoryid" => $questioncategoryid,
             "fachlichreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE)));
 
     return $questions;
@@ -560,7 +579,7 @@ function block_exaquest_get_questionbankentries_fachlich_reviewed_count($coursec
  * @param $coursecategoryid
  * @return array
  */
-function block_exaquest_get_my_questionbankentries_to_be_reviewed_count($coursecategoryid, $userid) {
+function block_exaquest_get_my_questionbankentries_to_be_reviewed_count($questioncategoryid, $userid) {
     global $DB, $USER;
     if (!$userid) {
         $userid = $USER->id;
@@ -568,14 +587,15 @@ function block_exaquest_get_my_questionbankentries_to_be_reviewed_count($coursec
     $sql = "SELECT qs.id
 			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
 			JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid 
-			WHERE qs.coursecategoryid = :coursecategoryid
+			WHERE qbe.questioncategoryid = :questioncategoryid
 			AND (qs.status = :fachlichreviewdone
 			OR qs.status = :formalreviewdone
 			OR qs.status = :toassess)
             AND qbe.ownerid = :ownerid";
 
     $questions = count($DB->get_records_sql($sql,
-        array("coursecategoryid" => $coursecategoryid, "fachlichreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE,
+        array("questioncategoryid" => $questioncategoryid,
+            "fachlichreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE,
             "formalreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE,
             "toassess" => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS, "ownerid" => $userid)));
 
@@ -590,15 +610,38 @@ function block_exaquest_get_my_questionbankentries_to_be_reviewed_count($coursec
  * @param $coursecategoryid
  * @return array
  */
-function block_exaquest_get_released_questionbankentries_count($coursecategoryid) {
+function block_exaquest_get_released_questionbankentries_count($questioncategoryid) {
     global $DB;
     $sql = "SELECT qs.id
 			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
-			WHERE qs.coursecategoryid = :coursecategoryid
+			JOIN {question_bank_entries} qbe ON qs.questionbankentryid = qbe.id
+			WHERE qbe.questioncategoryid = :questioncategoryid
 			AND qs.status = :finalised";
 
     $questions = count($DB->get_records_sql($sql,
-        array("coursecategoryid" => $coursecategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED)));
+        array("questioncategoryid" => $questioncategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED)));
+
+    return $questions;
+}
+/**
+* Returns count of
+*
+ * Locked
+ *
+ * @param $coursecategoryid
+* @return array
+ */
+
+function block_exaquest_get_locked_questionbankentries_count($questioncategoryid) {
+    global $DB;
+    $sql = "SELECT qs.id
+			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
+			JOIN {question_bank_entries} qbe ON qs.questionbankentryid = qbe.id
+			WHERE qbe.questioncategoryid = :questioncategoryid
+			AND qs.status = :locked";
+
+    $questions = count($DB->get_records_sql($sql,
+        array("questioncategoryid" => $questioncategoryid, "locked" => BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED)));
 
     return $questions;
 }
@@ -609,15 +652,16 @@ function block_exaquest_get_released_questionbankentries_count($coursecategoryid
  * @param $coursecategoryid
  * @return array
  */
-function block_exaquest_get_released_and_to_review_questionbankentries_count($coursecategoryid) {
+function block_exaquest_get_released_and_to_review_questionbankentries_count($questioncategoryid) {
     global $DB;
     $sql = "SELECT qs.id
 			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
-			WHERE qs.coursecategoryid = :coursecategoryid
+			JOIN {question_bank_entries} qbe ON qs.questionbankentryid = qbe.id
+			WHERE qbe.questioncategoryid = :questioncategoryid
 			AND qs.status = :finalised";
 
     $questions = count($DB->get_records_sql($sql,
-        array("coursecategoryid" => $coursecategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED)));
+        array("questioncategoryid" => $questioncategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED)));
 
     return $questions;
 }
@@ -628,16 +672,17 @@ function block_exaquest_get_released_and_to_review_questionbankentries_count($co
  * @param $coursecategoryid
  * @return array
  */
-function block_exaquest_get_finalised_questionbankentries_count($coursecategoryid) {
+function block_exaquest_get_finalised_questionbankentries_count($questioncategoryid) {
     // the same as to_release in most cases
     global $DB;
     $sql = "SELECT qs.id
 			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
-			WHERE qs.coursecategoryid = :coursecategoryid
+			JOIN {question_bank_entries} qbe ON qs.questionbankentryid = qbe.id
+			WHERE qbe.questioncategoryid = :questioncategoryid
 			AND qs.status = :finalised";
 
     $questions = count($DB->get_records_sql($sql,
-        array("coursecategoryid" => $coursecategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED)));
+        array("questioncategoryid" => $questioncategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED)));
 
     return $questions;
 }
@@ -648,7 +693,7 @@ function block_exaquest_get_finalised_questionbankentries_count($coursecategoryi
  * @param $coursecategoryid
  * @return array
  */
-function block_exaquest_get_my_finalised_questionbankentries_count($coursecategoryid, $userid) {
+function block_exaquest_get_my_finalised_questionbankentries_count($questioncategoryid, $userid) {
     // the same as to_release in most cases
     global $DB, $USER;
     if (!$userid) {
@@ -657,22 +702,23 @@ function block_exaquest_get_my_finalised_questionbankentries_count($coursecatego
     $sql = "SELECT qs.id
 			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
 			JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid 
-			WHERE qs.coursecategoryid = :coursecategoryid
+			WHERE qbe.questioncategoryid = :questioncategoryid
 			AND qs.status = :finalised
 			AND qbe.ownerid = :ownerid";
 
     $questions = count($DB->get_records_sql($sql,
-        array("coursecategoryid" => $coursecategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED,
+        array("questioncategoryid" => $questioncategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED,
             "ownerid" => $userid)));
 
     return $questions;
 }
 
 function block_exaquest_get_quizzes_for_me_to_fill_count($userid) {
-    return count(block_exaquest_get_quizzes_for_me_to_fill($userid));
+    return count(block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS,
+        BLOCK_EXAQUEST_QUIZSTATUS_NEW));
 }
 
-function block_exaquest_get_quizzes_for_me_to_fill($userid) {
+function block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, $assigntype, $quizstatus) {
     global $DB, $USER;
 
     if (!$userid) {
@@ -681,11 +727,13 @@ function block_exaquest_get_quizzes_for_me_to_fill($userid) {
     // questionbankentryid DISTINCT to not count twice
     $sql = 'SELECT DISTINCT qa.quizid as quizid, q.name as name,  cm.id as coursemoduleid
 			FROM {' . BLOCK_EXAQUEST_DB_QUIZASSIGN . '} qa
+			JOIN {' . BLOCK_EXAQUEST_DB_QUIZSTATUS . '} qs on qs.quizid = qa.quizid
 			JOIN {quiz} q on q.id = qa.quizid 
 			JOIN {course_modules} cm on cm.instance = q.id
 			JOIN {modules} m on m.id = cm.module
 			WHERE qa.assigneeid = :userid
-			AND qa.assigntype = ' . BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS . '
+			AND qa.assigntype = ' . $assigntype . '
+			AND qs.status = ' . $quizstatus . '
             AND m. name = "quiz"';
 
     $quizzes = $DB->get_records_sql($sql,
@@ -701,7 +749,7 @@ function block_exaquest_get_quizzes_for_me_to_fill($userid) {
  * @param $coursecategoryid
  * @return array
  */
-function block_exaquest_get_questions_for_me_to_review_count($coursecategoryid, $userid = 0) {
+function block_exaquest_get_questions_for_me_to_review_count($questioncategoryid, $userid = 0) {
     // get from the table exaquestreviewassing. But there are 2 reviewtypes, do not count twice!
     global $DB, $USER;
 
@@ -712,12 +760,13 @@ function block_exaquest_get_questions_for_me_to_review_count($coursecategoryid, 
     // questionbankentryid DISTINCT to not count twice
     $sql = 'SELECT DISTINCT ra.questionbankentryid
 			FROM {' . BLOCK_EXAQUEST_DB_REVIEWASSIGN . '} ra
+			JOIN {question_bank_entries} qbe ON ra.questionbankentryid = qbe.id
 			WHERE ra.reviewerid = :userid
-			AND ra.coursecategoryid = :coursecategoryid';
+			AND qbe.questioncategoryid = :questioncategoryid';
     //AND (ra.reviewtype = '. BLOCK_EXAQUEST_REVIEWTYPE_FORMAL .' OR ra.reviewtype =  '. BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH .')';
 
     $questions = count($DB->get_records_sql($sql,
-        array('userid' => $userid, 'coursecategoryid' => $coursecategoryid)));
+        array('userid' => $userid, 'questioncategoryid' => $questioncategoryid)));
 
     return $questions;
 }
@@ -728,8 +777,8 @@ function block_exaquest_get_questions_for_me_to_review_count($coursecategoryid, 
  * @param $coursecategoryid
  * @return array
  */
-function block_exaquest_get_questions_for_me_to_create_count($coursecategoryid, $userid = 0) {
-    return count(block_exaquest_get_questions_for_me_to_create($coursecategoryid, $userid));
+function block_exaquest_get_questions_for_me_to_create_count($questioncategoryid, $userid = 0) {
+    return count(block_exaquest_get_questions_for_me_to_create($questioncategoryid, $userid));
 }
 
 /**
@@ -808,7 +857,7 @@ function block_exaquest_get_exams_for_me_to_fill($courseid, $userid = 0) {
     $sql = 'SELECT qa.*, q.name, qc.comment
 			FROM {' . BLOCK_EXAQUEST_DB_QUIZASSIGN . '} qa
 			JOIN {quiz} q on q.id = qa.quizid
-			JOIN {' . BLOCK_EXAQUEST_DB_QUIZCOMMENT .'} qc on qc.quizid = qa.quizid AND qc.quizassignid = qa.id
+			JOIN {' . BLOCK_EXAQUEST_DB_QUIZCOMMENT . '} qc on qc.quizid = qa.quizid AND qc.quizassignid = qa.id
 			WHERE qa.assigneeid = :assigneeid
             AND q.course = :courseid';
 
@@ -817,7 +866,6 @@ function block_exaquest_get_exams_for_me_to_fill($courseid, $userid = 0) {
 
     return $exams;
 }
-
 
 /**
  * Returns
@@ -829,7 +877,6 @@ function block_exaquest_get_exams_for_me_to_fill_count($courseid, $userid = 0) {
     return count(block_exaquest_get_exams_for_me_to_fill($courseid, $userid));
 }
 
-
 /**
  * Returns count of questionbankentries that have to be revised of this course of this user
  * used e.g. for the fragenersteller to see which questions they should revise
@@ -838,7 +885,7 @@ function block_exaquest_get_exams_for_me_to_fill_count($courseid, $userid = 0) {
  * @param $userid
  * @return array
  */
-function block_exaquest_get_questions_for_me_to_revise_count($coursecategoryid, $userid = 0) {
+function block_exaquest_get_questions_for_me_to_revise_count($questioncategoryid, $userid = 0) {
     global $DB, $USER;
     if (!$userid) {
         $userid = $USER->id;
@@ -846,14 +893,15 @@ function block_exaquest_get_questions_for_me_to_revise_count($coursecategoryid, 
 
     $sql = 'SELECT qs.id
 			FROM {' . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . '} qs
-			JOIN {question_bank_entries} qe ON qs.questionbankentryid = qe.id
-			WHERE qe.ownerid = :ownerid
+			JOIN {question_bank_entries} qbe ON qs.questionbankentryid = qbe.id
+			JOIN {' . BLOCK_EXAQUEST_DB_REVISEASSIGN . '} qra ON qra.questionbankentryid = qs.questionbankentryid
+			WHERE qra.reviserid = :reviserid
 			AND qs.status = :status
-			AND qs.coursecategoryid = :coursecategoryid';
+			AND qbe.questioncategoryid = :questioncategoryid';
 
     $questions =
-        count($DB->get_records_sql($sql, array('ownerid' => $userid, 'status' => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE,
-            'coursecategoryid' => $coursecategoryid)));
+        count($DB->get_records_sql($sql, array('reviserid' => $userid, 'status' => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE,
+            'questioncategoryid' => $questioncategoryid)));
 
     return $questions;
 }
@@ -865,20 +913,21 @@ function block_exaquest_get_questions_for_me_to_revise_count($coursecategoryid, 
  * @param $coursecategoryid
  * @return array
  */
-function block_exaquest_get_questions_for_me_to_release_count($coursecategoryid, $userid = 0) {
+function block_exaquest_get_questions_for_me_to_release_count($questioncategoryid, $userid = 0) {
     global $DB, $USER;
     if (!$userid) {
         $userid = $USER->id;
     }
     $sql = "SELECT qs.id
 			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
-			JOIN {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} qra ON qra.questionbankentryid = qs.questionbankentryid 
-			WHERE qs.coursecategoryid = :coursecategoryid
+			JOIN {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} qra ON qra.questionbankentryid = qs.questionbankentryid
+			JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid 
+			WHERE qbe.questioncategoryid = :questioncategoryid
 			AND qs.status = :finalised
 			AND qra.reviewerid = :reviewerid";
 
     $questions = count($DB->get_records_sql($sql,
-        array("coursecategoryid" => $coursecategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED,
+        array("questioncategoryid" => $questioncategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED,
             "reviewerid" => $userid)));
 
     return $questions;
@@ -1018,6 +1067,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:assignaddquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:createexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:setquestioncount', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:changeowner', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
         $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '', 'manager');
@@ -1041,7 +1091,8 @@ function block_exaquest_set_up_roles() {
     //added during development:
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
@@ -1080,7 +1131,8 @@ function block_exaquest_set_up_roles() {
     //added during development:
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
@@ -1097,11 +1149,13 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:requestnewexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:dofachlichreview', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:doformalreview', CAP_ALLOW, $roleid, $context);
+    //Mover should not be able to do this : assign_capability('block/exaquest:doformalreview', CAP_ALLOW, $roleid, $context);
+    unassign_capability('block/exaquest:doformalreview', $roleid, $context->id); // accidentally added, should be deleted
     assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:assignaddquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:createexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:setquestioncount', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:changeowner', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fragenersteller'])) {
         $roleid = create_role('Fragenersteller', 'fragenersteller', '', 'manager');
@@ -1157,6 +1211,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
@@ -1183,7 +1238,8 @@ function block_exaquest_set_up_roles() {
     //added during development:
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
@@ -1215,7 +1271,8 @@ function block_exaquest_set_up_roles() {
     //added during development:
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
@@ -1244,7 +1301,8 @@ function block_exaquest_set_up_roles() {
     //added during development:
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
@@ -1271,7 +1329,8 @@ function block_exaquest_set_up_roles() {
     //added during development:
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
@@ -1332,13 +1391,45 @@ function block_exaquest_set_up_roles() {
     //added during development:
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewownquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
+
+    if (!$DB->record_exists('role', ['shortname' => 'sekretariat'])) {
+        $roleid = create_role('Sekretariat', 'sekretariat', '', 'manager');
+        $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
+        $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
+        $definitiontable->force_duplicate($archetype,
+            $options); // overwrites everything that is set in the options. The rest stays.
+        $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
+        $definitiontable->save_changes();
+        $sourcerole = new \stdClass();
+        $sourcerole->id = $archetype;
+        role_cap_duplicate($sourcerole, $roleid);
+    } else {
+        $roleid = $DB->get_record('role', ['shortname' => 'sekretariat'])->id;
+    }
+    assign_capability('block/exaquest:sekretariat', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:createquestion', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:readallquestions', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:changestatusofreleasedquestions', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:setstatustoreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:reviseownquestion', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewownrevisedquestions', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
+    assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
+    //added during development:
+    assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:changeowner', CAP_ALLOW, $roleid, $context);
 
     //
     //role_assign($roleid, $USER->id, $contextid);
@@ -1529,7 +1620,7 @@ function block_exaquest_get_courseids() {
  * Returns all course ids where an instance of Exabis question management tool is installed for this user
  * The course has to have an enddate that ends in the last 6 months, or no enddate (be active)
  */
-function block_exaquest_get_courseids_of_relevant_courses_for_user($userid = null) {
+function block_exaquest_get_relevant_courses_for_user($userid = null) {
     global $DB, $USER;
 
     if ($userid == null) {
@@ -1548,14 +1639,22 @@ function block_exaquest_get_courseids_of_relevant_courses_for_user($userid = nul
                 $course = get_course($context->instanceid);
                 if ($course->enddate) {
                     if ($course->enddate > (time() - 15552000)) { // 15552000 is 6 months in seconds
-                        $exaquest_courses[$context->instanceid] = $context->instanceid;
+                        $exaquest_courses[$context->instanceid] = $course;
                     }
                 } else {
-                    $exaquest_courses[$context->instanceid] = $context->instanceid;
+                    $exaquest_courses[$context->instanceid] = $course;
                 }
             }
         }
     }
+
+    // order by "category" attribute of the objects in $exaquest_courses
+    usort($exaquest_courses, function($a, $b) {
+        return $a->category <=> $b->category;
+        // spaceship operator (<=>). This operator returns -1 if the left-hand side ($a->category) is less than the right-hand side ($b->category),
+        // 1 if it is greater, and 0 if they are equal.
+
+    });
 
     return $exaquest_courses;
 }
@@ -1567,22 +1666,22 @@ function block_exaquest_get_courseids_of_relevant_courses_for_user($userid = nul
  *     questions_for_me_to_revise_count + exams_for_me_to_create_count. Depending on your role some of those todos may not exist,
  *     but this will lead to a count of 0 for those todos, which means, it does not matter. No capabilities check needed.
  */
-function block_exaquest_get_todo_count($userid, $coursecategoryid, $context) {
+function block_exaquest_get_todo_count($userid, $coursecategoryid, $questioncategoryid, $context) {
     $questions_for_me_to_create_count =
         block_exaquest_get_questions_for_me_to_create_count($coursecategoryid, $userid);
     $questions_for_me_to_review_count =
-        block_exaquest_get_questions_for_me_to_review_count($coursecategoryid, $userid);
+        block_exaquest_get_questions_for_me_to_review_count($questioncategoryid, $userid);
     $questions_for_me_to_revise_count =
-        block_exaquest_get_questions_for_me_to_revise_count($coursecategoryid, $userid);
+        block_exaquest_get_questions_for_me_to_revise_count($questioncategoryid, $userid);
 
     // there is no "for me to release, which is why we take the finalised questionbankentries count. This is not available for everyone ==> check capability
     $questions_finalised_count = 0;
     if (has_capability('block/exaquest:viewquestionstorelease', $context, $userid)) {
-        $questions_finalised_count = block_exaquest_get_finalised_questionbankentries_count($coursecategoryid);
+        $questions_finalised_count = block_exaquest_get_finalised_questionbankentries_count($questioncategoryid);
     }
 
     $my_questions_to_submit_count =
-        block_exaquest_get_my_questionbankentries_to_submit_count($coursecategoryid, $userid);
+        block_exaquest_get_my_questionbankentries_to_submit_count($questioncategoryid, $userid);
     //$exams_for_me_to_create_count =
     //    block_exaquest_get_exams_for_me_to_create_count($coursecategoryid, $userid);
     $exams_for_me_to_fill_count = block_exaquest_get_exams_for_me_to_fill_count($coursecategoryid, $userid);
@@ -1613,17 +1712,17 @@ function block_exaquest_get_coursecategoryid_by_courseid($courseid) {
  * @param $status
  * @return array
  */
-function block_exaquest_exams_by_status($coursecategoryid = null, $status = BLOCK_EXAQUEST_QUIZSTATUS_NEW) {
+function block_exaquest_exams_by_status($courseid = null, $status = BLOCK_EXAQUEST_QUIZSTATUS_NEW) {
     global $DB, $USER;
 
-    if ($coursecategoryid) {
+    if ($courseid) {
         $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid
 			FROM {" . BLOCK_EXAQUEST_DB_QUIZSTATUS . "} quizstatus
 			JOIN {quiz} q on q.id = quizstatus.quizid 
 			JOIN {course_modules} cm on cm.instance = q.id
 			JOIN {modules} m on m.id = cm.module
 			WHERE quizstatus.status = :status
-			AND quizstatus.coursecategoryid = :coursecategoryid
+			AND q.course = :courseid
 			AND m.name = 'quiz'";
 
         /**
@@ -1639,7 +1738,7 @@ function block_exaquest_exams_by_status($coursecategoryid = null, $status = BLOC
          */
 
         $quizzes = $DB->get_records_sql($sql,
-            array("status" => $status, "coursecategoryid" => $coursecategoryid));
+            array("status" => $status, "courseid" => $courseid));
     } else {
         $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid, q.timeclose as timeclose
 			FROM {" . BLOCK_EXAQUEST_DB_QUIZSTATUS . "} quizstatus
@@ -1664,9 +1763,9 @@ function block_exaquest_exams_by_status($coursecategoryid = null, $status = BLOC
  */
 function block_exaquest_exams_set_status($quizid, $status) {
     global $DB;
-    $record = $DB->get_record('block_exaquestquizstatus', array("quizid" => $quizid));
+    $record = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, array("quizid" => $quizid));
     $record->status = $status;
-    $DB->update_record('block_exaquestquizstatus', $record);
+    $DB->update_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, $record);
 }
 
 function is_exaquest_active_in_course() {
@@ -1799,7 +1898,7 @@ function block_exaquest_get_all_pruefungskoordination_users() {
 
 function block_exaquest_get_pruefungskoodrination_by_courseid($courseid) {
     $context = context_course::instance($courseid);
-    return get_enrolled_users($context, 'block/exaquest:pruefungskoordination');
+    return get_enrolled_users($context, 'block/exaquest:pruefungskoordination', 0, 'u.*', null, 0, 0, true);
 }
 
 function block_exaquest_create_daily_notifications() {
@@ -1809,18 +1908,20 @@ function block_exaquest_create_daily_notifications() {
 
     foreach ($users as $user) {
         // get the todocount and create the todos notification
-        $courseids = block_exaquest_get_courseids_of_relevant_courses_for_user($user->id);
+        $courses = block_exaquest_get_relevant_courses_for_user($user->id);
+        // "relevant" is relative... it creates todos for this course, and a course that was active in the last 6 months. Could lead to often produce two similar sentences,
+        // but it is summed up into ONE notification anyway
         $todosmessage = '';
-        foreach ($courseids as $courseid) {
-            $course = get_course($courseid);
-            $context = \context_course::instance($courseid);
-            $todocount = block_exaquest_get_todo_count($user->id, $course->category, $context);
+        foreach ($courses as $c) {
+            $context = \context_course::instance($c->id);
+            $questioncategoryid = get_question_category_and_context_of_course($c->id)[0];
+            $todocount = block_exaquest_get_todo_count($user->id, $c->category, $questioncategoryid, $context);
             if ($todocount) {
                 // create the message
                 $messageobject = new stdClass();
                 $messageobject->todoscount = $todocount;
-                $messageobject->fullname = $course->fullname;
-                $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $courseid]);
+                $messageobject->fullname = $c->fullname;
+                $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $c->id]);
                 $messageobject->url = $messageobject->url->raw_out(false);
                 $todosmessage .= get_string('todos_in_course', 'block_exaquest', $messageobject);
             }
@@ -1832,28 +1933,41 @@ function block_exaquest_create_daily_notifications() {
             $subject = get_string('dailytodos_subject', 'block_exaquest');
             $url_to_moodle_dashboard = new moodle_url('/my/index.php');
             $url_to_moodle_dashboard = $url_to_moodle_dashboard->raw_out();
+
+            // only create a message, when the todos count differs from the message of the previous day. careful: if it is the first notification --> null problems
+            // check if there exist a notifications with the same eventtype (dailytodos) and the same userid get the most current one and compare the content
+            // if the content is the same, don't send it again. if there is not notifaction or the content is not the same --> send it
+            // content = message
+            // get the notifcations with eventtype="dailtytodos" and userid=$user->id
+            $notifications = block_exaquest_get_notifications_by_eventtype_and_userid("dailytodos", $user->id);
+            if ($notifications) {
+                $notification = reset($notifications); // get the first element of the array
+                if ($notification->fullmessage == $message) {
+                    // do not send the notification again
+                    continue;
+                }
+            }
             block_exaquest_send_moodle_notification("dailytodos", $USER->id, $user->id, $subject, $message,
                 "TODOs", $url_to_moodle_dashboard);
         }
     }
 
-    // TODO check that logic, not finished yet
     // get the PK of all courses and send notification about released questions
     $pks = block_exaquest_get_all_pruefungskoordination_users();
     foreach ($pks as $pk) {
-        $courseids = block_exaquest_get_courseids_of_relevant_courses_for_user($user->id);
+        $courses = block_exaquest_get_relevant_courses_for_user($pk->id);
         $daily_released_questions_message = '';
-        foreach ($courseids as $courseid) {
-            if (has_capability('block/exaquest:pruefungskoordination', \context_course::instance($courseid),
+        foreach ($courses as $c) {
+            if (has_capability('block/exaquest:pruefungskoordination', \context_course::instance($c->id),
                 $pk->id)) { // could have another role in this course ==> skip
-                $course = get_course($courseid);
-                $daily_released_questions = get_daily_released_questions($course->category);
+                $questioncategoryid = get_question_category_and_context_of_course($c->id)[0];
+                $daily_released_questions = get_daily_released_questions($questioncategoryid);
                 if ($daily_released_questions) {
                     // create the message
                     $messageobject = new stdClass();
                     $messageobject->daily_released_questions = $daily_released_questions;
-                    $messageobject->fullname = $course->fullname;
-                    $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $courseid]);
+                    $messageobject->fullname = $c->fullname;
+                    $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $c->id]);
                     $messageobject->url = $messageobject->url->raw_out(false);
                     $daily_released_questions_message .= get_string('daily_released_questions_in_course', 'block_exaquest',
                         $messageobject);
@@ -1871,21 +1985,26 @@ function block_exaquest_create_daily_notifications() {
                 'Daily released questions', $url_to_moodle_dashboard);
         }
     }
+}
 
-    //$courseids = block_exaquest_get_courseids();
-    //foreach ($courseids as $courseid){
-    //    $context = context_course::instance($courseid);
-    //    $pks = get_enrolled_users($context, 'block/exaquest:pruefungskoordination');
-
-    //}
-
+/**
+ * @param $eventtype
+ * @param $useridto
+ * @return notifications with the given eventtype and userid ordered by timecreated (element with highest timecreated first /
+ *     newest notification first)
+ */
+function block_exaquest_get_notifications_by_eventtype_and_userid($eventtype, $useridto) {
+    global $DB;
+    $notifications = $DB->get_records('notifications',
+        array('eventtype' => $eventtype, 'useridto' => $useridto), 'timecreated DESC');
+    return $notifications;
 }
 
 /**
  * @param $courseid
  * returns the count of how many questions have been released in which course
  */
-function get_daily_released_questions($coursecategoryid) {
+function get_daily_released_questions($questioncategoryid) {
     global $DB;
 
     $time_last_day = time() - 86400; // current time - 24*60*60 to have time of 24h hours ago.
@@ -1893,11 +2012,12 @@ function get_daily_released_questions($coursecategoryid) {
 
     $sql = 'SELECT qs.id
 			FROM {' . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . '} qs
-			WHERE qs.coursecategoryid = :coursecategoryid
+			JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid
+			WHERE qbe.questioncategoryid = :questioncategoryid
 			AND qs.timestamp > :timelastday
 			AND qs.status = ' . BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED;
 
-    $questions = $DB->get_records_sql($sql, array('coursecategoryid' => $coursecategoryid, 'timelastday' => $time_last_day));
+    $questions = $DB->get_records_sql($sql, array('questioncategoryid' => $questioncategoryid, 'timelastday' => $time_last_day));
     return count($questions);
 }
 
@@ -1920,6 +2040,26 @@ function block_exaquest_clean_up_tables() {
     WHERE questionbankentryid NOT IN (SELECT id FROM {question_bank_entries})';
     $DB->execute($sql);
 
+    // delete entries in exaquestquizstatus that have no quiz related
+    $sql = 'DELETE FROM {' . BLOCK_EXAQUEST_DB_QUIZSTATUS . '}
+    WHERE quizid NOT IN (SELECT id FROM {quiz})';
+    $DB->execute($sql);
+
+    // delete entries in exaquestquizassig that have no quiz related
+    $sql = 'DELETE FROM {' . BLOCK_EXAQUEST_DB_QUIZASSIGN . '}
+    WHERE quizid NOT IN (SELECT id FROM {quiz})';
+    $DB->execute($sql);
+
+    // delete entries in exaquestquizcomment that have no quiz related
+    $sql = 'DELETE FROM {' . BLOCK_EXAQUEST_DB_QUIZCOMMENT . '}
+    WHERE quizid NOT IN (SELECT id FROM {quiz})';
+    $DB->execute($sql);
+
+    // delete entries in exaquestquizqcount that have no quiz related
+    $sql = 'DELETE FROM {' . BLOCK_EXAQUEST_DB_QUIZQCOUNT . '}
+    WHERE quizid NOT IN (SELECT id FROM {quiz})';
+    $DB->execute($sql);
+
     // delete entries in exaquestreviewassign that have no questionbankentry related
     $sql = 'DELETE FROM {' . BLOCK_EXAQUEST_DB_REVIEWASSIGN . '}
     WHERE questionbankentryid NOT IN (SELECT id FROM {question_bank_entries})';
@@ -1934,7 +2074,8 @@ function block_exaquest_clean_up_tables() {
     $DB->execute($sql);
 }
 
-function block_exaquest_assign_quiz_addquestions($courseid, $userfrom, $userto, $comment, $quizid, $quizname = null, $assigntype = null) {
+function block_exaquest_assign_quiz_addquestions($courseid, $userfrom, $userto, $comment, $quizid, $quizname = null,
+    $assigntype = null) {
     global $DB, $COURSE;
 
     // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that exact quizid, assigneeid and assigntype. ? TODO: what to do if 2 requests are made... for now keep them both
@@ -1968,6 +2109,43 @@ function block_exaquest_assign_quiz_addquestions($courseid, $userfrom, $userto, 
         "fillexam", $messageobject->url);
 }
 
+function block_exaquest_assign_quiz_fp($userto, $quizid) {
+    global $DB, $COURSE;
+
+    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that quizid and assigntype, as it should be overridden (there can only be one)
+    $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+        array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER));
+
+    // enter data into the exaquest tables
+    $assigndata = new stdClass;
+    $assigndata->quizid = $quizid;
+    $assigndata->assigneeid = $userto;
+    $assigndata->assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER;
+    $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
+
+    //// insert comment into BLOCK_EXAQUEST_DB_QUIZCOMMENT
+    //if ($comment != '') {
+    //    $commentdata = new stdClass;
+    //    $commentdata->quizid = $quizid;
+    //    $commentdata->commentorid = $userfrom->id;
+    //    $commentdata->quizassignid = $quizassignid;
+    //    $commentdata->comment = $comment;
+    //    $commentdata->timestamp = time();
+    //    $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZCOMMENT, $commentdata);
+    //}
+    //
+    //// create the message
+    //$messageobject = new stdClass;
+    //$messageobject->fullname = $quizname;
+    //$messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
+    //$messageobject->url = $messageobject->url->raw_out(false);
+    //$messageobject->requestcomment = $comment;
+    //$message = get_string('please_fill_exam', 'block_exaquest', $messageobject);
+    //$subject = get_string('please_fill_exam_subject', 'block_exaquest', $messageobject);
+    //block_exaquest_send_moodle_notification("fillexam", $userfrom->id, $userto, $subject, $message,
+    //    "fillexam", $messageobject->url);
+}
+
 function block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid) {
     global $DB;
 
@@ -1982,16 +2160,44 @@ function block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quiz
 
     $fragefaecher = $DB->get_records_sql($sql, array('coursecategoryid' => $course->category, 'quizid' => $quizid));
 
+    return $fragefaecher;
+}
+
+function block_exaquest_get_assigned_fachlicherpruefer($quizid) {
+    global $DB;
+    $sql = 'SELECT qa.assigneeid
+			FROM {' . BLOCK_EXAQUEST_DB_QUIZASSIGN . '} qa
+			WHERE qa.quizid = :quizid
+			AND qa.assigntype = ' . BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER;
+
+    $fachlicherpreufer = $DB->get_record_sql($sql,
+        array('quizid' => $quizid));
+    return $fachlicherpreufer;
+}
+
+function block_exaquest_get_fragefaecher_by_courseid($courseid) {
+    global $DB;
+
+    // get course
+    $course = $DB->get_record('course', array('id' => $courseid));
+
+    $sql = 'SELECT cat.*
+            FROM {' . BLOCK_EXAQUEST_DB_CATEGORIES . '} cat
+            WHERE cat.coursecategoryid = :coursecategoryid
+            AND cat.categorytype = ' . BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH;
+
+    $fragefaecher = $DB->get_records_sql($sql, array('coursecategoryid' => $course->category));
 
     return $fragefaecher;
 
 }
 
-function block_exaquest_set_questioncount_for_exaquestcategory($quizid, $exaquestcategoryid, $count){
+function block_exaquest_set_questioncount_for_exaquestcategory($quizid, $exaquestcategoryid, $count) {
     global $DB;
 
     // get the current questioncount for this quiz and exaquestcategory
-    $quizqcount = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZQCOUNT, array('quizid' => $quizid, 'exaquestcategoryid' => $exaquestcategoryid));
+    $quizqcount =
+        $DB->get_record(BLOCK_EXAQUEST_DB_QUIZQCOUNT, array('quizid' => $quizid, 'exaquestcategoryid' => $exaquestcategoryid));
 
     // if it exists: update, else: create new
     if ($quizqcount) {
@@ -2004,4 +2210,88 @@ function block_exaquest_set_questioncount_for_exaquestcategory($quizid, $exaques
         $quizqcount->questioncount = $count;
         $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZQCOUNT, $quizqcount);
     }
+}
+
+// this is the check, returns if imported, does not set any status
+function block_exaquest_check_if_question_is_imported($questionid) {
+    $handler = \qbank_customfields\customfield\question_handler::create();
+    $datas = $handler->get_instance_data($questionid);
+    // get the set customfields
+    // if there is a field from the type "exaquestcategory" that is set, then it is a question that has been created in exaquest (since these are mandatory fields)
+    // if there is a field from the type "exaquestcategory" that is NOT set, then it is a question that has been imported from exaquest (since these are mandatory fields)
+    // $data->get_field()->get("type")
+    $is_imported = false;
+    foreach ($datas as $data) {
+        // if it is not an exaquestcategory, then continue, since we are only interested in if exaquestcategories are set or not
+        if ($data->get_field()->get('type') != 'exaquestcategory') {
+            continue;
+        }
+        if ($data->get_value() == $data->get_default_value()) { // default value means nothing is set
+            // this question has been imported
+            $is_imported = true;
+            break; // as soon as we find one exaquestcategory that is not set, we can stop searching, as it must be imported
+        }
+    }
+    return $is_imported;
+}
+
+function block_exaquest_check_if_questions_imported($questionid, $questionbankentryid) {
+    global $DB;
+    $is_imported = block_exaquest_check_if_question_is_imported($questionid);
+    if ($is_imported) {
+        // it is imported --> set status to imported
+        $questionstatus = $DB->get_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, ["questionbankentryid" => $questionbankentryid]);
+        $questionstatus->status = BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED;
+        $questionstatus->is_imported = 1;
+        $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $questionstatus);
+    } else {
+        // it has been created manually --> everything can stay as it is
+    }
+}
+
+function block_exaquest_check_if_exam_is_ready($quizid) {
+    global $DB;
+    // check if every assignment of this kind is done for this quiz
+    if ($DB->get_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+        array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS))) {
+        // records still exist ==> not every todo is done
+        return false;
+    } else {
+        // no records exist ==> every assignment is done
+        // set the quizstatus from new to BLOCK_EXAQUEST_QUIZSTATUS_CREATED
+        $quizstatus = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, array('quizid' => $quizid));
+        $quizstatus->status = BLOCK_EXAQUEST_QUIZSTATUS_CREATED;
+        $DB->update_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, $quizstatus);
+        return true;
+    }
+
+    // TODO: also check when all questions are added ?
+
+}
+
+function block_exaquest_check_if_question_containes_categories($questionid) {
+    global $DB;
+
+    $categoryoptionids = $DB->get_records_sql("SELECT cfd.value
+                                    FROM {question} q
+                                    JOIN {customfield_data} cfd ON q.id = cfd.instanceid
+                                   WHERE q.id = ?", array($questionid));
+
+    $categoryoptionidarray = array();
+    foreach ($categoryoptionids as $categoryoptionid) {
+        $mrg = explode(',', $categoryoptionid->value);
+        $categoryoptionidarray = array_merge($categoryoptionidarray, $mrg);
+    }
+    $query = "('" . implode("','", $categoryoptionidarray) . "')";
+
+    $categoryoptions = $DB->get_records_sql("SELECT eqc.id, eqc.categoryname, eqc.categorytype
+                                    FROM {block_exaquestcategories} eqc
+                                   WHERE eqc.id IN " . $query);
+
+    $categorytypes = array();
+    foreach ($categoryoptions as $categoryoption) {
+        $categorytypes[] = intval($categoryoption->categorytype);
+    }
+    return in_array(0, $categorytypes) && in_array(1, $categorytypes) && in_array(2, $categorytypes) && in_array(3, $categorytypes);
+
 }

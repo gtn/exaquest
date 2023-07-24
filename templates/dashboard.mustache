@@ -21,7 +21,7 @@
                                 <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
                                    href={{my_questions_to_submit_link}}>
                                             <span class="badge-outer text-center">
-                                                <span class="badge badge-primary">{{my_questions_to_submit_count}}</span>
+                                                <span class="badge  tododoscounter {{#my_questions_to_submit_count}}badge-primary{{/my_questions_to_submit_count}}">{{my_questions_to_submit_count}}</span>
                                             </span>
                                     <span class="flex-grow-1"> {{#str}}
                                         questions_for_me_to_submit, block_exaquest {{/str}}</span>
@@ -31,7 +31,7 @@
                                 <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
                                    href={{questions_for_me_to_review_link}}>
                                             <span class="badge-outer text-center">
-                                                <span class="badge badge-primary">{{questions_for_me_to_review_count}}</span>
+                                                <span class="badge  tododoscounter {{#questions_for_me_to_review_count}}badge-primary{{/questions_for_me_to_review_count}}">{{questions_for_me_to_review_count}}</span>
                                             </span>
                                     <span class="flex-grow-1"> {{#str}}
                                         questions_for_me_to_review, block_exaquest {{/str}}</span>
@@ -41,7 +41,7 @@
                                 <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
                                    href={{questions_for_me_to_revise_link}}>
                                             <span class="badge-outer text-center">
-                                                <span class="badge badge-primary">{{questions_for_me_to_revise_count}}</span>
+                                                <span class="badge  tododoscounter {{#questions_for_me_to_revise_count}}badge-primary{{/questions_for_me_to_revise_count}}">{{questions_for_me_to_revise_count}}</span>
                                             </span>
                                     <span class="flex-grow-1"> {{#str}}
                                         questions_for_me_to_revise, block_exaquest {{/str}}</span>
@@ -51,7 +51,7 @@
                                 <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
                                    href={{questions_for_me_to_release_link}}>
                                             <span class="badge-outer text-center">
-                                                <span class="badge badge-primary">{{questions_finalised_count}}</span>
+                                                <span class="badge  tododoscounter {{#questions_finalised_count }}badge-primary{{/questions_finalised_count}}">{{questions_finalised_count}}</span>
                                             </span>
                                     <span class="flex-grow-1"> {{#str}}
                                         questions_for_me_to_release, block_exaquest {{/str}}</span>
@@ -105,7 +105,7 @@
                         <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
                            href={{questions_overall_link}}>
                                             <span class="badge-outer text-center">
-                                                <span class="badge badge-primary">{{questions_count}}</span>
+                                                <span class="badge  tododoscounter {{#questions_count}}badge-primary{{/questions_count}}">{{questions_count}}</span>
                                             </span>
                             <span class="flex-grow-1"> {{#str}}
                                 questions_overall_count, block_exaquest {{/str}}</span>
@@ -115,7 +115,7 @@
                         <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
                            href={{questions_new_link}}>
                                             <span class="badge-outer text-center">
-                                                <span class="badge badge-primary">{{questions_new_count}}</span>
+                                                <span class="badge  tododoscounter {{#questions_new_count}}badge-primary{{/questions_new_count}}">{{questions_new_count}}</span>
                                             </span>
                             <span class="flex-grow-1"> {{#str}}
                                 questions_new_count, block_exaquest {{/str}}</span>
@@ -125,7 +125,7 @@
                         <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
                            href={{questions_to_review_link}}>
                                             <span class="badge-outer text-center">
-                                                <span class="badge badge-primary">{{questions_to_review_count}}</span>
+                                                <span class="badge  tododoscounter {{#questions_to_review_count}}badge-primary{{/questions_to_review_count}}">{{questions_to_review_count}}</span>
                                             </span>
                             <span class="flex-grow-1"> {{#str}}
                                 questions_to_review_count, block_exaquest {{/str}}</span>
@@ -135,7 +135,7 @@
                         <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
                            href={{questions_fachlich_reviewed_link}}>
                                             <span class="badge-outer text-center">
-                                                <span class="badge badge-primary">{{questions_fachlich_reviewed_count}}</span>
+                                                <span class="badge  tododoscounter {{#questions_fachlich_reviewed_count}}badge-primary{{/questions_fachlich_reviewed_count}}">{{questions_fachlich_reviewed_count}}</span>
                                             </span>
                             <span class="flex-grow-1"> {{#str}}
                                 questions_fachlich_reviewed_count, block_exaquest {{/str}}</span>
@@ -145,7 +145,7 @@
                         <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
                            href={{questions_formal_reviewed_link}}>
                                             <span class="badge-outer text-center">
-                                                <span class="badge badge-primary">{{questions_formal_reviewed_count}}</span>
+                                                <span class="badge  tododoscounter {{#questions_formal_reviewed_count}}badge-primary{{/questions_formal_reviewed_count}}">{{questions_formal_reviewed_count}}</span>
                                             </span>
                             <span class="flex-grow-1"> {{#str}}
                                 questions_formal_reviewed_count, block_exaquest {{/str}}</span>
@@ -154,7 +154,7 @@
                         <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
                            href={{questions_to_revise_link}}>
                                             <span class="badge-outer text-center">
-                                                <span class="badge badge-primary">{{questions_to_revise_count}}</span>
+                                                <span class="badge  tododoscounter {{#questions_to_revise_count}}badge-primary{{/questions_to_revise_count}}">{{questions_to_revise_count}}</span>
                                             </span>
                             <span class="flex-grow-1"> {{#str}}
                                 questions_to_revise_count, block_exaquest {{/str}}</span>
@@ -164,7 +164,7 @@
                         <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
                            href={{questions_finalised_link}}>
                                             <span class="badge-outer text-center">
-                                                <span class="badge badge-primary">{{questions_finalised_count}}</span>
+                                                <span class="badge  tododoscounter {{#questions_finalised_count}}badge-primary{{/questions_finalised_count}}">{{questions_finalised_count}}</span>
                                             </span>
                             <span class="flex-grow-1"> {{#str}}
                                 questions_reviewed_count, block_exaquest {{/str}}</span>
@@ -174,22 +174,18 @@
                         <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
                            href={{questions_released_link}}>
                                             <span class="badge-outer text-center">
-                                                <span class="badge badge-primary">{{questions_released_count}}</span>
+                                                <span class="badge  tododoscounter {{#questions_released_count}}badge-primary{{/questions_released_count}}">{{questions_released_count}}</span>
                                             </span>
                             <span class="flex-grow-1"> {{#str}}
                                 questions_released_count, block_exaquest {{/str}}</span>
                         </a>
-
-
-                        <!--                There is no link for that, because there is no filter for that... but maybe in the future-->
-                        <!--                    TODO: this is never used. Released questions are sent to be revised. Should we change that and use LOCKED status?-->
-                        <a class="btn btn-light w-100 d-flex justify-content-between align-items-center disabled"
-                           href={{questions_released_and_to_review_link}}>
+                        <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
+                           href={{questions_locked_link}}>
                                             <span class="badge-outer text-center">
-                                                <span class="badge badge-primary">{{questions_released_and_to_review_count}}</span>
+                                                <span class="badge  tododoscounter {{#questions_locked_count}}badge-primary{{/questions_locked_count}}">{{questions_locked_count}}</span>
                                             </span>
                             <span class="flex-grow-1"> {{#str}}
-                                questions_released_and_to_review_count, block_exaquest {{/str}}</span>
+                                questions_locked_count, block_exaquest {{/str}}</span>
                         </a>
                     </div>
                 </div>
@@ -204,14 +200,14 @@
                         <a href=""
                            class="btn btn-light w-100 d-flex justify-content-between align-items-center disabled">
                             <span class="badge-outer text-center"><span
-                                    class="badge badge-primary">{{my_questions_count}}</span></span>
+                                    class="badge  tododoscounter {{#my_questions_count}}badge-primary{{/my_questions_count}}">{{my_questions_count}}</span></span>
                             <span class="flex-grow-1"> {{#str}}my_questions_count, block_exaquest {{/str}}</span>
                         </a>
 
                         <a href=""
                            class="btn btn-light w-100 d-flex justify-content-between align-items-center disabled">
                             <span class="badge-outer text-center"><span
-                                    class="badge badge-primary">{{my_questions_to_review_count}}</span></span>
+                                    class="badge  tododoscounter {{#my_questions_to_review_count}}badge-primary{{/my_questions_to_review_count}}">{{my_questions_to_review_count}}</span></span>
                             <span class="flex-grow-1"> {{#str}}
                                 my_questions_to_review_count, block_exaquest {{/str}}</span>
                         </a>
@@ -219,7 +215,7 @@
                         <a href=""
                            class="btn btn-light w-100 d-flex justify-content-between align-items-center disabled">
                             <span class="badge-outer text-center"><span
-                                    class="badge badge-primary">{{my_questions_finalised_count}}</span></span>
+                                    class="badge  tododoscounter {{#my_questions_finalised_count}}badge-primary{{/my_questions_finalised_count}}">{{my_questions_finalised_count}}</span></span>
                             <span class="flex-grow-1"> {{#str}}
                                 my_questions_finalised_count, block_exaquest {{/str}}</span>
                         </a>

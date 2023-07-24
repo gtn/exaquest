@@ -1,24 +1,160 @@
 <div id="exaquest">
     <h3>{{#str}} settings_title, block_exaquest {{/str}}</h3>
-    <p>{{#str}} settings_description, block_exaquest {{/str}}</p>
-    <form action="{{action}}" method="post">
-        <div>
-            <label for="fragencharakter">Fragencharakter</label>
-            <textarea id="fragencharakter" class="form-control" name="fragencharakter" rows="4" cols="50">{{#fragencharakter}}{{.}}{{/fragencharakter}}</textarea>
-        </div>
-        <div>
-            <label for="klassifikation">Klassifikation</label>
-            <textarea id="klassifikation" class="form-control" name="klassifikation" rows="4" cols="50">{{#klassifikation}}{{.}}{{/klassifikation}}</textarea>
-        </div>
-        <div>
-            <label for="fragefach">Fragefach</label>
-            <textarea id="fragefach" class="form-control" name="fragefach" rows="4" cols="50">{{#fragefach}}{{.}}{{/fragefach}}</textarea>
-        </div>
-        <div>
-            <label for="lehrinhalt">Lehrinhalt</label>
-            <textarea id="lehrinhalt" class="form-control" name="lehrinhalt" rows="4" cols="50">{{#lehrinhalt}}{{.}}{{/lehrinhalt}}</textarea>
+    <br/>
+
+    <form method="post">
+        <h4>Fragencharakter</h4>
+        <div id="fragencharakterDiv">
+            <div class="row">
+                <div class="col-7">
+                    <b>Name</b>
+                </div>
+                <div class="col-5">
+                    <b>{{#str}} actions, block_exaquest {{/str}}</b>
+                </div>
+            </div>
+            <hr/>
+            {{#fragencharakter}}
+                <div class="row">
+                    <div class="col-7">
+                        {{categoryname}}
+                    </div>
+                    <div class="col-5">
+                        {{#editTemplate}}
+                            {{>block_exaquest/popup_edit_category}}
+                        {{/editTemplate}}
+                        {{#deleteTemplate}}
+                            {{>block_exaquest/popup_delete_category}}
+                        {{/deleteTemplate}}
+                    </div>
+                </div>
+            {{/fragencharakter}}
         </div>
         <br/>
-        <input type="submit" value="Submit" class="btn btn-primary">
+
+        <h4>Klassifikation</h4>
+        <div id="klassifikationDiv">
+            <div class="row">
+                <div class="col-7">
+                    <b>Name</b>
+                </div>
+                <div class="col-5">
+                    <b>Actions</b>
+                </div>
+            </div>
+            <hr/>
+            {{#klassifikation}}
+                <div class="row">
+                    <div class="col-7">
+                        {{categoryname}}
+                    </div>
+                    <div class="col-5">
+                        {{#editTemplate}}
+                            {{>block_exaquest/popup_edit_category}}
+                        {{/editTemplate}}
+                        {{#deleteTemplate}}
+                            {{>block_exaquest/popup_delete_category}}
+                        {{/deleteTemplate}}
+                    </div>
+                </div>
+            {{/klassifikation}}
+        </div>
+        <br/>
+        <h4>Fragefach</h4>
+        <div id="fragefachDiv">
+            <div class="row">
+                <div class="col-7">
+                    <b>Name</b>
+                </div>
+                <div class="col-5">
+                    <b>Actions</b>
+                </div>
+            </div>
+            <hr/>
+            {{#fragefach}}
+                <div class="row">
+                    <div class="col-7">
+                        {{categoryname}}
+                    </div>
+                    <div class="col-5">
+                        {{#editTemplate}}
+                            {{>block_exaquest/popup_edit_category}}
+                        {{/editTemplate}}
+                        {{#deleteTemplate}}
+                            {{>block_exaquest/popup_delete_category}}
+                        {{/deleteTemplate}}
+                    </div>
+                </div>
+            {{/fragefach}}
+        </div>
+        <br/>
+        <h4>Lerninhalt</h4>
+        <div id="lehrinhaltDiv">
+            <div class="row">
+                <div class="col-7">
+                    <b>Name</b>
+                </div>
+                <div class="col-5">
+                    <b>Actions</b>
+                </div>
+            </div>
+            <hr/>
+            {{#lehrinhalt}}
+                <div class="row">
+                    <div class="col-7">
+                        {{categoryname}}
+                    </div>
+                    <div class="col-5">
+                        {{#editTemplate}}
+                            {{>block_exaquest/popup_edit_category}}
+                        {{/editTemplate}}
+                        {{#deleteTemplate}}
+                            {{>block_exaquest/popup_delete_category}}
+                        {{/deleteTemplate}}
+                    </div>
+                </div>
+            {{/lehrinhalt}}
+        </div>
+
+        <br/>
+        <button type="button" class="btn btn-primary" data-toggle="modal"
+                data-target="#addCategoryName">
+            {{#str}}add_category, block_exaquest {{/str}}
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="addCategoryName" data-backdrop="static" data-keyboard="false"
+             tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">{{#str}}add_category, block_exaquest {{/str}}</h5>
+                        <button type="button" class="close btn-sm" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body col-auto">
+                        <div class="form-group">
+                            <select class="form-select" aria-label="Default select example" name="categorytype">
+                                <option value="0">Fragencharakter</option>
+                                <option value="1">Klassifikation</option>
+                                <option value="2">Fragefach</option>
+                                <option value="3">Lerninhalt</option>
+                            </select>
+                            <br/>
+                            <input class="form-control" name="addcategory">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" formaction="{{add}}" value="Edit"
+                                class="btn btn-primary addCategory">
+                            {{#str}}submit, block_exaquest {{/str}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </form>
 </div>

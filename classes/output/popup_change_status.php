@@ -16,10 +16,18 @@ class popup_change_status implements renderable, templatable {
     var $questionbankentryid = null;
     var $action = null;
 
-    public function __construct($selectusers, $action, $name, $questionbankentryid) {
+    public function __construct($selectusers, $action, $name, $question) {
+        global $USER;
         $this->selectusers = $selectusers;
+        // you can never select yourself: remove yourself from the selectusers
+        foreach ($this->selectusers as $key => $user) {
+            if ($user->id == $USER->id) {
+                unset($this->selectusers[$key]);
+            }
+        }
         $this->name = $name;
-        $this->questionbankentryid = $questionbankentryid;
+        $this->questionbankentryid = $question->questionbankentryid;
+        $this->questionname = $question->name;
         $this->action = $action;
     }
 
@@ -32,6 +40,7 @@ class popup_change_status implements renderable, templatable {
         global $PAGE, $COURSE, $DB;
         $data = new stdClass();
         $data->name = $this->name;
+        $data->questionname = $this->questionname;
         $readonlyusers = [];
         $context = \context_course::instance($COURSE->id);
         // this is NOT needed anymore. The modulverantwortlicher should not be selectable, the PK should also not be selectable ==> keep code in case later it will be needed after all
@@ -54,7 +63,8 @@ class popup_change_status implements renderable, templatable {
                                                FROM {question_versions} qv
                                                JOIN {question} q ON qv.questionid = q.id
                                                JOIN {user} u ON q.createdby = u.id
-                                               WHERE qv.questionbankentryid = '.$this->questionbankentryid));
+                                               WHERE qv.questionbankentryid = ' . $this->questionbankentryid . '
+                                                AND u.deleted = 0'));
         } else {
             $data->text = get_string('open_for_review_text', 'block_exaquest');
             $data->title = get_string('open_for_review_title', 'block_exaquest');
@@ -69,10 +79,12 @@ class popup_change_status implements renderable, templatable {
         foreach ($data->selectusers as $selectuser) {
             $autocompleteoptions[$selectuser->id] = $selectuser->firstname . ' ' . $selectuser->lastname;
         }
-        if ($this->action == 'open_question_for_review') {
-            $selectusers_autocomplete_html = $mform->create_autocomplete_single_select_html($autocompleteoptions, $this->questionbankentryid);
-        }else{
-            $selectusers_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, $this->questionbankentryid);
+        if ($this->action == 'open_question_for_review' || $this->action == 'revise_question') {
+            $selectusers_autocomplete_html =
+                $mform->create_autocomplete_single_select_html($autocompleteoptions, $this->questionbankentryid);
+        } else {
+            $selectusers_autocomplete_html =
+                $mform->create_autocomplete_multi_select_html($autocompleteoptions, $this->questionbankentryid);
         }
 
         $data->selectusers_autocomplete_html = $selectusers_autocomplete_html;

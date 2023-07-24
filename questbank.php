@@ -1,7 +1,7 @@
 <?php
 require __DIR__ . '/inc.php';
 
-global $CFG, $COURSE, $PAGE, $OUTPUT;
+global $CFG, $COURSE, $PAGE, $OUTPUT, $SESSION;
 
 use core\event\question_category_viewed;
 
@@ -12,22 +12,58 @@ require_once(__DIR__ . '/questionbank_extensions/exaquest_view.php');
 list($thispageurl, $contexts, $cmid, $cm, $module, $pagevars) =
     question_edit_setup('questions', '/question/edit.php');
 
+
+
 $courseid = required_param('courseid', PARAM_INT);
-$filterstatus = optional_param('filterstatus',0, PARAM_INT);
-$fragencharakter = optional_param('fragencharakter',-1, PARAM_INT);
-$klassifikation = optional_param('klassifikation',-1, PARAM_INT);
-$fragefach = optional_param('fragefach',-1, PARAM_INT);
-$lehrinhalt = optional_param('lehrinhalt',-1, PARAM_INT);
+$filterstatus = optional_param('filterstatus',-1, PARAM_INT);
+$fragencharakter = optional_param('fragencharakter',-2, PARAM_INT);
+$klassifikation = optional_param('klassifikation',-2, PARAM_INT);
+$fragefach = optional_param('fragefach',-2, PARAM_INT);
+$lehrinhalt = optional_param('lehrinhalt',-2, PARAM_INT);
 $category = optional_param('category','', PARAM_TEXT);
 
 require_login($courseid);
 require_capability('block/exaquest:viewquestionbanktab', context_course::instance($courseid));
 
-$pagevars['filterstatus'] = $filterstatus;
-$pagevars['fragencharakter'] = $fragencharakter;
-$pagevars['klassifikation'] = $klassifikation;
-$pagevars['fragefach'] = $fragefach;
-$pagevars['lehrinhalt'] = $lehrinhalt;
+
+if(!property_exists($SESSION, 'filterstatus')){
+    $SESSION->filterstatus = 0;
+}
+if(!property_exists($SESSION, 'fragencharakter')){
+    $SESSION->fragencharakter = -1;
+}
+if(!property_exists($SESSION, 'klassifikation')){
+    $SESSION->klassifikation = -1;
+}
+if(!property_exists($SESSION, 'fragefach')){
+    $SESSION->fragefach = -1;
+}
+if(!property_exists($SESSION, 'lehrinhalt')){
+    $SESSION->lehrinhalt = -1;
+}
+
+if($filterstatus != -1){
+    $SESSION->filterstatus = $filterstatus;
+}
+if($fragencharakter != -2) {
+    $SESSION->fragencharakter = $fragencharakter;
+}
+if($klassifikation != -2) {
+    $SESSION->klassifikation = $klassifikation;
+}
+if($fragefach != -2) {
+    $SESSION->fragefach = $fragefach;
+}
+if($lehrinhalt != -2) {
+    $SESSION->lehrinhalt = $lehrinhalt;
+}
+
+$pagevars['filterstatus'] = $SESSION->filterstatus;
+$pagevars['fragencharakter'] = $SESSION->fragencharakter;
+$pagevars['klassifikation'] = $SESSION->klassifikation;
+$pagevars['fragefach'] = $SESSION->fragefach;
+$pagevars['lehrinhalt'] = $SESSION->lehrinhalt;
+
 $catAndCont = get_question_category_and_context_of_course();
 $pagevars['cat'] = $catAndCont[0] . ',' . $catAndCont[1];
 
@@ -36,10 +72,9 @@ $page_params = array('courseid' => $courseid);
 $url = new moodle_url('/blocks/exaquest/questbank.php', $page_params);
 
 $PAGE->set_url($url);
-$PAGE->set_heading('showQuestionBank');
-//$streditingquestions = get_string('editquestions', 'question');
-//$PAGE->set_title(block_exacomp_get_string($streditingquestions));
-$PAGE->set_title('showQuestionBank');
+$PAGE->set_heading(get_string('questionbank_of_course', 'block_exaquest', $COURSE->fullname));
+$PAGE->set_title(get_string('questionbank_of_course', 'block_exaquest', $COURSE->fullname));
+
 
 $context = context_course::instance($courseid);
 $output = $PAGE->get_renderer('block_exaquest');

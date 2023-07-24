@@ -83,6 +83,10 @@ $capabilities = array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
     ),
+    'block/exaquest:sekretariat' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+    ),
 
     // capabilities defined by ZML:
     'block/exaquest:readallquestions' => array(
@@ -308,6 +312,10 @@ $capabilities = array(
         'contextlevel' => CONTEXT_COURSE,
     ),
     'block/exaquest:setquestioncount' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+    ),
+    'block/exaquest:changeowner' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
     ),

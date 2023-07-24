@@ -14,10 +14,13 @@ class popup_change_status_warning implements renderable, templatable {
     var $questionbankentryid = null;
     var $action = null;
 
-    public function __construct($action, $name, $questionbankentryid) {
+    public function __construct($action, $name, $question) {
         $this->name = $name;
-        $this->questionbankentryid = $questionbankentryid;
+        $this->questionbankentryid = $question->questionbankentryid;
         $this->action = $action;
+        $this->questionname = $question->name;
+        $this->questionid = $question->id;
+
     }
 
     /**
@@ -32,6 +35,14 @@ class popup_change_status_warning implements renderable, templatable {
         $data->text = get_string('release_question_warning', 'block_exaquest');
         $data->title = get_string('release_question_warning_title', 'block_exaquest');
         $data->questionbankentryid = $this->questionbankentryid;
+        $data->questionname = $this->questionname;
+        $data->disabled = "";
+        $data->dataToggle = "modal";
+        if(!block_exaquest_check_if_question_containes_categories($this->questionid)){
+            $data->disabled = "disabled";
+            $data->dataToggle = "tooltip";
+            $data->tooltip = get_string('missing_category_tooltip', 'block_exaquest');
+        }
 
 
 

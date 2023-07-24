@@ -14,6 +14,7 @@ require_capability('block/exaquest:viewdashboardtab', context_course::instance($
 $context = context_course::instance($courseid);
 
 $coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($courseid);
+$questioncategoryid = get_question_category_and_context_of_course($courseid)[0];
 
 //block_exaquest_set_up_roles(); // for testing
 
@@ -27,8 +28,8 @@ $page_params = array('courseid' => $courseid);
 
 $url = new moodle_url('/blocks/exaquest/dashboard.php', $page_params);
 $PAGE->set_url($url);
-$PAGE->set_heading(get_string('dashboard', 'block_exaquest'));
-$PAGE->set_title(get_string('dashboard', 'block_exaquest'));
+$PAGE->set_heading(get_string('dashboard_of_course', 'block_exaquest', $COURSE->fullname));
+$PAGE->set_title(get_string('dashboard_of_course', 'block_exaquest', $COURSE->fullname));
 
 block_exaquest_init_js_css();
 
@@ -119,7 +120,7 @@ if ($capabilities["addquestiontoexam"]) {
 
 
 
-$dashboard = new \block_exaquest\output\dashboard($USER->id, $courseid, $capabilities, $fragenersteller, $questions_to_create, $coursecategoryid, $fachlichepruefer, $exams_to_fill);
+$dashboard = new \block_exaquest\output\dashboard($USER->id, $courseid, $capabilities, $fragenersteller, $questions_to_create, $coursecategoryid, $questioncategoryid, $fachlichepruefer, $exams_to_fill);
 echo $output->render($dashboard);
 
 // This is the code for rendering the create-questions-button with moodle-core functions. It is moved to the correct position with javascript.

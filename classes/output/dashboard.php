@@ -16,8 +16,9 @@ class dashboard implements renderable, templatable {
     private $request_questions_popup;
     private $questions_for_me_to_create_popup;
     private $coursecategoryid;
+    private $questioncategoryid;
 
-    public function __construct($userid, $courseid, $capabilities, $fragenersteller, $questions_to_create, $coursecategoryid,
+    public function __construct($userid, $courseid, $capabilities, $fragenersteller, $questions_to_create, $coursecategoryid, $questioncategoryid,
         $fachlichepruefer, $exams_to_fill) {
         $this->courseid = $courseid;
         $this->capabilities = $capabilities;
@@ -30,6 +31,7 @@ class dashboard implements renderable, templatable {
         $this->questions_for_me_to_create_popup = new popup_questions_for_me_to_create($questions_to_create);
         //$this->exams_for_me_to_create_popup = new popup_exams_for_me_to_create($exams_to_create);
         $this->coursecategoryid = $coursecategoryid;
+        $this->questioncategoryid = $questioncategoryid;
         //$this->request_exams_popup = new popup_request_exams($fachlichepruefer);
         $this->popup_exams_for_me_to_fill = new popup_exams_for_me_to_fill($exams_to_fill);
         $this->exams_for_me_to_fill_count = count($exams_to_fill);
@@ -44,40 +46,42 @@ class dashboard implements renderable, templatable {
         global $PAGE, $COURSE;
         $data = new stdClass();
         $data->capabilities = $this->capabilities;
-        $data->questions_count = block_exaquest_get_questionbankentries_by_coursecategoryid_count($this->coursecategoryid);
-        $data->questions_to_review_count = block_exaquest_get_questionbankentries_to_be_reviewed_count($this->coursecategoryid);
+        $data->questions_count = block_exaquest_get_questionbankentries_by_questioncategoryid_count($this->questioncategoryid);
+        $data->questions_to_review_count = block_exaquest_get_questionbankentries_to_be_reviewed_count($this->questioncategoryid);
         $data->questions_fachlich_reviewed_count =
-            block_exaquest_get_questionbankentries_fachlich_reviewed_count($this->coursecategoryid);
+            block_exaquest_get_questionbankentries_fachlich_reviewed_count($this->questioncategoryid);
         $data->questions_formal_reviewed_count =
-            block_exaquest_get_questionbankentries_formal_reviewed_count($this->coursecategoryid);
-        $data->questions_finalised_count = block_exaquest_get_finalised_questionbankentries_count($this->coursecategoryid);
-        $data->questions_released_count = block_exaquest_get_released_questionbankentries_count($this->coursecategoryid);
+            block_exaquest_get_questionbankentries_formal_reviewed_count($this->questioncategoryid);
+        $data->questions_finalised_count = block_exaquest_get_finalised_questionbankentries_count($this->questioncategoryid);
+        $data->questions_released_count = block_exaquest_get_released_questionbankentries_count($this->questioncategoryid);
+
+        $data->questions_locked_count = block_exaquest_get_locked_questionbankentries_count($this->questioncategoryid);
         $data->questions_released_and_to_review_count =
-            block_exaquest_get_released_and_to_review_questionbankentries_count($this->coursecategoryid);
+            block_exaquest_get_released_and_to_review_questionbankentries_count($this->questioncategoryid);
         $data->questions_to_revise_count =
-            block_exaquest_get_questionbankentries_to_be_revised_count($this->coursecategoryid);
+            block_exaquest_get_questionbankentries_to_be_revised_count($this->questioncategoryid);
         $data->questions_new_count =
-            block_exaquest_get_questionbankentries_new_count($this->coursecategoryid);
+            block_exaquest_get_questionbankentries_new_count($this->questioncategoryid);
 
         $data->questions_for_me_to_create_count =
             block_exaquest_get_questions_for_me_to_create_count($this->coursecategoryid, $this->userid);
         $data->questions_for_me_to_review_count =
-            block_exaquest_get_questions_for_me_to_review_count($this->coursecategoryid, $this->userid);
+            block_exaquest_get_questions_for_me_to_review_count($this->questioncategoryid, $this->userid);
         $data->questions_for_me_to_revise_count =
-            block_exaquest_get_questions_for_me_to_revise_count($this->coursecategoryid, $this->userid);
+            block_exaquest_get_questions_for_me_to_revise_count($this->questioncategoryid, $this->userid);
         //$data->questions_for_me_to_release_count = block_exaquest_get_questions_for_me_to_release_count($this->coursecategoryid, $this->userid);
         // TODO what should that mean? questions for me to release? questions_finalised_count for now.
         $data->exams_for_me_to_create_count =
             block_exaquest_get_exams_for_me_to_create_count($this->coursecategoryid, $this->userid);
 
         $data->my_questions_count =
-            block_exaquest_get_my_questionbankentries_count($this->coursecategoryid, $this->userid);
+            block_exaquest_get_my_questionbankentries_count($this->questioncategoryid, $this->userid);
         $data->my_questions_to_submit_count =
-            block_exaquest_get_my_questionbankentries_to_submit_count($this->coursecategoryid, $this->userid);
+            block_exaquest_get_my_questionbankentries_to_submit_count($this->questioncategoryid, $this->userid);
         $data->my_questions_to_review_count =
-            block_exaquest_get_my_questionbankentries_to_be_reviewed_count($this->coursecategoryid, $this->userid);
+            block_exaquest_get_my_questionbankentries_to_be_reviewed_count($this->questioncategoryid, $this->userid);
         $data->my_questions_finalised_count =
-            block_exaquest_get_my_finalised_questionbankentries_count($this->coursecategoryid, $this->userid);
+            block_exaquest_get_my_finalised_questionbankentries_count($this->questioncategoryid, $this->userid);
 
         $catAndCont = get_question_category_and_context_of_course();
 
@@ -113,12 +117,12 @@ class dashboard implements renderable, templatable {
 
         $data->questions_fachlich_reviewed_link = new moodle_url('/blocks/exaquest/questbank.php',
             array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
-                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW));
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FACHLICH_REVIEWED));
         $data->questions_fachlich_reviewed_link = $data->questions_fachlich_reviewed_link->raw_out(false);
 
         $data->questions_formal_reviewed_link = new moodle_url('/blocks/exaquest/questbank.php',
             array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
-                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW));
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FORMAL_REVIEWED));
         $data->questions_formal_reviewed_link = $data->questions_formal_reviewed_link->raw_out(false);
 
         $data->questions_finalised_link = new moodle_url('/blocks/exaquest/questbank.php',
@@ -130,6 +134,11 @@ class dashboard implements renderable, templatable {
             array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
                 "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS));
         $data->questions_released_link = $data->questions_released_link->raw_out(false);
+
+        $data->questions_locked_link = new moodle_url('/blocks/exaquest/questbank.php',
+            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_LOCKED_QUESTIONS));
+        $data->questions_locked_link = $data->questions_locked_link->raw_out(false);
 
         $data->questions_to_revise_link = new moodle_url('/blocks/exaquest/questbank.php',
             array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
@@ -169,7 +178,7 @@ class dashboard implements renderable, templatable {
         //    $data->show_exams_heading = true;
         //}
 
-        if ($this->capabilities["fachlicherpruefer"]) {
+        if ($this->capabilities["fachlicherpruefer"] || $this->capabilities["modulverantwortlicher"] || $this->capabilities["pruefungskoordination"]) {
             $data->show_exams_heading = true;
         }
 
