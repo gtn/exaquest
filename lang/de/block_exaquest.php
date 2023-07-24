@@ -207,6 +207,7 @@ $string['change_owner_text'] = 'Fragenersteller verändern zu..';
 $string['unlock_question'] = 'Entsperren';
 $string['lock_question'] = 'Sperren';
 $string['locked'] = 'Gesperrt';
+$string['missing_category_tooltip'] = 'Es wurden nicht alle Kategorien zu der Frage zugewiesen';
 
 //Category Settings
 $string['settings_title'] = 'Kategorieeinstellungen';
