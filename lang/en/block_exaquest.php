@@ -205,6 +205,8 @@ $string['change_owner_text'] = 'Change Creator to..';
 $string['unlock_question'] = 'Unlock';
 $string['lock_question'] = 'Lock Question';
 $string['locked'] = 'Locked';
+$string['missing_category_tooltip'] = 'Not all categories are assigned to the quesiton';
+
 
 
 //Category Settings
