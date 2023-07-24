@@ -594,5 +594,27 @@ function xmldb_block_exaquest_upgrade($oldversion) {
         upgrade_block_savepoint(true, 2023071800, 'exaquest');
     }
 
+    if ($oldversion < 2023072400) {
+        // add boolean field "is_imported" to the table "block_exaquestquestionstatus"
+        $table = new xmldb_table('block_exaquestquestionstatus');
+        $field = new xmldb_field('coursecategoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        $table = new xmldb_table('block_exaquestreviewassign');
+        $field = new xmldb_field('coursecategoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        $table = new xmldb_table('block_exaquestreviseassign');
+        $field = new xmldb_field('coursecategoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2023072400, 'exaquest');
+    }
+
+
     return $return_result;
 }
