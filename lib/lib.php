@@ -176,7 +176,7 @@ function block_exaquest_request_review($userfrom, $userto, $comment, $questionba
     $assigndata->questionbankentryid = $questionbankentryid;
     $assigndata->reviewerid = $userto;
     $assigndata->reviewtype = $reviewtype;
-//    $assigndata->coursecategoryid = $coursecategoryid;
+    //    $assigndata->coursecategoryid = $coursecategoryid;
     $DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
 
     // create the message
@@ -200,7 +200,7 @@ function block_exaquest_request_revision($userfrom, $userto, $comment, $question
     $assigndata = new stdClass;
     $assigndata->questionbankentryid = $questionbankentryid;
     $assigndata->reviserid = $userto;
-//    $assigndata->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($courseid);
+    //    $assigndata->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($courseid);
     // I am assigning formal and fachlich review here... is this correct? --> NO, this would not make sense... The "request revision" should maybe change the owner? or add it to reviewassign but with 3rd value, not fachlich or formal review
     // created table like the reviewtable to assign revision
     //$assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FORMAL;
@@ -400,7 +400,8 @@ function block_exaquest_get_questionbankentries_by_questioncategoryid_count($que
 			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
 			JOIN {question_bank_entries} qbe ON qs.questionbankentryid = qbe.id
 			WHERE qbe.questioncategoryid = :questioncategoryid
-			AND qs.status != " . BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED; // "all" questions except imported ones that have not been released yet
+			AND qs.status != " .
+        BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED; // "all" questions except imported ones that have not been released yet
 
     // we simply count the exaquestquestionstatus entries for this course, so we do not need to have the category, do not read unneccesary entries in the question_bank_entries etc
 
@@ -452,7 +453,8 @@ function block_exaquest_get_my_questionbankentries_to_submit_count($questioncate
              AND qs.status = :newquestion";
 
     $questions = count($DB->get_records_sql($sql,
-        array("questioncategoryid" => $questioncategoryid, "ownerid" => $userid, "newquestion" => BLOCK_EXAQUEST_QUESTIONSTATUS_NEW)));
+        array("questioncategoryid" => $questioncategoryid, "ownerid" => $userid,
+            "newquestion" => BLOCK_EXAQUEST_QUESTIONSTATUS_NEW)));
 
     return $questions;
 }
@@ -474,7 +476,8 @@ function block_exaquest_get_questionbankentries_to_be_reviewed_count($questionca
 			OR qs.status = :toassess)";
 
     $questions = count($DB->get_records_sql($sql,
-        array("questioncategoryid" => $questioncategoryid, "fachlichreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE,
+        array("questioncategoryid" => $questioncategoryid,
+            "fachlichreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE,
             "formalreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE,
             "toassess" => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS)));
 
@@ -539,7 +542,8 @@ function block_exaquest_get_questionbankentries_formal_reviewed_count($questionc
 			AND qs.status = :formalreviewdone";
 
     $questions = count($DB->get_records_sql($sql,
-        array("questioncategoryid" => $questioncategoryid, "formalreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE)));
+        array("questioncategoryid" => $questioncategoryid,
+            "formalreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE)));
 
     return $questions;
 }
@@ -586,7 +590,8 @@ function block_exaquest_get_my_questionbankentries_to_be_reviewed_count($questio
             AND qbe.ownerid = :ownerid";
 
     $questions = count($DB->get_records_sql($sql,
-        array("questioncategoryid" => $questioncategoryid, "fachlichreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE,
+        array("questioncategoryid" => $questioncategoryid,
+            "fachlichreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE,
             "formalreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE,
             "toassess" => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS, "ownerid" => $userid)));
 
@@ -683,7 +688,8 @@ function block_exaquest_get_my_finalised_questionbankentries_count($questioncate
 }
 
 function block_exaquest_get_quizzes_for_me_to_fill_count($userid) {
-    return count(block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS, BLOCK_EXAQUEST_QUIZSTATUS_NEW));
+    return count(block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS,
+        BLOCK_EXAQUEST_QUIZSTATUS_NEW));
 }
 
 function block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, $assigntype, $quizstatus) {
@@ -1124,7 +1130,6 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:createexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:setquestioncount', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:changeowner', CAP_ALLOW, $roleid, $context);
-
 
     if (!$DB->record_exists('role', ['shortname' => 'fragenersteller'])) {
         $roleid = create_role('Fragenersteller', 'fragenersteller', '', 'manager');
@@ -1589,7 +1594,7 @@ function block_exaquest_get_courseids() {
  * Returns all course ids where an instance of Exabis question management tool is installed for this user
  * The course has to have an enddate that ends in the last 6 months, or no enddate (be active)
  */
-function block_exaquest_get_courseids_of_relevant_courses_for_user($userid = null) {
+function block_exaquest_get_relevant_courses_for_user($userid = null) {
     global $DB, $USER;
 
     if ($userid == null) {
@@ -1608,14 +1613,22 @@ function block_exaquest_get_courseids_of_relevant_courses_for_user($userid = nul
                 $course = get_course($context->instanceid);
                 if ($course->enddate) {
                     if ($course->enddate > (time() - 15552000)) { // 15552000 is 6 months in seconds
-                        $exaquest_courses[$context->instanceid] = $context->instanceid;
+                        $exaquest_courses[$context->instanceid] = $course;
                     }
                 } else {
-                    $exaquest_courses[$context->instanceid] = $context->instanceid;
+                    $exaquest_courses[$context->instanceid] = $course;
                 }
             }
         }
     }
+
+    // order by "category" attribute of the objects in $exaquest_courses
+    usort($exaquest_courses, function($a, $b) {
+        return $a->category <=> $b->category;
+        // spaceship operator (<=>). This operator returns -1 if the left-hand side ($a->category) is less than the right-hand side ($b->category),
+        // 1 if it is greater, and 0 if they are equal.
+
+    });
 
     return $exaquest_courses;
 }
@@ -1869,21 +1882,20 @@ function block_exaquest_create_daily_notifications() {
 
     foreach ($users as $user) {
         // get the todocount and create the todos notification
-        $courseids = block_exaquest_get_courseids_of_relevant_courses_for_user($user->id);
+        $courses = block_exaquest_get_relevant_courses_for_user($user->id);
         // "relevant" is relative... it creates todos for this course, and a course that was active in the last 6 months. Could lead to often produce two similar sentences
         // but it is summed up into ONE notification anyways
         $todosmessage = '';
-        foreach ($courseids as $courseid) {
-            $course = get_course($courseid);
-            $context = \context_course::instance($courseid);
-            $questioncategoryid = get_question_category_and_context_of_course($courseid)[0];
-            $todocount = block_exaquest_get_todo_count($user->id, $course->category, $questioncategoryid, $context);
+        foreach ($courses as $c) {
+            $context = \context_course::instance($c->id);
+            $questioncategoryid = get_question_category_and_context_of_course($c->id)[0];
+            $todocount = block_exaquest_get_todo_count($user->id, $c->category, $questioncategoryid, $context);
             if ($todocount) {
                 // create the message
                 $messageobject = new stdClass();
                 $messageobject->todoscount = $todocount;
-                $messageobject->fullname = $course->fullname;
-                $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $courseid]);
+                $messageobject->fullname = $c->fullname;
+                $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $c->id]);
                 $messageobject->url = $messageobject->url->raw_out(false);
                 $todosmessage .= get_string('todos_in_course', 'block_exaquest', $messageobject);
             }
@@ -1898,13 +1910,13 @@ function block_exaquest_create_daily_notifications() {
 
             // only create a message, when the todos count differs from the message of the previous day. careful: if it is the first notification --> null problems
             // check if there exist a notifications with the same eventtype (dailytodos) and the same userid get the most current one and compare the content
-            // if the content is the same, dont send it again. if there is not notifaction or the content is not the same --> send it
+            // if the content is the same, don't send it again. if there is not notifaction or the content is not the same --> send it
             // content = message
             // get the notifcations with eventtype="dailtytodos" and userid=$user->id
             $notifications = block_exaquest_get_notifications_by_eventtype_and_userid("dailytodos", $user->id);
-            if($notifications){
+            if ($notifications) {
                 $notification = reset($notifications); // get the first element of the array
-                if($notification->fullmessage == $message){
+                if ($notification->fullmessage == $message) {
                     // do not send the notification again
                     continue;
                 }
@@ -1917,20 +1929,19 @@ function block_exaquest_create_daily_notifications() {
     // get the PK of all courses and send notification about released questions
     $pks = block_exaquest_get_all_pruefungskoordination_users();
     foreach ($pks as $pk) {
-        $courseids = block_exaquest_get_courseids_of_relevant_courses_for_user($pk->id);
+        $courses = block_exaquest_get_relevant_courses_for_user($pk->id);
         $daily_released_questions_message = '';
-        foreach ($courseids as $courseid) {
-            if (has_capability('block/exaquest:pruefungskoordination', \context_course::instance($courseid),
+        foreach ($courses as $c) {
+            if (has_capability('block/exaquest:pruefungskoordination', \context_course::instance($c->id),
                 $pk->id)) { // could have another role in this course ==> skip
-                $course = get_course($courseid);
-                $questioncategoryid = get_question_category_and_context_of_course($courseid)[0];
+                $questioncategoryid = get_question_category_and_context_of_course($c->id)[0];
                 $daily_released_questions = get_daily_released_questions($questioncategoryid);
                 if ($daily_released_questions) {
                     // create the message
                     $messageobject = new stdClass();
                     $messageobject->daily_released_questions = $daily_released_questions;
-                    $messageobject->fullname = $course->fullname;
-                    $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $courseid]);
+                    $messageobject->fullname = $c->fullname;
+                    $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $c->id]);
                     $messageobject->url = $messageobject->url->raw_out(false);
                     $daily_released_questions_message .= get_string('daily_released_questions_in_course', 'block_exaquest',
                         $messageobject);
@@ -1953,7 +1964,8 @@ function block_exaquest_create_daily_notifications() {
 /**
  * @param $eventtype
  * @param $useridto
- * @return notifications with the given eventtype and userid ordered by timecreated (element with highest timecreated first / newest notification first)
+ * @return notifications with the given eventtype and userid ordered by timecreated (element with highest timecreated first /
+ *     newest notification first)
  */
 function block_exaquest_get_notifications_by_eventtype_and_userid($eventtype, $useridto) {
     global $DB;
@@ -2211,13 +2223,14 @@ function block_exaquest_check_if_questions_imported($questionid, $questionbanken
     }
 }
 
-function block_exaquest_check_if_exam_is_ready($quizid){
+function block_exaquest_check_if_exam_is_ready($quizid) {
     global $DB;
     // check if every assignment of this kind is done for this quiz
-    if($DB->get_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS))){
+    if ($DB->get_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+        array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS))) {
         // records still exist ==> not every todo is done
         return false;
-    } else{
+    } else {
         // no records exist ==> every assignment is done
         // set the quizstatus from new to BLOCK_EXAQUEST_QUIZSTATUS_CREATED
         $quizstatus = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, array('quizid' => $quizid));
@@ -2230,7 +2243,7 @@ function block_exaquest_check_if_exam_is_ready($quizid){
 
 }
 
-function block_exaquest_check_if_question_containes_categories($questionid){
+function block_exaquest_check_if_question_containes_categories($questionid) {
     global $DB;
 
     $categoryoptionids = $DB->get_records_sql("SELECT cfd.value
@@ -2239,18 +2252,18 @@ function block_exaquest_check_if_question_containes_categories($questionid){
                                    WHERE q.id = ?", array($questionid));
 
     $categoryoptionidarray = array();
-    foreach($categoryoptionids as $categoryoptionid){
-        $mrg = explode(',',$categoryoptionid->value);
+    foreach ($categoryoptionids as $categoryoptionid) {
+        $mrg = explode(',', $categoryoptionid->value);
         $categoryoptionidarray = array_merge($categoryoptionidarray, $mrg);
     }
-    $query = "('". implode("','", $categoryoptionidarray) . "')";
+    $query = "('" . implode("','", $categoryoptionidarray) . "')";
 
     $categoryoptions = $DB->get_records_sql("SELECT eqc.id, eqc.categoryname, eqc.categorytype
                                     FROM {block_exaquestcategories} eqc
-                                   WHERE eqc.id IN ". $query);
+                                   WHERE eqc.id IN " . $query);
 
     $categorytypes = array();
-    foreach($categoryoptions as $categoryoption){
+    foreach ($categoryoptions as $categoryoption) {
         $categorytypes[] = intval($categoryoption->categorytype);
     }
     return in_array(0, $categorytypes) && in_array(1, $categorytypes) && in_array(2, $categorytypes) && in_array(3, $categorytypes);

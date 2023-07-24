@@ -14,10 +14,11 @@ class block_exaquest extends block_list {
         //$context = context_system::instance(); // todo: system? or block? think of dashboard. for now solved with viewdashboardoutsidecourse cap
 
         // get all courses where exaquest is added as a block:
-        $courseids = block_exaquest_get_courseids_of_relevant_courses_for_user($USER->id);
+        $courses = block_exaquest_get_relevant_courses_for_user($USER->id);
+
         $hascapability_in_some_course = false;
-        foreach ($courseids as $courseid) {
-            if (has_capability('block/exaquest:viewdashboardoutsidecourse', context_course::instance($courseid))) {
+        foreach ($courses as $c) {
+            if (has_capability('block/exaquest:viewdashboardoutsidecourse', context_course::instance($c->id))) {
                 $hascapability_in_some_course = true;
             }
         }
@@ -36,15 +37,22 @@ class block_exaquest extends block_list {
             $this->content->icons = array();
             $this->content->footer = '';
 
-
+            $previous_coursecat = 0;
             if ($PAGE->pagelayout == "mydashboard") {
                 // get all courses where exaquest is added as a blocK:
                 //$courseids = block_exaquest_get_courseids();
-                foreach ($courseids as $courseid) {
-                    $course = get_course($courseid);
-                    $coursename = $course->fullname;
-                    $questioncategoryid = get_question_category_and_context_of_course($courseid)[0];
-                    $todocount = block_exaquest_get_todo_count($USER->id, $course->category, $questioncategoryid, context_course::instance($courseid));
+                foreach ($courses as $c) {
+                    // if the $previous_coursecat is not the same as the $c->category then print the category name
+                    if ($previous_coursecat != $c->category) {
+                        $previous_coursecat = $c->category;
+                        $categoryname = $DB->get_record('course_categories', array('id' => $c->category))->name;
+                        $this->content->items[] = html_writer::tag('div', $categoryname, array('class' => 'mb-2'));
+                    }
+
+
+                    $coursename = $c->fullname;
+                    $questioncategoryid = get_question_category_and_context_of_course($c->id)[0];
+                    $todocount = block_exaquest_get_todo_count($USER->id, $c->category, $questioncategoryid, context_course::instance($c->id));
                     if ($todocount) {
                         $todocountmesssage = '<span class="badge badge-primary ml-3 badge-lg">' .
                             $todocount . get_string('todos_are_open', 'block_exaquest') . ' </span>';
@@ -54,7 +62,7 @@ class block_exaquest extends block_list {
 
                     $combinedmessage =
                         html_writer::tag('a', get_string('dashboard_of_course', 'block_exaquest', $coursename) . $todocountmesssage,
-                            array('href' => $CFG->wwwroot . '/blocks/exaquest/dashboard.php?courseid=' . $courseid));
+                            array('href' => $CFG->wwwroot . '/blocks/exaquest/dashboard.php?courseid=' . $c->id));
                     $combinedmessage = html_writer::tag('div', $combinedmessage, array('class' => 'mb-2'));
                     $this->content->items[] = $combinedmessage;
                 }
