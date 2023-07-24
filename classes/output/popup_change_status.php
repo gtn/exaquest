@@ -63,7 +63,8 @@ class popup_change_status implements renderable, templatable {
                                                FROM {question_versions} qv
                                                JOIN {question} q ON qv.questionid = q.id
                                                JOIN {user} u ON q.createdby = u.id
-                                               WHERE qv.questionbankentryid = '.$this->questionbankentryid));
+                                               WHERE qv.questionbankentryid = ' . $this->questionbankentryid . '
+                                                AND u.deleted = 0'));
         } else {
             $data->text = get_string('open_for_review_text', 'block_exaquest');
             $data->title = get_string('open_for_review_title', 'block_exaquest');
@@ -79,9 +80,11 @@ class popup_change_status implements renderable, templatable {
             $autocompleteoptions[$selectuser->id] = $selectuser->firstname . ' ' . $selectuser->lastname;
         }
         if ($this->action == 'open_question_for_review' || $this->action == 'revise_question') {
-            $selectusers_autocomplete_html = $mform->create_autocomplete_single_select_html($autocompleteoptions, $this->questionbankentryid);
-        }else{
-            $selectusers_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, $this->questionbankentryid);
+            $selectusers_autocomplete_html =
+                $mform->create_autocomplete_single_select_html($autocompleteoptions, $this->questionbankentryid);
+        } else {
+            $selectusers_autocomplete_html =
+                $mform->create_autocomplete_multi_select_html($autocompleteoptions, $this->questionbankentryid);
         }
 
         $data->selectusers_autocomplete_html = $selectusers_autocomplete_html;

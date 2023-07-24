@@ -278,8 +278,11 @@ function block_exaquest_send_moodle_notification($notificationtype, $userfrom, $
 function block_exaquest_get_fragenersteller_by_courseid($courseid) {
     $context = context_course::instance($courseid);
     $userarray = array();
-    $userarray = array_replace($userarray, get_enrolled_users($context, 'block/exaquest:fragenerstellerlight'));
-    $userarray = array_replace($userarray, get_enrolled_users($context, 'block/exaquest:fragenersteller'));
+    $userarray = array_replace($userarray,
+        get_enrolled_users($context, 'block/exaquest:fragenerstellerlight', 0, 'u.*', null, 0, 0, true));
+
+    $userarray = array_replace($userarray,
+        get_enrolled_users($context, 'block/exaquest:fragenersteller', 0, 'u.*', null, 0, 0, true));
     return $userarray;
 }
 
@@ -293,7 +296,7 @@ function block_exaquest_get_fragenersteller_by_courseid($courseid) {
 function block_exaquest_get_pmw_by_courseid($courseid) {
     $context = context_course::instance($courseid);
     $userarray = array();
-    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:pruefungsmitwirkende'));
+    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:pruefungsmitwirkende', 0, 'u.*', null, 0, 0, true));
     return $userarray;
 }
 
@@ -306,7 +309,7 @@ function block_exaquest_get_pmw_by_courseid($courseid) {
  */
 function block_exaquest_get_fachlichepruefer_by_courseid($courseid) {
     $context = context_course::instance($courseid);
-    return get_enrolled_users($context, 'block/exaquest:fachlicherpruefer');
+    return get_enrolled_users($context, 'block/exaquest:fachlicherpruefer', 0, 'u.*', null, 0, 0, true);
 }
 
 /**
@@ -318,7 +321,7 @@ function block_exaquest_get_fachlichepruefer_by_courseid($courseid) {
  */
 function block_exaquest_get_modulverantwortliche_by_courseid($courseid) {
     $context = context_course::instance($courseid);
-    return get_enrolled_users($context, 'block/exaquest:modulverantwortlicher');
+    return get_enrolled_users($context, 'block/exaquest:modulverantwortlicher', 0, 'u.*', null, 0, 0, true);
 }
 
 /**
@@ -332,8 +335,8 @@ function block_exaquest_get_reviewer_by_courseid($courseid) {
     $context = context_course::instance($courseid);
     $userarray = array();
     //$userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:modulverantwortlicher'));
-    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fachlfragenreviewer'));
-    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fachlfragenreviewerlight'));
+    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fachlfragenreviewer', 0, 'u.*', null, 0, 0, true));
+    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fachlfragenreviewerlight', 0, 'u.*', null, 0, 0, true));
     //$userarray = array_merge($userarray, get_enrolled_users($context,
     //    'block/exaquest:pruefungskoordination')); // according to 20230112 Feedbackliste. But should they really have the right to review? nope, they should not be here, as told in later feedbackliste 20230323
     $userarray = array_unique($userarray, SORT_REGULAR); // to remove users who have multiple roles
@@ -1872,7 +1875,7 @@ function block_exaquest_get_all_pruefungskoordination_users() {
 
 function block_exaquest_get_pruefungskoodrination_by_courseid($courseid) {
     $context = context_course::instance($courseid);
-    return get_enrolled_users($context, 'block/exaquest:pruefungskoordination');
+    return get_enrolled_users($context, 'block/exaquest:pruefungskoordination', 0, 'u.*', null, 0, 0, true);
 }
 
 function block_exaquest_create_daily_notifications() {
@@ -1883,8 +1886,8 @@ function block_exaquest_create_daily_notifications() {
     foreach ($users as $user) {
         // get the todocount and create the todos notification
         $courses = block_exaquest_get_relevant_courses_for_user($user->id);
-        // "relevant" is relative... it creates todos for this course, and a course that was active in the last 6 months. Could lead to often produce two similar sentences
-        // but it is summed up into ONE notification anyways
+        // "relevant" is relative... it creates todos for this course, and a course that was active in the last 6 months. Could lead to often produce two similar sentences,
+        // but it is summed up into ONE notification anyway
         $todosmessage = '';
         foreach ($courses as $c) {
             $context = \context_course::instance($c->id);
