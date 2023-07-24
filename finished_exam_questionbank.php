@@ -24,7 +24,7 @@ $pagevars['cat'] = $catAndCont[0] . ',' . $catAndCont[1];
 
 $page_params = array('courseid' => $courseid);
 
-$url = new moodle_url('/blocks/exaquest/finished_exam_questbank.php', $page_params);
+$url = new moodle_url('/blocks/exaquest/finished_exam_questionbank.php', $page_params);
 
 $PAGE->set_url($url);
 $PAGE->set_heading('showQuestionBank');
