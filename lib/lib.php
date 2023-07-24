@@ -1724,9 +1724,9 @@ function block_exaquest_exams_by_status($coursecategoryid = null, $status = BLOC
  */
 function block_exaquest_exams_set_status($quizid, $status) {
     global $DB;
-    $record = $DB->get_record('block_exaquestquizstatus', array("quizid" => $quizid));
+    $record = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, array("quizid" => $quizid));
     $record->status = $status;
-    $DB->update_record('block_exaquestquizstatus', $record);
+    $DB->update_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, $record);
 }
 
 function is_exaquest_active_in_course() {
@@ -1870,6 +1870,8 @@ function block_exaquest_create_daily_notifications() {
     foreach ($users as $user) {
         // get the todocount and create the todos notification
         $courseids = block_exaquest_get_courseids_of_relevant_courses_for_user($user->id);
+        // "relevant" is relative... it creates todos for this course, and a course that was active in the last 6 months. Could lead to often produce two similar sentences
+        // but it is summed up into ONE notification anyways
         $todosmessage = '';
         foreach ($courseids as $courseid) {
             $course = get_course($courseid);
@@ -1894,7 +1896,6 @@ function block_exaquest_create_daily_notifications() {
             $url_to_moodle_dashboard = new moodle_url('/my/index.php');
             $url_to_moodle_dashboard = $url_to_moodle_dashboard->raw_out();
 
-            // todo: dont send 2 notifcations if there are 2 courses within the same coursecategoryid
             // only create a message, when the todos count differs from the message of the previous day. careful: if it is the first notification --> null problems
             // check if there exist a notifications with the same eventtype (dailytodos) and the same userid get the most current one and compare the content
             // if the content is the same, dont send it again. if there is not notifaction or the content is not the same --> send it
@@ -1943,8 +1944,6 @@ function block_exaquest_create_daily_notifications() {
             $subject = get_string('daily_released_questions_subject', 'block_exaquest');
             $url_to_moodle_dashboard = new moodle_url('/my/index.php');
             $url_to_moodle_dashboard = $url_to_moodle_dashboard->raw_out();
-
-            // todo: dont send 2 notifcations if there are 2 courses within the same coursecategoryid
             block_exaquest_send_moodle_notification('daily_released_questions', $USER->id, $pk->id, $subject, $message,
                 'Daily released questions', $url_to_moodle_dashboard);
         }

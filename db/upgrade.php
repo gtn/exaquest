@@ -598,16 +598,23 @@ function xmldb_block_exaquest_upgrade($oldversion) {
         // add boolean field "is_imported" to the table "block_exaquestquestionstatus"
         $table = new xmldb_table('block_exaquestquestionstatus');
         $field = new xmldb_field('coursecategoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
+        // first drop the key, otherwise it will not allow the deletion of the column
+        $key = new xmldb_key('coursecategoryid', XMLDB_KEY_FOREIGN, array('coursecategoryid'), 'course_categories', array('id'));
+        $dbman->drop_key($table, $key);
         if ($dbman->field_exists($table, $field)) {
             $dbman->drop_field($table, $field);
         }
         $table = new xmldb_table('block_exaquestreviewassign');
         $field = new xmldb_field('coursecategoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
+        $key = new xmldb_key('coursecategoryid', XMLDB_KEY_FOREIGN, array('coursecategoryid'), 'course_categories', array('id'));
+        $dbman->drop_key($table, $key);
         if ($dbman->field_exists($table, $field)) {
             $dbman->drop_field($table, $field);
         }
         $table = new xmldb_table('block_exaquestreviseassign');
         $field = new xmldb_field('coursecategoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
+        $key = new xmldb_key('coursecategoryid', XMLDB_KEY_FOREIGN, array('coursecategoryid'), 'course_categories', array('id'));
+        $dbman->drop_key($table, $key);
         if ($dbman->field_exists($table, $field)) {
             $dbman->drop_field($table, $field);
         }
