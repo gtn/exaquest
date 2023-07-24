@@ -296,6 +296,7 @@ $string['exaquest:pruefungsmitwirkende'] = 'Prüfungsmitwirkende';
 $string['exaquest:fachlicherzweitpruefer'] = 'Fachlicherzweitprüfer';
 $string['exaquest:fachlfragenreviewerlight'] = 'Fachlfragenreviewerlight';
 $string['exaquest:fragenerstellerlight'] = 'Fragenerstellerlight';
+$string['exaquest:sekretariat'] = 'Sekretariat';
 
 $string['exaquest:readallquestions'] = 'Lesen aller Fragen im freigegebene Fragenpool des zugeordneten Moduls (Module)';
 $string['exaquest:readquestionstatistics'] = 'Fragenstatistik abfragen (Anzahl Fragen je Status, je Kategorie, je QS-Kennzahl...)';

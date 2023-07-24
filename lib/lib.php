@@ -1414,7 +1414,7 @@ function block_exaquest_set_up_roles() {
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'sekretariat'])->id;
     }
-    assign_capability('block/exaquest:fragenersteller', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:sekretariat', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:createquestion', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:readallquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:changestatusofreleasedquestions', CAP_ALLOW, $roleid, $context);
