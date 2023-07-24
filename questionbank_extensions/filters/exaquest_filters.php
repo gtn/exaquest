@@ -103,6 +103,9 @@ class exaquest_filters extends condition {
             case BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS:
                 $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED;
                 break;
+            case BLOCK_EXAQUEST_FILTERSTATUS_ALL_LOCKED_QUESTIONS:
+                $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED;
+                break;
         }
         //this is for restricing view of questions for new fragenersteller light role
         if (!has_capability('block/exaquest:readallquestions', \context_course::instance($COURSE->id))) {
@@ -191,6 +194,10 @@ class exaquest_filters extends condition {
         $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS] . ' value="' .
             BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS . '">' .
             get_string('show_all_released_questions', 'block_exaquest') . '</option>';
+        $html .= '    <optgroup label="' . get_string('locked_filter', 'block_exaquest') . '">';
+        $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_LOCKED_QUESTIONS] . ' value="' .
+            BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED . '">' .
+            get_string('show_all_locked_questions', 'block_exaquest') . '</option>';
         $html .= '    </optgroup>';
         $html .= '</select></div></div>';
 

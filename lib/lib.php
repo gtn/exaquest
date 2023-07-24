@@ -96,6 +96,7 @@ const BLOCK_EXAQUEST_FILTERSTATUS_ALL_NEW_QUESTIONS = 10; // all questions that 
 const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FACHLICH_REVIEWED = 11;
 const BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FORMAL_REVIEWED = 12;
 const BLOCK_EXAQUEST_FILTERSTATUS_ALL_IMPORTED_QUESTIONS = 13;
+const BLOCK_EXAQUEST_FILTERSTATUS_ALL_LOCKED_QUESTIONS = 14;
 
 function block_exaquest_init_js_css() {
     global $PAGE, $CFG;
@@ -619,6 +620,28 @@ function block_exaquest_get_released_questionbankentries_count($questioncategory
 
     $questions = count($DB->get_records_sql($sql,
         array("questioncategoryid" => $questioncategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED)));
+
+    return $questions;
+}
+/**
+* Returns count of
+*
+ * Locked
+ *
+ * @param $coursecategoryid
+* @return array
+ */
+
+function block_exaquest_get_locked_questionbankentries_count($questioncategoryid) {
+    global $DB;
+    $sql = "SELECT qs.id
+			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
+			JOIN {question_bank_entries} qbe ON qs.questionbankentryid = qbe.id
+			WHERE qbe.questioncategoryid = :questioncategoryid
+			AND qs.status = :locked";
+
+    $questions = count($DB->get_records_sql($sql,
+        array("questioncategoryid" => $questioncategoryid, "locked" => BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED)));
 
     return $questions;
 }
