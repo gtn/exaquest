@@ -1876,8 +1876,6 @@ function block_exaquest_create_daily_notifications() {
             $context = \context_course::instance($courseid);
             $questioncategoryid = get_question_category_and_context_of_course($courseid)[0];
             $todocount = block_exaquest_get_todo_count($user->id, $course->category, $questioncategoryid, $context);
-            // todo: only create a message, when the todos count differs from the message of the previous day. careful: if it is the first notification --> null problems
-
             if ($todocount) {
                 // create the message
                 $messageobject = new stdClass();
@@ -1895,12 +1893,26 @@ function block_exaquest_create_daily_notifications() {
             $subject = get_string('dailytodos_subject', 'block_exaquest');
             $url_to_moodle_dashboard = new moodle_url('/my/index.php');
             $url_to_moodle_dashboard = $url_to_moodle_dashboard->raw_out();
+
+            // todo: dont send 2 notifcations if there are 2 courses within the same coursecategoryid
+            // only create a message, when the todos count differs from the message of the previous day. careful: if it is the first notification --> null problems
+            // check if there exist a notifications with the same eventtype (dailytodos) and the same userid get the most current one and compare the content
+            // if the content is the same, dont send it again. if there is not notifaction or the content is not the same --> send it
+            // content = message
+            // get the notifcations with eventtype="dailtytodos" and userid=$user->id
+            $notifications = block_exaquest_get_notifications_by_eventtype_and_userid("dailytodos", $user->id);
+            if($notifications){
+                $notification = reset($notifications); // get the first element of the array
+                if($notification->fullmessage == $message){
+                    // do not send the notification again
+                    continue;
+                }
+            }
             block_exaquest_send_moodle_notification("dailytodos", $USER->id, $user->id, $subject, $message,
                 "TODOs", $url_to_moodle_dashboard);
         }
     }
 
-    // TODO check that logic, not finished yet
     // get the PK of all courses and send notification about released questions
     $pks = block_exaquest_get_all_pruefungskoordination_users();
     foreach ($pks as $pk) {
@@ -1912,8 +1924,6 @@ function block_exaquest_create_daily_notifications() {
                 $course = get_course($courseid);
                 $questioncategoryid = get_question_category_and_context_of_course($courseid)[0];
                 $daily_released_questions = get_daily_released_questions($questioncategoryid);
-                // todo: only create a message, when the todos count differs from the message of the previous day. careful: if it is the first notification --> null problems
-
                 if ($daily_released_questions) {
                     // create the message
                     $messageobject = new stdClass();
@@ -1933,18 +1943,24 @@ function block_exaquest_create_daily_notifications() {
             $subject = get_string('daily_released_questions_subject', 'block_exaquest');
             $url_to_moodle_dashboard = new moodle_url('/my/index.php');
             $url_to_moodle_dashboard = $url_to_moodle_dashboard->raw_out();
+
+            // todo: dont send 2 notifcations if there are 2 courses within the same coursecategoryid
             block_exaquest_send_moodle_notification('daily_released_questions', $USER->id, $pk->id, $subject, $message,
                 'Daily released questions', $url_to_moodle_dashboard);
         }
     }
+}
 
-    //$courseids = block_exaquest_get_courseids();
-    //foreach ($courseids as $courseid){
-    //    $context = context_course::instance($courseid);
-    //    $pks = get_enrolled_users($context, 'block/exaquest:pruefungskoordination');
-
-    //}
-
+/**
+ * @param $eventtype
+ * @param $useridto
+ * @return notifications with the given eventtype and userid ordered by timecreated (element with highest timecreated first / newest notification first)
+ */
+function block_exaquest_get_notifications_by_eventtype_and_userid($eventtype, $useridto) {
+    global $DB;
+    $notifications = $DB->get_records('notifications',
+        array('eventtype' => $eventtype, 'useridto' => $useridto), 'timecreated DESC');
+    return $notifications;
 }
 
 /**
@@ -1959,7 +1975,7 @@ function get_daily_released_questions($questioncategoryid) {
 
     $sql = 'SELECT qs.id
 			FROM {' . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . '} qs
-			JOIN {question_bank_entries} qbe ON qbe.id = ps.questionbankentryid
+			JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid
 			WHERE qbe.questioncategoryid = :questioncategoryid
 			AND qs.timestamp > :timelastday
 			AND qs.status = ' . BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED;
