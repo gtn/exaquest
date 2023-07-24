@@ -41,7 +41,7 @@ class popup_change_status_warning implements renderable, templatable {
         if(!block_exaquest_check_if_question_containes_categories($this->questionid)){
             $data->disabled = "disabled";
             $data->dataToggle = "tooltip";
-            $data->tooltip = get_string('missing_category_tooltip', 'block_exaquest');;
+            $data->tooltip = get_string('missing_category_tooltip', 'block_exaquest');
         }
 
 

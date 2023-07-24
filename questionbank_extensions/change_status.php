@@ -149,7 +149,7 @@ class change_status extends column_base {
                 if (has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
                     if(!block_exaquest_check_if_question_containes_categories($this->questionid)){
                         echo '<button href="#" class="changestatus' . $question->questionbankentryid .
-                            ' btn btn-primary disabled" disabled role="button" value="unlockquestion"> ' .
+                            ' btn btn-primary disabled" disabled data-toggle="tooltip" role="button" value="unlockquestion" title="'.get_string('missing_category_tooltip', 'block_exaquest').'"> ' .
                             get_string('unlock_question', 'block_exaquest') . '</button>';
                     } else {
                         echo '<button href="#" class="changestatus' . $question->questionbankentryid .
