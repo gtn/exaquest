@@ -622,6 +622,24 @@ function xmldb_block_exaquest_upgrade($oldversion) {
         upgrade_block_savepoint(true, 2023072400, 'exaquest');
     }
 
+    if ($oldversion < 2023072401) {
+        // drop coursecategoryid, since we want courseid and have this in the quiz table ==> redundant to save that
+        $table = new xmldb_table('block_exaquestquizstatus');
+        $field = new xmldb_field('coursecategoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        // drop key
+        $key = new xmldb_key('fk_coursecategoryid', XMLDB_KEY_FOREIGN, array('coursecategoryid'), 'course_categories', array('id'));
+        $dbman->drop_key($table, $key);
+        // drop field
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2023072401, 'exaquest');
+    }
+
+
+
 
     return $return_result;
 }

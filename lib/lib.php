@@ -1673,17 +1673,17 @@ function block_exaquest_get_coursecategoryid_by_courseid($courseid) {
  * @param $status
  * @return array
  */
-function block_exaquest_exams_by_status($coursecategoryid = null, $status = BLOCK_EXAQUEST_QUIZSTATUS_NEW) {
+function block_exaquest_exams_by_status($courseid = null, $status = BLOCK_EXAQUEST_QUIZSTATUS_NEW) {
     global $DB, $USER;
 
-    if ($coursecategoryid) {
+    if ($courseid) {
         $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid
 			FROM {" . BLOCK_EXAQUEST_DB_QUIZSTATUS . "} quizstatus
 			JOIN {quiz} q on q.id = quizstatus.quizid 
 			JOIN {course_modules} cm on cm.instance = q.id
 			JOIN {modules} m on m.id = cm.module
 			WHERE quizstatus.status = :status
-			AND quizstatus.coursecategoryid = :coursecategoryid
+			AND q.course = :courseid
 			AND m.name = 'quiz'";
 
         /**
@@ -1699,7 +1699,7 @@ function block_exaquest_exams_by_status($coursecategoryid = null, $status = BLOC
          */
 
         $quizzes = $DB->get_records_sql($sql,
-            array("status" => $status, "coursecategoryid" => $coursecategoryid));
+            array("status" => $status, "courseid" => $courseid));
     } else {
         $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid, q.timeclose as timeclose
 			FROM {" . BLOCK_EXAQUEST_DB_QUIZSTATUS . "} quizstatus

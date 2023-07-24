@@ -84,8 +84,8 @@ class block_exaquest_observer {
             $insert = new stdClass();
             $insert->quizid = $data['other']['instanceid'];
             $insert->status = BLOCK_EXAQUEST_QUIZSTATUS_NEW;
-            $insert->coursecategoryid =
-                block_exaquest_get_coursecategoryid_by_courseid($event->courseid); // the context is context_module. The event has the courseid.
+            //$insert->coursecategoryid =
+            //    block_exaquest_get_coursecategoryid_by_courseid($event->courseid); // the context is context_module. The event has the courseid.
             $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, $insert);
         }
     }
@@ -105,8 +105,8 @@ class block_exaquest_observer {
             $insert = new stdClass();
             $insert->quizid = $data['other']['instanceid'];
             $insert->status = BLOCK_EXAQUEST_QUIZSTATUS_NEW;
-            $insert->coursecategoryid =
-                block_exaquest_get_coursecategoryid_by_courseid($event->courseid); // the context is context_module. The event has the courseid.
+            //$insert->coursecategoryid =
+            //    block_exaquest_get_coursecategoryid_by_courseid($event->courseid); // the context is context_module. The event has the courseid.
             $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, $insert);
         }
     }
@@ -143,8 +143,8 @@ class block_exaquest_observer {
             $insert = new stdClass();
             $insert->quizid = $data['other']['instanceid'];
             $insert->status = BLOCK_EXAQUEST_QUIZSTATUS_NEW;
-            $insert->coursecategoryid =
-                block_exaquest_get_coursecategoryid_by_courseid($event->courseid); // the context is context_module. The event has the courseid.
+            //$insert->coursecategoryid =
+            //    block_exaquest_get_coursecategoryid_by_courseid($event->courseid); // the context is context_module. The event has the courseid.
             $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, $insert);
         }
     }
