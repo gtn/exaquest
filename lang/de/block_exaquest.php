@@ -220,6 +220,7 @@ $string['submit'] = "Bestätigen";
 $string['add_category'] = "Kategorie hinzufügen";
 $string['delete'] = "Archivieren";
 $string['delete_check'] = "Ich bin mir sicher, dass ich diese Kategorie löschen möchte";
+$string['actions'] = "Aktionen";
 
 // Similarity Comparison
 $string['exaquest:similarity_title'] = 'Ähnlichkeitsvergleich';

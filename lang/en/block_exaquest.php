@@ -220,6 +220,7 @@ $string['submit'] = "Submit";
 $string['add_category'] = "Add Category";
 $string['delete'] = "Delete";
 $string['delete_check'] = "I am certain that I want to delete this category.";
+$string['actions'] = "Actions";
 
 
 // Similarity Comparison
