@@ -128,6 +128,7 @@ $string['questions_fachlich_reviewed_count'] = 'Nur fachlich begutachtete Fragen
 $string['questions_formal_reviewed_count'] = 'Nur formal begutachtete Fragen. Fachlich noch zu begutachten';
 $string['questions_finalised_count'] = 'Finalisierte Fragen';
 $string['questions_released_count'] = 'Freigegebene Fragen';
+$string['questions_locked_count'] = 'Gepserrte Fragen';
 $string['questions_released_and_to_review_count'] = 'Freigegebene Fragen die überarbeitet werden müssen';
 
 $string['my_questions_count'] = 'Fragen von mir erstellt';
@@ -164,11 +165,13 @@ $string['show_questions_for_me_to_revise'] = 'Meine Fragen zur Überabeitung anz
 $string['show_questions_to_release'] = 'Freizugebende Fragen anzeigen';
 $string['show_questions_for_me_to_release'] = 'Meine freizugebenden Fragen anzeigen';
 $string['show_all_released_questions'] = 'Alle freigegebenen Fragen anzeigen';
+$string['show_all_locked_questions'] = 'Alle gesperrten Fragen anzeigen';
 
 $string['created'] = 'Erstellt:';
 $string['review'] = 'Begutachten:';
 $string['revise'] = 'Überarbeiten:';
 $string['release'] = 'Freigeben:';
+$string['locked_filter'] = 'Gesperrt:';
 
 $string['open_question_for_review'] = 'Frage zur Begutachtung freigeben';
 $string['formal_review_done'] = 'Formal finalisieren';

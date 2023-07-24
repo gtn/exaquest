@@ -125,6 +125,7 @@ $string['questions_fachlich_reviewed_count'] = 'Fachlich reviewed questions';
 $string['questions_formal_reviewed_count'] = 'Formal reviewed questions';
 $string['questions_finalised_count'] = 'questions finalised';
 $string['questions_released_count'] = 'questions released';
+$string['questions_locked_count'] = 'questions locked';
 $string['questions_released_and_to_review_count'] = 'questions are released and should be reviewed again';
 
 $string['my_questions_count'] = 'questions from me';
@@ -163,11 +164,13 @@ $string['show_questions_for_me_to_revise'] = 'Show questions for me to revise';
 $string['show_questions_to_release'] = 'Show questions to release';
 $string['show_questions_for_me_to_release'] = 'Show questions for me to release';
 $string['show_all_released_questions'] = 'Show all released questions';
+$string['show_all_locked_questions'] = 'Show all locked questions';
 
 $string['created'] = 'Created:';
 $string['review'] = 'Review:';
 $string['revise'] = 'Revise:';
 $string['release'] = 'Release:';
+$string['locked_filter'] = 'Locked:';
 
 $string['open_question_for_review'] = 'Open question for review';
 $string['formal_review_done'] = 'Finish formal review';

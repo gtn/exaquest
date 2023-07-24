@@ -179,17 +179,13 @@
                             <span class="flex-grow-1"> {{#str}}
                                 questions_released_count, block_exaquest {{/str}}</span>
                         </a>
-
-
-                        <!--                There is no link for that, because there is no filter for that... but maybe in the future-->
-                        <!--                    TODO: this is never used. Released questions are sent to be revised. Should we change that and use LOCKED status?-->
-                        <a class="btn btn-light w-100 d-flex justify-content-between align-items-center disabled"
-                           href={{questions_released_and_to_review_link}}>
+                        <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
+                           href={{questions_locked_link}}>
                                             <span class="badge-outer text-center">
-                                                <span class="badge  tododoscounter {{#questions_released_and_to_review_count}}badge-primary{{/questions_released_and_to_review_count}}">{{questions_released_and_to_review_count}}</span>
+                                                <span class="badge  tododoscounter {{#questions_locked_count}}badge-primary{{/questions_locked_count}}">{{questions_locked_count}}</span>
                                             </span>
                             <span class="flex-grow-1"> {{#str}}
-                                questions_released_and_to_review_count, block_exaquest {{/str}}</span>
+                                questions_locked_count, block_exaquest {{/str}}</span>
                         </a>
                     </div>
                 </div>

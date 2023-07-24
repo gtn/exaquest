@@ -54,6 +54,8 @@ class dashboard implements renderable, templatable {
             block_exaquest_get_questionbankentries_formal_reviewed_count($this->questioncategoryid);
         $data->questions_finalised_count = block_exaquest_get_finalised_questionbankentries_count($this->questioncategoryid);
         $data->questions_released_count = block_exaquest_get_released_questionbankentries_count($this->questioncategoryid);
+
+        $data->questions_locked_count = block_exaquest_get_locked_questionbankentries_count($this->questioncategoryid);
         $data->questions_released_and_to_review_count =
             block_exaquest_get_released_and_to_review_questionbankentries_count($this->questioncategoryid);
         $data->questions_to_revise_count =
@@ -132,6 +134,11 @@ class dashboard implements renderable, templatable {
             array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
                 "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS));
         $data->questions_released_link = $data->questions_released_link->raw_out(false);
+
+        $data->questions_locked_link = new moodle_url('/blocks/exaquest/questbank.php',
+            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_LOCKED_QUESTIONS));
+        $data->questions_locked_link = $data->questions_locked_link->raw_out(false);
 
         $data->questions_to_revise_link = new moodle_url('/blocks/exaquest/questbank.php',
             array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
