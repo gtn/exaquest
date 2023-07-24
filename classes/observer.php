@@ -45,16 +45,16 @@ class block_exaquest_observer {
                 $insert->is_imported = 0;
                 // get the questionbankentry via a moodle function (simply a join from questions over the versions to the banke_entry)
                 $insert->questionbankentryid = $questionbankentry->id;
-                if ($event->get_context() instanceof \context_coursecat) {
-                    $insert->coursecategoryid = $event->contextinstanceid;
-                } else if ($event->get_context() instanceof
-                    \context_course) { // TODO: this should NOT happen anyways. Otherwise the question is in the wrong place and will not be seen.
-                    //$course = $DB->get_record('course', array('id' => $event->contextinstanceid));
-                    throw new Exception("questions should be created in coursecategory context, not course context");
-                    //$insert->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($event->contextinstanceid);
-                } else {
-                    throw new Exception("neither course nor coursecategory context"); // TODO, what else could there be?
-                }
+//                if ($event->get_context() instanceof \context_coursecat) {
+//                    $insert->coursecategoryid = $event->contextinstanceid;
+//                } else if ($event->get_context() instanceof
+//                    \context_course) { // TODO: this should NOT happen anyways. Otherwise the question is in the wrong place and will not be seen.
+//                    //$course = $DB->get_record('course', array('id' => $event->contextinstanceid));
+//                    throw new Exception("questions should be created in coursecategory context, not course context");
+//                    //$insert->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($event->contextinstanceid);
+//                } else {
+//                    throw new Exception("neither course nor coursecategory context"); // TODO, what else could there be?
+//                }
                 $DB->insert_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $insert);
 
                 // schedule a task to check if the question is imported or not, IF the question is marked as imported (sometimes the customfield data is not yet available)

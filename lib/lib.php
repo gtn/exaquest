@@ -167,7 +167,7 @@ function block_exaquest_request_exam($userfrom, $userto, $comment) {
         "Prüfungserstellung", $messageobject->url);
 }
 
-function block_exaquest_request_review($userfrom, $userto, $comment, $questionbankentryid, $questionname, $coursecategoryid,
+function block_exaquest_request_review($userfrom, $userto, $comment, $questionbankentryid, $questionname,
     $courseid,
     $reviewtype) {
     global $DB, $COURSE;
@@ -176,7 +176,7 @@ function block_exaquest_request_review($userfrom, $userto, $comment, $questionba
     $assigndata->questionbankentryid = $questionbankentryid;
     $assigndata->reviewerid = $userto;
     $assigndata->reviewtype = $reviewtype;
-    $assigndata->coursecategoryid = $coursecategoryid;
+//    $assigndata->coursecategoryid = $coursecategoryid;
     $DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
 
     // create the message
@@ -193,14 +193,14 @@ function block_exaquest_request_review($userfrom, $userto, $comment, $questionba
         "Review", $messageobject->url);
 }
 
-function block_exaquest_request_revision($userfrom, $userto, $comment, $questionbankentryid, $questionname, $coursecategoryid,
+function block_exaquest_request_revision($userfrom, $userto, $comment, $questionbankentryid, $questionname,
     $courseid) {
     global $DB, $COURSE;
     // enter data into the exaquest tables
     $assigndata = new stdClass;
     $assigndata->questionbankentryid = $questionbankentryid;
     $assigndata->reviserid = $userto;
-    $assigndata->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($courseid);
+//    $assigndata->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($courseid);
     // I am assigning formal and fachlich review here... is this correct? --> NO, this would not make sense... The "request revision" should maybe change the owner? or add it to reviewassign but with 3rd value, not fachlich or formal review
     // created table like the reviewtable to assign revision
     //$assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FORMAL;
