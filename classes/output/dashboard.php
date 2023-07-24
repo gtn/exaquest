@@ -115,12 +115,12 @@ class dashboard implements renderable, templatable {
 
         $data->questions_fachlich_reviewed_link = new moodle_url('/blocks/exaquest/questbank.php',
             array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
-                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW));
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FACHLICH_REVIEWED));
         $data->questions_fachlich_reviewed_link = $data->questions_fachlich_reviewed_link->raw_out(false);
 
         $data->questions_formal_reviewed_link = new moodle_url('/blocks/exaquest/questbank.php',
             array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
-                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW));
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FORMAL_REVIEWED));
         $data->questions_formal_reviewed_link = $data->questions_formal_reviewed_link->raw_out(false);
 
         $data->questions_finalised_link = new moodle_url('/blocks/exaquest/questbank.php',
