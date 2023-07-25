@@ -1156,6 +1156,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:createexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:setquestioncount', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:changeowner', CAP_ALLOW, $roleid, $context);
+    unassign_capability('mod/quiz:addinstance', $roleid, $context->id);
 
     if (!$DB->record_exists('role', ['shortname' => 'fragenersteller'])) {
         $roleid = create_role('Fragenersteller', 'fragenersteller', '', 'manager');

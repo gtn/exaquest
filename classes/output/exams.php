@@ -22,6 +22,7 @@ class exams implements renderable, templatable {
         $this->capabilities = $capabilities;
         $this->userid = $userid;
         //$this->exams = $DB->get_records("quiz", array("course" => $COURSE->id));
+        $this->capabilities["createnewexam"] = has_capability('mod/quiz:addinstance', \context_course::instance($COURSE->id));
         if ($capabilities["viewnewexams"]) {
             $this->new_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_NEW);
         } else if ($capabilities["addquestiontoexam"]) {

@@ -1,9 +1,11 @@
 <div id="exaquest">
 {{#capabilities}}
     {{#viewnewexams}}
+        {{#createnewexam}}
             <a href="{{create_exam_link}}" type="submit" class="btn
             btn-secondary"
                value="">{{#str}}create_new_exam_button, block_exaquest {{/str}}</a>
+        {{/createnewexam}}
             <div class="examcard">
                 <h4>{{#str}}new_exams, block_exaquest {{/str}}</h4>
                 <p>{{#str}}add_questions_to_these_exams, block_exaquest {{/str}}</p>
