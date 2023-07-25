@@ -37,6 +37,14 @@
                                     </button>
                                 </td>
                             {{/createexam}}
+                            {{#skipandreleaseexam}}
+                                <td>
+                                    <button type="submit" class="btn btn-primary change-exam-status-button"
+                                            value="skipandrelease_exam" quizid={{quizid}} courseid={{courseid}}>Prüfung
+                                        finalisieren und freigeben
+                                    </button>
+                                </td>
+                            {{/skipandreleaseexam}}
                             {{#assignaddquestions}}
                                 <td>
                                     {{#popup_assign_addquestions}}

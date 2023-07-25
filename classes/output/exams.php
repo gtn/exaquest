@@ -25,6 +25,9 @@ class exams implements renderable, templatable {
         $this->capabilities["createnewexam"] = has_capability('mod/quiz:addinstance', \context_course::instance($COURSE->id));
         if ($capabilities["viewnewexams"]) {
             $this->new_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_NEW);
+            foreach($this->new_exams as $new_exam){
+                $new_exam->skipandreleaseexam = $userid == intval($new_exam->creatorid);
+            }
         } else if ($capabilities["addquestiontoexam"]) {
             // new exams can only be seen by PK and Mover, except if you are specifically assigned to an exam, e.g. as a FP or PMW
             // ==> give the viewnewexams capability to all users who are assigned to an exam, but filter the newexams according to users role

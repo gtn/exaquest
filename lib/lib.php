@@ -1717,7 +1717,7 @@ function block_exaquest_exams_by_status($courseid = null, $status = BLOCK_EXAQUE
     global $DB, $USER;
 
     if ($courseid) {
-        $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid
+        $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid, quizstatus.creatorid as creatorid
 			FROM {" . BLOCK_EXAQUEST_DB_QUIZSTATUS . "} quizstatus
 			JOIN {quiz} q on q.id = quizstatus.quizid 
 			JOIN {course_modules} cm on cm.instance = q.id
@@ -1741,7 +1741,7 @@ function block_exaquest_exams_by_status($courseid = null, $status = BLOCK_EXAQUE
         $quizzes = $DB->get_records_sql($sql,
             array("status" => $status, "courseid" => $courseid));
     } else {
-        $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid, q.timeclose as timeclose
+        $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid, q.timeclose as timeclose, quizstatus.creatorid as creatorid
 			FROM {" . BLOCK_EXAQUEST_DB_QUIZSTATUS . "} quizstatus
 			JOIN {quiz} q on q.id = quizstatus.quizid 
 			JOIN {course_modules} cm on cm.instance = q.id
