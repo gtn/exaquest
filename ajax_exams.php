@@ -21,7 +21,7 @@ switch ($action) {
     //    block_exaquest_assign_quiz_addquestions($quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
     //    break;
     case ('fachlich_release_exam'):
-        block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_FACHLICH_RELEASED);
+        block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE);
         break;
     case ('request_revision'):
         //TODO: do something else than only revert it to created?
