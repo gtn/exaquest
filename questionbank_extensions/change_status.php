@@ -219,28 +219,6 @@ class change_status extends column_base {
                     });
                 });
 
-                //$(".disable<?php //echo $question->questionbankentryid; ?>//").attr('disabled', true);
-                //
-                //$('.commenttext<?php //echo $question->questionbankentryid; ?>//').on('keyup', function () {
-                //    var textarea_value = $('.commenttext<?php //echo $question->questionbankentryid; ?>//').val();
-                //
-                //    if (textarea_value != '') {
-                //        $(".disable<?php //echo $question->questionbankentryid; ?>//").attr('disabled', false);
-                //    } else {
-                //        $(".disable<?php //echo $question->questionbankentryid; ?>//").attr('disabled', true);
-                //    }
-                //});
-
-                // $('.requestquestionscomment').on('keyup', function () {
-                //     var textarea_value = $('.requestquestionscomment').val();
-                //     if (textarea_value != '') {
-                //         $('.requestquestionssubmit').attr('disabled', false);
-                //     } else {
-                //         $('.requestquestionssubmit').attr('disabled', true);
-                //     }
-                // });
-
-
             });
 
         </script>

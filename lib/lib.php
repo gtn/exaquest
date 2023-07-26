@@ -201,13 +201,6 @@ function block_exaquest_request_revision($userfrom, $userto, $comment, $question
     $assigndata = new stdClass;
     $assigndata->questionbankentryid = $questionbankentryid;
     $assigndata->reviserid = $userto;
-    //    $assigndata->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($courseid);
-    // I am assigning formal and fachlich review here... is this correct? --> NO, this would not make sense... The "request revision" should maybe change the owner? or add it to reviewassign but with 3rd value, not fachlich or formal review
-    // created table like the reviewtable to assign revision
-    //$assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FORMAL;
-    //$DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
-    //$assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH;
-    //$DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
     $DB->insert_record(BLOCK_EXAQUEST_DB_REVISEASSIGN, $assigndata);
 
     // create the message
@@ -344,53 +337,6 @@ function block_exaquest_get_reviewer_by_courseid($courseid) {
     return $userarray;
 }
 
-/**
- * Returns all count of questionbankentries that have to be formally reviewed
- * used e.g. for the prüfungscoordination or the studmis to see which questions they should revise
- *
- * @param $courseid
- * @param $userid
- * @return array
- */
-//Not used and outdated, would require questioncategoryid check
-//function block_exaquest_get_questionbankentries_to_formal_review_count($coursecategoryid,
-//    $userid) { // TODO change to coursecategoryid and use it in query
-//    global $DB;
-//    $sql = "SELECT q.*
-//			FROM {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} ra
-//			JOIN {question_bank_entries} qe ON ra.questionbankentryid = qe.id
-//			WHERE ra.reviewerid = :reviewerid
-//			AND ra.reviewtype = :reviewtype";
-//
-//    $questions =
-//        count($DB->get_records_sql($sql, array("reviewerid" => $userid, "reviewtype" => BLOCK_EXAQUEST_REVIEWTYPE_FORMAL)));
-//
-//    return $questions;
-//}
-
-/**
- * Returns count of questionbankentries that have to be fachlich reviewed
- * used e.g. for the fachlicherreviewer to see which questions they should revise
- *
- * @param $courseid
- * @param $userid
- * @return array
- */
-//Not used and outdated, would require questioncategoryid check
-//function block_exaquest_get_questionbankentries_to_fachlich_review_count($courseid,
-//    $userid) { // TODO change to coursecategoryid and use it in query
-//    global $DB;
-//    $sql = "SELECT q.*
-//			FROM {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} ra
-//			JOIN {question_bank_entries} qe ON ra.questionbankentryid = qe.id
-//			WHERE ra.reviewerid = :reviewerid
-//			AND ra.reviewtype = :reviewtype";
-//
-//    $questions =
-//        count($DB->get_records_sql($sql, array("reviewerid" => $userid, " reviewtype" => BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH)));
-//
-//    return $questions;
-//}
 
 /**
  * Returns count of all questionbankentries (all entries in exaquestqeustionstatus)
@@ -1570,27 +1516,6 @@ function get_question_category_and_context_of_course($courseid = null) {
     // this way, the questioncontext for the coursecategory of the current course can be found.
 
     return [$categoryid, $contextid];
-
-    ////$catmenu = helper::question_category_options($contexts, true, 0,
-    ////    true, -1, false);
-    //
-    //$context = context_course::instance($courseid);
-    ////var_dump($context);
-    ////die;
-    //$contexts = explode('/', $context->path);
-    //$questioncategory = $DB->get_records('question_categories',
-    //    ['contextid' => $contexts[2]]); // hardcoded contexts[2] leads to problems when the path has a different depth than expected
-    //$category =
-    //    end($questioncategory); // an actual array, not a returnvalue of a function has to be passed, since it sets the internal pointer of the array, so there has to be a real array
-    //
-    //if ($category) {
-    //    //var_dump([$category->id, $contexts[2]]);
-    //    //die;
-    //    return [$category->id,
-    //        $contexts[2]]; // TODO why $contexts[2]? That should give the same as $category->contextid but $category->contextid seems safer
-    //} else {
-    //    return false;
-    //}
 
 }
 
