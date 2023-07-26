@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- *  file description here.
+ *  shows all categories assigned to this question
  *
  * @package
  * @copyright  2022 fabio <>

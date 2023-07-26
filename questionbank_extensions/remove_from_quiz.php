@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- *  file description here.
+ *  button to remove question from quiz.
  *
  * @package
  * @copyright  2022 fabio <>

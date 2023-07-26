@@ -6,7 +6,7 @@ namespace qbank_openquestionforreview;
 use core_question\local\bank\column_base;
 
 /**
- * A column type for the name of the question creator.
+ * A column to inform who last changed the question.
  *
  * @package   qbank_viewcreator
  * @copyright 2009 Tim Hunt

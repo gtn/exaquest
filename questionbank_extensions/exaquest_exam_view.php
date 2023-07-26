@@ -16,7 +16,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * exaquest_history file description here.
+ * this calss is for the exam view to add questions to exams
  *
  * @package    exaquest_history
  * @copyright  2022 fabio <>
@@ -40,7 +40,7 @@ require_once('filters/exaquest_questioncategoryfilter.php');
 
 
 
-
+// this calss is for the exam view to add questions to exams
 class exaquest_exam_view extends exaquest_view {
 
     public function __construct($contexts, $pageurl, $course, $cm = null) {

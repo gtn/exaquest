@@ -42,6 +42,7 @@ class change_status extends column_base {
 
         $fragenersteller = block_exaquest_get_fragenersteller_by_courseid($COURSE->id);
 
+        //decides which button is visible to whom
         switch (intval($question->teststatus)) {
             case BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED:
                 if (has_capability('block/exaquest:changeowner', \context_course::instance($COURSE->id))) {
@@ -165,6 +166,7 @@ class change_status extends column_base {
         ?>
 
         <script type="text/javascript">
+            //  javascript redirects events to the ajax.php file and passes necessary data
             $(document).ready(function () {
                 $(".changestatus<?php echo $question->questionbankentryid; ?>").click(function (e) {
 

@@ -32,6 +32,14 @@ use qbank_managecategories\helper;
 use qbank_questiontodescriptor;
 
 
+/**
+ * main exaquest view for questionbank, this one is also derived by other views
+ *
+ * @package    exaquest_view
+ * @copyright  2022 fabio <>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 class exaquest_view extends view
 {
 
@@ -54,6 +62,7 @@ class exaquest_view extends view
         $questionbankclasscolumns = [];
         $newpluginclasscolumns = [];
         //edited:
+        //Commenting out $corequestionbankcolumns removes them from the questionbank table
         $corequestionbankcolumns = [
             'checkbox_column',
             'question_type_column',
@@ -125,6 +134,8 @@ class exaquest_view extends view
             }
         }
 
+        // this is where you can add new colums to the current questionbank of this view
+        // it also needs to be added in plugin_feature
         $specialpluginentrypointobject = new \qbank_openquestionforreview\plugin_feature();
         $specialplugincolumnobjects = $specialpluginentrypointobject->get_question_columns($this);
         $questionbankclasscolumns["question_id_column"] = $specialplugincolumnobjects[8];
@@ -140,10 +151,12 @@ class exaquest_view extends view
         return $questionbankclasscolumns;
     }
 
+    // The display function is called by the questionbank.php file, it creates the whole view of the questionbank
     public function display($pagevars, $tabname): void
     {
         global $SESSION;
 
+        // retrieving all the pagevars, that got initialized in questionbank.php, it also utilizes $SESSION to save the state when changing pages
         $page = $pagevars['qpage'];
         $perpage = $pagevars['qperpage'];
         $cat = $pagevars['cat'];
@@ -166,7 +179,7 @@ class exaquest_view extends view
 
         $editcontexts = $this->contexts->having_one_edit_tab_cap($tabname);
 
-        //var_dump($cat);
+
         // Show the filters and search options.
         $this->wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus, $fragencharakter, $klassifikation, $fragefach, $lehrinhalt);
 
@@ -210,6 +223,7 @@ class exaquest_view extends view
                 }
 
                 //array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
+                // these are used to add extra filters to this view
                 array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_filters($filterstatus));
                 array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_questioncategoryfilter($fragencharakter, $klassifikation, $fragefach, $lehrinhalt));
                 array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_category_condition(
@@ -405,6 +419,7 @@ class exaquest_view extends view
     {
         // Get the required tables and fields.
         $joins = [];
+        // add here extra fields to get from the sql query, but be careful these can cause problems if not the right tables are not joind and the first one in this field determains the indexing of the return array
         $fields = [ 'qbe.id as questionbankentryid','qv.status', 'qc.id as categoryid', 'qv.version', 'qv.id as versionid'];
         if (!empty($this->requiredcolumns)) {
             foreach ($this->requiredcolumns as $column) {
@@ -444,14 +459,19 @@ class exaquest_view extends view
             }
         }
         // Build the SQL.
+        //here it adds all joins together, including the extra_joins from other columns
         $sql = ' FROM {question} q ' . implode(' ', $joins);
+        // adds all where clauses, including the onse that were defined in out filters
         $sql .= ' WHERE ' . implode(' AND ', $tests);
+        // important note: The DISTINCT is necessary so the questionbank counts all questions correctly
         $this->countsql = 'SELECT count(DISTINCT qbe.id)' . $sql;
+        // important note: The DISTINCT is necessary so the questionbank does not leave out any questions
         $this->loadsql = 'SELECT DISTINCT ' . implode(', ', $fields) . $sql . ' ORDER BY ' . implode(', ', $sorts);
     }
 
     protected function load_page_questions($page, $perpage): \moodle_recordset
     {
+        // here the actual query is called
         global $DB;
         $questions = $DB->get_recordset_sql($this->loadsql, $this->sqlparams, $page * $perpage, $perpage);
         if (empty($questions)) {

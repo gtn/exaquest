@@ -29,7 +29,7 @@ use qbank_columnsortorder\column_manager;
 use core_plugin_manager;
 
 
-
+//class displays the version history of questions
 class exaquest_history_view extends question_history_view {
 
     public function __construct($contexts, $pageurl, $course, int $entryid, string $returnurl) {

@@ -6,10 +6,22 @@ use core_question\local\bank\exaquest_view;
 use qbank_columnsortorder\column_manager;
 use core_plugin_manager;
 
+
+
 require_once('exaquest_exam_view.php');
 require_once('plugin_feature.php');
 require_once('filters/in_quiz_filter.php');
 require_once('filters/only_released_questions.php');
+
+
+/**
+* this class is for the exam view to view already added questions in an exam
+*
+ * @package    exaquest_finished_exam
+* @copyright  2022 fabio <>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 class exaquest_finished_exam_view extends exaquest_exam_view
 {
     public function __construct($contexts, $pageurl, $course, $cm = null) {
@@ -29,7 +41,7 @@ class exaquest_finished_exam_view extends exaquest_exam_view
         if ($quizid != null) {
             $quizname = $DB->get_field("quiz", "name", array("id" => $quizid));
         }
-
+// sql retrieves all categories for each questions inside this view
         $coustomfieldvalues = $DB->get_records_sql("SELECT *
                               FROM {quiz_slots} qusl
                               JOIN {question_references} qref ON qusl.id = qref.itemid
@@ -46,6 +58,7 @@ class exaquest_finished_exam_view extends exaquest_exam_view
             $mrg = explode(',', $categoryoptionid->value);
             $categoryoptionidarray = array_merge($categoryoptionidarray, $mrg);
         }
+        // counts how often each category was used in each question
         $categoryoptionidcount = array();
         foreach ($categoryoptionidarray as $categoryoptionid) {
             $categoryoptionidcount[$categoryoptionid] += 1;
@@ -57,7 +70,7 @@ class exaquest_finished_exam_view extends exaquest_exam_view
 
 
         $query = "('" . implode("','", $categoryoptionidkeys) . "')";
-
+// after creating query it retrieves all categories which are contained in any of the questions
         $categoryoptions = $DB->get_records_sql("SELECT eqc.id, eqc.categoryname, eqc.categorytype
                                     FROM {block_exaquestcategories} eqc
                                    WHERE eqc.id IN " . $query);
