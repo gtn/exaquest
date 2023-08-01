@@ -485,4 +485,82 @@ class exaquest_view extends view
         return $questions;
     }
 
+    /**
+     * Display the controls at the bottom of the list of questions.
+     *
+     * @param \context $catcontext The context of the category being displayed.
+     * unchanged, maybe will change in the future
+     */
+    protected function display_bottom_controls(\context $catcontext): void {
+        // use the parent function
+        //parent::display_bottom_controls($catcontext);
+
+        $caneditall = has_capability('moodle/question:editall', $catcontext);
+        $canuseall = has_capability('moodle/question:useall', $catcontext);
+        $canmoveall = has_capability('moodle/question:moveall', $catcontext);
+        if ($caneditall || $canmoveall || $canuseall) {
+            global $PAGE;
+            $bulkactiondatas = [];
+            $params = $this->base_url()->params();
+            $params['returnurl'] = $this->base_url();
+            foreach ($this->bulkactions as $key => $action) {
+                // Check capabilities.
+                $capcount = 0;
+                foreach ($action['capabilities'] as $capability) {
+                    if (has_capability($capability, $catcontext)) {
+                        $capcount ++;
+                    }
+                }
+                // At least one cap need to be there.
+                if ($capcount === 0) {
+                    unset($this->bulkactions[$key]);
+                    continue;
+                }
+                $actiondata = new \stdClass();
+                $actiondata->actionname = $action['title'];
+                $actiondata->actionkey = $key;
+                $actiondata->actionurl = new \moodle_url($action['url'], $params);
+                $bulkactiondata[] = $actiondata;
+
+                $bulkactiondatas ['bulkactionitems'] = $bulkactiondata;
+            }
+            // We dont need to show this section if none of the plugins are enabled.
+            if (!empty($bulkactiondatas)) {
+                echo $PAGE->get_renderer('core_question', 'bank')->render_bulk_actions_ui($bulkactiondatas);
+            }
+        }
+    }
+
+    /**
+     * Initialize bulk actions.
+     * unchanged, maybe will change in the future
+     */
+    protected function init_bulk_actions(): void {
+        $plugins = \core_component::get_plugin_list_with_class('qbank', 'plugin_feature', 'plugin_feature.php');
+        foreach ($plugins as $componentname => $plugin) {
+            if (!\core\plugininfo\qbank::is_plugin_enabled($componentname)) {
+                continue;
+            }
+
+            $pluginentrypoint = new $plugin();
+            $bulkactions = $pluginentrypoint->get_bulk_actions();
+            if (!is_array($bulkactions)) {
+                debugging("The method {$componentname}::get_bulk_actions() must return an " .
+                    "array of bulk actions instead of a single bulk action. " .
+                    "Please update your implementation of get_bulk_actions() to return an array. " .
+                    "Check out the qbank_bulkmove plugin for a working example.", DEBUG_DEVELOPER);
+                $bulkactions = [$bulkactions];
+            }
+
+            foreach ($bulkactions as $bulkactionobject) {
+                $this->bulkactions[$bulkactionobject->get_key()] = [
+                    'title' => $bulkactionobject->get_bulk_action_title(),
+                    'url' => $bulkactionobject->get_bulk_action_url(),
+                    'capabilities' => $bulkactionobject->get_bulk_action_capabilities()
+                ];
+            }
+
+        }
+    }
+
 }
