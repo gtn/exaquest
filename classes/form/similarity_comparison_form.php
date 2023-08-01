@@ -38,12 +38,12 @@ class similarity_comparison_form extends moodleform {
         */
 
         $similarityButtonGroup = array();
-        $similarityButtonGroup[] = $mform->createElement('submit', 'showSimilarityOverviewButton',
-            get_string("exaquest:similarity_update_button_label", "block_exaquest"));
-        $similarityButtonGroup[] = $mform->createElement('submit', 'computeSimilarityButton',
-            get_string("exaquest:similarity_compute_button_label", "block_exaquest"));
         $similarityButtonGroup[] = $mform->createElement('submit', 'computeSimilarityStoreButton',
             get_string("exaquest:similarity_persist_button_label", "block_exaquest"));
+        $similarityButtonGroup[] = $mform->createElement('submit', 'showSimilarityOverviewButton',
+            get_string("exaquest:similarity_update_button_label", "block_exaquest"));
+        //$similarityButtonGroup[] = $mform->createElement('submit', 'computeSimilarityButton',
+        //    get_string("exaquest:similarity_compute_button_label", "block_exaquest"));
 
         $mform->addGroup($similarityButtonGroup, 'similarityButtonGroup', '', ' ', false);
 

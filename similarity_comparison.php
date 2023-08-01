@@ -111,8 +111,8 @@ Logger::debug("block_exaquest_similarity_comparison - question course context: "
 
 // switch page functionality/content, based on user input
 $allSimilarityRecordWrappers = match ($action) {
-    'computeSimilarity' => computeSimilarityComparisonTableData($moodleQuestions,
-        $similarityComparisonSettings), // compute Similarity and display, but do not store in DB
+    //'computeSimilarity' => computeSimilarityComparisonTableData($moodleQuestions,
+    //    $similarityComparisonSettings), // compute Similarity and display, but do not store in DB
     'computeSimilarityStore' => computeSimilarityComparisonTableData($moodleQuestions, $similarityComparisonSettings,
         $DB), // compute and store results in DB
     default => getSimilarityRecordsWithID($DB, array_column($moodleQuestions, 'id')), // show existing DB results only
@@ -161,9 +161,9 @@ function evaluateSimiliarityComparisonFormAction(similarity_comparison_form $mfo
             //$redirectUrl->param($paramname, 'showSimilarityComparison');
             $action = 'showSimilarityComparison';
             //redirect($redirectUrl); // TODO: do we have to redirect? it loses the courseid GET param after form submission, but seems to work nevertheless?
-        } else if (isset($mdata->computeSimilarityButton)) {
-            //$redirectUrl->param($paramname, 'computeSimilarity');
-            $action = 'computeSimilarity';
+        //} else if (isset($mdata->computeSimilarityButton)) {
+        //    //$redirectUrl->param($paramname, 'computeSimilarity');
+        //    $action = 'computeSimilarity';
         } else if (isset($mdata->computeSimilarityStoreButton)) {
             //$redirectUrl->param($paramname, 'computeSimilarityStore');
             $action = 'computeSimilarityStore';
@@ -339,7 +339,7 @@ function getQuestionCategories(array $pagevars, bool $recurse = false): array {
  * @return string
  */
 function validateInput(string $param, string $value): string {
-    $allowedActions = ["default", "computeSimilarity", "computeSimilarityStore", "showSimilarityComparison"];
+    $allowedActions = ["default", "computeSimilarityStore", "showSimilarityComparison"];
     $allowedSort = ["default", "similarityDesc", "similarityAsc"];
 
     switch ($param) {
