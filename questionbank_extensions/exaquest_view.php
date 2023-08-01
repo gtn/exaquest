@@ -13,7 +13,6 @@ require_once('plugin_feature.php');
 require_once('edit_action_column_exaquest.php');
 require_once('filters/exaquest_filters.php');
 require_once('filters/exaquest_questioncategoryfilter.php');
-require_once('edit_action_column_exaquest.php');
 require_once('delete_action_column_exaquest.php');
 require_once('history_action_column_exaquest.php');
 require_once('exaquest_category_condition.php');
@@ -21,6 +20,7 @@ require_once('question_id_column.php');
 require_once('owner_column.php');
 require_once('last_changed_column.php');
 require_once('status_column.php');
+require_once('question_name_idnumber_tags_column_exaquest.php');
 
 
 
@@ -134,7 +134,7 @@ class exaquest_view extends view
             }
         }
 
-        // this is where you can add new colums to the current questionbank of this view
+        // this is where you can add new columns to the current questionbank of this view
         // it also needs to be added in plugin_feature
         $specialpluginentrypointobject = new \qbank_openquestionforreview\plugin_feature();
         $specialplugincolumnobjects = $specialpluginentrypointobject->get_question_columns($this);
@@ -146,6 +146,7 @@ class exaquest_view extends view
         $questionbankclasscolumns["edit_action_column"] = $specialplugincolumnobjects[1];
         $questionbankclasscolumns["delete_action_column"] = $specialplugincolumnobjects[2];
         $questionbankclasscolumns["history_action_column"] = $specialplugincolumnobjects[3];
+        $questionbankclasscolumns["question_name_idnumber_tags_column"] = $specialplugincolumnobjects[12];
 
 
         return $questionbankclasscolumns;
