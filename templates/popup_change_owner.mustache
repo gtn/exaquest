@@ -1,17 +1,17 @@
 <!-- using bootstrap modals to do the popups https://getbootstrap.com/docs/4.6/components/modal/ -->
 
-{{#hidden}}
 
-{{/hidden}}
+
+
 <button id=openModalButton{{questionbankentryid}} type="button" class="btn btn-primary" data-toggle="modal"
-        data-target="#changeStatusModal{{questionbankentryid}}" style="display: none;">
+        data-target="#changeOwnerModal{{questionbankentryid}}" {{#hidden}}style="display: none;{{/hidden}}">
     {{title}}
 <!--    #pix i/group/pix-->
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="changeStatusModal{{questionbankentryid}}" data-backdrop="static" data-keyboard="false"
-     tabindex="-1" aria-labelledby="changeStatusModalLabel" aria-hidden="true">
+<div class="modal fade" id="changeOwnerModal{{questionbankentryid}}" data-backdrop="static" data-keyboard="false"
+     tabindex="-1" aria-labelledby="changeOwnerModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -30,7 +30,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="submit" value="{{action}}"
-                        class="btn btn-primary changestatus{{questionbankentryid}} {{#require}}disable{{questionbankentryid}}{{/require}}">
+                        class="btn btn-primary changeowner{{questionbankentryid}} {{#require}}disable{{questionbankentryid}}{{/require}}">
                     Request
                 </button>
             </div>

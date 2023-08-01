@@ -51,7 +51,7 @@ class popup_assign_addquestions implements renderable, templatable {
         foreach ($data->fp as $fp) {
             $autocompleteoptions[$fp->id] = $fp->firstname . ' ' . $fp->lastname;
         }
-        $pmw_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, "pmw".$data->quizid);
+        $pmw_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, "pmw".$data->quizid, 'popup_assign_addquestions');
         $data->pmw_autocomplete_html = $pmw_autocomplete_html;
 
 

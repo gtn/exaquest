@@ -205,6 +205,7 @@ $string['open_for_review_title'] = 'Review';
 $string['revise_title'] = 'Revision';
 $string['change_owner_title'] = 'Change Creator';
 $string['change_owner_text'] = 'Change Creator to..';
+$string['change_owner'] = 'Change Creator';
 $string['unlock_question'] = 'Unlock';
 $string['lock_question'] = 'Lock Question';
 $string['locked'] = 'Locked';

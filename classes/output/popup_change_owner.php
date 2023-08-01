@@ -60,7 +60,7 @@ class popup_change_owner implements renderable, templatable {
         foreach ($data->selectusers as $selectuser) {
             $autocompleteoptions[$selectuser->id] = $selectuser->firstname . ' ' . $selectuser->lastname;
         }
-        $selectusers_autocomplete_html = $mform->create_autocomplete_single_select_html($autocompleteoptions, $this->questionbankentryid);
+        $selectusers_autocomplete_html = $mform->create_autocomplete_single_select_html($autocompleteoptions, $this->questionbankentryid, 'popup_change_owner');
 
 
         $data->selectusers_autocomplete_html = $selectusers_autocomplete_html;
@@ -68,7 +68,7 @@ class popup_change_owner implements renderable, templatable {
         $data->action = $this->action;
         $data->sesskey = sesskey();
 
-        $data->hidden = true;
+        $data->hidden = $this->hidden;
         return $data;
     }
 }

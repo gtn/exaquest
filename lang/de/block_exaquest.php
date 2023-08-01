@@ -207,6 +207,7 @@ $string['open_for_review_title'] = 'Begutachtung';
 $string['revise_title'] = 'Überarbeitung';
 $string['change_owner_title'] = 'Fragenersteller verändern';
 $string['change_owner_text'] = 'Fragenersteller verändern zu..';
+$string['change_owner'] = 'Fragenersteller verändern';
 $string['unlock_question'] = 'Entsperren';
 $string['lock_question'] = 'Sperren';
 $string['locked'] = 'Gesperrt';
