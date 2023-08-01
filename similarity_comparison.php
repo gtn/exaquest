@@ -68,6 +68,7 @@ $action = optional_param('action', 'default', PARAM_ALPHANUMEXT);
 $sortBy = optional_param('sort', 'similarityDesc', PARAM_ALPHANUMEXT);
 $substituteIDs = optional_param('substituteid', false, PARAM_BOOL);
 $hidePreviousQ = optional_param('hidepreviousq', false, PARAM_BOOL);
+$examid = optional_param('examid', false, PARAM_INT);
 require_login($courseID);
 [$thispageurl, $contexts, $cmid, $cm, $module, $pagevars] = question_edit_setup('questions', '/question/edit.php');
 $url = new moodle_url('/blocks/exaquest/similarity_comparison.php', array('courseid' => $courseID, "category" => $catAndCont));
@@ -77,7 +78,7 @@ $PAGE->set_title(get_string('similarity_of_course', 'block_exaquest', $COURSE->f
 //$PAGE->requires->js_call_amd('block_exaquest/helloworld', 'init', [['courseid' => $courseID, 'sortby' => $sortBy]]); // include javascript within ./amd/src/
 
 $mform = new similarity_comparison_form($url, ["courseid" => $courseID, "sort" => $sortBy, "substituteid" => $substituteIDs,
-    "hidepreviousq" => $hidePreviousQ]); // button array
+    "hidepreviousq" => $hidePreviousQ, "examid" => $examid]); // button array
 $action = evaluateSimiliarityComparisonFormAction($mform);
 [$sortByIdx, $sortBy] = evaluateSimiliarityComparisonFormOption($mform, 'sort', $sortBy, similarity_comparison_form::$sortBy);
 $substituteIDs =
@@ -203,6 +204,7 @@ function evaluateSimiliarityComparisonFormCheckbox(similarity_comparison_form $m
 function evaluateSimiliarityComparisonFormOption(similarity_comparison_form $mform, string $paramName, string $defaultValue,
     array $options): array {
     $value = $defaultValue;
+    $idx = 0;
 
     if ($mdata = $mform->get_data()) { // contains all relevant form data/fields that were set by the user
         require_sesskey();

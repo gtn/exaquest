@@ -6,42 +6,37 @@ use core_question\local\bank\exaquest_view;
 use qbank_columnsortorder\column_manager;
 use core_plugin_manager;
 
-
+use moodle_url;
 
 require_once('exaquest_exam_view.php');
 require_once('plugin_feature.php');
 require_once('filters/in_quiz_filter.php');
 require_once('filters/only_released_questions.php');
 
-
 /**
-* this class is for the exam view to view already added questions in an exam
-*
+ * this class is for the exam view to view already added questions in an exam
+ *
  * @package    exaquest_finished_exam
-* @copyright  2022 fabio <>
+ * @copyright  2022 fabio <>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-class exaquest_finished_exam_view extends exaquest_exam_view
-{
+class exaquest_finished_exam_view extends exaquest_exam_view {
     public function __construct($contexts, $pageurl, $course, $cm = null) {
         parent::__construct($contexts, $pageurl, $course, $cm);
     }
 
-
     /**
      * Display the header element for the question bank.
      */
-    protected function display_question_bank_header(): void
-    {
-        global $OUTPUT, $DB;
+    protected function display_question_bank_header(): void {
+        global $OUTPUT, $DB, $COURSE;
 
         $quizid = optional_param('quizid', null, PARAM_INT);
 
         if ($quizid != null) {
             $quizname = $DB->get_field("quiz", "name", array("id" => $quizid));
         }
-// sql retrieves all categories for each questions inside this view
+        // sql retrieves all categories for each questions inside this view
         $coustomfieldvalues = $DB->get_records_sql("SELECT *
                               FROM {quiz_slots} qusl
                               JOIN {question_references} qref ON qusl.id = qref.itemid
@@ -68,9 +63,8 @@ class exaquest_finished_exam_view extends exaquest_exam_view
             $categoryoptionidkeys[] = $key;
         }
 
-
         $query = "('" . implode("','", $categoryoptionidkeys) . "')";
-// after creating query it retrieves all categories which are contained in any of the questions
+        // after creating query it retrieves all categories which are contained in any of the questions
         $categoryoptions = $DB->get_records_sql("SELECT eqc.id, eqc.categoryname, eqc.categorytype
                                     FROM {block_exaquestcategories} eqc
                                    WHERE eqc.id IN " . $query);
@@ -80,34 +74,46 @@ class exaquest_finished_exam_view extends exaquest_exam_view
             $options[$categoryoption->categorytype][$categoryoption->id] = $categoryoption->categoryname;
         }
 
-        $content = array('','','','');
-        foreach ($options as $key => $option){
+        $content = array('', '', '', '');
+        foreach ($options as $key => $option) {
             foreach ($option as $keyy => $name) {
                 $content[$key] .= '<div class="col-lg-12"><span>' . $name . ': ' . $categoryoptionidcount[$keyy] . '</span></div>';
             }
         }
-        echo $OUTPUT->heading(get_string('questionbank_selected_quiz', 'block_exaquest').''. $quizname, 2);
+        echo $OUTPUT->heading(get_string('questionbank_selected_quiz', 'block_exaquest') . '' . $quizname, 2);
 
         $html = '<div class="container-fluid">
                     <div class="row">
                          <div class="col-lg-3">
                          <div class="col-lg-12 border-bottom"><h6>Fragencharakter</h6></div>
-                            '.$content[0].'
+                            ' . $content[0] . '
                         </div>
                         <div class="col-lg-3">
                         <div class="col-lg-12 border-bottom"><h6>Klassifikation</h6></div>
-                            '.$content[1].'
+                            ' . $content[1] . '
                         </div>
                         <div class="col-lg-3">
                         <div class="col-lg-12 border-bottom"><h6>Fragefach</h6></div>
-                            '.$content[2].'
+                            ' . $content[2] . '
                         </div>
                         <div class="col-lg-3">
                         <div class="col-lg-12 border-bottom"><h6>Lerninhalt</h6></div>
-                            '.$content[3].'
+                            ' . $content[3] . '
                         </div>
                     </div>
                 </div>';
+        // add a button that links to exaquest/similarity_comparison.php with questioncategoryid, courseid and examid
+        $catAndCont = get_question_category_and_context_of_course();
+        $courseid = $COURSE->id;
+        $url = new moodle_url('/blocks/exaquest/similarity_comparison.php',
+            array("courseid" => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1], "examid" => $quizid));
+        $html .= '<br>';
+        $html .= '<div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <a href="' . $url . '" class="btn btn-primary">Ähnlichkeitsvergleich</a>
+                        </div>
+                    </div>';
         echo "<br/>";
         echo $html;
         echo "<br/>";
@@ -208,7 +214,6 @@ class exaquest_finished_exam_view extends exaquest_exam_view
             }
         }
 
-
         //// New plugins added at the end of the array, will change in sorting feature.
         //foreach ($newpluginclasscolumns as $key => $newpluginclasscolumn) {
         //    $questionbankclasscolumns[$key] = $newpluginclasscolumn;
@@ -237,12 +242,11 @@ class exaquest_finished_exam_view extends exaquest_exam_view
         $questionbankclasscolumns["category_options"] = $specialplugincolumnobjects[6];
         $questionbankclasscolumns["remove_from_quiz"] = $specialplugincolumnobjects[7];
 
-
-
         return $questionbankclasscolumns;
     }
 
-    public function wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus=0, $fragencharakter=-1, $klassifikation=-1, $fragefach=-1,  $lehrinhalt=-1): void {
+    public function wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus = 0,
+        $fragencharakter = -1, $klassifikation = -1, $fragefach = -1, $lehrinhalt = -1): void {
         global $CFG;
         list(, $contextid) = explode(',', $cat);
         $catcontext = \context::instance_by_id($contextid);
@@ -262,13 +266,13 @@ class exaquest_finished_exam_view extends exaquest_exam_view
                 }
             } else {
                 if ($CFG->usetags) {
-                       //array_unshift($this->searchconditions,
-                         //new \core_question\bank\search\tag_condition([$catcontext, $thiscontext], $tagids));
+                    //array_unshift($this->searchconditions,
+                    //new \core_question\bank\search\tag_condition([$catcontext, $thiscontext], $tagids));
                 }
 
                 //array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
                 array_unshift($this->searchconditions, new \core_question\bank\search\in_quiz_filter($filterstatus));
-//                array_unshift($this->searchconditions, new \core_question\bank\search\only_released_questions());
+                //                array_unshift($this->searchconditions, new \core_question\bank\search\only_released_questions());
                 array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_category_condition(
                     $cat, $recurse, $editcontexts, $this->baseurl, $this->course));
 
