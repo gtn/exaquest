@@ -2195,7 +2195,7 @@ function block_exaquest_check_if_exam_is_ready($quizid) {
 
 }
 
-function block_exaquest_check_if_question_containes_categories($questionid) {
+function block_exaquest_check_if_question_contains_categories($questionid) {
     global $DB;
 
     $categoryoptionids = $DB->get_records_sql("SELECT cfd.value
@@ -2212,7 +2212,8 @@ function block_exaquest_check_if_question_containes_categories($questionid) {
 
     $categoryoptions = $DB->get_records_sql("SELECT eqc.id, eqc.categoryname, eqc.categorytype
                                     FROM {block_exaquestcategories} eqc
-                                   WHERE eqc.id IN " . $query);
+                                   WHERE eqc.deleted = 0
+                                       AND eqc.id IN " . $query);
 
     $categorytypes = array();
     foreach ($categoryoptions as $categoryoption) {
