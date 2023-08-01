@@ -52,7 +52,6 @@ class question_name_idnumber_tags_column_exaquest extends question_name_idnumber
         );
 
 
-
         //// get context of coursecategory by the id stored in the question object
         //$context = \context::instance_by_id($question->contextid, IGNORE_MISSING);
         //$questiondisplay = $this->question_preview_link($question->id, $context, true);

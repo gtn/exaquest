@@ -138,7 +138,7 @@ class exaquest_filters extends condition {
     public function display_options_adv() {
         global $PAGE, $COURSE;
 
-        $selected = array_fill(0, 14, '');
+        $selected = array_fill(0, 15, '');
         $selected[$this->filterstatus] = 'selected="selected"';
 
         $html =
@@ -196,7 +196,7 @@ class exaquest_filters extends condition {
             get_string('show_all_released_questions', 'block_exaquest') . '</option>';
         $html .= '    <optgroup label="' . get_string('locked_filter', 'block_exaquest') . '">';
         $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_LOCKED_QUESTIONS] . ' value="' .
-            BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED . '">' .
+            BLOCK_EXAQUEST_FILTERSTATUS_ALL_LOCKED_QUESTIONS . '">' .
             get_string('show_all_locked_questions', 'block_exaquest') . '</option>';
         $html .= '    </optgroup>';
         $html .= '</select></div></div>';
