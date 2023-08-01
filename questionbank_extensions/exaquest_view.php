@@ -17,6 +17,7 @@ require_once('delete_action_column_exaquest.php');
 require_once('history_action_column_exaquest.php');
 require_once('exaquest_category_condition.php');
 require_once('question_id_column.php');
+require_once('set_fragenersteller_column.php');
 require_once('owner_column.php');
 require_once('last_changed_column.php');
 require_once('status_column.php');
@@ -30,7 +31,7 @@ use qbank_columnsortorder\column_manager;
 use qbank_editquestion\editquestion_helper;
 use qbank_managecategories\helper;
 use qbank_questiontodescriptor;
-
+use qbank_setfragenersteller\set_fragenersteller_column;
 
 /**
  * main exaquest view for questionbank, this one is also derived by other views
@@ -147,6 +148,7 @@ class exaquest_view extends view
         $questionbankclasscolumns["delete_action_column"] = $specialplugincolumnobjects[2];
         $questionbankclasscolumns["history_action_column"] = $specialplugincolumnobjects[3];
         $questionbankclasscolumns["question_name_idnumber_tags_column"] = $specialplugincolumnobjects[12];
+        $questionbankclasscolumns["set_fragenersteller_column"] = $specialplugincolumnobjects[13];
 
 
         return $questionbankclasscolumns;

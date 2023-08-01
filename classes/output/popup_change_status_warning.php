@@ -20,7 +20,6 @@ class popup_change_status_warning implements renderable, templatable {
         $this->action = $action;
         $this->questionname = $question->name;
         $this->questionid = $question->id;
-
     }
 
     /**

@@ -1,7 +1,12 @@
 <!-- using bootstrap modals to do the popups https://getbootstrap.com/docs/4.6/components/modal/ -->
-<button type="button" class="btn btn-primary" data-toggle="modal"
-        data-target="#changeStatusModal{{questionbankentryid}}">
+
+{{#hidden}}
+
+{{/hidden}}
+<button id=openModalButton{{questionbankentryid}} type="button" class="btn btn-primary" data-toggle="modal"
+        data-target="#changeStatusModal{{questionbankentryid}}" style="display: none;">
     {{title}}
+<!--    #pix i/group/pix-->
 </button>
 
 <!-- Modal -->
@@ -10,7 +15,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">{{title}}</h5>
+                <h5 class="modal-title" id="staticBackdropLabel">"{{title}}"</h5>
                 <button type="button" class="close btn-sm" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

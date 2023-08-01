@@ -35,7 +35,8 @@ class plugin_feature extends \core_question\local\bank\plugin_features_base {
             new owner_column($qbank),
             new last_changed_column($qbank),
             new status_column($qbank),
-            new \qbank_viewquestionname\question_name_idnumber_tags_column_exaquest($qbank)
+            new \qbank_viewquestionname\question_name_idnumber_tags_column_exaquest($qbank),
+            new set_fragenersteller_column($qbank)
         ];
     }
 }
