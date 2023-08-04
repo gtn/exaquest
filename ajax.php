@@ -76,10 +76,21 @@ switch ($action) {
         $data->id = $record->id;
         $data->timestamp = time();
         $data->questionbankentryid = $questionbankentryid;
+
         if ($record->status == BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE) {
-            $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED;
-            // delete the entry in exaquestreviewassign, since no review has to be done anymore once it is finalized. If it somehow gets reassigned again, a new entry has to be created
+            // delete the entry in exaquestreviewassign, since no review has to be done anymore once it is finalized or released.
+            // If it somehow gets reassigned again, a new entry has to be created
             $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN, ['questionbankentryid' => $questionbankentryid]);
+
+            // check if the question has been fachlich reviewed by the mover
+            $reviewedByMover = $record->reviewed_by_mover;
+            if($reviewedByMover){
+                // immediately release question instead of setting it to "finalised" and sending notification to mover
+                realease_question($questionbankentryid);
+                break;
+            }
+            // if it has not been reviewed by the mover but for example, the fachlicherreviewer --> send notification to mover and set status to finalised
+            $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED;
             // send notification for releasing to the mover
             $questionname = $DB->get_record('question', array('id' => $questionid))->name;
             block_exaquest_notify_mover_of_finalised_question($USER, $questionbankentryid, $questionname, $courseid);
@@ -96,28 +107,38 @@ switch ($action) {
         $data->id = $record->id;
         $data->timestamp = time();
         $data->questionbankentryid = $questionbankentryid;
+
+        // check if the current user is mover/modulverantwortlicher
+        $context = context_course::instance($courseid);
+        $isMover = has_capability("block/exaquest:modulverantwortlicher", $context, $USER);
+        if ($isMover) {
+            $data->reviewed_by_mover = 1;
+        } else {
+            $data->reviewed_by_mover = 0;
+        }
+
         if ($record->status == BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE) {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED;
             // delete the entry in exaquestreviewassign, since no review has to be done anymore once it is finalized. If it somehow gets reassigned again, a new entry has to be created
             $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN, ['questionbankentryid' => $questionbankentryid]);
-            // send notification for releasing to the mover
-            $questionname = $DB->get_record('question', array('id' => $questionid))->name;
-            block_exaquest_notify_mover_of_finalised_question($USER, $questionbankentryid, $questionname, $courseid);
+            if($isMover){
+                // continue right on to "release_question"
+            }else{
+                // send notification for releasing to the mover
+                $questionname = $DB->get_record('question', array('id' => $questionid))->name;
+                block_exaquest_notify_mover_of_finalised_question($USER, $questionbankentryid, $questionname, $courseid);
+                $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
+                break;
+            }
         } else {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE;
             $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN,
                 ['questionbankentryid' => $questionbankentryid, 'reviewtype' => BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH]);
+            $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
+            break;
         }
-        $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
-        break;
     case ('release_question'):
-        $data = new stdClass;
-        $data->questionbankentryid = $questionbankentryid;
-        $data->timestamp = time();
-        $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED;
-        $data->id = $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'id', array("questionbankentryid" => $questionbankentryid));
-        $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
-
+        realease_question($questionbankentryid);
         break;
     case ('revise_question'):
         //$DB->record_exists(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, array("questionbankentryid" => $questionbankentryid));
@@ -126,6 +147,7 @@ switch ($action) {
         $data->timestamp = time();
         $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE;
         $data->id = $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'id', array("questionbankentryid" => $questionbankentryid));
+        $data->reviewed_by_mover = 0; // reset this field, since it is not reviewed by the mover anymore
         $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
         if ($commenttext != null) {
             $args = new stdClass;
@@ -165,7 +187,7 @@ switch ($action) {
         $ret = quiz_add_quiz_question($questionid, $quiz, $page = 0, $maxmark = null);
         break;
     case ('change_owner'):
-        if(is_array($users)){
+        if (is_array($users)) {
             $qbe = new stdClass();
             $qbe->id = $questionbankentryid;
             $qbe->ownerid = $users[0];
@@ -186,4 +208,14 @@ switch ($action) {
         $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
 
         break;
+}
+
+function realease_question($questionbankentryid){
+    global $DB;
+    $data = new stdClass;
+    $data->questionbankentryid = $questionbankentryid;
+    $data->timestamp = time();
+    $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED;
+    $data->id = $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'id', array("questionbankentryid" => $questionbankentryid));
+    $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
 }
