@@ -68,7 +68,13 @@ $action = optional_param('action', 'default', PARAM_ALPHANUMEXT);
 $sortBy = optional_param('sort', 'similarityDesc', PARAM_ALPHANUMEXT);
 $substituteIDs = optional_param('substituteid', false, PARAM_BOOL);
 $hidePreviousQ = optional_param('hidepreviousq', false, PARAM_BOOL);
-$examid = optional_param('examid', false, PARAM_INT);
+$examid = optional_param('examid', 0, PARAM_INT);
+if($examid) {
+    // get quizname from quizid
+    $examname = $DB->get_record('quiz', array('id' => $examid), 'name')->name;
+}else{
+    $examname = get_string("exaquest:similarity_exam_select_label", "block_exaquest");
+}
 require_login($courseID);
 [$thispageurl, $contexts, $cmid, $cm, $module, $pagevars] = question_edit_setup('questions', '/question/edit.php');
 $url = new moodle_url('/blocks/exaquest/similarity_comparison.php', array('courseid' => $courseID, "category" => $catAndCont));
@@ -80,13 +86,14 @@ $PAGE->set_title(get_string('similarity_of_course', 'block_exaquest', $COURSE->f
 $mform = new similarity_comparison_form($url, ["courseid" => $courseID, "sort" => $sortBy, "substituteid" => $substituteIDs,
     "hidepreviousq" => $hidePreviousQ, "examid" => $examid]); // button array
 $action = evaluateSimiliarityComparisonFormAction($mform);
-[$sortByIdx, $sortBy] = evaluateSimiliarityComparisonFormOption($mform, 'sort', $sortBy, similarity_comparison_form::$sortBy);
+[$sortByIdx, $sortBy] = evaluateSimiliarityComparisonFormOption($mform, 'sort', $sortBy, similarity_comparison_form::$sortBy, 0);
 $substituteIDs =
     evaluateSimiliarityComparisonFormCheckbox($mform, 'substituteid'); // form checkbox for ID substitution, converts to bool
 $hidePreviousQ =
     evaluateSimiliarityComparisonFormCheckbox($mform, 'hidepreviousq'); // form checkbox for hiding older versions, converts to bool
-[$examid, $examname] = evaluateSimiliarityComparisonFormOption($mform, 'examid', 0,
-    $mform->exams); // form checkbox for hiding older versions, converts to bool
+[$examid, $examname] = evaluateSimiliarityComparisonFormOption($mform, 'examid', $examname,
+    $mform->exams, $examid); // form checkbox for hiding older versions, converts to bool
+
 
 block_exaquest_init_js_css();
 $output = $PAGE->get_renderer('block_exaquest');
@@ -202,9 +209,9 @@ function evaluateSimiliarityComparisonFormCheckbox(similarity_comparison_form $m
  * @return array the action that the user wants to perform
  */
 function evaluateSimiliarityComparisonFormOption(similarity_comparison_form $mform, string $paramName, string $defaultValue,
-    array $options): array {
+    array $options, $defaultIdx): array {
     $value = $defaultValue;
-    $idx = 0;
+    $idx = $defaultIdx;
 
     if ($mdata = $mform->get_data()) { // contains all relevant form data/fields that were set by the user
         require_sesskey();

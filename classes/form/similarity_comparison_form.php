@@ -72,6 +72,7 @@ class similarity_comparison_form extends moodleform {
         $mform->addElement('hidden', 'courseid', $this->_customdata['courseid']);
         $mform->setType('courseid', PARAM_INT);
         //$this->add_action_buttons();
+        // send the form with the set action
     }
 
     public function validation($data, $files) {
