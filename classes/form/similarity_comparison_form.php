@@ -50,10 +50,10 @@ class similarity_comparison_form extends moodleform {
         $optionCheckboxGroup = array();
         $optionCheckboxGroup[] = $mform->createElement('advcheckbox', 'substituteid', '',
             get_string("exaquest:similarity_substitute_checkbox_label", "block_exaquest"), array('group' => 1), array(0, 1));
-        $optionCheckboxGroup[] = $mform->createElement('advcheckbox', 'hidepreviousq', '',
-            get_string("exaquest:similarity_hide_checkbox_label", "block_exaquest"), array('group' => 1), array(0, 1));
+        //$optionCheckboxGroup[] = $mform->createElement('advcheckbox', 'hidepreviousq', '',
+        //    get_string("exaquest:similarity_hide_checkbox_label", "block_exaquest"), array('group' => 1), array(0, 1));
         $mform->setDefault('substituteid', $this->_customdata['substituteid']);
-        $mform->setDefault('hidepreviousq', $this->_customdata['hidepreviousq']);
+        //$mform->setDefault('hidepreviousq', $this->_customdata['hidepreviousq']);
 
         $optionCheckboxGroup[] =
             $mform->createElement('select', 'sort', get_string("exaquest:similarity_sort_select_label", "block_exaquest"),
