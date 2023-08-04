@@ -584,7 +584,6 @@ function xmldb_block_exaquest_upgrade($oldversion) {
     }
 
     if ($oldversion < 2023071800) {
-        // add boolean field "is_imported" to the table "block_exaquestquestionstatus"
         $table = new xmldb_table('block_exaquestcategories');
         $field = new xmldb_field('deleted', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0);
         if (!$dbman->field_exists($table, $field)) {
@@ -595,7 +594,6 @@ function xmldb_block_exaquest_upgrade($oldversion) {
     }
 
     if ($oldversion < 2023072400) {
-        // add boolean field "is_imported" to the table "block_exaquestquestionstatus"
         $table = new xmldb_table('block_exaquestquestionstatus');
         $field = new xmldb_field('coursecategoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
         // first drop the key, otherwise it will not allow the deletion of the column
@@ -661,7 +659,6 @@ function xmldb_block_exaquest_upgrade($oldversion) {
     }
 
     if ($oldversion < 2023072501) {
-        // add boolean field "is_imported" to the table "block_exaquestquestionstatus"
         $table = new xmldb_table('block_exaquestquizstatus');
         $field = new xmldb_field('creatorid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, -1);
         if (!$dbman->field_exists($table, $field)) {
@@ -673,6 +670,16 @@ function xmldb_block_exaquest_upgrade($oldversion) {
         upgrade_block_savepoint(true, 2023072501, 'exaquest');
     }
 
+    if ($oldversion < 2023080401) {
+        // add boolean field "reviewed_by_mover" to the table "block_exaquestquestionstatus"
+        $table = new xmldb_table('block_exaquestquestionstatus');
+        $field = new xmldb_field('reviewed_by_mover', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2023080401, 'exaquest');
+    }
 
 
     return $return_result;
