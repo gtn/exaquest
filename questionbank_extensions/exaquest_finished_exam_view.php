@@ -56,7 +56,11 @@ class exaquest_finished_exam_view extends exaquest_exam_view {
         // counts how often each category was used in each question
         $categoryoptionidcount = array();
         foreach ($categoryoptionidarray as $categoryoptionid) {
-            $categoryoptionidcount[$categoryoptionid] += 1;
+            if(array_key_exists($categoryoptionid, $categoryoptionidcount)){
+                $categoryoptionidcount[$categoryoptionid] += 1;
+            }else{
+                $categoryoptionidcount[$categoryoptionid] = 1;
+            }
         }
         $categoryoptionidkeys = array();
         foreach ($categoryoptionidcount as $key => $categoryoptionidcnt) {
@@ -74,13 +78,24 @@ class exaquest_finished_exam_view extends exaquest_exam_view {
             $options[$categoryoption->categorytype][$categoryoption->id] = $categoryoption->categoryname;
         }
 
+        $categorys_required_counts = block_exaquest_get_fragefaecher_by_courseid_and_quizid($COURSE->id, $quizid);
+
         $content = array('', '', '', '');
         foreach ($options as $key => $option) {
-            foreach ($option as $keyy => $name) {
-                $content[$key] .= '<div class="col-lg-12"><span>' . $name . ': ' . $categoryoptionidcount[$keyy] . '</span></div>';
+            foreach ($option as $categoryid => $name) {
+                if ($key == BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH) {
+                    $content[$key] .= '<div class="col-lg-12"><span>' . $name . ': ' . $categoryoptionidcount[$categoryid] .
+                        ' von '. $categorys_required_counts[$categoryid]->questioncount . '</span></div>';
+                } else {
+                    $content[$key] .= '<div class="col-lg-12"><span>' . $name . ': ' . $categoryoptionidcount[$categoryid] .
+                        '</span></div>';
+                }
             }
         }
         echo $OUTPUT->heading(get_string('questionbank_selected_quiz', 'block_exaquest') . '' . $quizname, 2);
+
+        // get the questioncounts from questionqcount table for this quiz
+
 
         $html = '<div class="container-fluid">
                     <div class="row">
