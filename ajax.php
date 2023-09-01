@@ -5,6 +5,7 @@ require __DIR__ . '/inc.php';
 global $DB, $CFG, $COURSE, $USER;
 require_once($CFG->dirroot . '/comment/lib.php');
 require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+use mod_quiz\quiz_settings;
 
 $questionbankentryid = required_param('questionbankentryid', PARAM_INT);
 $questionid = required_param('questionid', PARAM_INT);
@@ -184,7 +185,22 @@ switch ($action) {
         $quiz->id = $quizid;
         $quiz->course = $courseid;
         $quiz->questionsperpage = 1;
-        $ret = quiz_add_quiz_question($questionid, $quiz, $page = 0, $maxmark = null);
+        //$ret = quiz_add_quiz_question($questionid, $quiz, $page = 0, $maxmark = null);
+
+
+        // from edit.php from mod/quiz
+        // get $cm coursemodule for this quiz
+        $cm = get_coursemodule_from_instance('quiz', $quiz->id, $quiz->course);
+        $quizobj = new quiz_settings($quiz, $cm, $quiz->course);
+        //$structure = $quizobj->get_structure();
+        $gradecalculator = $quizobj->get_grade_calculator();
+        quiz_require_question_use($questionid);
+        $addonpage = optional_param('addonpage', 0, PARAM_INT);
+        quiz_add_quiz_question($questionid, $quiz, $addonpage);
+        quiz_delete_previews($quiz);
+        $gradecalculator->recompute_quiz_sumgrades();
+        //$thispageurl->param('lastchanged', $questionid);
+        //redirect($afteractionurl);
         break;
     case ('change_owner'):
         if (is_array($users)) {
