@@ -14,19 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Class for question bank edit question column.
- *
- * @package   qbank_editquestion
- * @copyright 2009 Tim Hunt
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-
 namespace qbank_editquestion;
 
 use core_question\local\bank\menu_action_column_base;
 use moodle_url;
+use qbank_previewquestion\helper;
 
 /**
  * Class for question bank edit question column.
@@ -38,6 +30,9 @@ use moodle_url;
 class edit_action_column_exaquest extends edit_action_column {
 
 
+    // ideas to change the link from edit to preview:
+    // 1. look at public function question_row(structure $structure... in edit_renderer of the mode/quiz/edit maybe
+    // 2. look at the question/bank/previewquestion... the code structure is more similar to what we need
     protected function get_url_icon_and_label(\stdClass $question): array {
         global $COURSE, $USER, $DB;
         if (!\question_bank::is_qtype_installed($question->qtype)) {
@@ -58,6 +53,9 @@ class edit_action_column_exaquest extends edit_action_column {
 
         ) {
             return [$this->edit_question_moodle_url($question->id), 't/edit', $this->stredit];
+            //return [$this->preview_question_moodle_url($question->id), 't/edit', $this->stredit];
+            //return [helper::question_preview_url($question->id), 't/preview', $this->stredit];
+
         } else {
             return [null, null, null];
         }
@@ -67,4 +65,23 @@ class edit_action_column_exaquest extends edit_action_column {
     public function get_extra_joins(): array {
         return ['cfd' => 'LEFT JOIN {customfield_data} cfd ON q.id = cfd.instanceid'];
     }
+
+    //private function preview_question_moodle_url($questionid): moodle_url {
+    //    //return new moodle_url($this->editquestionurl, ['id' => $questionid]);
+    //    $params = [
+    //        'id' => $questionid,
+    //    ];
+    //    if ($context->contextlevel == CONTEXT_MODULE) {
+    //        $params['cmid'] = $context->instanceid;
+    //    } else if ($context->contextlevel == CONTEXT_COURSE) {
+    //        $params['courseid'] = $context->instanceid;
+    //    }
+    //    if ($previewid) {
+    //        $params['previewid'] = $previewid;
+    //    }
+    //    if ($returnurl !== null) {
+    //        $params['returnurl'] = $returnurl;
+    //    }
+    //    return new moodle_url('/question/bank/previewquestion/preview.php', $params);
+    //}
 }

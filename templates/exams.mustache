@@ -1,9 +1,11 @@
 <div id="exaquest">
 {{#capabilities}}
     {{#viewnewexams}}
+        {{#createnewexam}}
             <a href="{{create_exam_link}}" type="submit" class="btn
             btn-secondary"
                value="">{{#str}}create_new_exam_button, block_exaquest {{/str}}</a>
+        {{/createnewexam}}
             <div class="examcard">
                 <h4>{{#str}}new_exams, block_exaquest {{/str}}</h4>
                 <p>{{#str}}add_questions_to_these_exams, block_exaquest {{/str}}</p>
@@ -35,6 +37,14 @@
                                     </button>
                                 </td>
                             {{/createexam}}
+                            {{#skipandreleaseexam}}
+                                <td>
+                                    <button type="submit" class="btn btn-primary change-exam-status-button"
+                                            value="skipandrelease_exam" quizid={{quizid}} courseid={{courseid}}>Prüfung
+                                        finalisieren und freigeben
+                                    </button>
+                                </td>
+                            {{/skipandreleaseexam}}
                             {{#assignaddquestions}}
                                 <td>
                                     {{#popup_assign_addquestions}}
@@ -98,7 +108,7 @@
     {{#viewreleasedexams}}
             <div class="examcard">
                 <h4>{{#str}}fachlich_released_exams, block_exaquest {{/str}}</h4>
-                <p>Diese Prüfungen wurden fachlich begutachtet. Formales review notwendig.</p>
+                <p>Diese Prüfungen wurden fachlich begutachtet.</p>
                 <table>
                     <thead></thead>
                     <tbody>
@@ -117,8 +127,8 @@
                             </td>
                             <td>
                                 <button type="submit" class="btn btn-primary change-exam-status-button"
-                                        value="formal_release_exam" quizid={{quizid}} courseid={{courseid}}>Prüfung
-                                    formal freigeben
+                                        value="formal_release_exam" quizid={{quizid}} courseid={{courseid}}>Zur Durchführung
+                                    freigeben
                                 </button>
                             </td>
                         </tr>
@@ -127,44 +137,6 @@
                 </table>
             </div>
     {{/viewreleasedexams}}
-    {{#viewreleasedexams}}
-
-
-
-            <div class="examcard">
-                <h4>{{#str}}formal_released_exams, block_exaquest {{/str}}</h4>
-                <p>Diese Prüfungen wurden fachlich und formal begutachtet. Freigabe zur Durchführung
-                    notwendig.</p>
-                <table>
-                    <thead></thead>
-                    <tbody>
-                    {{#formal_released_exams}}
-                        <tr>
-                            <td>
-                                <a class="link"
-                                   href="http://localhost/mod/quiz/view.php?id={{coursemoduleid}}
-                                "
-                                >
-                                {{name}} </a>
-                            </td>
-                            <td>
-                                <a href="{{got_to_exam_view}}&quizid={{quizid}}" type="submit" class="btn
-                                btn-primary"
-                                value="">{{#str}}check_added_questions, block_exaquest {{/str}}</a>
-                            </td>
-                            <td>
-                                <button type="submit" class="btn btn-primary change-exam-status-button"
-                                        value="release_exam" quizid={{quizid}} courseid={{courseid}}>Zur Durchführung
-                                    freigeben
-                                </button>
-                            </td>
-                        </tr>
-                    {{/formal_released_exams}}
-                    </tbody>
-                </table>
-            </div>
-    {{/viewreleasedexams}}
-
     {{#viewactiveexams}}
 
 

@@ -201,13 +201,6 @@ function block_exaquest_request_revision($userfrom, $userto, $comment, $question
     $assigndata = new stdClass;
     $assigndata->questionbankentryid = $questionbankentryid;
     $assigndata->reviserid = $userto;
-    //    $assigndata->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($courseid);
-    // I am assigning formal and fachlich review here... is this correct? --> NO, this would not make sense... The "request revision" should maybe change the owner? or add it to reviewassign but with 3rd value, not fachlich or formal review
-    // created table like the reviewtable to assign revision
-    //$assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FORMAL;
-    //$DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
-    //$assigndata->reviewtype = BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH;
-    //$DB->insert_record(BLOCK_EXAQUEST_DB_REVIEWASSIGN, $assigndata);
     $DB->insert_record(BLOCK_EXAQUEST_DB_REVISEASSIGN, $assigndata);
 
     // create the message
@@ -344,53 +337,6 @@ function block_exaquest_get_reviewer_by_courseid($courseid) {
     return $userarray;
 }
 
-/**
- * Returns all count of questionbankentries that have to be formally reviewed
- * used e.g. for the prüfungscoordination or the studmis to see which questions they should revise
- *
- * @param $courseid
- * @param $userid
- * @return array
- */
-//Not used and outdated, would require questioncategoryid check
-//function block_exaquest_get_questionbankentries_to_formal_review_count($coursecategoryid,
-//    $userid) { // TODO change to coursecategoryid and use it in query
-//    global $DB;
-//    $sql = "SELECT q.*
-//			FROM {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} ra
-//			JOIN {question_bank_entries} qe ON ra.questionbankentryid = qe.id
-//			WHERE ra.reviewerid = :reviewerid
-//			AND ra.reviewtype = :reviewtype";
-//
-//    $questions =
-//        count($DB->get_records_sql($sql, array("reviewerid" => $userid, "reviewtype" => BLOCK_EXAQUEST_REVIEWTYPE_FORMAL)));
-//
-//    return $questions;
-//}
-
-/**
- * Returns count of questionbankentries that have to be fachlich reviewed
- * used e.g. for the fachlicherreviewer to see which questions they should revise
- *
- * @param $courseid
- * @param $userid
- * @return array
- */
-//Not used and outdated, would require questioncategoryid check
-//function block_exaquest_get_questionbankentries_to_fachlich_review_count($courseid,
-//    $userid) { // TODO change to coursecategoryid and use it in query
-//    global $DB;
-//    $sql = "SELECT q.*
-//			FROM {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} ra
-//			JOIN {question_bank_entries} qe ON ra.questionbankentryid = qe.id
-//			WHERE ra.reviewerid = :reviewerid
-//			AND ra.reviewtype = :reviewtype";
-//
-//    $questions =
-//        count($DB->get_records_sql($sql, array("reviewerid" => $userid, " reviewtype" => BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH)));
-//
-//    return $questions;
-//}
 
 /**
  * Returns count of all questionbankentries (all entries in exaquestqeustionstatus)
@@ -857,7 +803,7 @@ function block_exaquest_get_exams_for_me_to_fill($courseid, $userid = 0) {
     $sql = 'SELECT qa.*, q.name, qc.comment
 			FROM {' . BLOCK_EXAQUEST_DB_QUIZASSIGN . '} qa
 			JOIN {quiz} q on q.id = qa.quizid
-			JOIN {' . BLOCK_EXAQUEST_DB_QUIZCOMMENT . '} qc on qc.quizid = qa.quizid AND qc.quizassignid = qa.id
+			LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZCOMMENT . '} qc on qc.quizid = qa.quizid AND qc.quizassignid = qa.id
 			WHERE qa.assigneeid = :assigneeid
             AND q.course = :courseid';
 
@@ -933,42 +879,6 @@ function block_exaquest_get_questions_for_me_to_release_count($questioncategoryi
     return $questions;
 }
 
-//-----------
-
-function block_exaquest_set_up_roles_test() {
-    global $DB;
-    $context = \context_system::instance();
-    $options = array(
-        'shortname' => 0,
-        'name' => 0,
-        'description' => 0,
-        'permissions' => 1,
-        'archetype' => 0,
-        'contextlevels' => 1,
-        'allowassign' => 1,
-        'allowoverride' => 1,
-        'allowswitch' => 1,
-        'allowview' => 1);
-
-    if (!$DB->record_exists('role', ['shortname' => 'testen'])) {
-        $roleid = create_role('Test Role', 'testen', '', 'manager');
-        $archetype = intval($DB->get_record('role', ['shortname' => 'manager'])->id); // manager archetype
-        $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
-        $definitiontable->force_duplicate($archetype,
-            $options); // overwrites everything that is set in the options. The rest stays.
-        $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
-        $definitiontable->save_changes();
-        $sourcerole = new \stdClass();
-        $sourcerole->id = $archetype;
-        role_cap_duplicate($sourcerole, $roleid);
-    } else {
-        $roleid = $DB->get_record('role', ['shortname' => 'admintechnpruefungsdurchf'])->id;
-    }
-    assign_capability('block/exaquest:admintechnpruefungsdurchf', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:doformalreview', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:executeexam', CAP_ALLOW, $roleid, $context);
-
-}
 
 /**
  * Sets up the roles in install.php and upgrade.php
@@ -1012,6 +922,13 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewnewexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewcreatedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewreleasedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewactiveexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungskoordination'])) {
         $roleid = create_role('Prüfungskoordination', 'pruefungskoordination', '', 'manager');
@@ -1102,6 +1019,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewnewexams', CAP_ALLOW, $roleid, $context);
     unassign_capability('block/exaquest:createexam', $roleid, $context->id); // accidentally added, should be deleted
 
+
     if (!$DB->record_exists('role', ['shortname' => 'modulverantwortlicher'])) {
         $roleid = create_role('Modulverantwortlicher', 'modulverantwortlicher', '', 'manager');
         $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
@@ -1156,6 +1074,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:createexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:setquestioncount', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:changeowner', CAP_ALLOW, $roleid, $context);
+    unassign_capability('mod/quiz:addinstance', $roleid, $context->id);
 
     if (!$DB->record_exists('role', ['shortname' => 'fragenersteller'])) {
         $roleid = create_role('Fragenersteller', 'fragenersteller', '', 'manager');
@@ -1281,6 +1200,13 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:assignaddquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:createexam', CAP_ALLOW, $roleid, $context);
 
+    assign_capability('block/exaquest:viewnewexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewcreatedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewreleasedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewactiveexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
+
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsmitwirkende'])) {
         $roleid = create_role('Prüfungsmitwirkende', 'pruefungsmitwirkende', '', 'manager');
         $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
@@ -1335,6 +1261,13 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
+
+    assign_capability('block/exaquest:viewnewexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewcreatedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewreleasedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewactiveexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
 
     // ---
     if (!$DB->record_exists('role', ['shortname' => 'fragenerstellerlight'])) {
@@ -1570,27 +1503,6 @@ function get_question_category_and_context_of_course($courseid = null) {
 
     return [$categoryid, $contextid];
 
-    ////$catmenu = helper::question_category_options($contexts, true, 0,
-    ////    true, -1, false);
-    //
-    //$context = context_course::instance($courseid);
-    ////var_dump($context);
-    ////die;
-    //$contexts = explode('/', $context->path);
-    //$questioncategory = $DB->get_records('question_categories',
-    //    ['contextid' => $contexts[2]]); // hardcoded contexts[2] leads to problems when the path has a different depth than expected
-    //$category =
-    //    end($questioncategory); // an actual array, not a returnvalue of a function has to be passed, since it sets the internal pointer of the array, so there has to be a real array
-    //
-    //if ($category) {
-    //    //var_dump([$category->id, $contexts[2]]);
-    //    //die;
-    //    return [$category->id,
-    //        $contexts[2]]; // TODO why $contexts[2]? That should give the same as $category->contextid but $category->contextid seems safer
-    //} else {
-    //    return false;
-    //}
-
 }
 
 /**block_instances
@@ -1716,7 +1628,7 @@ function block_exaquest_exams_by_status($courseid = null, $status = BLOCK_EXAQUE
     global $DB, $USER;
 
     if ($courseid) {
-        $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid
+        $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid, quizstatus.creatorid as creatorid
 			FROM {" . BLOCK_EXAQUEST_DB_QUIZSTATUS . "} quizstatus
 			JOIN {quiz} q on q.id = quizstatus.quizid 
 			JOIN {course_modules} cm on cm.instance = q.id
@@ -1740,7 +1652,7 @@ function block_exaquest_exams_by_status($courseid = null, $status = BLOCK_EXAQUE
         $quizzes = $DB->get_records_sql($sql,
             array("status" => $status, "courseid" => $courseid));
     } else {
-        $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid, q.timeclose as timeclose
+        $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid, q.timeclose as timeclose, quizstatus.creatorid as creatorid
 			FROM {" . BLOCK_EXAQUEST_DB_QUIZSTATUS . "} quizstatus
 			JOIN {quiz} q on q.id = quizstatus.quizid 
 			JOIN {course_modules} cm on cm.instance = q.id
@@ -2269,7 +2181,7 @@ function block_exaquest_check_if_exam_is_ready($quizid) {
 
 }
 
-function block_exaquest_check_if_question_containes_categories($questionid) {
+function block_exaquest_check_if_question_contains_categories($questionid) {
     global $DB;
 
     $categoryoptionids = $DB->get_records_sql("SELECT cfd.value
@@ -2286,7 +2198,8 @@ function block_exaquest_check_if_question_containes_categories($questionid) {
 
     $categoryoptions = $DB->get_records_sql("SELECT eqc.id, eqc.categoryname, eqc.categorytype
                                     FROM {block_exaquestcategories} eqc
-                                   WHERE eqc.id IN " . $query);
+                                   WHERE eqc.deleted = 0
+                                       AND eqc.id IN " . $query);
 
     $categorytypes = array();
     foreach ($categoryoptions as $categoryoption) {

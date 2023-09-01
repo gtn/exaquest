@@ -13,14 +13,15 @@ require_once('plugin_feature.php');
 require_once('edit_action_column_exaquest.php');
 require_once('filters/exaquest_filters.php');
 require_once('filters/exaquest_questioncategoryfilter.php');
-require_once('edit_action_column_exaquest.php');
 require_once('delete_action_column_exaquest.php');
 require_once('history_action_column_exaquest.php');
 require_once('exaquest_category_condition.php');
 require_once('question_id_column.php');
+require_once('set_fragenersteller_column.php');
 require_once('owner_column.php');
 require_once('last_changed_column.php');
 require_once('status_column.php');
+require_once('question_name_idnumber_tags_column_exaquest.php');
 
 
 
@@ -30,7 +31,15 @@ use qbank_columnsortorder\column_manager;
 use qbank_editquestion\editquestion_helper;
 use qbank_managecategories\helper;
 use qbank_questiontodescriptor;
+use qbank_setfragenersteller\set_fragenersteller_column;
 
+/**
+ * main exaquest view for questionbank, this one is also derived by other views
+ *
+ * @package    exaquest_view
+ * @copyright  2022 fabio <>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 class exaquest_view extends view
 {
@@ -54,6 +63,7 @@ class exaquest_view extends view
         $questionbankclasscolumns = [];
         $newpluginclasscolumns = [];
         //edited:
+        //Commenting out $corequestionbankcolumns removes them from the questionbank table
         $corequestionbankcolumns = [
             'checkbox_column',
             'question_type_column',
@@ -117,20 +127,6 @@ class exaquest_view extends view
         }
 
 
-        // New plugins added at the end of the array, will change in sorting feature.
-        //foreach ($newpluginclasscolumns as $key => $newpluginclasscolumn) {
-        //    $questionbankclasscolumns[$key] = $newpluginclasscolumn;
-        //}
-        // Check if qbank_columnsortorder is enabled.
-        //if (array_key_exists('columnsortorder', core_plugin_manager::instance()->get_enabled_plugins('qbank'))) {
-        //    $columnorder = new column_manager();
-        //    $questionbankclasscolumns = $columnorder->get_sorted_columns($questionbankclasscolumns);
-        //}
-        // remove all $newpluginclasscolumns from $questionbankclasscolumns. This is done here, because the get_sorted_columns function would fill the $questionbankclasscolumns with empty values if we do it before.
-        //foreach ($newpluginclasscolumns as $key => $newpluginclasscolumn) {
-        //    unset($questionbankclasscolumns[$key]);
-        //}
-        // The whole sorting thing has been removed. We do not need it, and it lead to errors. If one day the sorting will be needed, a different solution is needed.
 
         // Mitigate the error in case of any regression.
         foreach ($questionbankclasscolumns as $shortname => $questionbankclasscolumn) {
@@ -139,6 +135,8 @@ class exaquest_view extends view
             }
         }
 
+        // this is where you can add new columns to the current questionbank of this view
+        // it also needs to be added in plugin_feature
         $specialpluginentrypointobject = new \qbank_openquestionforreview\plugin_feature();
         $specialplugincolumnobjects = $specialpluginentrypointobject->get_question_columns($this);
         $questionbankclasscolumns["question_id_column"] = $specialplugincolumnobjects[8];
@@ -149,15 +147,19 @@ class exaquest_view extends view
         $questionbankclasscolumns["edit_action_column"] = $specialplugincolumnobjects[1];
         $questionbankclasscolumns["delete_action_column"] = $specialplugincolumnobjects[2];
         $questionbankclasscolumns["history_action_column"] = $specialplugincolumnobjects[3];
+        $questionbankclasscolumns["question_name_idnumber_tags_column"] = $specialplugincolumnobjects[12];
+        $questionbankclasscolumns["set_fragenersteller_column"] = $specialplugincolumnobjects[13];
 
 
         return $questionbankclasscolumns;
     }
 
+    // The display function is called by the questionbank.php file, it creates the whole view of the questionbank
     public function display($pagevars, $tabname): void
     {
         global $SESSION;
 
+        // retrieving all the pagevars, that got initialized in questionbank.php, it also utilizes $SESSION to save the state when changing pages
         $page = $pagevars['qpage'];
         $perpage = $pagevars['qperpage'];
         $cat = $pagevars['cat'];
@@ -180,7 +182,7 @@ class exaquest_view extends view
 
         $editcontexts = $this->contexts->having_one_edit_tab_cap($tabname);
 
-        //var_dump($cat);
+
         // Show the filters and search options.
         $this->wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus, $fragencharakter, $klassifikation, $fragefach, $lehrinhalt);
 
@@ -224,6 +226,7 @@ class exaquest_view extends view
                 }
 
                 //array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
+                // these are used to add extra filters to this view
                 array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_filters($filterstatus));
                 array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_questioncategoryfilter($fragencharakter, $klassifikation, $fragefach, $lehrinhalt));
                 array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_category_condition(
@@ -419,6 +422,7 @@ class exaquest_view extends view
     {
         // Get the required tables and fields.
         $joins = [];
+        // add here extra fields to get from the sql query, but be careful these can cause problems if not the right tables are not joind and the first one in this field determains the indexing of the return array
         $fields = [ 'qbe.id as questionbankentryid','qv.status', 'qc.id as categoryid', 'qv.version', 'qv.id as versionid'];
         if (!empty($this->requiredcolumns)) {
             foreach ($this->requiredcolumns as $column) {
@@ -458,14 +462,19 @@ class exaquest_view extends view
             }
         }
         // Build the SQL.
+        //here it adds all joins together, including the extra_joins from other columns
         $sql = ' FROM {question} q ' . implode(' ', $joins);
+        // adds all where clauses, including the onse that were defined in out filters
         $sql .= ' WHERE ' . implode(' AND ', $tests);
+        // important note: The DISTINCT is necessary so the questionbank counts all questions correctly
         $this->countsql = 'SELECT count(DISTINCT qbe.id)' . $sql;
+        // important note: The DISTINCT is necessary so the questionbank does not leave out any questions
         $this->loadsql = 'SELECT DISTINCT ' . implode(', ', $fields) . $sql . ' ORDER BY ' . implode(', ', $sorts);
     }
 
     protected function load_page_questions($page, $perpage): \moodle_recordset
     {
+        // here the actual query is called
         global $DB;
         $questions = $DB->get_recordset_sql($this->loadsql, $this->sqlparams, $page * $perpage, $perpage);
         if (empty($questions)) {
@@ -474,6 +483,84 @@ class exaquest_view extends view
             $questions = $DB->get_recordset_sql($this->loadsql, $this->sqlparams, 0, $perpage);
         }
         return $questions;
+    }
+
+    /**
+     * Display the controls at the bottom of the list of questions.
+     *
+     * @param \context $catcontext The context of the category being displayed.
+     * unchanged, maybe will change in the future
+     */
+    protected function display_bottom_controls(\context $catcontext): void {
+        // use the parent function
+        //parent::display_bottom_controls($catcontext);
+
+        $caneditall = has_capability('moodle/question:editall', $catcontext);
+        $canuseall = has_capability('moodle/question:useall', $catcontext);
+        $canmoveall = has_capability('moodle/question:moveall', $catcontext);
+        if ($caneditall || $canmoveall || $canuseall) {
+            global $PAGE;
+            $bulkactiondatas = [];
+            $params = $this->base_url()->params();
+            $params['returnurl'] = $this->base_url();
+            foreach ($this->bulkactions as $key => $action) {
+                // Check capabilities.
+                $capcount = 0;
+                foreach ($action['capabilities'] as $capability) {
+                    if (has_capability($capability, $catcontext)) {
+                        $capcount ++;
+                    }
+                }
+                // At least one cap need to be there.
+                if ($capcount === 0) {
+                    unset($this->bulkactions[$key]);
+                    continue;
+                }
+                $actiondata = new \stdClass();
+                $actiondata->actionname = $action['title'];
+                $actiondata->actionkey = $key;
+                $actiondata->actionurl = new \moodle_url($action['url'], $params);
+                $bulkactiondata[] = $actiondata;
+
+                $bulkactiondatas ['bulkactionitems'] = $bulkactiondata;
+            }
+            // We dont need to show this section if none of the plugins are enabled.
+            if (!empty($bulkactiondatas)) {
+                echo $PAGE->get_renderer('core_question', 'bank')->render_bulk_actions_ui($bulkactiondatas);
+            }
+        }
+    }
+
+    /**
+     * Initialize bulk actions.
+     * unchanged, maybe will change in the future
+     */
+    protected function init_bulk_actions(): void {
+        $plugins = \core_component::get_plugin_list_with_class('qbank', 'plugin_feature', 'plugin_feature.php');
+        foreach ($plugins as $componentname => $plugin) {
+            if (!\core\plugininfo\qbank::is_plugin_enabled($componentname)) {
+                continue;
+            }
+
+            $pluginentrypoint = new $plugin();
+            $bulkactions = $pluginentrypoint->get_bulk_actions();
+            if (!is_array($bulkactions)) {
+                debugging("The method {$componentname}::get_bulk_actions() must return an " .
+                    "array of bulk actions instead of a single bulk action. " .
+                    "Please update your implementation of get_bulk_actions() to return an array. " .
+                    "Check out the qbank_bulkmove plugin for a working example.", DEBUG_DEVELOPER);
+                $bulkactions = [$bulkactions];
+            }
+
+            foreach ($bulkactions as $bulkactionobject) {
+                $this->bulkactions[$bulkactionobject->get_key()] = [
+                    'title' => $bulkactionobject->get_bulk_action_title(),
+                    'url' => $bulkactionobject->get_bulk_action_url(),
+                    'capabilities' => $bulkactionobject->get_bulk_action_capabilities()
+                ];
+            }
+
+        }
     }
 
 }

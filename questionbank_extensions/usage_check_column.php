@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- *  file description here.
+ *  shows when questions was used last, to prevent too frequent usage.
  *
  * @package
  * @copyright  2022 fabio <>

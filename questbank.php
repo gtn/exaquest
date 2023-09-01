@@ -25,7 +25,7 @@ $category = optional_param('category','', PARAM_TEXT);
 require_login($courseid);
 require_capability('block/exaquest:viewquestionbanktab', context_course::instance($courseid));
 
-
+// this inititialises the categories in the $SESSION
 if(!property_exists($SESSION, 'filterstatus')){
     $SESSION->filterstatus = 0;
 }
@@ -42,6 +42,7 @@ if(!property_exists($SESSION, 'lehrinhalt')){
     $SESSION->lehrinhalt = -1;
 }
 
+//this updates the $SESSION if it is not the value for unseletiong the filter
 if($filterstatus != -1){
     $SESSION->filterstatus = $filterstatus;
 }
@@ -58,12 +59,14 @@ if($lehrinhalt != -2) {
     $SESSION->lehrinhalt = $lehrinhalt;
 }
 
+// this adds it to the pagevars that are passed to the view.display() function
 $pagevars['filterstatus'] = $SESSION->filterstatus;
 $pagevars['fragencharakter'] = $SESSION->fragencharakter;
 $pagevars['klassifikation'] = $SESSION->klassifikation;
 $pagevars['fragefach'] = $SESSION->fragefach;
 $pagevars['lehrinhalt'] = $SESSION->lehrinhalt;
 
+// not sure if this is actually used anywhere, becasue we jsut call this function
 $catAndCont = get_question_category_and_context_of_course();
 $pagevars['cat'] = $catAndCont[0] . ',' . $catAndCont[1];
 
@@ -86,7 +89,7 @@ if (($lastchanged = optional_param('lastchanged', 0, PARAM_INT)) !== 0) {
 }
 
 
-
+// call to display view
 $questionbank = new core_question\local\bank\exaquest_view($contexts, $url, $COURSE, $cm);
 
 echo '<div class="questionbankwindow boxwidthwide boxaligncenter">';

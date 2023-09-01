@@ -44,7 +44,6 @@ class add_to_quiz extends column_base {
         $quizid = optional_param('quizid', null, PARAM_INT);
 
         global $USER, $DB, $COURSE, $PAGE;
-        //echo '<div class="container"><div class="row"><div class="col-md-12 text-right">';
         $output = $PAGE->get_renderer('block_exaquest');
         $questioncreator = new \stdClass();
         $questioncreator->firstname = $question->creatorfirstname;
@@ -64,7 +63,7 @@ class add_to_quiz extends column_base {
         ?>
 
         <script type="text/javascript">
-
+// redirects event to ajax.php
             $(document).ready(function() {
                 $(".addquestion<?php echo $question->questionbankentryid; ?>").click(function (e) {
                     var data = {

@@ -20,7 +20,6 @@ class popup_change_status_warning implements renderable, templatable {
         $this->action = $action;
         $this->questionname = $question->name;
         $this->questionid = $question->id;
-
     }
 
     /**
@@ -38,7 +37,8 @@ class popup_change_status_warning implements renderable, templatable {
         $data->questionname = $this->questionname;
         $data->disabled = "";
         $data->dataToggle = "modal";
-        if(!block_exaquest_check_if_question_containes_categories($this->questionid)){
+        // disable the button if not all categorytypes are assigned
+        if(!block_exaquest_check_if_question_contains_categories($this->questionid)){
             $data->disabled = "disabled";
             $data->dataToggle = "tooltip";
             $data->tooltip = get_string('missing_category_tooltip', 'block_exaquest');

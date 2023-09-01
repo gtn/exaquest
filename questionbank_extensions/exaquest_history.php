@@ -2,7 +2,7 @@
 
 <?php
 
-
+global $CFG, $PAGE, $OUTPUT, $COURSE;
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->dirroot . '/question/editlib.php');
 require_once('exaquest_history_view.php');

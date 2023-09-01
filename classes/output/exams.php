@@ -22,8 +22,12 @@ class exams implements renderable, templatable {
         $this->capabilities = $capabilities;
         $this->userid = $userid;
         //$this->exams = $DB->get_records("quiz", array("course" => $COURSE->id));
+        $this->capabilities["createnewexam"] = has_capability('mod/quiz:addinstance', \context_course::instance($COURSE->id));
         if ($capabilities["viewnewexams"]) {
             $this->new_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_NEW);
+            foreach ($this->new_exams as $new_exam) {
+                $new_exam->skipandreleaseexam = $userid == intval($new_exam->creatorid);
+            }
         } else if ($capabilities["addquestiontoexam"]) {
             // new exams can only be seen by PK and Mover, except if you are specifically assigned to an exam, e.g. as a FP or PMW
             // ==> give the viewnewexams capability to all users who are assigned to an exam, but filter the newexams according to users role
@@ -44,10 +48,9 @@ class exams implements renderable, templatable {
         if ($capabilities["viewcreatedexams"]) {
             $this->created_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
         } else {
-            $this->created_exams = $this->new_exams =
-                block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
-                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER,
-                    BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
+            $this->created_exams = block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
+                BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER,
+                BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
             if ($this->created_exams) {
                 $this->capabilities["viewcreatedexams"] = true;
             }
@@ -69,7 +72,6 @@ class exams implements renderable, templatable {
         $this->add_link_to_quiz($this->active_exams);
         $this->add_link_to_quiz($this->finished_exams);
         $this->add_link_to_quiz($this->grading_released_exams);
-
 
     }
 
@@ -102,7 +104,8 @@ class exams implements renderable, templatable {
             $new_exam->link_to_exam = $new_exam->link_to_exam->raw_out(false);
         }
 
-        $data->created_exams = array_values($this->created_exams); // TODO rw: test if they are shown with current mustache (no way to create them in moodle yet --> create one manually)
+        $data->created_exams =
+            array_values($this->created_exams); // TODO rw: test if they are shown with current mustache (no way to create them in moodle yet --> create one manually)
         $data->fachlich_released_exams = array_values($this->fachlich_released_exams);
         $data->formal_released_exams = array_values($this->formal_released_exams);
         $data->active_exams = array_values($this->active_exams);
@@ -130,7 +133,7 @@ class exams implements renderable, templatable {
         return $data;
     }
 
-    private function add_link_to_quiz($exams){
+    private function add_link_to_quiz($exams) {
         foreach ($exams as $exam) {
             $exam->link_to_exam =
                 new moodle_url('/course/modedit.php', array('update' => $exam->coursemoduleid, 'return' => '1'));

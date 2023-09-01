@@ -102,10 +102,11 @@ class compare_questions implements renderable, templatable {
         ];*/
         $data->similarity_comparison_url = $this->overview_url;
 
-        $data->buttons = [
-            self::createShowOverviewButton($data->similarity_comparison_url, $this->courseid,
-                'exaquest:similarity_refresh_button_label')
-        ];
+        // todo: what did this really do? removed because not needed
+        //$data->buttons = [
+        //    self::createShowOverviewButton($data->similarity_comparison_url, $this->courseid,
+        //        'exaquest:similarity_refresh_button_label')
+        //];
 
         //TODO: add pagination? see paging_bar in outputcomponents.php
 

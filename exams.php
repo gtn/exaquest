@@ -34,13 +34,16 @@ if ($action == 'assign_quiz_addquestions') {
     $quizid = required_param('quizid', PARAM_INT);
     // get quiz for quizname
     $quizname = $DB->get_field('quiz', 'name', array('id' => $quizid));
-    if (array_key_exists("selectedusersfp".$quizid, $_POST)) {
-        $selectedfp = clean_param($_POST["selectedusersfp".$quizid], PARAM_INT);
-        block_exaquest_assign_quiz_addquestions($courseid, $USER, $selectedfp, $comment, $quizid, $quizname, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
-    }
+    //$selectedfpkey = "selectedusersfp".$quizid."popup_assign_addquestions";
+    //if (array_key_exists($selectedfpkey, $_POST)) {
+    //    $selectedfp = clean_param($_POST[$selectedfpkey], PARAM_INT);
+    //    block_exaquest_assign_quiz_addquestions($courseid, $USER, $selectedfp, $comment, $quizid, $quizname, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
+    //}
+    // not needed anymore, since FP is set in quiz settings
     // check if selecteduserspmw is set and an array
-    if (array_key_exists("selecteduserspmw".$quizid, $_POST) && is_array($_POST["selecteduserspmw".$quizid])) {
-        $selectedpmw = clean_param_array($_POST["selecteduserspmw".$quizid], PARAM_INT);
+    $selectedpmwkey = "selecteduserspmw".$quizid."popup_assign_addquestions";
+    if (array_key_exists($selectedpmwkey, $_POST) && is_array($_POST[$selectedpmwkey])) {
+        $selectedpmw = clean_param_array($_POST[$selectedpmwkey], PARAM_INT);
         foreach ($selectedpmw as $pmw) {
             block_exaquest_assign_quiz_addquestions($courseid, $USER, $pmw, $comment, $quizid, $quizname, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
         }

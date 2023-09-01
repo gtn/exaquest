@@ -205,6 +205,7 @@ $string['open_for_review_title'] = 'Review';
 $string['revise_title'] = 'Revision';
 $string['change_owner_title'] = 'Change Creator';
 $string['change_owner_text'] = 'Change Creator to..';
+$string['change_owner'] = 'Change Creator';
 $string['unlock_question'] = 'Unlock';
 $string['lock_question'] = 'Lock Question';
 $string['locked'] = 'Locked';
@@ -279,6 +280,8 @@ $string['exaquest:similarity_settings_swggapvalue_desc'] = 'a non-positive gap p
 $string['exaquest:similarity_settings_nrofthreads'] = 'Number of threads';
 $string['exaquest:similarity_settings_nrofthreads_desc'] =
     'if this value is greater than 1, it will utilize a multi-threaded implementation to compute the similarity, which should be much more performant for greater datasets';
+$string['exaquest:similarity_exam_select_label'] = 'Wählen Sie eine Prüfung oder "alle Fragen" aus';
+$string['exaquest:similarity_exam_select_default'] = 'Alle Fragen';
 
 // capabilites
 $string['exaquest:myaddinstance'] = 'myaddinstance';

@@ -6,6 +6,8 @@ global $DB, $CFG, $COURSE, $PAGE, $OUTPUT, $USER;
 require_once($CFG->dirroot . '/question/editlib.php');
 require_once(__DIR__ . '/questionbank_extensions/exaquest_view.php');
 
+
+//read in a necessary params
 $courseid = required_param('courseid', PARAM_INT);
 $action = optional_param('action', "", PARAM_ALPHAEXT);
 $fragencharakter  = optional_param('fragencharakter', null, PARAM_TEXT);
@@ -39,6 +41,7 @@ $output = $PAGE->get_renderer('block_exaquest');
 
 echo $output->header($context, $courseid, get_string('exams_overview', 'block_exaquest'));
 
+//edit name of category
 if( $action == "edit"){
     $currcat = $DB->get_records("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "deleted" => 0));
     foreach($currcat as $cat){
@@ -52,7 +55,7 @@ if( $action == "edit"){
     }
 }
 
-
+// delete category by setting the state to deleted in database
 if( $action == "delete"){
     $obj = new stdClass();
     $obj->deleted = 1;
@@ -60,7 +63,7 @@ if( $action == "delete"){
     $DB->update_record("block_exaquestcategories", $obj);
 
     $cat = get_question_category_and_context_of_course($courseid)[0];
-
+// sql selects the newest version of the question for questioncategory and gets the each question which has this category assigned so these questions can be blocked
     $questions = $DB->get_records_sql('SELECT cfd.id, qbe.id AS qbeid, cfd.value
                                                FROM {question_versions} qv
                                                JOIN {question} q ON qv.questionid = q.id
@@ -82,7 +85,7 @@ if( $action == "delete"){
     }
 
 }
-
+// add new category
 if( $action == "add") {
     if(! $DB->record_exists("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $addcategory, "categorytype"=> $categorytype))) {
         $DB->insert_record("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $addcategory, "categorytype" => $categorytype));

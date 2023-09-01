@@ -10,18 +10,16 @@
                 <FIELD NAME="questionbankentryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
                        COMMENT="questionbankentryid"/>
                 <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="status"/>
-<!--                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"-->
-<!--                       COMMENT="coursecategoryid"/>-->
                 <FIELD NAME="timestamp" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
                 <FIELD NAME="is_imported" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"
                        COMMENT="Boolean value, 0 = not imported, 1 = imported"/>
+                <FIELD NAME="reviewed_by_mover" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"
+                       COMMENT="Boolean value, 0 = not reviewed by mover, 1 = reviewed by mover. Needed for skipping steps if reviewed by mover (directly release once it is formal reviewed)"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
                 <KEY NAME="questionbankentryid" TYPE="foreign" FIELDS="questionbankentryid"
                      REFTABLE="question_bank_entries" REFFIELDS="id"/>
-<!--                <KEY NAME="coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories"-->
-<!--                     REFFIELDS="id"/>-->
             </KEYS>
         </TABLE>
         <TABLE NAME="block_exaquestreviewassign"
@@ -34,16 +32,12 @@
                        COMMENT="the assigned reviewer"/>
                 <FIELD NAME="reviewtype" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
                        COMMENT="type of the review 0=formal, 1=fachlich"/>
-<!--                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"-->
-<!--                       COMMENT="coursecategoryid"/>-->
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
                 <KEY NAME="questionbankentryid" TYPE="foreign" FIELDS="questionbankentryid"
                      REFTABLE="question_bank_entries" REFFIELDS="id"/>
                 <KEY NAME="reviewerid" TYPE="foreign" FIELDS="reviewerid" REFTABLE="user" REFFIELDS="id"/>
-<!--                <KEY NAME="coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories"-->
-<!--                     REFFIELDS="id"/>-->
             </KEYS>
         </TABLE>
         <TABLE NAME="block_exaquest_similarity"
@@ -82,7 +76,7 @@
                        COMMENT="name of queston category in exaquest"/>
                 <FIELD NAME="categorytype" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
                        COMMENT="type of queston category in exaquest"/>
-                <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"
+                <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false"
                        COMMENT="Boolean value, 0 = not deleted, 1 = deleted"/>
             </FIELDS>
             <KEYS>
@@ -111,14 +105,11 @@
                 <FIELD NAME="quizid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
                        COMMENT="id of the quiz table"/>
                 <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="status"/>
-<!--                <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"-->
-<!--                       COMMENT="courseid"/>-->
+                <FIELD NAME="creatorid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="userid"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
                 <KEY NAME="fk_quizid" TYPE="foreign" FIELDS="quizid" REFTABLE="quiz" REFFIELDS="id"/>
-<!--                <KEY NAME="fk_courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="course"-->
-<!--                     REFFIELDS="id"/>-->
             </KEYS>
         </TABLE>
         <TABLE NAME="block_exaquestrequestquest"
@@ -163,16 +154,12 @@
                        COMMENT="questionbankentryid"/>
                 <FIELD NAME="reviserid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
                        COMMENT="the assigned reviewer"/>
-<!--                <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"-->
-<!--                       COMMENT="coursecategoryid"/>-->
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
                 <KEY NAME="questionbankentryid" TYPE="foreign" FIELDS="questionbankentryid"
                      REFTABLE="question_bank_entries" REFFIELDS="id"/>
                 <KEY NAME="reviserid" TYPE="foreign" FIELDS="reviserid" REFTABLE="user" REFFIELDS="id"/>
-<!--                <KEY NAME="coursecategoryid" TYPE="foreign" FIELDS="coursecategoryid" REFTABLE="course_categories"-->
-<!--                     REFFIELDS="id"/>-->
             </KEYS>
         </TABLE>
         <TABLE NAME="block_exaquestquizassign"
@@ -225,7 +212,8 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
                 <KEY NAME="quizid" TYPE="foreign" FIELDS="quizid" REFTABLE="quiz" REFFIELDS="id"/>
-                <KEY NAME="exaquestcategoryid" TYPE="foreign" FIELDS="exaquestcategoryid" REFTABLE="block_exaquestcategories" REFFIELDS="id"/>
+                <KEY NAME="exaquestcategoryid" TYPE="foreign" FIELDS="exaquestcategoryid"
+                     REFTABLE="block_exaquestcategories" REFFIELDS="id"/>
             </KEYS>
         </TABLE>
     </TABLES>

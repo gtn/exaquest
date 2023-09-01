@@ -42,11 +42,12 @@ class change_status extends column_base {
 
         $fragenersteller = block_exaquest_get_fragenersteller_by_courseid($COURSE->id);
 
+        //decides which button is visible to whom
         switch (intval($question->teststatus)) {
             case BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED:
                 if (has_capability('block/exaquest:changeowner', \context_course::instance($COURSE->id))) {
                     echo $output->render(new \block_exaquest\output\popup_change_owner($fragenersteller, 'change_owner',
-                        get_string('open_question_for_review', 'block_exaquest'), $question));
+                        get_string('change_owner', 'block_exaquest'), $question, false));
                 }
                 if (has_capability('block/exaquest:modulverantwortlicher', \context_course::instance($COURSE->id)) ||
                     has_capability('block/exaquest:pruefungskoordination', \context_course::instance($COURSE->id)) ||
@@ -57,6 +58,11 @@ class change_status extends column_base {
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_NEW:
             case BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE:
+                if (has_capability('block/exaquest:changeowner', \context_course::instance($COURSE->id))) {
+                    echo $output->render(new \block_exaquest\output\popup_change_owner($fragenersteller, 'change_owner',
+                        get_string('change_owner', 'block_exaquest'), $question, true));
+
+                }
                 if (intval($question->ownerid) == $USER->id &&
                     has_capability('block/exaquest:setstatustoreview', \context_course::instance($COURSE->id))) {
                     $usertoselect = block_exaquest_get_reviewer_by_courseid($COURSE->id);
@@ -71,6 +77,10 @@ class change_status extends column_base {
                 //echo '<a href="#" class="changestatus'.$question->questionbankentryid.' btn btn-primary btn-sm" role="button" value="open_question_for_review"> '.get_string('open_question_for_review', 'block_exaquest').'</a>';
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS:
+                if (has_capability('block/exaquest:changeowner', \context_course::instance($COURSE->id))) {
+                    echo $output->render(new \block_exaquest\output\popup_change_owner($fragenersteller, 'change_owner',
+                        get_string('change_owner', 'block_exaquest'), $question, true));
+                }
                 if (has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
                     echo $output->render(new \block_exaquest\output\popup_change_status($fragenersteller, 'revise_question',
                         get_string('revise_question', 'block_exaquest'), $question));
@@ -92,6 +102,10 @@ class change_status extends column_base {
                 }
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE:
+                if (has_capability('block/exaquest:changeowner', \context_course::instance($COURSE->id))) {
+                    echo $output->render(new \block_exaquest\output\popup_change_owner($fragenersteller, 'change_owner',
+                        get_string('change_owner', 'block_exaquest'), $question, true));
+                }
                 if (has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
                     echo $output->render(new \block_exaquest\output\popup_change_status($fragenersteller, 'revise_question',
                         get_string('revise_question', 'block_exaquest'), $question));
@@ -108,6 +122,10 @@ class change_status extends column_base {
                 }
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE:
+                if (has_capability('block/exaquest:changeowner', \context_course::instance($COURSE->id))) {
+                    echo $output->render(new \block_exaquest\output\popup_change_owner($fragenersteller, 'change_owner',
+                        get_string('change_owner', 'block_exaquest'), $question, true));
+                }
                 if (has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
                     echo $output->render(new \block_exaquest\output\popup_change_status($fragenersteller, 'revise_question',
                         get_string('revise_question', 'block_exaquest'), $question));
@@ -124,6 +142,10 @@ class change_status extends column_base {
                 }
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED:
+                if (has_capability('block/exaquest:changeowner', \context_course::instance($COURSE->id))) {
+                    echo $output->render(new \block_exaquest\output\popup_change_owner($fragenersteller, 'change_owner',
+                        get_string('change_owner', 'block_exaquest'), $question, true));
+                }
                 if (has_capability('block/exaquest:releasequestion', \context_course::instance($COURSE->id))) {
                     echo '<button href="#" class="changestatus' . $question->questionbankentryid .
                         ' btn btn-primary" role="button" value="release_question"> ' .
@@ -135,6 +157,10 @@ class change_status extends column_base {
                 }
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED:
+                if (has_capability('block/exaquest:changeowner', \context_course::instance($COURSE->id))) {
+                    echo $output->render(new \block_exaquest\output\popup_change_owner($fragenersteller, 'change_owner',
+                        get_string('change_owner', 'block_exaquest'), $question, true));
+                }
                 if (has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
                     echo $output->render(new \block_exaquest\output\popup_change_status($fragenersteller, 'revise_question',
                         get_string('revise_question', 'block_exaquest'), $question));
@@ -144,16 +170,25 @@ class change_status extends column_base {
                 }
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_IN_QUIZ:
+                if (has_capability('block/exaquest:changeowner', \context_course::instance($COURSE->id))) {
+                    echo $output->render(new \block_exaquest\output\popup_change_owner($fragenersteller, 'change_owner',
+                        get_string('change_owner', 'block_exaquest'), $question, true));
+                }
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED:
+                if (has_capability('block/exaquest:changeowner', \context_course::instance($COURSE->id))) {
+                    echo $output->render(new \block_exaquest\output\popup_change_owner($fragenersteller, 'change_owner',
+                        get_string('change_owner', 'block_exaquest'), $question, true));
+                }
                 if (has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
-                    if(!block_exaquest_check_if_question_containes_categories($question->id)){
+                    if (block_exaquest_check_if_question_contains_categories($question->id)) {
                         echo '<button href="#" class="changestatus' . $question->questionbankentryid .
-                            ' btn btn-primary disabled" disabled data-toggle="tooltip" role="button" value="unlockquestion" title="'.get_string('missing_category_tooltip', 'block_exaquest').'"> ' .
+                            ' btn btn-primary" role="button" value="unlockquestion"> ' .
                             get_string('unlock_question', 'block_exaquest') . '</button>';
                     } else {
                         echo '<button href="#" class="changestatus' . $question->questionbankentryid .
-                            ' btn btn-primary" role="button" value="unlockquestion"> ' .
+                            ' btn btn-primary disabled" disabled data-toggle="tooltip" role="button" value="unlockquestion" title="' .
+                            get_string('missing_category_tooltip', 'block_exaquest') . '"> ' .
                             get_string('unlock_question', 'block_exaquest') . '</button>';
                     }
                     echo $output->render(new \block_exaquest\output\popup_change_status($fragenersteller, 'revise_question',
@@ -165,9 +200,10 @@ class change_status extends column_base {
         ?>
 
         <script type="text/javascript">
+            //  javascript redirects events to the ajax.php file and passes necessary data
             $(document).ready(function () {
                 $(".changestatus<?php echo $question->questionbankentryid; ?>").click(function (e) {
-
+                    debugger
                     //let changestatus_value = $(".changestatus<?php //echo $question->questionbankentryid; ?>//").val();
                     let changestatus_value = e.currentTarget.value;
                     let textarea_value = $('.commenttext<?php echo $question->questionbankentryid; ?>').val();
@@ -219,29 +255,60 @@ class change_status extends column_base {
                     });
                 });
 
-                //$(".disable<?php //echo $question->questionbankentryid; ?>//").attr('disabled', true);
-                //
-                //$('.commenttext<?php //echo $question->questionbankentryid; ?>//').on('keyup', function () {
-                //    var textarea_value = $('.commenttext<?php //echo $question->questionbankentryid; ?>//').val();
-                //
-                //    if (textarea_value != '') {
-                //        $(".disable<?php //echo $question->questionbankentryid; ?>//").attr('disabled', false);
-                //    } else {
-                //        $(".disable<?php //echo $question->questionbankentryid; ?>//").attr('disabled', true);
-                //    }
-                //});
-
-                // $('.requestquestionscomment').on('keyup', function () {
-                //     var textarea_value = $('.requestquestionscomment').val();
-                //     if (textarea_value != '') {
-                //         $('.requestquestionssubmit').attr('disabled', false);
-                //     } else {
-                //         $('.requestquestionssubmit').attr('disabled', true);
-                //     }
-                // });
-
-
+                // same for changeowner
+                $(".changeowner<?php echo $question->questionbankentryid; ?>").click(function (e) {
+                    debugger
+                    var data = {
+                        action: $(this).val(),
+                        questionbankentryid: <?php echo $question->questionbankentryid; ?>,
+                        questionid: <?php echo $question->id; ?>,
+                        courseid: <?php echo $COURSE->id; ?>,
+                        //users: $('.userselectioncheckbox<?php //echo $question->questionbankentryid; ?>//:checkbox:checked').map(function () {
+                        //    return $(this).val();
+                        //}).get(), this was the code for the checkboxes, now we have a multiselect
+                        users: $("#changeOwnerModal<?php echo $question->questionbankentryid; ?>").find('.form-autocomplete-selection').children().map(function () {
+                            return $(this).attr("data-value");
+                        }).get()
+                    };
+                    e.preventDefault();
+                    var ajax = $.ajax({
+                        method: "POST",
+                        url: "ajax.php",
+                        data: data
+                    }).done(function () {
+                        //console.log(data.action, 'ret', ret);
+                        location.reload();
+                    }).fail(function (ret) {
+                        var errorMsg = '';
+                        if (ret.responseText[0] == '<') {
+                            // html
+                            errorMsg = $(ret.responseText).find('.errormessage').text();
+                        }
+                        console.log("Error in action '" + data.action + "'", errorMsg, 'ret', ret);
+                    });
+                });
             });
+
+
+            document.addEventListener("DOMContentLoaded", function () {
+                // Get references to the button and link elements
+                var openModalBtn = document.getElementById("openModalButton<?php echo $question->questionbankentryid; ?>");
+                var openModalLink = document.querySelector("a[data-action='changeowner<?php echo $question->questionbankentryid; ?>']");
+
+                // Function to simulate the button click event and open the modal
+                function openModalWithButton() {
+                    // Trigger the click event on the button
+                    openModalBtn.click();
+                }
+
+                // Attach click event handler to the link
+                openModalLink.addEventListener("click", function (event) {
+                    debugger
+                    event.preventDefault(); // Prevent default link behavior
+                    openModalWithButton(); // Call the function to open the modal
+                });
+            });
+
 
         </script>
         <?php

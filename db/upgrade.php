@@ -584,7 +584,6 @@ function xmldb_block_exaquest_upgrade($oldversion) {
     }
 
     if ($oldversion < 2023071800) {
-        // add boolean field "is_imported" to the table "block_exaquestquestionstatus"
         $table = new xmldb_table('block_exaquestcategories');
         $field = new xmldb_field('deleted', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0);
         if (!$dbman->field_exists($table, $field)) {
@@ -595,7 +594,6 @@ function xmldb_block_exaquest_upgrade($oldversion) {
     }
 
     if ($oldversion < 2023072400) {
-        // add boolean field "is_imported" to the table "block_exaquestquestionstatus"
         $table = new xmldb_table('block_exaquestquestionstatus');
         $field = new xmldb_field('coursecategoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
         // first drop the key, otherwise it will not allow the deletion of the column
@@ -649,7 +647,39 @@ function xmldb_block_exaquest_upgrade($oldversion) {
         upgrade_block_savepoint(true, 2023072402, 'exaquest');
     }
 
+    if ($oldversion < 2023072500) {
+        // Creating roles and assigning capabilities
+        // Done as a task AFTER the installation/upgrade, because the capabilities only exist at the end/after the installation/upgrade.
+        // create the instance
+        $setuptask = new \block_exaquest\task\set_up_roles();
+        // queue it
+        \core\task\manager::queue_adhoc_task($setuptask);
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2023072500, 'exaquest');
+    }
 
+    if ($oldversion < 2023072501) {
+        $table = new xmldb_table('block_exaquestquizstatus');
+        $field = new xmldb_field('creatorid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, -1);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        $key = new xmldb_key('fk_creatorid', XMLDB_KEY_FOREIGN, ['creatorid'], 'user', ['id']);
+        $dbman->add_key($table, $key);
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2023072501, 'exaquest');
+    }
+
+    if ($oldversion < 2023080401) {
+        // add boolean field "reviewed_by_mover" to the table "block_exaquestquestionstatus"
+        $table = new xmldb_table('block_exaquestquestionstatus');
+        $field = new xmldb_field('reviewed_by_mover', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2023080401, 'exaquest');
+    }
 
     return $return_result;
 }
