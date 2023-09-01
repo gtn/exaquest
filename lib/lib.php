@@ -803,7 +803,7 @@ function block_exaquest_get_exams_for_me_to_fill($courseid, $userid = 0) {
     $sql = 'SELECT qa.*, q.name, qc.comment
 			FROM {' . BLOCK_EXAQUEST_DB_QUIZASSIGN . '} qa
 			JOIN {quiz} q on q.id = qa.quizid
-			JOIN {' . BLOCK_EXAQUEST_DB_QUIZCOMMENT . '} qc on qc.quizid = qa.quizid AND qc.quizassignid = qa.id
+			LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZCOMMENT . '} qc on qc.quizid = qa.quizid AND qc.quizassignid = qa.id
 			WHERE qa.assigneeid = :assigneeid
             AND q.course = :courseid';
 
