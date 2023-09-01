@@ -161,6 +161,14 @@ $capabilities = array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
     ),
+    'block/exaquest:doformalreviewexam' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+    ),
+    'block/exaquest:dofachlichreviewexam' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+    ),
     'block/exaquest:executeexam' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,

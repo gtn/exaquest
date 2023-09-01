@@ -681,5 +681,16 @@ function xmldb_block_exaquest_upgrade($oldversion) {
         upgrade_block_savepoint(true, 2023080401, 'exaquest');
     }
 
+    if ($oldversion < 2023090100) {
+        // Creating roles and assigning capabilities
+        // Done as a task AFTER the installation/upgrade, because the capabilities only exist at the end/after the installation/upgrade.
+        // create the instance
+        $setuptask = new \block_exaquest\task\set_up_roles();
+        // queue it
+        \core\task\manager::queue_adhoc_task($setuptask);
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2023090100, 'exaquest');
+    }
+
     return $return_result;
 }

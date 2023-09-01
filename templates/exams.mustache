@@ -125,12 +125,14 @@
                                 btn-primary"
                                 value="">{{#str}}check_added_questions, block_exaquest {{/str}}</a>
                             </td>
-                            <td>
-                                <button type="submit" class="btn btn-primary change-exam-status-button"
-                                        value="formal_release_exam" quizid={{quizid}} courseid={{courseid}}>Zur Durchführung
-                                    freigeben
-                                </button>
-                            </td>
+                            {{#doformalreviewexam}}
+                                <td>
+                                    <button type="submit" class="btn btn-primary change-exam-status-button"
+                                            value="formal_release_exam" quizid={{quizid}} courseid={{courseid}}>Zur Durchführung
+                                        freigeben
+                                    </button>
+                                </td>
+                            {{/doformalreviewexam}}
                         </tr>
                     {{/fachlich_released_exams}}
                     </tbody>

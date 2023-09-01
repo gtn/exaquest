@@ -72,6 +72,8 @@ $capabilities["addquestiontoexam"] = has_capability('block/exaquest:addquestiont
 $capabilities["assignaddquestions"] = has_capability('block/exaquest:assignaddquestions', $context);
 $capabilities["createexam"] = has_capability('block/exaquest:createexam', $context);
 $capabilities["setquestioncount"] = has_capability('block/exaquest:setquestioncount', $context);
+$capabilities["doformalreviewexam"] = has_capability('block/exaquest:doformalreviewexam', $context);
+$capabilities["dofachlichreviewexam"] = has_capability('block/exaquest:dofachlichreviewexam', $context);
 
 $exams = new \block_exaquest\output\exams($USER->id, $courseid, $capabilities);
 echo $output->render($exams);

@@ -57,7 +57,7 @@ const BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED = 9;
 const BLOCK_EXAQUEST_QUIZSTATUS_NEW = 0; // Questions are being added
 const BLOCK_EXAQUEST_QUIZSTATUS_CREATED = 1; // Questions have been added
 const BLOCK_EXAQUEST_QUIZSTATUS_FACHLICH_RELEASED = 2; // Fachlicher Pruefer has released
-const BLOCK_EXAQUEST_QUIZSTATUS_FORMAL_RELEASED = 3; // MUSSS released it
+//const BLOCK_EXAQUEST_QUIZSTATUS_FORMAL_RELEASED = 3; // MUSSS released it
 const BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE = 4; // ongoing exam?
 const BLOCK_EXAQUEST_QUIZSTATUS_FINISHED = 5; // exam finished
 const BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED = 6; // grades released
@@ -898,6 +898,7 @@ function block_exaquest_set_up_roles() {
         'allowswitch' => 1,
         'allowview' => 1);
 
+    // is this the MUSSS?
     if (!$DB->record_exists('role', ['shortname' => 'admintechnpruefungsdurchf'])) {
         $roleid = create_role('admin./techn. Prüfungsdurchf.', 'admintechnpruefungsdurchf', '', 'manager');
         $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
@@ -929,6 +930,8 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewactiveexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:doformalreviewexam', CAP_ALLOW, $roleid, $context);
+
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungskoordination'])) {
         $roleid = create_role('Prüfungskoordination', 'pruefungskoordination', '', 'manager');
@@ -985,6 +988,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:createexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:setquestioncount', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:changeowner', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:dofachlichreviewexam', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
         $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '', 'manager');
@@ -1206,6 +1210,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewactiveexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:dofachlichreviewexam', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsmitwirkende'])) {
         $roleid = create_role('Prüfungsmitwirkende', 'pruefungsmitwirkende', '', 'manager');

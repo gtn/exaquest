@@ -59,8 +59,8 @@ class exams implements renderable, templatable {
         $this->created_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
         $this->fachlich_released_exams =
             block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_FACHLICH_RELEASED);
-        $this->formal_released_exams =
-            block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_FORMAL_RELEASED);
+        //$this->formal_released_exams =
+        //    block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_FORMAL_RELEASED);
         $this->active_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE);
         $this->finished_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_FINISHED);
         $this->grading_released_exams =
@@ -107,7 +107,7 @@ class exams implements renderable, templatable {
         $data->created_exams =
             array_values($this->created_exams); // TODO rw: test if they are shown with current mustache (no way to create them in moodle yet --> create one manually)
         $data->fachlich_released_exams = array_values($this->fachlich_released_exams);
-        $data->formal_released_exams = array_values($this->formal_released_exams);
+        //$data->formal_released_exams = array_values($this->formal_released_exams);
         $data->active_exams = array_values($this->active_exams);
         $data->finished_exams = array_values($this->finished_exams);
         $data->grading_released_exams = array_values($this->grading_released_exams);
