@@ -2,6 +2,16 @@
 xxxx
 -Show only courses that are active or have been active in the last 6 months in moodle dashboard
 -Added filter in questionbank and count in dashboard for: Questions that have been created but not yet submitted for review.
+-Dashboard redesign
+-Fachlicher Prüfer and required points per Fragefach added to exam creation
+-Questions can now be imported and show up in the exaquest questionbank
+-Fragenersteller of a question can be changed. Questionname cannot be changed in the questionbank overview anymore.
+-Similarity check for specific exam added to the exam view
+-Questiongcategories reworked. Questions with archived categories cannot be unlocked
+-Streamlined the review process. E.g. if mover does fachlich review, then someone does formal review, the mover does not have to release but it releases automatically.
+-Added filters for different steps in fachlich/formal review
+-Filling exams: Can assign PMW and FP. When every person assigned to fill an exam has finished the assignment, the exam status is automatically changed to the next step.
+-
 #####################################
 #####################################
 2023041400
