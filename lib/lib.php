@@ -282,7 +282,7 @@ function block_exaquest_get_fragenersteller_by_courseid($courseid) {
 
 /**
  *
- * Returns all pmw of this course
+ * Returns all pmw/prüfungsmitwirkender of this course
  *
  * @param $courseid
  * @return array
@@ -291,6 +291,20 @@ function block_exaquest_get_pmw_by_courseid($courseid) {
     $context = context_course::instance($courseid);
     $userarray = array();
     $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:pruefungsmitwirkende', 0, 'u.*', null, 0, 0, true));
+    return $userarray;
+}
+
+/**
+ *
+ * Returns all bmw/beurteilungsmitwirkender of this course
+ *
+ * @param $courseid
+ * @return array
+ */
+function block_exaquest_get_bmw_by_courseid($courseid) {
+    $context = context_course::instance($courseid);
+    $userarray = array();
+    $userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:beurteilungsmitwirkende', 0, 'u.*', null, 0, 0, true));
     return $userarray;
 }
 

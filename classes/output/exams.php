@@ -130,6 +130,13 @@ class exams implements renderable, templatable {
 
         $data->courseid = $this->courseid;
 
+
+        // add popup_assign_gradeexam to every finished exam:
+        foreach ($data->finished_exams as $finished_exam) {
+            $popup = new popup_assign_gradeexam($this->courseid, $finished_exam->quizid);
+            $finished_exam->popup_assign_gradeexam = $popup->export_for_template($output);
+        }
+
         return $data;
     }
 
