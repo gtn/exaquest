@@ -27,4 +27,28 @@ switch ($action) {
         $requestid = required_param('requestid', PARAM_INT);
         $DB->delete_records(BLOCK_EXAQUEST_DB_REQUESTQUEST, array('id' => $requestid));
         break;
+    case ('mark_check_exam_grading_request_as_done'):
+
+        $requestid = required_param('requestid', PARAM_INT);
+
+        // get the quiz with this requestid
+        $quizid = $DB->get_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'quizid', array('id' => $requestid));
+
+        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $requestid));
+
+        // TODO: check if exam is xxxxx.   Different from when an exam is filled with questions
+        // check if every assignment of this kind is done for this quiz
+        block_exaquest_check_if_grades_should_be_released($quizid);
+
+
+        /*
+         * Wurden mehrere BMW ausgewählt, ist die Beurteilung erst freigeben, sobald
+            alle BMWs ihre Teil-Begutachtung/-Freigabe der Beurteilung abgeschlossen
+            haben und der FP die Beurteilung freigegeben hat. (FP könnte theoretisch
+            finale und rechtlich notwendige Freigabe schon vor Teil-Freigabe der BMW
+            durchführen, da ja alle zeitgleich informiert werden  finale Freigabe aber im
+            System erst dann, wenn alle Teil-Freigaben der ausgewählten BMWs +
+            Freigabe durch FP durchgeführt wurden)
+         */
+        break;
 }

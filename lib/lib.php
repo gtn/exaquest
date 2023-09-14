@@ -2219,7 +2219,7 @@ function block_exaquest_check_if_exam_is_ready($quizid) {
     // check if every assignment of this kind is done for this quiz
     if ($DB->get_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
             array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS))) {
-        // records still exist ==> not every todo is done
+        // records still exist ==> not every todoo is done
         return false;
     } else {
         // no records exist ==> every assignment is done
@@ -2233,6 +2233,26 @@ function block_exaquest_check_if_exam_is_ready($quizid) {
     // TODO: also check when all questions are added ?
 
 }
+
+function block_exaquest_check_if_grades_should_be_released($quizid) {
+    global $DB;
+    // check if every assignment of this kind is done for this quiz
+    if ($DB->get_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING))) {
+        // records still exist ==> not every todoo is done
+        return false;
+    } else {
+        // no records exist ==> every assignment is done
+        // set the quizstatus from BLOCK_EXAQUEST_QUIZSTATUS_FINISHED to BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED and release the grades
+        // TODO: release the grades, this has to trigger sometghing from moodle
+        $quizstatus = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, array('quizid' => $quizid));
+        $quizstatus->status = BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED;
+        $DB->update_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, $quizstatus);
+        return true;
+    }
+}
+
+
 
 function block_exaquest_check_if_question_contains_categories($questionid) {
     global $DB;
