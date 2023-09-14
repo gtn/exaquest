@@ -1,11 +1,11 @@
 <!-- using bootstrap modals to do the popups https://getbootstrap.com/docs/4.6/components/modal/ -->
 
-<button class="btn btn-primary w-100" data-toggle="modal" data-target="#assignQuizModal{{quizid}}">
+<button class="btn btn-primary w-100" data-toggle="modal" data-target="#assignGradeExamModal{{quizid}}">
     {{#str}}assign_gradeexam, block_exaquest {{/str}}
     <!--    <i class="icon fa fa-plus fa-fw "></i>-->
 </button>
-<div class="modal fade" id="assignQuizModal{{quizid}}" tabindex="-1"
-     aria-labelledby="assignQuizModalLabel"
+<div class="modal fade" id="assignGradeExamModal{{quizid}}" tabindex="-1"
+     aria-labelledby="assignGradeExamModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -20,7 +20,7 @@
                 <div class="modal-body">
                     <div class="form-group">{{#str}}
                         assign_gradeexam_label, block_exaquest {{/str}}
-                        {{{ pmw_autocomplete_html }}}
+                        {{{ bmw_autocomplete_html }}}
                     </div>
                     <div class="form-group">
                         <textarea class="form-control assigngradeexamcomment" name="assigngradeexamcomment" id="assigngradeexamcomment"

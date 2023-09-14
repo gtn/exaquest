@@ -1,11 +1,11 @@
 <!-- using bootstrap modals to do the popups https://getbootstrap.com/docs/4.6/components/modal/ -->
 
-<button class="btn btn-primary w-100" data-toggle="modal" data-target="#assignQuizModal{{quizid}}">
+<button class="btn btn-primary w-100" data-toggle="modal" data-target="#assignAddQuestionModal{{quizid}}">
     {{#str}}assign_addquestions, block_exaquest {{/str}}
     <!--    <i class="icon fa fa-plus fa-fw "></i>-->
 </button>
-<div class="modal fade" id="assignQuizModal{{quizid}}" tabindex="-1"
-     aria-labelledby="assignQuizModalLabel"
+<div class="modal fade" id="assignAddQuestionModal{{quizid}}" tabindex="-1"
+     aria-labelledby="assignAddQuestionModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
