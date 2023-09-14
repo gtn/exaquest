@@ -41,19 +41,41 @@ if ($action == 'assign_quiz_addquestions') {
     //}
     // not needed anymore, since FP is set in quiz settings
     // check if selecteduserspmw is set and an array
-    $selectedpmwkey = "selecteduserspmw".$quizid."popup_assign_addquestions";
+    $selectedpmwkey = "selecteduserspmw" . $quizid . "popup_assign_addquestions";
     if (array_key_exists($selectedpmwkey, $_POST) && is_array($_POST[$selectedpmwkey])) {
         $selectedpmw = clean_param_array($_POST[$selectedpmwkey], PARAM_INT);
         foreach ($selectedpmw as $pmw) {
-            block_exaquest_assign_quiz_addquestions($courseid, $USER, $pmw, $comment, $quizid, $quizname, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
+            block_exaquest_assign_quiz_addquestions($USER, $pmw, $comment, $quizid, $quizname,
+                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
         }
     }
-}else if ($action == 'set_questioncount_per_quiz_and_fragefach'){
+} else if ($action == 'set_questioncount_per_quiz_and_fragefach') {
     $quizid = required_param('quizid', PARAM_INT);
     if (array_key_exists("fragefaecher", $_POST)) {
         $fragefaecher = clean_param_array($_POST["fragefaecher"], PARAM_INT);
         foreach ($fragefaecher as $exaquestcategoryid => $count) {
             block_exaquest_set_questioncount_for_exaquestcategory($quizid, $exaquestcategoryid, $count);
+        }
+    }
+} else if ($action == 'assign_check_exam_grading') {
+    $comment = optional_param('assignaddquestionscomment', '', PARAM_TEXT);
+    $quizid = required_param('quizid', PARAM_INT);
+    $quizname = $DB->get_field('quiz', 'name', array('id' => $quizid));
+
+    //$selectedfpkey = "selectedusersfp" . $quizid . "popup_assign_check_exam_grading";
+    //if (array_key_exists($selectedfpkey, $_POST)) {
+    //    $selectedfp = clean_param($_POST[$selectedfpkey], PARAM_INT);
+    //    block_exaquest_assign_check_exam_grading($courseid, $USER, $selectedfp, $comment, $quizid, $quizname,
+    //            BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
+    //}
+
+    // TODO: check if teh FP is selected, since this will lead to different behaviour
+    $selectedbmwkey = "selectedusersbmw" . $quizid . "popup_assign_check_exam_grading";
+    if (array_key_exists($selectedbmwkey, $_POST) && is_array($_POST[$selectedbmwkey])) {
+        $selectedbmw = clean_param_array($_POST[$selectedbmwkey], PARAM_INT);
+        foreach ($selectedbmw as $bmw) {
+            block_exaquest_assign_check_exam_grading($USER, $bmw, $comment, $quizid, $quizname,
+                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
         }
     }
 }
@@ -68,7 +90,8 @@ $capabilities["viewactiveexams"] = is_enrolled($context, $USER, "block/exaquest:
 $capabilities["viewfinishedexams"] = is_enrolled($context, $USER, "block/exaquest:viewfinishedexams");
 $capabilities["viewgradesreleasedexams"] = is_enrolled($context, $USER, "block/exaquest:viewgradesreleasedexams");
 $capabilities["viewgradesreleasedexams"] = is_enrolled($context, $USER, "block/exaquest:viewgradesreleasedexams");
-$capabilities["addquestiontoexam"] = has_capability('block/exaquest:addquestiontoexam', $context); // has_capability actually makes more sense than is_enrolled, even though the outcome is the same
+$capabilities["addquestiontoexam"] = has_capability('block/exaquest:addquestiontoexam',
+        $context); // has_capability actually makes more sense than is_enrolled, even though the outcome is the same
 $capabilities["assignaddquestions"] = has_capability('block/exaquest:assignaddquestions', $context);
 $capabilities["createexam"] = has_capability('block/exaquest:createexam', $context);
 $capabilities["setquestioncount"] = has_capability('block/exaquest:setquestioncount', $context);

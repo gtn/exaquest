@@ -192,10 +192,15 @@
                                     passieren?)
                                 </button>
                             </td>
+<!--                            <td>-->
+<!--                                {{#popup_assign_gradeexam}}-->
+<!--                                    {{>block_exaquest/popup_assign_addquestions}}-->
+<!--                                {{/popup_assign_gradeexam}}-->
+<!--                            </td>-->
                             <td>
-                                {{#popup_assign_gradeexam}}
-                                    {{>block_exaquest/popup_assign_addquestions}}
-                                {{/popup_assign_gradeexam}}
+                                {{#popup_assign_check_exam_grading}}
+                                    {{>block_exaquest/popup_assign_check_exam_grading}}
+                                {{/popup_assign_check_exam_grading}}
                             </td>
                         </tr>
                     {{/finished_exams}}
