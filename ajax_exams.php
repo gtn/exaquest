@@ -12,10 +12,23 @@ $context = context_course::instance($COURSE->id);
 require_capability('block/exaquest:viewexamstab', $context);
 
 switch ($action) {
-    case ('create_exam'):
-        block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
+    case ('send_exam_to_review'):
+        // dont instantly change the status
+        // instead: do the same as when checking the todoo in the dashboard. When every assigned pm and the fp have checked this --> change status to "created"
+        $quizassignid = $DB->get_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'id', array(
+                        'quizid' => $quizid,
+                        'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS,
+                        'assigneeid' => $USER->id)
+        );
+
+        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $quizassignid));
+
+        // check if every assignment of this kind is done for this quiz
+        block_exaquest_check_if_exam_is_ready($quizid);
+
+        //block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
         // remove entries in exaquestquizassign
-        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, ['quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS]);
+        //$DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, ['quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS]);
         break;
     case ('skipandrelease_exam'):
         block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE);

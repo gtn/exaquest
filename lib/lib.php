@@ -1223,7 +1223,8 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:assignaddquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:createexam', CAP_ALLOW, $roleid, $context);
 
-    assign_capability('block/exaquest:viewnewexams', CAP_ALLOW, $roleid, $context);
+    //assign_capability('block/exaquest:viewnewexams', CAP_ALLOW, $roleid, $context);
+    unassign_capability('block/exaquest:viewnewexams', $roleid, $context->id); // FP can NOT see every new exam, only the ones they are assigned to
     assign_capability('block/exaquest:viewcreatedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewreleasedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewactiveexams', CAP_ALLOW, $roleid, $context);

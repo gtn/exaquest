@@ -2,9 +2,9 @@
 {{#capabilities}}
     {{#viewnewexams}}
         {{#createnewexam}}
-            <a href="{{create_exam_link}}" type="submit" class="btn
+                <a href="{{create_exam_link}}" type="submit" class="btn
             btn-secondary"
-               value="">{{#str}}create_new_exam_button, block_exaquest {{/str}}</a>
+                   value="">{{#str}}create_new_exam_button, block_exaquest {{/str}}</a>
         {{/createnewexam}}
             <div class="examcard">
                 <h4>{{#str}}new_exams, block_exaquest {{/str}}</h4>
@@ -29,14 +29,20 @@
                                 <a href="{{got_to_exam_view}}&quizid={{quizid}}" type="submit" class="btn btn-primary"
                                 value="">{{#str}}check_added_questions, block_exaquest {{/str}}</a>
                             </td>
-                            {{#createexam}}
+                            {{#sendexamtoreview}}
                                 <td>
                                     <button type="submit" class="btn btn-primary change-exam-status-button"
-                                            value="create_exam" quizid={{quizid}} courseid={{courseid}}>Prüfung zur
-                                        Begutachtung schicken
+                                            value="send_exam_to_review" quizid={{quizid}} courseid={{courseid}}>{{#str}}send_exam_to_review, block_exaquest {{/str}}
                                     </button>
                                 </td>
-                            {{/createexam}}
+                            {{/sendexamtoreview}}
+                            {{#fachlichreleaseexam}}
+                                <td>
+                                    <button type="submit" class="btn btn-primary change-exam-status-button"
+                                            value="fachlich_release_exam" quizid={{quizid}} courseid={{courseid}}>{{#str}}fachlich_release_exam, block_exaquest {{/str}}
+                                    </button>
+                                </td>
+                            {{/fachlichreleaseexam}}
                             {{#skipandreleaseexam}}
                                 <td>
                                     <button type="submit" class="btn btn-primary change-exam-status-button"
@@ -78,7 +84,7 @@
                                 <a class="link"
                                    href={{link_to_exam}}
                                 >
-                                {{name}} </a>
+                                    {{name}} </a>
                             </td>
                             <td>
                                 <a href="{{got_to_exam_view}}&quizid={{quizid}}" type="submit" class="btn
@@ -88,8 +94,7 @@
                             <td>
                                 <!--                    <input type="submit" class="btn btn-primary" value="Prüfung fachlich freigeben">-->
                                 <button type="submit" class="btn btn-primary change-exam-status-button"
-                                        value="fachlich_release_exam" quizid={{quizid}}  courseid={{courseid}}>Prüfung
-                                    fachlich freigeben
+                                        value="fachlich_release_exam" quizid={{quizid}} courseid={{courseid}}>{{#str}}fachlich_release_exam, block_exaquest {{/str}}
                                 </button>
                             </td>
                             <td>
@@ -118,7 +123,7 @@
                                 <a class="link"
                                    href={{link_to_exam}}
                                 >
-                                {{name}} </a>
+                                    {{name}} </a>
                             </td>
                             <td>
                                 <a href="{{got_to_exam_view}}&quizid={{quizid}}" type="submit" class="btn
@@ -155,7 +160,7 @@
                                 <a class="link"
                                    href={{link_to_exam}}
                                 >
-                                {{name}} </a>
+                                    {{name}} </a>
                             </td>
                             <td>
                                 <button type="submit" class="btn btn-primary change-exam-status-button"
@@ -182,18 +187,18 @@
                                 <a class="link"
                                    href={{link_to_exam}}
                                 >
-                                {{name}} </a>
+                                    {{name}} </a>
                             </td>
                             <td>
                                 <button type="submit" class="btn btn-primary change-exam-status-button"
                                         value="release_grades" quizid={{quizid}} courseid={{courseid}}>Prüfungsbeurteilung freigeben.
                                 </button>
                             </td>
-<!--                            <td>-->
-<!--                                {{#popup_assign_gradeexam}}-->
-<!--                                    {{>block_exaquest/popup_assign_addquestions}}-->
-<!--                                {{/popup_assign_gradeexam}}-->
-<!--                            </td>-->
+                            <!--                            <td>-->
+                                <!--                                {{#popup_assign_gradeexam}}-->
+                            <!--                                    {{>block_exaquest/popup_assign_addquestions}}-->
+                                <!--                                {{/popup_assign_gradeexam}}-->
+                            <!--                            </td>-->
                             <td>
                                 {{#popup_assign_check_exam_grading}}
                                     {{>block_exaquest/popup_assign_check_exam_grading}}
@@ -218,7 +223,7 @@
                                 <a class="link"
                                    href={{link_to_exam}}
                                 >
-                                {{name}} </a>
+                                    {{name}} </a>
                             </td>
                             <!--                    <td>-->
                             <!--                        <button type="submit" class="btn btn-primary change-exam-status-button"-->

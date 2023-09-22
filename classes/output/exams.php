@@ -31,12 +31,22 @@ class exams implements renderable, templatable {
         } else if ($capabilities["addquestiontoexam"]) {
             // new exams can only be seen by PK and Mover, except if you are specifically assigned to an exam, e.g. as a FP or PMW
             // ==> give the viewnewexams capability to all users who are assigned to an exam, but filter the newexams according to users role
-            $this->new_exams =
-                block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS,
+            $addquestionsassignments = block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS,
                     BLOCK_EXAQUEST_QUIZSTATUS_NEW);
+            foreach ($addquestionsassignments as $addquestionsassignment) {
+                $addquestionsassignment->sendexamtoreview = true;
+            }
+            $this->new_exams = $addquestionsassignments;
+
+            $fpexams = block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
+                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER, BLOCK_EXAQUEST_QUIZSTATUS_NEW);
+            // these are the exams for this FP ==> add the button for fachlich releasing
+            foreach ($fpexams as $fpexam) {
+                $fpexam->fachlichreleaseexam = true;
+            }
             // add the exams that have been assigned to the FP when creating the exam ( BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER)
-            $this->new_exams = array_merge($this->new_exams, block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
-                BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER, BLOCK_EXAQUEST_QUIZSTATUS_NEW));
+            $this->new_exams = array_merge($this->new_exams, $fpexams);
+
             // $this->new_exams is now an array filled with sdtClass objects
             // filter new_exams so that every quizid is only once in the array (quizid is a property of the objects)
             // it could otherwise happen, that a quiz is shown twice, because e.g. the fp is assigned as fp and also for adding questions
