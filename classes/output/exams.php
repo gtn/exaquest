@@ -94,7 +94,11 @@ class exams implements renderable, templatable {
         $data->got_to_exam_view = new moodle_url('/blocks/exaquest/finished_exam_questionbank.php',
             array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1]));
         $data->go_to_exam_questionbank = $data->go_to_exam_questionbank->raw_out(false);
-        $data->new_exams = array_values($this->new_exams);
+        if($this->new_exams){
+            $data->new_exams = array_values($this->new_exams);
+        }else{
+            $data->new_exams = array();
+        }
         // add the assignment popups for every new_exam:
         foreach ($data->new_exams as $new_exam) {
             $popup = new popup_assign_addquestions($this->courseid, $new_exam->quizid);

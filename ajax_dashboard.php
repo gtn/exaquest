@@ -36,7 +36,7 @@ switch ($action) {
 
         $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $requestid));
 
-        // TODO: check if exam is xxxxx.   Different from when an exam is filled with questions
+        // TODO: check if every assigned bmw and the FP have released.
         // check if every assignment of this kind is done for this quiz
         block_exaquest_check_if_grades_should_be_released($quizid);
 

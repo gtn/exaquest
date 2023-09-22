@@ -834,12 +834,6 @@ function block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid = 0,
     return $exams;
 }
 
-
-
-
-
-
-
 /**
  * Returns
  *
@@ -1194,6 +1188,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:checkexamsgrading', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlicherpruefer'])) {
         $roleid = create_role('fachlicher Prüfer', 'fachlicherpruefer', '', 'manager');
@@ -1235,6 +1230,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:dofachlichreviewexam', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:checkexamsgrading', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsmitwirkende'])) {
         $roleid = create_role('Prüfungsmitwirkende', 'pruefungsmitwirkende', '', 'manager');
@@ -1625,7 +1621,8 @@ function block_exaquest_get_todo_count($userid, $coursecategoryid, $questioncate
             block_exaquest_get_my_questionbankentries_to_submit_count($questioncategoryid, $userid);
     //$exams_for_me_to_create_count =
     //    block_exaquest_get_exams_for_me_to_create_count($coursecategoryid, $userid);
-    $exams_for_me_to_fill_count = block_exaquest_get_assigned_exams_by_assigntype_count($coursecategoryid, $userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
+    $exams_for_me_to_fill_count = block_exaquest_get_assigned_exams_by_assigntype_count($coursecategoryid, $userid,
+            BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
 
     return $questions_for_me_to_create_count + $questions_for_me_to_review_count + $questions_for_me_to_revise_count +
             $questions_finalised_count + $exams_for_me_to_fill_count + $my_questions_to_submit_count;
@@ -1793,6 +1790,7 @@ function block_exaquest_get_capabilities($context) {
     $capabilities["createexam"] = has_capability("block/exaquest:viewquestionstorevise", $context,
             $USER); // has_capability better than is_enrolled in this case, todo: change above
     $capabilities["setquestioncount"] = has_capability("block/exaquest:setquestioncount", $context, $USER);
+    $capabilities["checkexamsgrading"] = has_capability("block/exaquest:checkexamsgrading", $context, $USER);
 
     return $capabilities;
 }
@@ -2060,7 +2058,12 @@ function block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assig
     $assigndata->quizid = $quizid;
     $assigndata->assigneeid = $userto;
     $assigndata->assigntype = $assigntype;
-    $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
+    //if that assignment does not exist yet, create it
+    $quizassignid = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+            array('quizid' => $quizid, 'assigneeid' => $userto, 'assigntype' => $assigntype))->id;
+    if (!$quizassignid) {
+        $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
+    }
 
     // insert comment into BLOCK_EXAQUEST_DB_QUIZCOMMENT
     if ($comment != '') {
@@ -2245,14 +2248,14 @@ function block_exaquest_check_if_grades_should_be_released($quizid) {
         // no records exist ==> every assignment is done
         // set the quizstatus from BLOCK_EXAQUEST_QUIZSTATUS_FINISHED to BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED and release the grades
         // TODO: release the grades, this has to trigger sometghing from moodle
+        // ACTUALLY release the grades...
         $quizstatus = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, array('quizid' => $quizid));
         $quizstatus->status = BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED;
         $DB->update_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, $quizstatus);
+
         return true;
     }
 }
-
-
 
 function block_exaquest_check_if_question_contains_categories($questionid) {
     global $DB;

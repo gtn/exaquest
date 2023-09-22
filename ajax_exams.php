@@ -42,7 +42,18 @@ switch ($action) {
         block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_FINISHED);
         break;
     case ('release_grades'):
-        //TODO ACTUALLY release the grades... and maybe task for when they release it to also change status
-        block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED);
+        // same as mark_check_exam_grading_request_as_done in ajax_dashboard.php
+        // we do not have the quizassignid here, so we need to get it first
+        $quizassignid = $DB->get_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'id', array(
+                        'quizid' => $quizid,
+                        'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING,
+                        'assigneeid' => $USER->id)
+        );
+        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $quizassignid));
+        // check if every assignment of this kind is done for this quiz
+        //block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED_BY_FP);
+        // only mark the todoo for the FP as done, do NOT release instantly, but first check if the BMWs have also done their part
+        // check if the exam is now completely released
+        block_exaquest_check_if_grades_should_be_released($quizid);
         break;
 }

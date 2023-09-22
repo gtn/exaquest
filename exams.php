@@ -58,7 +58,7 @@ if ($action == 'assign_quiz_addquestions') {
         }
     }
 } else if ($action == 'assign_check_exam_grading') {
-    $comment = optional_param('assignaddquestionscomment', '', PARAM_TEXT);
+    $comment = optional_param('assign_check_exam_grading_comment', '', PARAM_TEXT);
     $quizid = required_param('quizid', PARAM_INT);
     $quizname = $DB->get_field('quiz', 'name', array('id' => $quizid));
 
