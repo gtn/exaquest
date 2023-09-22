@@ -23,7 +23,7 @@ class exams implements renderable, templatable {
         $this->userid = $userid;
         //$this->exams = $DB->get_records("quiz", array("course" => $COURSE->id));
         $this->capabilities["createnewexam"] = has_capability('mod/quiz:addinstance', \context_course::instance($COURSE->id));
-        if ($capabilities["viewnewexams"]) {
+        if ($capabilities["viewnewexams"]) { // this means the user can see ALL new exams, not only some that have been assigned for example
             $this->new_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_NEW);
             foreach ($this->new_exams as $new_exam) {
                 $new_exam->skipandreleaseexam = $userid == intval($new_exam->creatorid);
@@ -72,7 +72,20 @@ class exams implements renderable, templatable {
         //$this->formal_released_exams =
         //    block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_FORMAL_RELEASED);
         $this->active_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE);
-        $this->finished_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_FINISHED);
+        if($this->capabilities["viewfinishedexams"]){
+            $this->finished_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_FINISHED);
+        }else{
+            $exams_to_check_grading = block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
+            foreach ($exams_to_check_grading as $exam_to_check_grading) {
+                $exam_to_check_grading->mark_check_exam_grading_request_as_done = true;
+            }
+            $this->finished_exams = $exams_to_check_grading;
+
+            if ($this->finished_exams) {
+                $this->capabilities["viewfinishedexams"] = true;
+            }
+        }
+
         $this->grading_released_exams =
             block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED);
 

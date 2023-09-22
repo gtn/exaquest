@@ -331,4 +331,9 @@ $capabilities = array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
     ),
+    // the pk can assign fp and bmw to check the exam grading
+    'block/exaquest:assigncheckexamgrading' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+    ),
 );

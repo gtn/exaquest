@@ -100,7 +100,7 @@ if ($capabilities["addquestiontoexam"]) {
 }
 
 $exams_to_check_grading = [];
-if ($capabilities["checkexamsgrading"]) { // TODO: new capability needed?
+if ($capabilities["checkexamsgrading"]) {
     $exams_to_check_grading = block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
 }
 

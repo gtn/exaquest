@@ -189,21 +189,34 @@
                                 >
                                     {{name}} </a>
                             </td>
-                            <td>
-                                <button type="submit" class="btn btn-primary change-exam-status-button"
-                                        value="release_grades" quizid={{quizid}} courseid={{courseid}}>Prüfungsbeurteilung freigeben.
-                                </button>
-                            </td>
+
+                            {{#assigncheckexamgrading}}
+                                <td>
+                                    {{#popup_assign_check_exam_grading}}
+                                        {{>block_exaquest/popup_assign_check_exam_grading}}
+                                    {{/popup_assign_check_exam_grading}}
+                                </td>
+                            {{/assigncheckexamgrading}}
+                            {{#mark_check_exam_grading_request_as_done}}
+                                <td>
+                                    <button type="submit" class="btn btn-primary change-exam-status-button"
+                                            value="release_grades" quizid={{quizid}} courseid={{courseid}}>Prüfungsbeurteilung freigeben.
+                                    </button>
+                                </td>
+                                <td>
+                                    {{#popup_assign_check_exam_grading}}
+                                        {{>block_exaquest/popup_assign_check_exam_grading}}
+                                    {{/popup_assign_check_exam_grading}}
+                                </td>
+                            {{/mark_check_exam_grading_request_as_done}}
+
+
                             <!--                            <td>-->
                                 <!--                                {{#popup_assign_gradeexam}}-->
                             <!--                                    {{>block_exaquest/popup_assign_addquestions}}-->
                                 <!--                                {{/popup_assign_gradeexam}}-->
                             <!--                            </td>-->
-                            <td>
-                                {{#popup_assign_check_exam_grading}}
-                                    {{>block_exaquest/popup_assign_check_exam_grading}}
-                                {{/popup_assign_check_exam_grading}}
-                            </td>
+
                         </tr>
                     {{/finished_exams}}
                     </tbody>
