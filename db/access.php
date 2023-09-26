@@ -275,9 +275,13 @@ $capabilities = array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
     ),
-    'block/exaquest:viewnewexams' => array(
+    'block/exaquest:viewnewexams' => array( // you can see some new exams, e.g. if you have been assigned to them ==> always show the block
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
+    ),
+    'block/exaquest:viewallnewexams' => array( // you can see EVERY new exam, regardless of assignment.. maybe instead use "viewnewexamscard"?
+            'captype' => 'write',
+            'contextlevel' => CONTEXT_COURSE,
     ),
     'block/exaquest:viewcreatedexams' => array(
         'captype' => 'write',
@@ -294,6 +298,10 @@ $capabilities = array(
     'block/exaquest:viewfinishedexams' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
+    ),
+    'block/exaquest:viewallfinishedexams' => array(
+            'captype' => 'write',
+            'contextlevel' => CONTEXT_COURSE,
     ),
     'block/exaquest:viewgradesreleasedexams' => array(
         'captype' => 'write',

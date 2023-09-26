@@ -84,10 +84,12 @@ if ($action == 'assign_quiz_addquestions') {
 $capabilities = [];
 $capabilities["createquestion"] = is_enrolled($context, $USER, "block/exaquest:createquestion");
 $capabilities["viewnewexams"] = is_enrolled($context, $USER, "block/exaquest:viewnewexams");
+$capabilities["viewallnewexams"] = is_enrolled($context, $USER, "block/exaquest:viewallnewexams");
 $capabilities["viewcreatedexams"] = is_enrolled($context, $USER, "block/exaquest:viewcreatedexams");
 $capabilities["viewreleasedexams"] = is_enrolled($context, $USER, "block/exaquest:viewreleasedexams");
 $capabilities["viewactiveexams"] = is_enrolled($context, $USER, "block/exaquest:viewactiveexams");
 $capabilities["viewfinishedexams"] = is_enrolled($context, $USER, "block/exaquest:viewfinishedexams");
+$capabilities["viewallfinishedexams"] = is_enrolled($context, $USER, "block/exaquest:viewallfinishedexams");
 $capabilities["viewgradesreleasedexams"] = is_enrolled($context, $USER, "block/exaquest:viewgradesreleasedexams");
 $capabilities["viewgradesreleasedexams"] = is_enrolled($context, $USER, "block/exaquest:viewgradesreleasedexams");
 $capabilities["addquestiontoexam"] = has_capability('block/exaquest:addquestiontoexam',

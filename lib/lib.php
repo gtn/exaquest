@@ -993,10 +993,12 @@ function block_exaquest_set_up_roles() {
     //assign_capability('block/exaquest:viewquestionstorelease', CAP_PROHIBIT, $roleid, $context);
 
     assign_capability('block/exaquest:viewnewexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewallnewexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewcreatedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewreleasedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewactiveexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewallfinishedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:releasequestion', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:requestnewexam', CAP_ALLOW, $roleid, $context);
@@ -1223,14 +1225,11 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:assignaddquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:createexam', CAP_ALLOW, $roleid, $context);
-
-    //assign_capability('block/exaquest:viewnewexams', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:viewnewexams', $roleid, $context->id); // FP can NOT see every new exam, only the ones they are assigned to
+    assign_capability('block/exaquest:viewnewexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewcreatedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewreleasedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewactiveexams', CAP_ALLOW, $roleid, $context);
-    //assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:viewfinishedexams', $roleid, $context->id); // FP can NOT see every new exam, only the ones they are assigned to
+    assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:dofachlichreviewexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:checkexamsgrading', CAP_ALLOW, $roleid, $context);

@@ -23,7 +23,7 @@ class exams implements renderable, templatable {
         $this->userid = $userid;
         //$this->exams = $DB->get_records("quiz", array("course" => $COURSE->id));
         $this->capabilities["createnewexam"] = has_capability('mod/quiz:addinstance', \context_course::instance($COURSE->id));
-        if ($capabilities["viewnewexams"]) { // this means the user can see ALL new exams, not only some that have been assigned for example
+        if ($capabilities["viewallnewexams"]) { // this means the user can see ALL new exams, not only some that have been assigned for example
             $this->new_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_NEW);
             foreach ($this->new_exams as $new_exam) {
                 $new_exam->skipandreleaseexam = $userid == intval($new_exam->creatorid);
@@ -31,7 +31,8 @@ class exams implements renderable, templatable {
         } else if ($capabilities["addquestiontoexam"]) {
             // new exams can only be seen by PK and Mover, except if you are specifically assigned to an exam, e.g. as a FP or PMW
             // ==> give the viewnewexams capability to all users who are assigned to an exam, but filter the newexams according to users role
-            $addquestionsassignments = block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS,
+            $addquestionsassignments = block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
+                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS,
                     BLOCK_EXAQUEST_QUIZSTATUS_NEW);
             foreach ($addquestionsassignments as $addquestionsassignment) {
                 $addquestionsassignment->sendexamtoreview = true;
@@ -51,16 +52,16 @@ class exams implements renderable, templatable {
             // filter new_exams so that every quizid is only once in the array (quizid is a property of the objects)
             // it could otherwise happen, that a quiz is shown twice, because e.g. the fp is assigned as fp and also for adding questions
             $this->new_exams = array_unique($this->new_exams, SORT_REGULAR);
-            if ($this->new_exams) {
-                $this->capabilities["viewnewexams"] = true;
-            }
+            //if ($this->new_exams) {
+            //    $this->capabilities["viewnewexams"] = true;
+            //} //instead of this setting of the capability, we ALWAYS see the new exams, but sometimes there just is none
         }
         if ($capabilities["viewcreatedexams"]) {
             $this->created_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
         } else {
             $this->created_exams = block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
-                BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER,
-                BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
+                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER,
+                    BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
             if ($this->created_exams) {
                 $this->capabilities["viewcreatedexams"] = true;
             }
@@ -68,26 +69,28 @@ class exams implements renderable, templatable {
         }
         $this->created_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
         $this->fachlich_released_exams =
-            block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_FACHLICH_RELEASED);
+                block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_FACHLICH_RELEASED);
         //$this->formal_released_exams =
         //    block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_FORMAL_RELEASED);
         $this->active_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE);
-        if($this->capabilities["viewfinishedexams"]){
-            $this->finished_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_FINISHED);
-        }else{
-            $exams_to_check_grading = block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
-            foreach ($exams_to_check_grading as $exam_to_check_grading) {
-                $exam_to_check_grading->mark_check_exam_grading_request_as_done = true;
-            }
-            $this->finished_exams = $exams_to_check_grading;
 
-            if ($this->finished_exams) {
-                $this->capabilities["viewfinishedexams"] = true;
+        $finished_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_FINISHED);
+        $exams_to_check_grading = block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid,
+                BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
+        foreach ($exams_to_check_grading as $exam_to_check_grading) {
+            $exam_to_check_grading->mark_check_exam_grading_request_as_done = true;
+            // remove it from the finished exams, since it is already in the exams_to_check_grading array
+            foreach ($finished_exams as $key => $finished_exam) {
+                if ($finished_exam->quizid == $exam_to_check_grading->quizid) {
+                    unset($finished_exams[$key]);
+                }
             }
         }
+        // combine finished_exams and exams_to_check_grading to one array,
+        $this->finished_exams = array_merge($finished_exams, $exams_to_check_grading);
 
         $this->grading_released_exams =
-            block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED);
+                block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED);
 
         $this->add_link_to_quiz($this->created_exams);
         $this->add_link_to_quiz($this->fachlich_released_exams);
@@ -108,18 +111,18 @@ class exams implements renderable, templatable {
         $data = new stdClass();
         $data->capabilities = $this->capabilities;
         $data->action =
-            $PAGE->url->out(false, array('action' => 'create', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
+                $PAGE->url->out(false, array('action' => 'create', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
 
         $catAndCont = get_question_category_and_context_of_course();
 
         $data->go_to_exam_questionbank = new moodle_url('/blocks/exaquest/exam_questionbank.php',
-            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1]));
+                array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1]));
         $data->got_to_exam_view = new moodle_url('/blocks/exaquest/finished_exam_questionbank.php',
-            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1]));
+                array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1]));
         $data->go_to_exam_questionbank = $data->go_to_exam_questionbank->raw_out(false);
-        if($this->new_exams){
+        if ($this->new_exams) {
             $data->new_exams = array_values($this->new_exams);
-        }else{
+        } else {
             $data->new_exams = array();
         }
         // add the assignment popups for every new_exam:
@@ -127,12 +130,12 @@ class exams implements renderable, templatable {
             $popup = new popup_assign_addquestions($this->courseid, $new_exam->quizid);
             $new_exam->popup_assign_addquestions = $popup->export_for_template($output);
             $new_exam->link_to_exam =
-                new moodle_url('/course/modedit.php', array('update' => $new_exam->coursemoduleid, 'return' => '1'));
+                    new moodle_url('/course/modedit.php', array('update' => $new_exam->coursemoduleid, 'return' => '1'));
             $new_exam->link_to_exam = $new_exam->link_to_exam->raw_out(false);
         }
 
         $data->created_exams =
-            array_values($this->created_exams); // TODO rw: test if they are shown with current mustache (no way to create them in moodle yet --> create one manually)
+                array_values($this->created_exams); // TODO rw: test if they are shown with current mustache (no way to create them in moodle yet --> create one manually)
         $data->fachlich_released_exams = array_values($this->fachlich_released_exams);
         //$data->formal_released_exams = array_values($this->formal_released_exams);
         $data->active_exams = array_values($this->active_exams);
@@ -140,7 +143,7 @@ class exams implements renderable, templatable {
         $data->grading_released_exams = array_values($this->grading_released_exams);
 
         $data->create_exam_link = new moodle_url('/course/modedit.php',
-            array('add' => 'quiz', 'course' => $COURSE->id, 'section' => 0, 'return' => 0, 'sr' => 0));
+                array('add' => 'quiz', 'course' => $COURSE->id, 'section' => 0, 'return' => 0, 'sr' => 0));
         $data->create_exam_link = $data->create_exam_link->raw_out(false);
 
         //if ($this->capabilities["releasequestion"]) {
@@ -157,14 +160,12 @@ class exams implements renderable, templatable {
 
         $data->courseid = $this->courseid;
 
-
         // TODO: later, now the check_exam_grading is more important
-//        // add popup_assign_gradeexam to every finished exam:
-//        foreach ($data->finished_exams as $finished_exam) {
-//            $popup = new popup_assign_gradeexam($this->courseid, $finished_exam->quizid);
-//            $finished_exam->popup_assign_gradeexam = $popup->export_for_template($output);
-//        }
-
+        //        // add popup_assign_gradeexam to every finished exam:
+        //        foreach ($data->finished_exams as $finished_exam) {
+        //            $popup = new popup_assign_gradeexam($this->courseid, $finished_exam->quizid);
+        //            $finished_exam->popup_assign_gradeexam = $popup->export_for_template($output);
+        //        }
 
         // add popup_assign_check_exam_grading to every finished exam:
         foreach ($data->finished_exams as $finished_exam) {
@@ -178,7 +179,7 @@ class exams implements renderable, templatable {
     private function add_link_to_quiz($exams) {
         foreach ($exams as $exam) {
             $exam->link_to_exam =
-                new moodle_url('/course/modedit.php', array('update' => $exam->coursemoduleid, 'return' => '1'));
+                    new moodle_url('/course/modedit.php', array('update' => $exam->coursemoduleid, 'return' => '1'));
             $exam->link_to_exam = $exam->link_to_exam->raw_out(false);
         }
     }

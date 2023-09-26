@@ -14,6 +14,8 @@ class popup_assign_check_exam_grading implements renderable, templatable {
     public function __construct($courseid, $quizid) {
         $this->bmw = block_exaquest_get_bmw_by_courseid($courseid);
         $this->fp = block_exaquest_get_fachlichepruefer_by_courseid($courseid);
+        // get the FP that has been assigned to this quiz
+        //$this->fp = block_exaquest_get_assigned_fachlicherpruefer($quizid);
         $this->quizid = $quizid;
     }
 
@@ -50,8 +52,9 @@ class popup_assign_check_exam_grading implements renderable, templatable {
         // add the fp to this multiselect as well
         foreach ($data->fp as $fp) {
             $autocompleteoptions[$fp->id] = $fp->firstname . ' ' . $fp->lastname;
+            $preselectedoption = $fp->id;
         }
-        $bmw_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, "bmw".$data->quizid, 'popup_assign_check_exam_grading');
+        $bmw_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, "bmw".$data->quizid, 'popup_assign_check_exam_grading', $preselectedoption);
         $data->bmw_autocomplete_html = $bmw_autocomplete_html;
 
 
