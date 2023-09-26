@@ -23,7 +23,7 @@ class exams implements renderable, templatable {
         $this->userid = $userid;
         //$this->exams = $DB->get_records("quiz", array("course" => $COURSE->id));
         $this->capabilities["createnewexam"] = has_capability('mod/quiz:addinstance', \context_course::instance($COURSE->id));
-        if ($capabilities["viewallnewexams"]) { // this means the user can see ALL new exams, not only some that have been assigned for example
+        if ($capabilities["viewnewexamscard"]) { // this means the user can see ALL new exams, not only some that have been assigned for example
             $this->new_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_NEW);
             foreach ($this->new_exams as $new_exam) {
                 $new_exam->skipandreleaseexam = $userid == intval($new_exam->creatorid);
@@ -56,15 +56,15 @@ class exams implements renderable, templatable {
             //    $this->capabilities["viewnewexams"] = true;
             //} //instead of this setting of the capability, we ALWAYS see the new exams, but sometimes there just is none
         }
-        if ($capabilities["viewcreatedexams"]) {
+        if ($capabilities["viewcreatedexamscard"]) {
             $this->created_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
         } else {
             $this->created_exams = block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
                     BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER,
                     BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
-            if ($this->created_exams) {
-                $this->capabilities["viewcreatedexams"] = true;
-            }
+            //if ($this->created_exams) {
+            //    $this->capabilities["viewcreatedexams"] = true;
+            //}
 
         }
         $this->created_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);

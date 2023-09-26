@@ -1,6 +1,6 @@
 <div id="exaquest">
 {{#capabilities}}
-    {{#viewnewexams}}
+    {{#viewnewexamscard}}
         {{#createnewexam}}
                 <a href="{{create_exam_link}}" type="submit" class="btn
             btn-secondary"
@@ -70,8 +70,8 @@
                     </tbody>
                 </table>
             </div>
-    {{/viewnewexams}}
-    {{#viewcreatedexams}}
+    {{/viewnewexamscard}}
+    {{#viewcreatedexamscard}}
             <div class="examcard">
                 <h4>{{#str}}created_exams, block_exaquest {{/str}}</h4>
                 <p>Diese Prüfungen wurden befüllt. Fachliche Begutachtung notwendig.</p>
@@ -109,8 +109,8 @@
                     </tbody>
                 </table>
             </div>
-    {{/viewcreatedexams}}
-    {{#viewreleasedexams}}
+    {{/viewcreatedexamscard}}
+    {{#viewreleasedexamscard}}
             <div class="examcard">
                 <h4>{{#str}}fachlich_released_exams, block_exaquest {{/str}}</h4>
                 <p>Diese Prüfungen wurden fachlich begutachtet.</p>
@@ -143,8 +143,8 @@
                     </tbody>
                 </table>
             </div>
-    {{/viewreleasedexams}}
-    {{#viewactiveexams}}
+    {{/viewreleasedexamscard}}
+    {{#viewactiveexamscard}}
 
 
             <div class="examcard">
@@ -172,9 +172,9 @@
                     </tbody>
                 </table>
             </div>
-    {{/viewactiveexams}}
+    {{/viewactiveexamscard}}
 
-    {{#viewfinishedexams}}
+    {{#viewfinishedexamscard}}
             <div class="examcard">
                 <h4>{{#str}}finished_exams, block_exaquest {{/str}}</h4>
                 <p>Abgeschlossene Prüfungen.</p>
@@ -222,9 +222,9 @@
                     </tbody>
                 </table>
             </div>
-    {{/viewfinishedexams}}
+    {{/viewfinishedexamscard}}
 
-    {{#viewgradesreleasedexams}}
+    {{#viewgradesreleasedexamscard}}
             <div class="examcard">
                 <h4>{{#str}}exams_grades_released, block_exaquest {{/str}}</h4>
                 <table>
@@ -249,6 +249,6 @@
                 </table>
             </div>
         </div>
-    {{/viewgradesreleasedexams}}
+    {{/viewgradesreleasedexamscard}}
 {{/capabilities}}
 

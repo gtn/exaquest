@@ -944,12 +944,12 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewnewexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewcreatedexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewreleasedexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewactiveexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewnewexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewcreatedexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewreleasedexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewactiveexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewfinishedexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewgradesreleasedexamscard', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:doformalreviewexam', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungskoordination'])) {
@@ -992,14 +992,12 @@ function block_exaquest_set_up_roles() {
     //assign_capability('block/exaquest:viewquestionstorelease', CAP_ALLOW, $roleid, $context); only modulverantwortlicher
     //assign_capability('block/exaquest:viewquestionstorelease', CAP_PROHIBIT, $roleid, $context);
 
-    assign_capability('block/exaquest:viewnewexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewallnewexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewcreatedexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewreleasedexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewactiveexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewallfinishedexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewnewexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewcreatedexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewreleasedexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewactiveexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewfinishedexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewgradesreleasedexamscard', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:releasequestion', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:requestnewexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
@@ -1042,7 +1040,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:addquestiontoexam', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewnewexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewnewexamscard', CAP_ALLOW, $roleid, $context);
     unassign_capability('block/exaquest:createexam', $roleid, $context->id); // accidentally added, should be deleted
 
     if (!$DB->record_exists('role', ['shortname' => 'modulverantwortlicher'])) {
@@ -1083,12 +1081,12 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewquestionstorelease', CAP_ALLOW, $roleid, $context);
 
     assign_capability('block/exaquest:viewquestionstoreview', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewnewexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewcreatedexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewreleasedexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewactiveexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewnewexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewcreatedexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewreleasedexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewactiveexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewfinishedexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewgradesreleasedexamscard', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:requestnewexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:dofachlichreview', CAP_ALLOW, $roleid, $context);
@@ -1188,8 +1186,8 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
 
-    assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewfinishedexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewgradesreleasedexamscard', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:checkexamsgrading', CAP_ALLOW, $roleid, $context);
 
@@ -1225,12 +1223,12 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:assignaddquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:createexam', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewnewexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewcreatedexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewreleasedexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewactiveexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewnewexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewcreatedexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewreleasedexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewactiveexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewfinishedexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewgradesreleasedexamscard', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:dofachlichreviewexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:checkexamsgrading', CAP_ALLOW, $roleid, $context);
 
@@ -1289,12 +1287,12 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
 
-    assign_capability('block/exaquest:viewnewexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewcreatedexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewreleasedexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewactiveexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewfinishedexams', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewgradesreleasedexams', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewnewexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewcreatedexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewreleasedexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewactiveexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewfinishedexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewgradesreleasedexamscard', CAP_ALLOW, $roleid, $context);
 
     // ---
     if (!$DB->record_exists('role', ['shortname' => 'fragenerstellerlight'])) {
