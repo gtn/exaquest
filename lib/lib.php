@@ -2132,6 +2132,10 @@ function block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quiz
     return $fragefaecher;
 }
 
+function block_exaquest_get_current_questioncount_for_category_and_quizid($quizid, $categoryid){
+
+}
+
 function block_exaquest_get_assigned_fachlicherpruefer($quizid) {
     global $DB;
     $sql = 'SELECT qa.assigneeid
@@ -2287,7 +2291,7 @@ function block_exaquest_check_if_question_contains_categories($questionid) {
     $query = "('" . implode("','", $categoryoptionidarray) . "')";
 
     $categoryoptions = $DB->get_records_sql("SELECT eqc.id, eqc.categoryname, eqc.categorytype
-                                    FROM {block_exaquestcategories} eqc
+                                    FROM {" . BLOCK_EXAQUEST_DB_CATEGORIES . "} eqc
                                    WHERE eqc.deleted = 0
                                        AND eqc.id IN " . $query);
 

@@ -43,13 +43,13 @@ echo $output->header($context, $courseid, get_string('exams_overview', 'block_ex
 
 //edit name of category
 if( $action == "edit"){
-    $currcat = $DB->get_records("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "deleted" => 0));
+    $currcat = $DB->get_records(BLOCK_EXAQUEST_DB_CATEGORIES, array("coursecategoryid" => $COURSE->category, "deleted" => 0));
     foreach($currcat as $cat){
         if(strcmp($editedName[intval($cat->id)], $cat->categoryname)){
             $obj = new stdClass();
             $obj->categoryname = $editedName[$cat->id];
             $obj->id = $cat->id;
-            $DB->update_record("block_exaquestcategories", $obj);
+            $DB->update_record(BLOCK_EXAQUEST_DB_CATEGORIES, $obj);
             break;
         }
     }
@@ -60,7 +60,7 @@ if( $action == "delete"){
     $obj = new stdClass();
     $obj->deleted = 1;
     $obj->id = $deleteid;
-    $DB->update_record("block_exaquestcategories", $obj);
+    $DB->update_record(BLOCK_EXAQUEST_DB_CATEGORIES, $obj);
 
     $cat = get_question_category_and_context_of_course($courseid)[0];
 // sql selects the newest version of the question for questioncategory and gets the each question which has this category assigned so these questions can be blocked
@@ -87,8 +87,8 @@ if( $action == "delete"){
 }
 // add new category
 if( $action == "add") {
-    if(! $DB->record_exists("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $addcategory, "categorytype"=> $categorytype))) {
-        $DB->insert_record("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "categoryname" => $addcategory, "categorytype" => $categorytype));
+    if(! $DB->record_exists(BLOCK_EXAQUEST_DB_CATEGORIES, array("coursecategoryid" => $COURSE->category, "categoryname" => $addcategory, "categorytype"=> $categorytype))) {
+        $DB->insert_record(BLOCK_EXAQUEST_DB_CATEGORIES, array("coursecategoryid" => $COURSE->category, "categoryname" => $addcategory, "categorytype" => $categorytype));
     }
 }
 

@@ -117,7 +117,7 @@ class exams implements renderable, templatable {
 
         $data->go_to_exam_questionbank = new moodle_url('/blocks/exaquest/exam_questionbank.php',
                 array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1]));
-        $data->got_to_exam_view = new moodle_url('/blocks/exaquest/finished_exam_questionbank.php',
+        $data->go_to_exam_view = new moodle_url('/blocks/exaquest/finished_exam_questionbank.php',
                 array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1]));
         $data->go_to_exam_questionbank = $data->go_to_exam_questionbank->raw_out(false);
         if ($this->new_exams) {

@@ -28,7 +28,6 @@ use core_question\local\bank\column_base;
 
 class category_options extends column_base {
 
-
     public function get_title(): string {
         return get_string('category_options', 'block_exaquest');
 
@@ -38,8 +37,7 @@ class category_options extends column_base {
         return 'categoryoptions';
     }
 
-    protected function display_content($question, $rowclasses)
-    {
+    protected function display_content($question, $rowclasses) {
 
         $quizid = optional_param('quizid', null, PARAM_INT);
 
@@ -51,18 +49,18 @@ class category_options extends column_base {
                                    WHERE q.id = ?", array($question->id));
 
         $categoryoptionidarray = array();
-        foreach($categoryoptionids as $categoryoptionid){
-            $mrg = explode(',',$categoryoptionid->value);
+        foreach ($categoryoptionids as $categoryoptionid) {
+            $mrg = explode(',', $categoryoptionid->value);
             $categoryoptionidarray = array_merge($categoryoptionidarray, $mrg);
         }
-        $query = "('". implode("','", $categoryoptionidarray) . "')";
+        $query = "('" . implode("','", $categoryoptionidarray) . "')";
 
         $categoryoptions = $DB->get_records_sql("SELECT eqc.id, eqc.categoryname, eqc.categorytype
-                                    FROM {block_exaquestcategories} eqc
-                                   WHERE eqc.id IN ". $query);
+                                    FROM {" . BLOCK_EXAQUEST_DB_CATEGORIES . "} eqc
+                                   WHERE eqc.id IN " . $query);
 
         $options = array();
-        foreach($categoryoptions as $categoryoption){
+        foreach ($categoryoptions as $categoryoption) {
             $options[$categoryoption->categorytype][] = $categoryoption->categoryname;
         }
 
@@ -75,32 +73,29 @@ class category_options extends column_base {
         $html = '<div class="container">
   <div class="row">
     <div class="col-sm-6 bg-secondary text-white rounded">
-    '.implode(' ', $options[0]).'
+    ' . implode(' ', $options[0]) . '
     </div>
     <div class="col-sm-6 bg-primary text-white rounded">
-      '.implode(' ', $options[1]).'
+      ' . implode(' ', $options[1]) . '
     </div>
   </div>
   <div class="row">
     <div class="col-sm-6 bg-success text-white rounded">
-      '.implode(' ', $options[2]).'
+      ' . implode(' ', $options[2]) . '
     </div>
     <div class="col-sm-6 bg-danger text-white rounded">
-      '.implode(' ', $options[3]).'
+      ' . implode(' ', $options[3]) . '
     </div>
   </div>
 </div>';
-echo $html;
+        echo $html;
         //echo '<div class="p-3 mb-2 bg-danger text-center text-white"></div>';
 
-
-
-
-
     }
+
     public function get_extra_joins(): array {
         return ['qref' => 'LEFT JOIN {question_references} qref ON qbe.id = qref.questionbankentryid',
-            'qusl' => 'LEFT JOIN {quiz_slots} qusl ON qref.itemid = qusl.id',
-            'cfd' => 'LEFT JOIN {customfield_data} cfd ON q.id = cfd.instanceid'];
+                'qusl' => 'LEFT JOIN {quiz_slots} qusl ON qref.itemid = qusl.id',
+                'cfd' => 'LEFT JOIN {customfield_data} cfd ON q.id = cfd.instanceid'];
     }
 }

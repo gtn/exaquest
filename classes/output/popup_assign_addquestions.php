@@ -17,6 +17,29 @@ class popup_assign_addquestions implements renderable, templatable {
         $this->quizid = $quizid;
         // get all pmw and fp that have already been assigned to add questions to this quiz
         $this->assigned_persons = block_exaquest_get_assigned_persons_by_quizid_and_assigntype($quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
+
+
+        $categorys_required_counts = block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid);
+        $categorys_current_counts = [];
+
+        foreach ($categorys_required_counts as $category) {
+            $categorys_current_counts[] = block_exaquest_get_current_questioncount_for_category_and_quizid($quizid, $category->id);
+        }
+
+
+        //$content = array('', '', '', '');
+        //foreach ($options as $key => $option) {
+        //    foreach ($option as $categoryid => $name) {
+        //        if ($key == BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH) {
+        //            $content[$key] .= '<div class="col-lg-12"><span>' . $name . ': ' . $categoryoptionidcount[$categoryid] .
+        //                    ' von '. $categorys_required_counts[$categoryid]->questioncount . '</span></div>';
+        //        } else {
+        //            $content[$key] .= '<div class="col-lg-12"><span>' . $name . ': ' . $categoryoptionidcount[$categoryid] .
+        //                    '</span></div>';
+        //        }
+        //    }
+        //}
+
     }
 
     /**

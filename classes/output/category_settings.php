@@ -27,7 +27,7 @@ class category_settings implements renderable, templatable {
         $this->capabilities = $capabilities;
         $this->userid = $userid;
         // get all categories to display
-        $records = $DB->get_records("block_exaquestcategories", array("coursecategoryid" => $COURSE->category, "deleted" => 0), 'categoryname');
+        $records = $DB->get_records(BLOCK_EXAQUEST_DB_CATEGORIES, array("coursecategoryid" => $COURSE->category, "deleted" => 0), 'categoryname');
         $categories = array();
         foreach($records as $key => $record){
                 $categories[$record->categorytype][] = $record;

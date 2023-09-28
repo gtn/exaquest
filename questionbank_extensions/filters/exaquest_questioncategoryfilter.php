@@ -134,7 +134,7 @@ class exaquest_questioncategoryfilter extends condition {
         $html =
             '<div class="form-group row"><label class="col-sm-2 col-form-label">Select Fragencharakter:</label><div class="col-sm-10"><select class="form-control select searchoptions" name="fragencharakter">';
         $html .= '<option value="-1"></option>';
-        $qcats = $DB->get_records("block_exaquestcategories", array("coursecategoryid" => $COURSE->category));
+        $qcats = $DB->get_records(BLOCK_EXAQUEST_DB_CATEGORIES, array("coursecategoryid" => $COURSE->category));
         $questcats = [];
         if ($qcats) {
             foreach ($qcats as $qcat) {

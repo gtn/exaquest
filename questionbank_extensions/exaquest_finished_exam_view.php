@@ -70,7 +70,7 @@ class exaquest_finished_exam_view extends exaquest_exam_view {
         $query = "('" . implode("','", $categoryoptionidkeys) . "')";
         // after creating query it retrieves all categories which are contained in any of the questions
         $categoryoptions = $DB->get_records_sql("SELECT eqc.id, eqc.categoryname, eqc.categorytype
-                                    FROM {block_exaquestcategories} eqc
+                                    FROM {" . BLOCK_EXAQUEST_DB_CATEGORIES . "} eqc
                                    WHERE eqc.id IN " . $query);
 
         $options = array();
