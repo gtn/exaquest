@@ -17,45 +17,45 @@ class exams implements renderable, templatable {
     public function __construct($userid, $courseid, $capabilities) {
         global $DB, $COURSE;
 
+        $this->fachlich_released_exams = [];
+        $this->formal_released_exams = [];
+        $this->active_exams = [];
+        $this->finished_exams = [];
+        $this->grading_released_exams = [];
+
         $this->courseid = $courseid;
         //$this->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($courseid); // coursecategoryid does not make sense here: use courseid instead
         $this->capabilities = $capabilities;
         $this->userid = $userid;
         //$this->exams = $DB->get_records("quiz", array("course" => $COURSE->id));
         $this->capabilities["createnewexam"] = has_capability('mod/quiz:addinstance', \context_course::instance($COURSE->id));
-        if ($capabilities["viewnewexamscard"]) { // this means the user can see ALL new exams, not only some that have been assigned for example
+        if ($capabilities["viewnewexamscard"]) {
             $this->new_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_NEW);
-            foreach ($this->new_exams as $new_exam) {
-                $new_exam->skipandreleaseexam = $userid == intval($new_exam->creatorid);
+            if ($capabilities["skipandreleaseexams"]) {
+                foreach ($this->new_exams as $new_exam) {
+                    $new_exam->skipandreleaseexam = $userid == intval($new_exam->creatorid);
+                }
             }
-        } else if ($capabilities["addquestiontoexam"]) {
-            // new exams can only be seen by PK and Mover, except if you are specifically assigned to an exam, e.g. as a FP or PMW
-            // ==> give the viewnewexams capability to all users who are assigned to an exam, but filter the newexams according to users role
-            $addquestionsassignments = block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
-                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS,
-                    BLOCK_EXAQUEST_QUIZSTATUS_NEW);
-            foreach ($addquestionsassignments as $addquestionsassignment) {
-                $addquestionsassignment->sendexamtoreview = true;
-            }
-            $this->new_exams = $addquestionsassignments;
+            if ($capabilities["addquestiontoexam"]) {
+                // new exams can only be seen by PK and Mover, except if you are specifically assigned to an exam, e.g. as a FP or PMW
+                // ==> give the viewnewexams capability to all users who are assigned to an exam, but filter the newexams according to users role
+                $addquestionsassignments = block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
+                        BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS,
+                        BLOCK_EXAQUEST_QUIZSTATUS_NEW);
 
-            $fpexams = block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
-                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER, BLOCK_EXAQUEST_QUIZSTATUS_NEW);
-            // these are the exams for this FP ==> add the button for fachlich releasing
-            foreach ($fpexams as $fpexam) {
-                $fpexam->fachlichreleaseexam = true;
+                // update the exams that have the addquestionassignment to have the sendexamtoreview property set to true
+                foreach ($addquestionsassignments as $addquestionsassignment) {
+                    $this->new_exams[$addquestionsassignment->quizid]->sendexamtoreview = true;
+                }
+                $fpexams = block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
+                        BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER, BLOCK_EXAQUEST_QUIZSTATUS_NEW);
+                // these are the exams for this FP ==> add the button for fachlich releasing
+                foreach ($fpexams as $fpexam) {
+                    $this->new_exams[$addquestionsassignment->quizid]->fachlichreleaseexam = true;
+                }
             }
-            // add the exams that have been assigned to the FP when creating the exam ( BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER)
-            $this->new_exams = array_merge($this->new_exams, $fpexams);
-
-            // $this->new_exams is now an array filled with sdtClass objects
-            // filter new_exams so that every quizid is only once in the array (quizid is a property of the objects)
-            // it could otherwise happen, that a quiz is shown twice, because e.g. the fp is assigned as fp and also for adding questions
-            $this->new_exams = array_unique($this->new_exams, SORT_REGULAR);
-            //if ($this->new_exams) {
-            //    $this->capabilities["viewnewexams"] = true;
-            //} //instead of this setting of the capability, we ALWAYS see the new exams, but sometimes there just is none
         }
+
         if ($capabilities["viewcreatedexamscard"]) {
             $this->created_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
         } else {
@@ -74,23 +74,27 @@ class exams implements renderable, templatable {
         //    block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_FORMAL_RELEASED);
         $this->active_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE);
 
-        $finished_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_FINISHED);
-        $exams_to_check_grading = block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid,
-                BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
-        foreach ($exams_to_check_grading as $exam_to_check_grading) {
-            $exam_to_check_grading->mark_check_exam_grading_request_as_done = true;
-            // remove it from the finished exams, since it is already in the exams_to_check_grading array
-            foreach ($finished_exams as $key => $finished_exam) {
-                if ($finished_exam->quizid == $exam_to_check_grading->quizid) {
-                    unset($finished_exams[$key]);
+        if ($capabilities["viewfinishedexamscard"]) {
+            $finished_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_FINISHED);
+            $exams_to_check_grading = block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid,
+                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
+            foreach ($exams_to_check_grading as $exam_to_check_grading) {
+                $exam_to_check_grading->mark_check_exam_grading_request_as_done = true;
+                // remove it from the finished exams, since it is already in the exams_to_check_grading array
+                foreach ($finished_exams as $key => $finished_exam) {
+                    if ($finished_exam->quizid == $exam_to_check_grading->quizid) {
+                        unset($finished_exams[$key]);
+                    }
                 }
             }
+            // combine finished_exams and exams_to_check_grading to one array,
+            $this->finished_exams = array_merge($finished_exams, $exams_to_check_grading);
         }
-        // combine finished_exams and exams_to_check_grading to one array,
-        $this->finished_exams = array_merge($finished_exams, $exams_to_check_grading);
 
-        $this->grading_released_exams =
-                block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED);
+        if ($capabilities["viegradingreleasedexams"]) {
+            $this->grading_released_exams =
+                    block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED);
+        }
 
         $this->add_link_to_quiz($this->created_exams);
         $this->add_link_to_quiz($this->fachlich_released_exams);

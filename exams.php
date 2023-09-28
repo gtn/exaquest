@@ -89,7 +89,6 @@ $capabilities["viewreleasedexamscard"] = is_enrolled($context, $USER, "block/exa
 $capabilities["viewactiveexamscard"] = is_enrolled($context, $USER, "block/exaquest:viewactiveexamscard");
 $capabilities["viewfinishedexamscard"] = is_enrolled($context, $USER, "block/exaquest:viewfinishedexamscard");
 $capabilities["viewgradesreleasedexamscard"] = is_enrolled($context, $USER, "block/exaquest:viewgradesreleasedexamscard");
-$capabilities["viewgradesreleasedexamscard"] = is_enrolled($context, $USER, "block/exaquest:viewgradesreleasedexamscard");
 $capabilities["addquestiontoexam"] = has_capability('block/exaquest:addquestiontoexam',
         $context); // has_capability actually makes more sense than is_enrolled, even though the outcome is the same
 $capabilities["assignaddquestions"] = has_capability('block/exaquest:assignaddquestions', $context);
@@ -98,6 +97,7 @@ $capabilities["setquestioncount"] = has_capability('block/exaquest:setquestionco
 $capabilities["doformalreviewexam"] = has_capability('block/exaquest:doformalreviewexam', $context);
 $capabilities["dofachlichreviewexam"] = has_capability('block/exaquest:dofachlichreviewexam', $context);
 $capabilities["assigncheckexamgrading"] = has_capability("block/exaquest:assigncheckexamgrading", $context, $USER);
+$capabilities["skipandreleaseexam"] = has_capability("block/exaquest:skipandreleaseexam", $context, $USER);
 
 $exams = new \block_exaquest\output\exams($USER->id, $courseid, $capabilities);
 echo $output->render($exams);

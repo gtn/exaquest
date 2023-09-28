@@ -1009,6 +1009,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:changeowner', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:dofachlichreviewexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:assigncheckexamgrading', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:skipandreleaseexam', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
         $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '', 'manager');
@@ -1097,6 +1098,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:createexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:setquestioncount', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:changeowner', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:skipandreleaseexam', CAP_ALLOW, $roleid, $context);
     unassign_capability('mod/quiz:addinstance', $roleid, $context->id);
 
     if (!$DB->record_exists('role', ['shortname' => 'fragenersteller'])) {
@@ -2132,8 +2134,57 @@ function block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quiz
     return $fragefaecher;
 }
 
-function block_exaquest_get_current_questioncount_for_category_and_quizid($quizid, $categoryid){
+//function block_exaquest_get_current_questioncount_for_category_and_quizid($quizid, $categoryid){
+//
+//}
 
+function block_exaquest_get_category_names_by_ids($categoryoptionidkeys, $onlyfragefaecher = false) {
+    global $DB;
+    $query = "('" . implode("','", $categoryoptionidkeys) . "')";
+    if ($onlyfragefaecher) {
+        $categoryoptions = $DB->get_records_sql("SELECT eqc.id, eqc.categoryname, eqc.categorytype
+                                    FROM {" . BLOCK_EXAQUEST_DB_CATEGORIES . "} eqc
+                                   WHERE eqc.categorytype = ". BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH ." AND eqc.id IN " . $query);
+    } else {
+        // after creating query it retrieves all categories which are contained in any of the questions
+        $categoryoptions = $DB->get_records_sql("SELECT eqc.id, eqc.categoryname, eqc.categorytype
+                                    FROM {" . BLOCK_EXAQUEST_DB_CATEGORIES . "} eqc
+                                   WHERE eqc.id IN " . $query);
+    }
+    return $categoryoptions;
+}
+
+// returns an array with key: categoryid and value: count of how many questions in this quiz have this category
+// the categoryid is the id of the exaquestcategories table. THe value is the count of how many questions in this quiz have this category
+function block_exaquest_get_category_question_count($quizid){
+    global $DB;
+    // sql retrieves all categories for each questions inside this view
+    $customfieldvalues = $DB->get_records_sql("SELECT *
+                              FROM {quiz_slots} qusl
+                              JOIN {question_references} qref ON qusl.id = qref.itemid
+                              JOIN {question_versions} qv ON qv.questionbankentryid = qref.questionbankentryid
+                              JOIN {customfield_data} cfd ON cfd.instanceid = qv.questionid
+                              WHERE qv.version = (SELECT Max(v.version)
+                                                    FROM   {question_versions} v
+                                                    JOIN {question_bank_entries} be
+                                                    ON be.id = v.questionbankentryid
+                                                    WHERE  be.id = qref.questionbankentryid) AND qusl.quizid=" . $quizid);
+
+    $categoryoptionidarray = array();
+    foreach ($customfieldvalues as $categoryoptionid) {
+        $mrg = explode(',', $categoryoptionid->value);
+        $categoryoptionidarray = array_merge($categoryoptionidarray, $mrg);
+    }
+    // counts how often each category was used in each question
+    $categoryoptionidcount = array();
+    foreach ($categoryoptionidarray as $categoryoptionid) {
+        if(array_key_exists($categoryoptionid, $categoryoptionidcount)){
+            $categoryoptionidcount[$categoryoptionid] += 1;
+        }else{
+            $categoryoptionidcount[$categoryoptionid] = 1;
+        }
+    }
+    return $categoryoptionidcount;
 }
 
 function block_exaquest_get_assigned_fachlicherpruefer($quizid) {

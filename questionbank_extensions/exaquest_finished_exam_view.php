@@ -36,48 +36,13 @@ class exaquest_finished_exam_view extends exaquest_exam_view {
         if ($quizid != null) {
             $quizname = $DB->get_field("quiz", "name", array("id" => $quizid));
         }
-        // sql retrieves all categories for each questions inside this view
-        $coustomfieldvalues = $DB->get_records_sql("SELECT *
-                              FROM {quiz_slots} qusl
-                              JOIN {question_references} qref ON qusl.id = qref.itemid
-                              JOIN {question_versions} qv ON qv.questionbankentryid = qref.questionbankentryid
-                              JOIN {customfield_data} cfd ON cfd.instanceid = qv.questionid
-                              WHERE qv.version = (SELECT Max(v.version)
-                                                    FROM   {question_versions} v
-                                                    JOIN {question_bank_entries} be
-                                                    ON be.id = v.questionbankentryid
-                                                    WHERE  be.id = qref.questionbankentryid) AND qusl.quizid=" . $quizid);
-
-        $categoryoptionidarray = array();
-        foreach ($coustomfieldvalues as $categoryoptionid) {
-            $mrg = explode(',', $categoryoptionid->value);
-            $categoryoptionidarray = array_merge($categoryoptionidarray, $mrg);
-        }
-        // counts how often each category was used in each question
-        $categoryoptionidcount = array();
-        foreach ($categoryoptionidarray as $categoryoptionid) {
-            if(array_key_exists($categoryoptionid, $categoryoptionidcount)){
-                $categoryoptionidcount[$categoryoptionid] += 1;
-            }else{
-                $categoryoptionidcount[$categoryoptionid] = 1;
-            }
-        }
-        $categoryoptionidkeys = array();
-        foreach ($categoryoptionidcount as $key => $categoryoptionidcnt) {
-            $categoryoptionidkeys[] = $key;
-        }
-
-        $query = "('" . implode("','", $categoryoptionidkeys) . "')";
-        // after creating query it retrieves all categories which are contained in any of the questions
-        $categoryoptions = $DB->get_records_sql("SELECT eqc.id, eqc.categoryname, eqc.categorytype
-                                    FROM {" . BLOCK_EXAQUEST_DB_CATEGORIES . "} eqc
-                                   WHERE eqc.id IN " . $query);
-
+        $categoryoptionidcount = block_exaquest_get_category_question_count($quizid);
+        $categoryoptionidkeys = array_keys($categoryoptionidcount);
+        $categoryoptions = block_exaquest_get_category_names_by_ids($categoryoptionidkeys);
         $options = array();
         foreach ($categoryoptions as $categoryoption) {
             $options[$categoryoption->categorytype][$categoryoption->id] = $categoryoption->categoryname;
         }
-
         $categorys_required_counts = block_exaquest_get_fragefaecher_by_courseid_and_quizid($COURSE->id, $quizid);
 
         $content = array('', '', '', '');
@@ -95,8 +60,6 @@ class exaquest_finished_exam_view extends exaquest_exam_view {
         echo $OUTPUT->heading(get_string('questionbank_selected_quiz', 'block_exaquest') . '' . $quizname, 2);
 
         // get the questioncounts from questionqcount table for this quiz
-
-
         $html = '<div class="container-fluid">
                     <div class="row">
                          <div class="col-lg-3">

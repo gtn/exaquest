@@ -28,6 +28,14 @@
                                 {{/assigned_persons}}
                             </ul>
                         </list>
+                        <list>
+                            <ul>
+                                Bereits zugewiesene Fragen pro Fragefach:
+                                {{#fragefaecher}}
+                                    <li>{{categoryname}}: {{currentquestioncount}} von {{requiredquestioncount}}</li>
+                                {{/fragefaecher}}
+                            </ul>
+                        </list>
                     </div>
 
                     <div class="form-group">{{#str}}

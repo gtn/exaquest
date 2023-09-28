@@ -20,26 +20,13 @@ class popup_assign_addquestions implements renderable, templatable {
 
 
         $categorys_required_counts = block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid);
-        $categorys_current_counts = [];
-
-        foreach ($categorys_required_counts as $category) {
-            $categorys_current_counts[] = block_exaquest_get_current_questioncount_for_category_and_quizid($quizid, $category->id);
+        $categorys_current_counts = block_exaquest_get_category_question_count($quizid);
+        $categoryoptionidkeys = array_keys($categorys_current_counts);
+        $this->fragefaecher = block_exaquest_get_category_names_by_ids($categoryoptionidkeys, true);
+        foreach($this->fragefaecher as $key => $option){
+            $this->fragefaecher[$key]->requiredquestioncount = $categorys_required_counts[$key]->questioncount;
+            $this->fragefaecher[$key]->currentquestioncount = $categorys_current_counts[$key];
         }
-
-
-        //$content = array('', '', '', '');
-        //foreach ($options as $key => $option) {
-        //    foreach ($option as $categoryid => $name) {
-        //        if ($key == BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH) {
-        //            $content[$key] .= '<div class="col-lg-12"><span>' . $name . ': ' . $categoryoptionidcount[$categoryid] .
-        //                    ' von '. $categorys_required_counts[$categoryid]->questioncount . '</span></div>';
-        //        } else {
-        //            $content[$key] .= '<div class="col-lg-12"><span>' . $name . ': ' . $categoryoptionidcount[$categoryid] .
-        //                    '</span></div>';
-        //        }
-        //    }
-        //}
-
     }
 
     /**
@@ -48,13 +35,14 @@ class popup_assign_addquestions implements renderable, templatable {
      * @return stdClass
      */
     public function export_for_template(renderer_base $output) {
-        global $PAGE, $COURSE, $CFG, $OUTPUT;
+        global $PAGE, $COURSE;
         $data = new stdClass();
 
         $data->pmw = $this->pmw;
         $data->fp = $this->fp;
         $data->quizid = $this->quizid;
         $data->assigned_persons = array_values($this->assigned_persons); // ARRAY_VALUES is needed, so the array is not indexed by the id of the person. Otherwise in mustache they are not shown
+        $data->fragefaecher = array_values($this->fragefaecher); // ARRAY_VALUES is needed, so the array is not indexed by the id of the person. Otherwise in mustache they are not shown
 
         //// create the fp autocomplete field with the help of an mform
         //$mform = new autofill_helper_form($data->fp);
