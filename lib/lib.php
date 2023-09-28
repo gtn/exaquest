@@ -2144,6 +2144,19 @@ function block_exaquest_get_assigned_fachlicherpruefer($quizid) {
     return $fachlicherpreufer;
 }
 
+function block_exaquest_get_assigned_persons_by_quizid_and_assigntype($quizid, $assigntype=BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS) {
+    global $DB;
+    $sql = 'SELECT qa.assigneeid, u.*
+			FROM {' . BLOCK_EXAQUEST_DB_QUIZASSIGN . '} qa
+			JOIN {user} u ON u.id = qa.assigneeid
+			WHERE qa.quizid = :quizid
+			AND qa.assigntype = :assigntype';
+
+    $assignedpersons = $DB->get_records_sql($sql,
+            array('quizid' => $quizid, 'assigntype' => $assigntype));
+    return $assignedpersons;
+}
+
 function block_exaquest_get_fragefaecher_by_courseid($courseid) {
     global $DB;
 

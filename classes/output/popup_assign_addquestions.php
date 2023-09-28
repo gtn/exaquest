@@ -15,6 +15,8 @@ class popup_assign_addquestions implements renderable, templatable {
         $this->pmw = block_exaquest_get_pmw_by_courseid($courseid);
         $this->fp = block_exaquest_get_fachlichepruefer_by_courseid($courseid);
         $this->quizid = $quizid;
+        // get all pmw and fp that have already been assigned to add questions to this quiz
+        $this->assigned_persons = block_exaquest_get_assigned_persons_by_quizid_and_assigntype($quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
     }
 
     /**
@@ -29,6 +31,7 @@ class popup_assign_addquestions implements renderable, templatable {
         $data->pmw = $this->pmw;
         $data->fp = $this->fp;
         $data->quizid = $this->quizid;
+        $data->assigned_persons = array_values($this->assigned_persons); // ARRAY_VALUES is needed, so the array is not indexed by the id of the person. Otherwise in mustache they are not shown
 
         //// create the fp autocomplete field with the help of an mform
         //$mform = new autofill_helper_form($data->fp);

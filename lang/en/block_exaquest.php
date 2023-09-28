@@ -40,8 +40,8 @@ $string['set_quizquestioncount'] = 'Request';
 $string['mark_as_done'] = 'Mark as done';
 $string['mark_selected_as_done_button'] = 'Mark selected requests as done';
 
-$string['assign_addquestions'] = 'Fragen zuweisung anfordern';
-$string['assign_addquestions_label'] = 'Fragen zuweisung anfordern von ...';
+$string['assign_addquestions'] = 'Fragenzuweisung anfordern';
+$string['assign_addquestions_label'] = 'Fragenzuweisung anfordern von ...';
 $string['assign_addquestions_comment_placeholder'] = 'Kommentar an die ausgewählten Personen';
 
 // Messages

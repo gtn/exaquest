@@ -151,13 +151,6 @@ class exams implements renderable, templatable {
         //}
         //$data->popup_assign_addquestions = $this->popup_assign_addquestions->export_for_template($output);
 
-        foreach ($data->new_exams as $new_exam) {
-            $popup = new popup_assign_addquestions($this->courseid, $new_exam->quizid);
-            $new_exam->popup_assign_addquestions = $popup->export_for_template($output);
-            //$popup = new popup_setquizquestioncount($this->courseid, $new_exam->quizid);
-            //$new_exam->popup_setquizquestioncount = $popup->export_for_template($output);
-        }
-
         $data->courseid = $this->courseid;
 
         // TODO: later, now the check_exam_grading is more important
