@@ -2154,6 +2154,23 @@ function block_exaquest_get_category_names_by_ids($categoryoptionidkeys, $onlyfr
     return $categoryoptions;
 }
 
+function block_exaquest_get_missing_questions_count($quizid, $courseid){
+    $categorys_required_counts = block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid);
+    $categorys_current_counts = block_exaquest_get_category_question_count($quizid);
+    $categoryoptionidkeys = array_keys($categorys_required_counts);
+    $fragefaecher = block_exaquest_get_category_names_by_ids($categoryoptionidkeys, true);
+    $missingquestionscount = 0;
+    foreach($fragefaecher as $key => $option){
+        $fragefaecher[$key]->requiredquestioncount = $categorys_required_counts[$key]->questioncount;
+        $fragefaecher[$key]->currentquestioncount = $categorys_current_counts[$key] ? : 0;
+        if($fragefaecher[$key]->currentquestioncount < $fragefaecher[$key]->requiredquestioncount) {
+            $missingquestionscount += $fragefaecher[$key]->requiredquestioncount -
+                    $fragefaecher[$key]->currentquestioncount;
+        }
+    }
+    return $missingquestionscount;
+}
+
 // returns an array with key: categoryid and value: count of how many questions in this quiz have this category
 // the categoryid is the id of the exaquestcategories table. THe value is the count of how many questions in this quiz have this category
 function block_exaquest_get_category_question_count($quizid){

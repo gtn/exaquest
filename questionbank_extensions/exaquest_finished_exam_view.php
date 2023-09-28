@@ -39,21 +39,32 @@ class exaquest_finished_exam_view extends exaquest_exam_view {
         $categoryoptionidcount = block_exaquest_get_category_question_count($quizid);
         $categoryoptionidkeys = array_keys($categoryoptionidcount);
         $categoryoptions = block_exaquest_get_category_names_by_ids($categoryoptionidkeys);
-        $options = array();
+        $options = [];
         foreach ($categoryoptions as $categoryoption) {
             $options[$categoryoption->categorytype][$categoryoption->id] = $categoryoption->categoryname;
         }
         $categorys_required_counts = block_exaquest_get_fragefaecher_by_courseid_and_quizid($COURSE->id, $quizid);
 
+        // if there are no questions of a category, this category will now show up in the options. ==> add the required fragefaecher so they always show up
+        foreach ($categorys_required_counts as $cat_required) {
+            // first check if it is even an array, or if it is completely empty still
+            // then check, if for THIS specific cat there is already an entry in the array or not
+            if (!is_array($options[BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH]) ||
+                    !array_key_exists($cat_required->id, $options[BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH])) {
+                $options[BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH][$cat_required->id] = $cat_required->categoryname;
+            }
+        }
+
         $content = array('', '', '', '');
         foreach ($options as $key => $option) {
             foreach ($option as $categoryid => $name) {
                 if ($key == BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH) {
-                    $content[$key] .= '<div class="col-lg-12"><span>' . $name . ': ' . $categoryoptionidcount[$categoryid] .
-                        ' von '. $categorys_required_counts[$categoryid]->questioncount . '</span></div>';
+                    $qcount = $categoryoptionidcount[$categoryid] ?: 0;
+                    $content[$key] .= '<div class="col-lg-12"><span>' . $name . ': ' . $qcount .
+                            ' von ' . $categorys_required_counts[$categoryid]->questioncount . '</span></div>';
                 } else {
                     $content[$key] .= '<div class="col-lg-12"><span>' . $name . ': ' . $categoryoptionidcount[$categoryid] .
-                        '</span></div>';
+                            '</span></div>';
                 }
             }
         }
@@ -84,7 +95,7 @@ class exaquest_finished_exam_view extends exaquest_exam_view {
         $catAndCont = get_question_category_and_context_of_course();
         $courseid = $COURSE->id;
         $url = new moodle_url('/blocks/exaquest/similarity_comparison.php',
-            array("courseid" => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1], "examid" => $quizid));
+                array("courseid" => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1], "examid" => $quizid));
         $html .= '<br>';
         $html .= '<div class="container-fluid">
                     <div class="row">
@@ -100,19 +111,19 @@ class exaquest_finished_exam_view extends exaquest_exam_view {
     protected function wanted_columns(): array {
         $this->requiredcolumns = [];
         $excludefeatures = [
-            'question_usage_column',
-            'history_action_column',
-            'edit_menu_column',
-            'edit_action_column',
-            'copy_action_column',
-            'tags_action_column',
-            'export_xml_action_column',
-            'delete_action_column',
-            'question_status_column',
-            'version_number_column',
-            'change_status',
-            'add_to_quiz',
-            'usage_check_column'
+                'question_usage_column',
+                'history_action_column',
+                'edit_menu_column',
+                'edit_action_column',
+                'copy_action_column',
+                'tags_action_column',
+                'export_xml_action_column',
+                'delete_action_column',
+                'question_status_column',
+                'version_number_column',
+                'change_status',
+                'add_to_quiz',
+                'usage_check_column'
 
         ];
         $questionbankcolumns = $this->get_question_bank_plugins();
@@ -131,21 +142,21 @@ class exaquest_finished_exam_view extends exaquest_exam_view {
         $newpluginclasscolumns = [];
         //edited:
         $corequestionbankcolumns = [
-            'checkbox_column',
-            'question_type_column',
-            'question_name_idnumber_tags_column',
-            'edit_menu_column',
-            'edit_action_column',
-            'copy_action_column',
-            'tags_action_column',
-            'preview_action_column',
-            'history_action_column',
-            'delete_action_column',
-            'export_xml_action_column',
-            'question_status_column',
-            'version_number_column',
-            'creator_name_column',
-            'comment_count_column'
+                'checkbox_column',
+                'question_type_column',
+                'question_name_idnumber_tags_column',
+                'edit_menu_column',
+                'edit_action_column',
+                'copy_action_column',
+                'tags_action_column',
+                'preview_action_column',
+                'history_action_column',
+                'delete_action_column',
+                'export_xml_action_column',
+                'question_status_column',
+                'version_number_column',
+                'creator_name_column',
+                'comment_count_column'
         ];
         if (question_get_display_preference('qbshowtext', 0, PARAM_BOOL, new \moodle_url(''))) {
             $corequestionbankcolumns[] = 'question_text_row';
@@ -224,7 +235,7 @@ class exaquest_finished_exam_view extends exaquest_exam_view {
     }
 
     public function wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus = 0,
-        $fragencharakter = -1, $klassifikation = -1, $fragefach = -1, $lehrinhalt = -1): void {
+            $fragencharakter = -1, $klassifikation = -1, $fragefach = -1, $lehrinhalt = -1): void {
         global $CFG;
         list(, $contextid) = explode(',', $cat);
         $catcontext = \context::instance_by_id($contextid);
@@ -252,7 +263,7 @@ class exaquest_finished_exam_view extends exaquest_exam_view {
                 array_unshift($this->searchconditions, new \core_question\bank\search\in_quiz_filter($filterstatus));
                 //                array_unshift($this->searchconditions, new \core_question\bank\search\only_released_questions());
                 array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_category_condition(
-                    $cat, $recurse, $editcontexts, $this->baseurl, $this->course));
+                        $cat, $recurse, $editcontexts, $this->baseurl, $this->course));
 
             }
         }

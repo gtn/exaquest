@@ -21,12 +21,19 @@ class popup_assign_addquestions implements renderable, templatable {
 
         $categorys_required_counts = block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid);
         $categorys_current_counts = block_exaquest_get_category_question_count($quizid);
-        $categoryoptionidkeys = array_keys($categorys_current_counts);
+        $categoryoptionidkeys = array_keys($categorys_required_counts);
         $this->fragefaecher = block_exaquest_get_category_names_by_ids($categoryoptionidkeys, true);
+        $this->missingquestionscount = 0;
         foreach($this->fragefaecher as $key => $option){
             $this->fragefaecher[$key]->requiredquestioncount = $categorys_required_counts[$key]->questioncount;
-            $this->fragefaecher[$key]->currentquestioncount = $categorys_current_counts[$key];
+            $this->fragefaecher[$key]->currentquestioncount = $categorys_current_counts[$key] ? : 0;
+            //if($this->fragefaecher[$key]->currentquestioncount < $this->fragefaecher[$key]->requiredquestioncount) {
+            //    $this->missingquestionscount += $this->fragefaecher[$key]->requiredquestioncount -
+            //            $this->fragefaecher[$key]->currentquestioncount;
+            //}
         }
+
+
     }
 
     /**

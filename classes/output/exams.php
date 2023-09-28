@@ -51,23 +51,31 @@ class exams implements renderable, templatable {
                         BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER, BLOCK_EXAQUEST_QUIZSTATUS_NEW);
                 // these are the exams for this FP ==> add the button for fachlich releasing
                 foreach ($fpexams as $fpexam) {
-                    $this->new_exams[$addquestionsassignment->quizid]->fachlichreleaseexam = true;
+                    $this->new_exams[$fpexam->quizid]->fachlichreleaseexam = true;
+                    // add info if questions are missing
+                    $this->new_exams[$fpexam->quizid]->missingquestionscount =
+                            block_exaquest_get_missing_questions_count($fpexam->quizid, $courseid);
+                    // this is not perfectly performant. It queries a few things that get queried again if the popup_assign_addquestions is also created for this exam
+                    // this happens rarely though
                 }
             }
         }
 
         if ($capabilities["viewcreatedexamscard"]) {
             $this->created_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
-        } else {
-            $this->created_exams = block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
-                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER,
-                    BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
-            //if ($this->created_exams) {
-            //    $this->capabilities["viewcreatedexams"] = true;
-            //}
-
+            $fpexams = block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
+                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
+            // these are the exams for this FP ==> add the button for fachlich releasing
+            foreach ($fpexams as $fpexam) {
+                $this->created_exams[$fpexam->quizid]->fachlichreleaseexam = true;
+                // add info if questions are missing
+                $this->created_exams[$fpexam->quizid]->missingquestionscount =
+                        block_exaquest_get_missing_questions_count($fpexam->quizid, $courseid);
+                // this is not perfectly performant. It queries a few things that get queried again if the popup_assign_addquestions is also created for this exam
+                // this happens rarely though
+            }
         }
-        $this->created_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
+
         $this->fachlich_released_exams =
                 block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_FACHLICH_RELEASED);
         //$this->formal_released_exams =
