@@ -17,6 +17,8 @@ class exams implements renderable, templatable {
     public function __construct($userid, $courseid, $capabilities) {
         global $DB, $COURSE;
 
+        $this->new_exams = [];
+        $this->created_exams = [];
         $this->fachlich_released_exams = [];
         $this->formal_released_exams = [];
         $this->active_exams = [];
@@ -99,7 +101,7 @@ class exams implements renderable, templatable {
             $this->finished_exams = array_merge($finished_exams, $exams_to_check_grading);
         }
 
-        if ($capabilities["viegradingreleasedexams"]) {
+        if ($capabilities["viewgradesreleasedexamscard"]) {
             $this->grading_released_exams =
                     block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED);
         }
