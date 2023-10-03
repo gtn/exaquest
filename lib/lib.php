@@ -812,7 +812,7 @@ function block_exaquest_get_exams_for_me_to_create($coursecategoryid, $userid = 
  * @param $courseid
  * @return array
  */
-function block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid = 0, $assigntype) {
+function block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid, $assigntype) {
     global $DB, $USER;
 
     if (!$userid) {
@@ -840,7 +840,7 @@ function block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid = 0,
  * @param $courseid
  * @return array
  */
-function block_exaquest_get_assigned_exams_by_assigntype_count($courseid, $userid = 0, $assigntype) {
+function block_exaquest_get_assigned_exams_by_assigntype_count($courseid, $userid, $assigntype) {
     return count(block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid, $assigntype));
 }
 
@@ -913,15 +913,15 @@ function block_exaquest_set_up_roles() {
             'permissions' => 1,
             'archetype' => 0,
             'contextlevels' => 1,
-            'allowassign' => 1,
-            'allowoverride' => 1,
-            'allowswitch' => 1,
-            'allowview' => 1);
+            'allowassign' => 0,
+            'allowoverride' => 0,
+            'allowswitch' => 0,
+            'allowview' => 0);
 
     // is this the MUSSS?
     if (!$DB->record_exists('role', ['shortname' => 'admintechnpruefungsdurchf'])) {
         $roleid = create_role('admin./techn. Prüfungsdurchf.', 'admintechnpruefungsdurchf', '', 'manager');
-        $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
+        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // manager archetype
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
                 $options); // overwrites everything that is set in the options. The rest stays.
@@ -930,6 +930,9 @@ function block_exaquest_set_up_roles() {
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
+
+        // allow setting role at context level "course category"
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'admintechnpruefungsdurchf'])->id;
     }
@@ -954,7 +957,7 @@ function block_exaquest_set_up_roles() {
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungskoordination'])) {
         $roleid = create_role('Prüfungskoordination', 'pruefungskoordination', '', 'manager');
-        $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
+        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // manager archetype
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
                 $options); // overwrites everything that is set in the options. The rest stays.
@@ -963,6 +966,9 @@ function block_exaquest_set_up_roles() {
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
+
+        // allow setting role at context level "course category"
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'pruefungskoordination'])->id;
     }
@@ -1013,7 +1019,7 @@ function block_exaquest_set_up_roles() {
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
         $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '', 'manager');
-        $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
+        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // manager archetype
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
                 $options); // overwrites everything that is set in the options. The rest stays.
@@ -1022,6 +1028,9 @@ function block_exaquest_set_up_roles() {
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
+
+        // allow setting role at context level "course category"
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'pruefungsstudmis'])->id;
     }
@@ -1046,7 +1055,7 @@ function block_exaquest_set_up_roles() {
 
     if (!$DB->record_exists('role', ['shortname' => 'modulverantwortlicher'])) {
         $roleid = create_role('Modulverantwortlicher', 'modulverantwortlicher', '', 'manager');
-        $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
+        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // manager archetype
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
                 $options); // overwrites everything that is set in the options. The rest stays.
@@ -1055,6 +1064,9 @@ function block_exaquest_set_up_roles() {
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
+
+        // allow setting role at context level "course category"
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'modulverantwortlicher'])->id;
     }
@@ -1103,7 +1115,7 @@ function block_exaquest_set_up_roles() {
 
     if (!$DB->record_exists('role', ['shortname' => 'fragenersteller'])) {
         $roleid = create_role('Fragenersteller', 'fragenersteller', '', 'manager');
-        $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
+        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // manager archetype
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
                 $options); // overwrites everything that is set in the options. The rest stays.
@@ -1112,6 +1124,9 @@ function block_exaquest_set_up_roles() {
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
+
+        // allow setting role at context level "course category"
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'fragenersteller'])->id;
     }
@@ -1133,7 +1148,7 @@ function block_exaquest_set_up_roles() {
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlfragenreviewer'])) {
         $roleid = create_role('fachl. Fragenreviewer', 'fachlfragenreviewer', '', 'manager');
-        $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
+        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // manager archetype
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
                 $options); // overwrites everything that is set in the options. The rest stays.
@@ -1142,6 +1157,9 @@ function block_exaquest_set_up_roles() {
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
+
+        // allow setting role at context level "course category"
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'fachlfragenreviewer'])->id;
     }
@@ -1165,7 +1183,7 @@ function block_exaquest_set_up_roles() {
 
     if (!$DB->record_exists('role', ['shortname' => 'beurteilungsmitwirkende'])) {
         $roleid = create_role('Beurteilungsmitwirkende', 'beurteilungsmitwirkende', '', 'manager');
-        $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
+        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // manager archetype
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
                 $options); // overwrites everything that is set in the options. The rest stays.
@@ -1174,6 +1192,9 @@ function block_exaquest_set_up_roles() {
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
+
+        // allow setting role at context level "course category"
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'beurteilungsmitwirkende'])->id;
     }
@@ -1195,15 +1216,18 @@ function block_exaquest_set_up_roles() {
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlicherpruefer'])) {
         $roleid = create_role('fachlicher Prüfer', 'fachlicherpruefer', '', 'manager');
-        $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
+        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // manager archetype
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
                 $options); // overwrites everything that is set in the options. The rest stays.
-        $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
+        $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null. This would read the form data if done by the admin in the settings page
         $definitiontable->save_changes();
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
+
+        // allow setting role at context level "course category"
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'fachlicherpruefer'])->id;
     }
@@ -1236,7 +1260,7 @@ function block_exaquest_set_up_roles() {
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsmitwirkende'])) {
         $roleid = create_role('Prüfungsmitwirkende', 'pruefungsmitwirkende', '', 'manager');
-        $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
+        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // manager archetype
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
                 $options); // overwrites everything that is set in the options. The rest stays.
@@ -1245,6 +1269,9 @@ function block_exaquest_set_up_roles() {
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
+
+        // allow setting role at context level "course category"
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'pruefungsmitwirkende'])->id;
     }
@@ -1265,7 +1292,7 @@ function block_exaquest_set_up_roles() {
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlicherzweitpruefer'])) {
         $roleid = create_role('Fachlicher Zweitprüfer', 'fachlicherzweitpruefer', '', 'manager');
-        $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
+        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // manager archetype
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
                 $options); // overwrites everything that is set in the options. The rest stays.
@@ -1274,6 +1301,9 @@ function block_exaquest_set_up_roles() {
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
+
+        // allow setting role at context level "course category"
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'fachlicherzweitpruefer'])->id;
     }
@@ -1299,7 +1329,7 @@ function block_exaquest_set_up_roles() {
     // ---
     if (!$DB->record_exists('role', ['shortname' => 'fragenerstellerlight'])) {
         $roleid = create_role('Fragenerstellerlight', 'fragenerstellerlight', '', 'manager');
-        $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
+        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // manager archetype
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
                 $options); // overwrites everything that is set in the options. The rest stays.
@@ -1308,6 +1338,9 @@ function block_exaquest_set_up_roles() {
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
+
+        // allow setting role at context level "course category"
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'fragenerstellerlight'])->id;
     }
@@ -1330,7 +1363,7 @@ function block_exaquest_set_up_roles() {
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlfragenreviewerlight'])) {
         $roleid = create_role('fachl. Fragenreviewerlight', 'fachlfragenreviewerlight', '', 'manager');
-        $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
+        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // manager archetype
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
                 $options); // overwrites everything that is set in the options. The rest stays.
@@ -1339,6 +1372,9 @@ function block_exaquest_set_up_roles() {
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
+
+        // allow setting role at context level "course category"
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'fachlfragenreviewerlight'])->id;
     }
@@ -1362,7 +1398,7 @@ function block_exaquest_set_up_roles() {
 
     if (!$DB->record_exists('role', ['shortname' => 'sekretariat'])) {
         $roleid = create_role('Sekretariat', 'sekretariat', '', 'manager');
-        $archetype = $DB->get_record('role', ['shortname' => 'manager'])->id; // manager archetype
+        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // manager archetype
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
                 $options); // overwrites everything that is set in the options. The rest stays.
@@ -1371,6 +1407,9 @@ function block_exaquest_set_up_roles() {
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
+
+        // allow setting role at context level "course category"
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'sekretariat'])->id;
     }
@@ -1399,7 +1438,95 @@ function block_exaquest_set_up_roles() {
     //assign_capability('block/custom_block:custom_capability', CAP_ALLOW,
     //    $roleid, $context);
     //}
+    // now that every role exists:
+    // set the allowassign, allowoverride, allowswitch and allowview for pk, mover and fp
+    // get all roleids that are allowed to assign
+    // for pk: allow every role
+    $allowedroles = array();
+    $allowedroles[] = $DB->get_record('role', ['shortname' => 'admintechnpruefungsdurchf'])->id;
+    $allowedroles[] = $DB->get_record('role', ['shortname' => 'pruefungskoordination'])->id;
+    $allowedroles[] = $DB->get_record('role', ['shortname' => 'pruefungsstudmis'])->id;
+    $allowedroles[] = $DB->get_record('role', ['shortname' => 'modulverantwortlicher'])->id;
+    $allowedroles[] = $DB->get_record('role', ['shortname' => 'fragenersteller'])->id;
+    $allowedroles[] = $DB->get_record('role', ['shortname' => 'fachlfragenreviewer'])->id;
+    $allowedroles[] = $DB->get_record('role', ['shortname' => 'beurteilungsmitwirkende'])->id;
+    $allowedroles[] = $DB->get_record('role', ['shortname' => 'fachlicherpruefer'])->id;
+    $allowedroles[] = $DB->get_record('role', ['shortname' => 'pruefungsmitwirkende'])->id;
+    $allowedroles[] = $DB->get_record('role', ['shortname' => 'fachlicherzweitpruefer'])->id;
+    $allowedroles[] = $DB->get_record('role', ['shortname' => 'fragenerstellerlight'])->id;
+    $allowedroles[] = $DB->get_record('role', ['shortname' => 'fachlfragenreviewerlight'])->id;
+    $allowedroles[] = $DB->get_record('role', ['shortname' => 'sekretariat'])->id;
+    $roleid = $DB->get_record('role', ['shortname' => 'pruefungskoordination'])->id;
+    foreach ($allowedroles as $allowedrole) {
+        if (!$DB->get_record('role_allow_override', array('roleid' => $roleid, 'allowoverride' => $allowedrole))) {
+            core_role_set_override_allowed($roleid, $allowedrole);
+            core_role_set_assign_allowed($roleid, $allowedrole);
+            core_role_set_switch_allowed($roleid, $allowedrole);
+            core_role_set_view_allowed($roleid, $allowedrole);
+        }
+    }
+
+    $allowedroles = array();
+    $allowedroles[] = $DB->get_record('role', ['shortname' => 'fragenersteller'])->id;
+    $allowedroles[] = $DB->get_record('role', ['shortname' => 'fachlfragenreviewer'])->id;
+    $allowedroles[] = $DB->get_record('role', ['shortname' => 'fragenerstellerlight'])->id;
+    $allowedroles[] = $DB->get_record('role', ['shortname' => 'fachlfragenreviewerlight'])->id;
+    $allowedroles[] = $DB->get_record('role', ['shortname' => 'sekretariat'])->id;
+    $roleid = $DB->get_record('role', ['shortname' => 'modulverantwortlicher'])->id;
+    foreach ($allowedroles as $allowedrole) {
+        if (!$DB->get_record('role_allow_override', array('roleid' => $roleid, 'allowoverride' => $allowedrole))) {
+            core_role_set_override_allowed($roleid, $allowedrole);
+            core_role_set_assign_allowed($roleid, $allowedrole);
+            core_role_set_switch_allowed($roleid, $allowedrole);
+            core_role_set_view_allowed($roleid, $allowedrole);
+        }
+    }
+
+    $allowedroles = array();
+    $allowedroles[] = $DB->get_record('role', ['shortname' => 'beurteilungsmitwirkende'])->id;
+    $allowedroles[] = $DB->get_record('role', ['shortname' => 'pruefungsmitwirkende'])->id;
+    $roleid = $DB->get_record('role', ['shortname' => 'fachlicherpruefer'])->id;
+    foreach ($allowedroles as $allowedrole) {
+        if (!$DB->get_record('role_allow_override', array('roleid' => $roleid, 'allowoverride' => $allowedrole))) {
+            core_role_set_override_allowed($roleid, $allowedrole);
+            core_role_set_assign_allowed($roleid, $allowedrole);
+            core_role_set_switch_allowed($roleid, $allowedrole);
+            core_role_set_view_allowed($roleid, $allowedrole);
+        }
+    }
+
+    // this approach does not work, since it is designed to be done by the admin via menues, so many of the attributes are private
+    //$roleid = $DB->get_record('role', ['shortname' => 'pruefungskoordination'])->id;
+    //$archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // manager archetype
+    //$definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
+    //$definitiontable->force_duplicate($archetype,
+    //        $options); // overwrites everything that is set in the options. The rest stays.
+    //$definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
+    //$definitiontable->allowassign = array(7, 8, 9, 10);
+    //$definitiontable->save_changes();
 }
+
+//function block_exaquest_set_role_allow_assign($roleid, $allowedroles){
+//    global $DB;
+//
+//    $record = new stdClass();
+//    $record->roleid      = $fromroleid;
+//    $record->allowassign = $targetroleid;
+//    $DB->insert_record('role_allow_assign', $record);
+//
+//}
+//
+//function block_exaquest_set_role_allow_override($roleid, $allowedroles){
+//
+//}
+//
+//function block_exaquest_set_role_allow_switch($roleid, $allowedroles){
+//
+//}
+//
+//function block_exaquest_set_role_allow_view($roleid, $allowedroles){
+//
+//}
 
 /**
  * Checks the active exams and changes status to finished, according to timing.
@@ -1794,7 +1921,6 @@ function block_exaquest_get_capabilities($context) {
     $capabilities["setquestioncount"] = has_capability("block/exaquest:setquestioncount", $context, $USER);
     $capabilities["checkexamsgrading"] = has_capability("block/exaquest:checkexamsgrading", $context, $USER);
 
-
     return $capabilities;
 }
 
@@ -2144,7 +2270,7 @@ function block_exaquest_get_category_names_by_ids($categoryoptionidkeys, $onlyfr
     if ($onlyfragefaecher) {
         $categoryoptions = $DB->get_records_sql("SELECT eqc.id, eqc.categoryname, eqc.categorytype
                                     FROM {" . BLOCK_EXAQUEST_DB_CATEGORIES . "} eqc
-                                   WHERE eqc.categorytype = ". BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH ." AND eqc.id IN " . $query);
+                                   WHERE eqc.categorytype = " . BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH . " AND eqc.id IN " . $query);
     } else {
         // after creating query it retrieves all categories which are contained in any of the questions
         $categoryoptions = $DB->get_records_sql("SELECT eqc.id, eqc.categoryname, eqc.categorytype
@@ -2154,16 +2280,16 @@ function block_exaquest_get_category_names_by_ids($categoryoptionidkeys, $onlyfr
     return $categoryoptions;
 }
 
-function block_exaquest_get_missing_questions_count($quizid, $courseid){
+function block_exaquest_get_missing_questions_count($quizid, $courseid) {
     $categorys_required_counts = block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid);
     $categorys_current_counts = block_exaquest_get_category_question_count($quizid);
     $categoryoptionidkeys = array_keys($categorys_required_counts);
     $fragefaecher = block_exaquest_get_category_names_by_ids($categoryoptionidkeys, true);
     $missingquestionscount = 0;
-    foreach($fragefaecher as $key => $option){
+    foreach ($fragefaecher as $key => $option) {
         $fragefaecher[$key]->requiredquestioncount = $categorys_required_counts[$key]->questioncount;
-        $fragefaecher[$key]->currentquestioncount = $categorys_current_counts[$key] ? : 0;
-        if($fragefaecher[$key]->currentquestioncount < $fragefaecher[$key]->requiredquestioncount) {
+        $fragefaecher[$key]->currentquestioncount = $categorys_current_counts[$key] ?: 0;
+        if ($fragefaecher[$key]->currentquestioncount < $fragefaecher[$key]->requiredquestioncount) {
             $missingquestionscount += $fragefaecher[$key]->requiredquestioncount -
                     $fragefaecher[$key]->currentquestioncount;
         }
@@ -2173,7 +2299,7 @@ function block_exaquest_get_missing_questions_count($quizid, $courseid){
 
 // returns an array with key: categoryid and value: count of how many questions in this quiz have this category
 // the categoryid is the id of the exaquestcategories table. THe value is the count of how many questions in this quiz have this category
-function block_exaquest_get_category_question_count($quizid){
+function block_exaquest_get_category_question_count($quizid) {
     global $DB;
     // sql retrieves all categories for each questions inside this view
     $customfieldvalues = $DB->get_records_sql("SELECT *
@@ -2195,9 +2321,9 @@ function block_exaquest_get_category_question_count($quizid){
     // counts how often each category was used in each question
     $categoryoptionidcount = array();
     foreach ($categoryoptionidarray as $categoryoptionid) {
-        if(array_key_exists($categoryoptionid, $categoryoptionidcount)){
+        if (array_key_exists($categoryoptionid, $categoryoptionidcount)) {
             $categoryoptionidcount[$categoryoptionid] += 1;
-        }else{
+        } else {
             $categoryoptionidcount[$categoryoptionid] = 1;
         }
     }
@@ -2216,7 +2342,8 @@ function block_exaquest_get_assigned_fachlicherpruefer($quizid) {
     return $fachlicherpreufer;
 }
 
-function block_exaquest_get_assigned_persons_by_quizid_and_assigntype($quizid, $assigntype=BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS) {
+function block_exaquest_get_assigned_persons_by_quizid_and_assigntype($quizid,
+        $assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS) {
     global $DB;
     $sql = 'SELECT qa.assigneeid, u.*
 			FROM {' . BLOCK_EXAQUEST_DB_QUIZASSIGN . '} qa
