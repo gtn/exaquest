@@ -65,6 +65,12 @@ class popup_change_status implements renderable, templatable {
                                                JOIN {user} u ON q.createdby = u.id
                                                WHERE qv.questionbankentryid = ' . $this->questionbankentryid . '
                                                 AND u.deleted = 0'));
+        } else if ($this->action == 'revise_question_from_quiz') {
+            $data->require = true;
+            $data->text = get_string('revise_text', 'block_exaquest');
+            $data->title = get_string('revise_title', 'block_exaquest');
+            $data->commentplaceholder = get_string('comment_placeholder_mandatory', 'block_exaquest');
+            $data->selectusers = $data->selectusers;
         } else {
             $data->text = get_string('open_for_review_text', 'block_exaquest');
             $data->title = get_string('open_for_review_title', 'block_exaquest');
@@ -81,10 +87,12 @@ class popup_change_status implements renderable, templatable {
         }
         if ($this->action == 'open_question_for_review' || $this->action == 'revise_question') {
             $selectusers_autocomplete_html =
-                $mform->create_autocomplete_single_select_html($autocompleteoptions, $this->questionbankentryid, 'popup_change_status');
+                    $mform->create_autocomplete_single_select_html($autocompleteoptions, $this->questionbankentryid,
+                            'popup_change_status');
         } else {
             $selectusers_autocomplete_html =
-                $mform->create_autocomplete_multi_select_html($autocompleteoptions, $this->questionbankentryid, 'popup_change_status');
+                    $mform->create_autocomplete_multi_select_html($autocompleteoptions, $this->questionbankentryid,
+                            'popup_change_status');
         }
 
         $data->selectusers_autocomplete_html = $selectusers_autocomplete_html;

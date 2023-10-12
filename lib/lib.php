@@ -197,7 +197,7 @@ function block_exaquest_request_review($userfrom, $userto, $comment, $questionba
 }
 
 function block_exaquest_request_revision($userfrom, $userto, $comment, $questionbankentryid, $questionname,
-        $courseid) {
+        $courseid, $link_to_released_questions = false, $questionid = 0) {
     global $DB, $COURSE;
     // enter data into the exaquest tables
     $assigndata = new stdClass;
@@ -209,8 +209,14 @@ function block_exaquest_request_revision($userfrom, $userto, $comment, $question
     $messageobject = new stdClass;
     $messageobject->fullname = $questionname;
     //$messageobject->url = new moodle_url('/blocks/exaquest/questbank.php', array('courseid' => $courseid, 'category' => $catAndCont[0] . ',' . $catAndCont[1]));
-    $messageobject->url = new moodle_url('/blocks/exaquest/questbank.php',
-            array('courseid' => $courseid, 'filterstatus' => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE));
+    if($link_to_released_questions){ // if the question status is NOT changed from the reviseassign, link to editquestion
+        // e.g. http://localhost/question/bank/editquestion/question.php?returnurl=%2Fblocks%2Fexaquest%2Fquestbank.php%3Fcourseid%3D3&courseid=3&id=1
+        $messageobject->url = new moodle_url('/question/bank/editquestion/question.php?',
+                array('courseid' => $courseid, 'id' => $questionid, 'returnurl' => '/blocks/exaquest/dashboard.php?courseid=' . $courseid));
+    } else{
+        $messageobject->url = new moodle_url('/blocks/exaquest/questbank.php',
+                array('courseid' => $courseid, 'filterstatus' => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE));
+    }
     $messageobject->url = $messageobject->url->raw_out(false);
     $messageobject->requestcomment = $comment;
     $message = get_string('please_revise_question', 'block_exaquest', $messageobject);
@@ -279,6 +285,22 @@ function block_exaquest_get_fragenersteller_by_courseid($courseid) {
 
     $userarray = array_replace($userarray,
             get_enrolled_users($context, 'block/exaquest:fragenersteller', 0, 'u.*', null, 0, 0, true));
+    return $userarray;
+}
+
+/**
+ *
+ * Returns all fragenersteller of this course
+ *
+ * @param $courseid
+ * @return array
+ */
+function block_exaquest_get_pk_by_courseid($courseid) {
+    $context = context_course::instance($courseid);
+    $userarray = array();
+    $userarray = array_replace($userarray,
+            get_enrolled_users($context, 'block/exaquest:pruefungskoordination', 0, 'u.*', null, 0, 0, true));
+
     return $userarray;
 }
 
@@ -1441,7 +1463,9 @@ function block_exaquest_set_up_roles() {
     // now that every role exists:
     // set the allowassign, allowoverride, allowswitch and allowview for pk, mover and fp
     // get all roleids that are allowed to assign
-    // for pk: allow every role
+
+
+
     $allowedroles = array();
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'admintechnpruefungsdurchf'])->id;
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'pruefungskoordination'])->id;
@@ -1456,13 +1480,25 @@ function block_exaquest_set_up_roles() {
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'fragenerstellerlight'])->id;
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'fachlfragenreviewerlight'])->id;
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'sekretariat'])->id;
+
+    // for every role, allow VIEWING of role, since this is not a problem and NOT seeing the role leads to confusion
+    foreach ($allowedroles as $roleid) {
+        foreach ($allowedroles as $allowedrole){
+            if (!$DB->get_record('role_allow_view', array('roleid' => $roleid, 'allowview' => $allowedrole))) {
+                core_role_set_view_allowed($roleid, $allowedrole);
+            }
+        }
+    }
+
+    // for pk: allow every role
     $roleid = $DB->get_record('role', ['shortname' => 'pruefungskoordination'])->id;
+
     foreach ($allowedroles as $allowedrole) {
         if (!$DB->get_record('role_allow_override', array('roleid' => $roleid, 'allowoverride' => $allowedrole))) {
             core_role_set_override_allowed($roleid, $allowedrole);
             core_role_set_assign_allowed($roleid, $allowedrole);
             core_role_set_switch_allowed($roleid, $allowedrole);
-            core_role_set_view_allowed($roleid, $allowedrole);
+            //core_role_set_view_allowed($roleid, $allowedrole);
         }
     }
 
@@ -1478,7 +1514,7 @@ function block_exaquest_set_up_roles() {
             core_role_set_override_allowed($roleid, $allowedrole);
             core_role_set_assign_allowed($roleid, $allowedrole);
             core_role_set_switch_allowed($roleid, $allowedrole);
-            core_role_set_view_allowed($roleid, $allowedrole);
+            //core_role_set_view_allowed($roleid, $allowedrole);
         }
     }
 
@@ -1491,9 +1527,14 @@ function block_exaquest_set_up_roles() {
             core_role_set_override_allowed($roleid, $allowedrole);
             core_role_set_assign_allowed($roleid, $allowedrole);
             core_role_set_switch_allowed($roleid, $allowedrole);
-            core_role_set_view_allowed($roleid, $allowedrole);
+            //core_role_set_view_allowed($roleid, $allowedrole);
         }
     }
+
+
+
+
+
 
     // this approach does not work, since it is designed to be done by the admin via menues, so many of the attributes are private
     //$roleid = $DB->get_record('role', ['shortname' => 'pruefungskoordination'])->id;

@@ -186,6 +186,7 @@ class exaquest_exam_view extends exaquest_view {
         $questionbankclasscolumns["category_options"] = $specialplugincolumnobjects[6];
         $questionbankclasscolumns["remove_from_quiz"] = $specialplugincolumnobjects[7];
 
+
         return $questionbankclasscolumns;
     }
 

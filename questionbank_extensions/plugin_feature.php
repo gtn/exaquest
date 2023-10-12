@@ -10,6 +10,7 @@ require_once('add_to_quiz.php');
 require_once('usage_check_column.php');
 require_once('category_options.php');
 require_once('remove_from_quiz.php');
+require_once('assign_to_revise_from_quiz.php');
 
 /**
  * Class plugin_feature is the entrypoint for the columns.
@@ -36,7 +37,8 @@ class plugin_feature extends \core_question\local\bank\plugin_features_base {
             new last_changed_column($qbank),
             new status_column($qbank),
             new \qbank_viewquestionname\question_name_idnumber_tags_column_exaquest($qbank),
-            new set_fragenersteller_column($qbank)
+            new set_fragenersteller_column($qbank),
+            new assign_to_revise_from_quiz($qbank)
         ];
     }
 }

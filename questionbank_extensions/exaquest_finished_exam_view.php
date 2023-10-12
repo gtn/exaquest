@@ -156,7 +156,7 @@ class exaquest_finished_exam_view extends exaquest_exam_view {
                 'question_status_column',
                 'version_number_column',
                 'creator_name_column',
-                'comment_count_column'
+                'comment_count_column',
         ];
         if (question_get_display_preference('qbshowtext', 0, PARAM_BOOL, new \moodle_url(''))) {
             $corequestionbankcolumns[] = 'question_text_row';
@@ -230,6 +230,7 @@ class exaquest_finished_exam_view extends exaquest_exam_view {
         $questionbankclasscolumns["usage_check_column"] = $specialplugincolumnobjects[5];
         $questionbankclasscolumns["category_options"] = $specialplugincolumnobjects[6];
         $questionbankclasscolumns["remove_from_quiz"] = $specialplugincolumnobjects[7];
+        $questionbankclasscolumns["assign_to_revise_from_quiz"] = $specialplugincolumnobjects[14];
 
         return $questionbankclasscolumns;
     }

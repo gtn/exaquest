@@ -5,6 +5,7 @@ require __DIR__ . '/inc.php';
 global $DB, $CFG, $COURSE, $USER;
 require_once($CFG->dirroot . '/comment/lib.php');
 require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+
 use mod_quiz\quiz_settings;
 
 $questionbankentryid = required_param('questionbankentryid', PARAM_INT);
@@ -25,7 +26,7 @@ switch ($action) {
 
         // if there is a reviseassign entry ==> delete that, since it is now revised
         $oldstatus =
-            $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'status', array("questionbankentryid" => $questionbankentryid));
+                $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'status', array("questionbankentryid" => $questionbankentryid));
         if ($oldstatus == BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE) {
             $DB->delete_records(BLOCK_EXAQUEST_DB_REVISEASSIGN, ['questionbankentryid' => $questionbankentryid]);
         }
@@ -43,7 +44,7 @@ switch ($action) {
         if ($users != null) {
             foreach ($users as $user) {
                 block_exaquest_request_review($USER, $user, $commenttext, $questionbankentryid, $questionname,
-                    $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH);
+                        $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH);
             }
         }
         // get the PKs, which are the ones that should be assigned to do the formal review
@@ -51,7 +52,7 @@ switch ($action) {
         if ($formalreviewusers != null) {
             foreach ($formalreviewusers as $user) {
                 block_exaquest_request_review($USER, $user->id, $commenttext, $questionbankentryid, $questionname,
-                    $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FORMAL);
+                        $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FORMAL);
             }
         }
 
@@ -85,7 +86,7 @@ switch ($action) {
 
             // check if the question has been fachlich reviewed by the mover
             $reviewedByMover = $record->reviewed_by_mover;
-            if($reviewedByMover){
+            if ($reviewedByMover) {
                 // immediately release question instead of setting it to "finalised" and sending notification to mover
                 realease_question($questionbankentryid);
                 break;
@@ -98,7 +99,7 @@ switch ($action) {
         } else {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE;
             $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN,
-                ['questionbankentryid' => $questionbankentryid, 'reviewtype' => BLOCK_EXAQUEST_REVIEWTYPE_FORMAL]);
+                    ['questionbankentryid' => $questionbankentryid, 'reviewtype' => BLOCK_EXAQUEST_REVIEWTYPE_FORMAL]);
         }
         $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
         break;
@@ -122,9 +123,9 @@ switch ($action) {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED;
             // delete the entry in exaquestreviewassign, since no review has to be done anymore once it is finalized. If it somehow gets reassigned again, a new entry has to be created
             $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN, ['questionbankentryid' => $questionbankentryid]);
-            if($isMover){
+            if ($isMover) {
                 // continue right on to "release_question"
-            }else{
+            } else {
                 // send notification for releasing to the mover
                 $questionname = $DB->get_record('question', array('id' => $questionid))->name;
                 block_exaquest_notify_mover_of_finalised_question($USER, $questionbankentryid, $questionname, $courseid);
@@ -134,7 +135,7 @@ switch ($action) {
         } else {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE;
             $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN,
-                ['questionbankentryid' => $questionbankentryid, 'reviewtype' => BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH]);
+                    ['questionbankentryid' => $questionbankentryid, 'reviewtype' => BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH]);
             $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
             break;
         }
@@ -171,7 +172,35 @@ switch ($action) {
             if ($users != null) {
                 foreach ($users as $user) {
                     block_exaquest_request_revision($USER, $user, $commenttext, $questionbankentryid, $questionname,
-                        $courseid);
+                            $courseid);
+                }
+            }
+        }
+        break;
+    case ('revise_question_from_quiz'):
+        //$DB->record_exists(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, array("questionbankentryid" => $questionbankentryid));
+        if ($commenttext != null) {
+            $args = new stdClass;
+            $args->contextid = 1;
+            $args->course = $courseid;
+            $args->area = 'question';
+            $args->itemid = $questionid;
+            $args->component = 'qbank_comment';
+            $args->linktext = get_string('commentheader', 'qbank_comment');
+            $args->notoggle = true;
+            $args->autostart = true;
+            $args->displaycancel = false;
+            $comment = new comment($args);
+            $comment->add($commenttext);
+        }
+
+        if ($users != null) {
+            $questionname = $DB->get_record('question', array('id' => $questionid))->name;
+            //$catAndCont = get_question_category_and_context_of_course($courseid);
+            if ($users != null) {
+                foreach ($users as $user) {
+                    block_exaquest_request_revision($USER, $user, $commenttext, $questionbankentryid, $questionname,
+                            $courseid, true, $questionid);
                 }
             }
         }
@@ -186,7 +215,6 @@ switch ($action) {
         $quiz->course = $courseid;
         $quiz->questionsperpage = 1;
         //$ret = quiz_add_quiz_question($questionid, $quiz, $page = 0, $maxmark = null);
-
 
         // from edit.php from mod/quiz
         // get $cm coursemodule for this quiz
@@ -226,7 +254,7 @@ switch ($action) {
         break;
 }
 
-function realease_question($questionbankentryid){
+function realease_question($questionbankentryid) {
     global $DB;
     $data = new stdClass;
     $data->questionbankentryid = $questionbankentryid;
