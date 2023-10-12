@@ -54,11 +54,9 @@ class assign_to_revise_from_quiz extends column_base {
 
         ?>
         <script type="text/javascript">
-            debugger
 
             $(document).ready(function () {
                 $(".changestatus<?php echo $question->questionbankentryid; ?>").click(function (e) {
-                    debugger
                     var data = {
                         action: $(this).val(),
                         questionbankentryid: <?php echo $question->questionbankentryid; ?>,
@@ -71,7 +69,9 @@ class assign_to_revise_from_quiz extends column_base {
                             return $(this).attr("data-value");
                         }).get(),
                         commenttext: $('.commenttext<?php echo $question->questionbankentryid; ?>').val(),
+                        change_status_and_remove_from_quiz: $('#change_status_and_remove_from_quiz<?php echo $question->questionbankentryid; ?>')[0].checked,
                     };
+                    debugger
                     e.preventDefault();
                     var ajax = $.ajax({
                         method: "POST",

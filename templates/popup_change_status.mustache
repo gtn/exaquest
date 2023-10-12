@@ -30,6 +30,17 @@
                               id="texta" rows="3"
                               placeholder="{{commentplaceholder}}"></textarea>
                 </div>
+
+                <!-- Checkbox for changing the status and removing from quiz -->
+                {{#change_status_and_remove_from_quiz}}
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="change_status_and_remove_from_quiz{{questionbankentryid}}">
+                        <label class="form-check-label" for="removeFromQuizCheckbox{{questionbankentryid}}">
+                            Change status of question and remove question from quiz
+                        </label>
+                    </div>
+                {{/change_status_and_remove_from_quiz}}
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

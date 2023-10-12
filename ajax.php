@@ -142,6 +142,38 @@ switch ($action) {
     case ('release_question'):
         realease_question($questionbankentryid);
         break;
+    case ('revise_question_from_quiz'):
+        $change_status_and_remove_from_quiz = optional_param('change_status_and_remove_from_quiz', false, PARAM_BOOL);
+        if (!$change_status_and_remove_from_quiz) {
+            //$DB->record_exists(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, array("questionbankentryid" => $questionbankentryid));
+            if ($commenttext != null) {
+                $args = new stdClass;
+                $args->contextid = 1;
+                $args->course = $courseid;
+                $args->area = 'question';
+                $args->itemid = $questionid;
+                $args->component = 'qbank_comment';
+                $args->linktext = get_string('commentheader', 'qbank_comment');
+                $args->notoggle = true;
+                $args->autostart = true;
+                $args->displaycancel = false;
+                $comment = new comment($args);
+                $comment->add($commenttext);
+            }
+
+            if ($users != null) {
+                $questionname = $DB->get_record('question', array('id' => $questionid))->name;
+                //$catAndCont = get_question_category_and_context_of_course($courseid);
+                if ($users != null) {
+                    foreach ($users as $user) {
+                        block_exaquest_request_revision($USER, $user, $commenttext, $questionbankentryid, $questionname,
+                                $courseid, true, $questionid);
+                    }
+                }
+            }
+            break;
+        }
+        // if not break, then continue to revise_question
     case ('revise_question'):
         //$DB->record_exists(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, array("questionbankentryid" => $questionbankentryid));
         $data = new stdClass;
@@ -177,34 +209,7 @@ switch ($action) {
             }
         }
         break;
-    case ('revise_question_from_quiz'):
-        //$DB->record_exists(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, array("questionbankentryid" => $questionbankentryid));
-        if ($commenttext != null) {
-            $args = new stdClass;
-            $args->contextid = 1;
-            $args->course = $courseid;
-            $args->area = 'question';
-            $args->itemid = $questionid;
-            $args->component = 'qbank_comment';
-            $args->linktext = get_string('commentheader', 'qbank_comment');
-            $args->notoggle = true;
-            $args->autostart = true;
-            $args->displaycancel = false;
-            $comment = new comment($args);
-            $comment->add($commenttext);
-        }
 
-        if ($users != null) {
-            $questionname = $DB->get_record('question', array('id' => $questionid))->name;
-            //$catAndCont = get_question_category_and_context_of_course($courseid);
-            if ($users != null) {
-                foreach ($users as $user) {
-                    block_exaquest_request_revision($USER, $user, $commenttext, $questionbankentryid, $questionname,
-                            $courseid, true, $questionid);
-                }
-            }
-        }
-        break;
     case ('mark_request_as_done'):
 
         break;

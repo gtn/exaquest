@@ -70,6 +70,7 @@ class popup_change_status implements renderable, templatable {
             $data->text = get_string('revise_text', 'block_exaquest');
             $data->title = get_string('revise_title', 'block_exaquest');
             $data->commentplaceholder = get_string('comment_placeholder_mandatory', 'block_exaquest');
+            $data->change_status_and_remove_from_quiz = true;
             $data->selectusers = $data->selectusers;
         } else {
             $data->text = get_string('open_for_review_text', 'block_exaquest');
