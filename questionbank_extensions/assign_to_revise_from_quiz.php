@@ -38,8 +38,12 @@ class assign_to_revise_from_quiz extends column_base {
     }
 
     protected function display_content($question, $rowclasses) {
-        global $PAGE, $COURSE, $OUTPUT;
-        //$quizid = optional_param('quizid', null, PARAM_INT);
+        global $DB, $COURSE, $OUTPUT;
+        $quizid = optional_param('quizid', null, PARAM_INT);
+        $quizslotid = $DB->get_field_sql("SELECT qs.id
+                                              FROM {question_references} qr
+                                              JOIN {quiz_slots} qs ON qr.itemid = qs.id
+                                              WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?", array($quizid, $question->questionbankentryid));
 
         $selectusers = block_exaquest_get_pk_by_courseid($COURSE->id);
 
@@ -70,7 +74,11 @@ class assign_to_revise_from_quiz extends column_base {
                         }).get(),
                         commenttext: $('.commenttext<?php echo $question->questionbankentryid; ?>').val(),
                         change_status_and_remove_from_quiz: $('#change_status_and_remove_from_quiz<?php echo $question->questionbankentryid; ?>')[0].checked,
+                        id: <?php echo $quizslotid; ?>,
+                        quizid: <?php echo $quizid; ?>,
+                        sesskey: "<?php echo sessKey(); ?>"
                     };
+
                     debugger
                     e.preventDefault();
                     var ajax = $.ajax({
