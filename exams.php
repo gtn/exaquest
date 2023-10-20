@@ -78,6 +78,18 @@ if ($action == 'assign_quiz_addquestions') {
                     BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
         }
     }
+} else if ($action == 'assign_gradeexam') {
+    $comment = optional_param('assign_gradeexam_comment', '', PARAM_TEXT);
+    $quizid = required_param('quizid', PARAM_INT);
+    $quizname = $DB->get_field('quiz', 'name', array('id' => $quizid));
+
+    $selectedbmwkey = "selectedusersbmw" . $quizid . "popup_assign_gradeexam";
+    if (array_key_exists($selectedbmwkey, $_POST) && is_array($_POST[$selectedbmwkey])) {
+        $selectedbmw = clean_param_array($_POST[$selectedbmwkey], PARAM_INT);
+        foreach ($selectedbmw as $bmw) {
+            block_exaquest_assign_gradeexam($USER, $bmw, $comment, $quizid, $quizname, BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM);
+        }
+    }
 }
 
 // RENDER:

@@ -15,7 +15,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" action="{{action}}" id="assigngradeexamform{{quizid}}">
+            <form method="post" action="{{action}}" id="assign_grade_exam_form{{quizid}}">
                 <input type="hidden" id="quizid" name="quizid" value={{quizid}}>
                 <div class="modal-body">
                     <div class="form-group">{{#str}}
@@ -23,7 +23,7 @@
                         {{{ bmw_autocomplete_html }}}
                     </div>
                     <div class="form-group">
-                        <textarea class="form-control assigngradeexamcomment" name="assigngradeexamcomment" id="assigngradeexamcomment"
+                        <textarea class="form-control assign_grade_exam_comment" name="assign_grade_exam_comment" id="assign_grade_exam_comment"
                                   rows="3"
                                   placeholder="{{#str}}assign_gradeexam_comment_placeholder, block_exaquest {{/str}}"></textarea>
                     </div>
@@ -32,7 +32,7 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <input type="submit"
                            value="{{#str}} request_questions_button, block_exaquest {{/str}}"
-                           class="btn btn-primary assigngradeexamsubmit">
+                           class="btn btn-primary assign_grade_exam_submit">
                 </div>
             </form>
         </div>

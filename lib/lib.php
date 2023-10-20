@@ -1003,6 +1003,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewgradesreleasedexamscard', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:doformalreviewexam', CAP_ALLOW, $roleid, $context);
 
+
     if (!$DB->record_exists('role', ['shortname' => 'pruefungskoordination'])) {
         $roleid = create_role('Prüfungskoordination', 'pruefungskoordination', '', 'manager');
         $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // manager archetype
@@ -1064,6 +1065,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:dofachlichreviewexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:assigncheckexamgrading', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:skipandreleaseexam', CAP_ALLOW, $roleid, $context);
+
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
         $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '', 'manager');
@@ -1261,6 +1263,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewgradesreleasedexamscard', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:checkexamsgrading', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:gradequestion', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlicherpruefer'])) {
         $roleid = create_role('fachlicher Prüfer', 'fachlicherpruefer', '', 'manager');
@@ -1305,6 +1308,8 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewgradesreleasedexamscard', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:dofachlichreviewexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:checkexamsgrading', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:gradequestion', CAP_ALLOW, $roleid, $context);
+
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsmitwirkende'])) {
         $roleid = create_role('Prüfungsmitwirkende', 'pruefungsmitwirkende', '', 'manager');
@@ -1988,6 +1993,7 @@ function block_exaquest_get_capabilities($context) {
             $USER); // has_capability better than is_enrolled in this case, todo: change above
     $capabilities["setquestioncount"] = has_capability("block/exaquest:setquestioncount", $context, $USER);
     $capabilities["checkexamsgrading"] = has_capability("block/exaquest:checkexamsgrading", $context, $USER);
+    $capabilities["gradequestion"] = has_capability("block/exaquest:gradequestion", $context, $USER);
 
     return $capabilities;
 }
@@ -2241,11 +2247,37 @@ function block_exaquest_assign_check_exam_grading($userfrom, $userto, $comment, 
     $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
     $messageobject->url = $messageobject->url->raw_out(false);
     $messageobject->requestcomment = $comment;
+    // TODO message wording
     $message = get_string('please_fill_exam', 'block_exaquest', $messageobject);
     $subject = get_string('please_fill_exam_subject', 'block_exaquest', $messageobject);
     block_exaquest_send_moodle_notification("fillexam", $userfrom->id, $userto, $subject, $message,
             "fillexam", $messageobject->url);
 }
+
+
+function block_exaquest_assign_gradeexam($userfrom, $userto, $comment, $quizid, $quizname = null,
+        $assigntype = null) {
+    global $COURSE;
+
+    block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assigntype);
+
+    // create the message
+    $messageobject = new stdClass;
+    $messageobject->fullname = $quizname;
+    $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
+    $messageobject->url = $messageobject->url->raw_out(false);
+    $messageobject->requestcomment = $comment;
+    // TODO: message wording
+    $message = get_string('please_fill_exam', 'block_exaquest', $messageobject);
+    $subject = get_string('please_fill_exam_subject', 'block_exaquest', $messageobject);
+    block_exaquest_send_moodle_notification("fillexam", $userfrom->id, $userto, $subject, $message,
+            "fillexam", $messageobject->url);
+}
+
+
+
+
+
 
 function block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assigntype = null) {
     global $DB;

@@ -19,7 +19,7 @@ class dashboard implements renderable, templatable {
     private $questioncategoryid;
 
     public function __construct($userid, $courseid, $capabilities, $fragenersteller, $questions_to_create, $coursecategoryid, $questioncategoryid,
-        $fachlichepruefer, $exams_to_fill, $exams_to_check_grading) {
+        $fachlichepruefer, $exams_to_fill, $exams_to_check_grading, $exams_to_grade) {
         $this->courseid = $courseid;
         $this->capabilities = $capabilities;
         $this->userid = $userid;
@@ -38,6 +38,9 @@ class dashboard implements renderable, templatable {
 
         $this->popup_exams_for_me_to_check_grading = new popup_exams_for_me_to_check_grading($exams_to_check_grading);
         $this->exams_for_me_to_check_grading_count = count($exams_to_check_grading);
+
+        $this->popup_exams_for_me_to_grade = new popup_exams_for_me_to_grade($exams_to_grade);
+        $this->exams_for_me_to_grade_count = count($exams_to_grade);
     }
 
     /**
@@ -189,6 +192,9 @@ class dashboard implements renderable, templatable {
 
         $data->popup_exams_for_me_to_fill = $this->popup_exams_for_me_to_fill->export_for_template($output);
         $data->exams_for_me_to_fill_count = $this->exams_for_me_to_fill_count;
+
+        $data->popup_exams_for_me_to_grade = $this->popup_exams_for_me_to_grade->export_for_template($output);
+        $data->exams_for_me_to_grade_count = $this->exams_for_me_to_grade_count;
 
         $data->popup_exams_for_me_to_check_grading = $this->popup_exams_for_me_to_check_grading->export_for_template($output);
         $data->exams_for_me_to_check_grading_count = $this->exams_for_me_to_check_grading_count;

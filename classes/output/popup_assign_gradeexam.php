@@ -54,9 +54,10 @@ class popup_assign_gradeexam implements renderable, templatable {
         $bmw_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, "bmw".$data->quizid, 'popup_assign_gradeexam');
         $data->bmw_autocomplete_html = $bmw_autocomplete_html;
 
+        // TODO: add questions to select?
 
         $data->action =
-            $PAGE->url->out(false, array('action' => 'assign_quiz_gradeexam', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
+            $PAGE->url->out(false, array('action' => 'assign_gradeexam', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
         $data->sesskey = sesskey();
 
 
