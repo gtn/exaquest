@@ -185,6 +185,8 @@ class exaquest_exam_view extends exaquest_view {
         $questionbankclasscolumns["usage_check_column"] = $specialplugincolumnobjects[5];
         $questionbankclasscolumns["category_options"] = $specialplugincolumnobjects[6];
         $questionbankclasscolumns["remove_from_quiz"] = $specialplugincolumnobjects[7];
+        $questionbankclasscolumns["assign_to_revise_from_quiz"] = $specialplugincolumnobjects[14];
+        $questionbankclasscolumns["lock_from_quiz"] = $specialplugincolumnobjects[15];
 
 
         return $questionbankclasscolumns;

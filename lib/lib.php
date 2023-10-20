@@ -80,6 +80,8 @@ const BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS = 3;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER = 4; // this FP is responsible for the quiz
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM = 5;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING = 6;
+const BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERZWEITPRUEFER = 7;
+const BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERDRITTPRUEFER = 8;
 
 /**
  * Filter Status
@@ -344,6 +346,30 @@ function block_exaquest_get_bmw_by_courseid($courseid) {
 function block_exaquest_get_fachlichepruefer_by_courseid($courseid) {
     $context = context_course::instance($courseid);
     return get_enrolled_users($context, 'block/exaquest:fachlicherpruefer', 0, 'u.*', null, 0, 0, true);
+}
+
+/**
+ *
+ * Returns all fachlichezweitpruefer of this course
+ *
+ * @param $courseid
+ * @return array
+ */
+function block_exaquest_get_fachlichezweitpruefer_by_courseid($courseid) {
+    $context = context_course::instance($courseid);
+    return get_enrolled_users($context, 'block/exaquest:fachlichezweitpruefer', 0, 'u.*', null, 0, 0, true);
+}
+
+/**
+ *
+ * Returns all fachlichedrittpruefer of this course
+ *
+ * @param $courseid
+ * @return array
+ */
+function block_exaquest_get_fachlichedrittpruefer_by_courseid($courseid) {
+    $context = context_course::instance($courseid);
+    return get_enrolled_users($context, 'block/exaquest:fachlichedrittpruefer', 0, 'u.*', null, 0, 0, true);
 }
 
 /**
@@ -1312,6 +1338,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:assignaddquestions', CAP_ALLOW, $roleid, $context);
 
+    // TODO: is this even a needed role? Or is it actually just "fachlicherpruefer" but assignes as a zweitpruefer to an exam? I guess so...
     if (!$DB->record_exists('role', ['shortname' => 'fachlicherzweitpruefer'])) {
         $roleid = create_role('Fachlicher Zweitprüfer', 'fachlicherzweitpruefer', '', 'manager');
         $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // manager archetype
@@ -2260,28 +2287,36 @@ function block_exaquest_assign_quiz_fp($userto, $quizid) {
     $assigndata->assigneeid = $userto;
     $assigndata->assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER;
     $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
+}
 
-    //// insert comment into BLOCK_EXAQUEST_DB_QUIZCOMMENT
-    //if ($comment != '') {
-    //    $commentdata = new stdClass;
-    //    $commentdata->quizid = $quizid;
-    //    $commentdata->commentorid = $userfrom->id;
-    //    $commentdata->quizassignid = $quizassignid;
-    //    $commentdata->comment = $comment;
-    //    $commentdata->timestamp = time();
-    //    $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZCOMMENT, $commentdata);
-    //}
-    //
-    //// create the message
-    //$messageobject = new stdClass;
-    //$messageobject->fullname = $quizname;
-    //$messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
-    //$messageobject->url = $messageobject->url->raw_out(false);
-    //$messageobject->requestcomment = $comment;
-    //$message = get_string('please_fill_exam', 'block_exaquest', $messageobject);
-    //$subject = get_string('please_fill_exam_subject', 'block_exaquest', $messageobject);
-    //block_exaquest_send_moodle_notification("fillexam", $userfrom->id, $userto, $subject, $message,
-    //    "fillexam", $messageobject->url);
+function block_exaquest_assign_quiz_fzp($userto, $quizid) {
+    global $DB, $COURSE;
+
+    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that quizid and assigntype, as it should be overridden (there can only be one)
+    $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERZWEITPRUEFER));
+
+    // enter data into the exaquest tables
+    $assigndata = new stdClass;
+    $assigndata->quizid = $quizid;
+    $assigndata->assigneeid = $userto;
+    $assigndata->assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERZWEITPRUEFER;
+    $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
+}
+
+function block_exaquest_assign_quiz_fdp($userto, $quizid) {
+    global $DB, $COURSE;
+
+    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that quizid and assigntype, as it should be overridden (there can only be one)
+    $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERDRITTPRUEFER));
+
+    // enter data into the exaquest tables
+    $assigndata = new stdClass;
+    $assigndata->quizid = $quizid;
+    $assigndata->assigneeid = $userto;
+    $assigndata->assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERDRITTPRUEFER;
+    $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
 }
 
 function block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid) {
@@ -2377,7 +2412,28 @@ function block_exaquest_get_assigned_fachlicherpruefer($quizid) {
 			FROM {' . BLOCK_EXAQUEST_DB_QUIZASSIGN . '} qa
 			WHERE qa.quizid = :quizid
 			AND qa.assigntype = ' . BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER;
+    $fachlicherpreufer = $DB->get_record_sql($sql,
+            array('quizid' => $quizid));
+    return $fachlicherpreufer;
+}
 
+function block_exaquest_get_assigned_fachlicherzweitpruefer($quizid) {
+    global $DB;
+    $sql = 'SELECT qa.assigneeid
+			FROM {' . BLOCK_EXAQUEST_DB_QUIZASSIGN . '} qa
+			WHERE qa.quizid = :quizid
+			AND qa.assigntype = ' . BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERZWEITPRUEFER;
+    $fachlicherpreufer = $DB->get_record_sql($sql,
+            array('quizid' => $quizid));
+    return $fachlicherpreufer;
+}
+
+function block_exaquest_get_assigned_fachlicherdrittpruefer($quizid) {
+    global $DB;
+    $sql = 'SELECT qa.assigneeid
+			FROM {' . BLOCK_EXAQUEST_DB_QUIZASSIGN . '} qa
+			WHERE qa.quizid = :quizid
+			AND qa.assigntype = ' . BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERDRITTPRUEFER;
     $fachlicherpreufer = $DB->get_record_sql($sql,
             array('quizid' => $quizid));
     return $fachlicherpreufer;

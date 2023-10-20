@@ -55,7 +55,7 @@ function block_exaquest_coursemodule_standard_elements($formwrapper, $mform) {
             $mform->addElement('header', 'exaquest_settings', get_string('exaquest_settings', 'block_exaquest'));
             $mform->setExpanded('exaquest_settings');
             // Add the fachlicherpruefer setting
-            $fachlichepruefer = block_exaquest_get_fachlichepruefer_by_courseid($COURSE->id);
+            $fachlichepruefer = block_exaquest_get_fachlichepruefer_by_courseid($COURSE->id); // for now I assume: there are only fachlichepruefer, there are no other roles, just other assignments TODO
             if ($fachlichepruefer) {
                 $fachlichepruefer_options = array();
                 foreach ($fachlichepruefer as $fachlicherpruefer) {
@@ -63,12 +63,48 @@ function block_exaquest_coursemodule_standard_elements($formwrapper, $mform) {
                         $fachlicherpruefer->firstname . ' ' . $fachlicherpruefer->lastname;
                 }
                 $mform->addElement('select', 'assignfachlicherpruefer', 'Fachlichen Prüfer auswählen', $fachlichepruefer_options);
+                $mform->addElement('select', 'assignfachlicherzweitpruefer', 'Fachlichen Zweitprüfer auswählen', array_merge(array(''), $fachlichepruefer_options));
+                $mform->addElement('select', 'assignfachlicherdrittpruefer', 'Fachlichen Drittprüfer auswählen', array_merge(array(''), $fachlichepruefer_options));
                 if ($quizid) {
                     // get the assigned fachlicherprüfer
                     $assignedfachlicherpruefer = block_exaquest_get_assigned_fachlicherpruefer($quizid);
                     $mform->setDefault('assignfachlicherpruefer', $assignedfachlicherpruefer->assigneeid);
+
+                    $assignedfachlicherpruefer = block_exaquest_get_assigned_fachlicherzweitpruefer($quizid);
+                    $mform->setDefault('assignfachlicherzweitpruefer', $assignedfachlicherpruefer->assigneeid);
+
+                    $assignedfachlicherpruefer = block_exaquest_get_assigned_fachlicherdrittpruefer($quizid);
+                    $mform->setDefault('assignfachlicherdrittpruefer', $assignedfachlicherpruefer->assigneeid);
                 }
             }
+
+            //$fachlichezweitpruefer = block_exaquest_get_fachlichezweitpruefer_by_courseid($COURSE->id);
+            //if ($fachlichezweitpruefer) {
+            //    $fachlichepruefer_options = array();
+            //    foreach ($fachlichezweitpruefer as $fachlicherpruefer) {
+            //        $fachlichepruefer_options[$fachlicherpruefer->id] =
+            //                $fachlicherpruefer->firstname . ' ' . $fachlicherpruefer->lastname;
+            //    }
+            //    $mform->addElement('select', 'assignfachlicherzweitpruefer', 'Fachlichen Zweitprüfer auswählen', $fachlichepruefer_options);
+            //    if ($quizid) {
+            //        $assignedfachlicherpruefer = block_exaquest_get_assigned_fachlicherzweitpruefer($quizid);
+            //        $mform->setDefault('assignfachlicherzweitpruefer', $assignedfachlicherpruefer->assigneeid);
+            //    }
+            //}
+            //
+            //$fachlichedrittpruefer = block_exaquest_get_fachlichedrittpruefer_by_courseid($COURSE->id);
+            //if ($fachlichedrittpruefer) {
+            //    $fachlichepruefer_options = array();
+            //    foreach ($fachlichedrittpruefer as $fachlicherpruefer) {
+            //        $fachlichepruefer_options[$fachlicherpruefer->id] =
+            //                $fachlicherpruefer->firstname . ' ' . $fachlicherpruefer->lastname;
+            //    }
+            //    $mform->addElement('select', 'assignfachlicherdrittpruefer', 'Fachlichen Drittprüfer auswählen', $fachlichepruefer_options);
+            //    if ($quizid) {
+            //        $assignedfachlicherpruefer = block_exaquest_get_assigned_fachlicherdrittpruefer($quizid);
+            //        $mform->setDefault('assignfachlicherdrittpruefer', $assignedfachlicherpruefer->assigneeid);
+            //    }
+            //}
 
             // add the question count per quiz and fragefach settings
             if ($quizid) {
@@ -111,6 +147,8 @@ function block_exaquest_coursemodule_edit_post_actions($data, $course) {
         // set the fachlicherprüfer
         if ($data->assignfachlicherpruefer) {
             block_exaquest_assign_quiz_fp($data->assignfachlicherpruefer, $quizid);
+            block_exaquest_assign_quiz_fzp($data->assignfachlicherzweitpruefer, $quizid);
+            block_exaquest_assign_quiz_fdp($data->assignfachlicherdrittpruefer, $quizid);
         }
     }
 
