@@ -34,14 +34,14 @@ if ($action == 'assign_quiz_addquestions') {
     $quizid = required_param('quizid', PARAM_INT);
     // get quiz for quizname
     $quizname = $DB->get_field('quiz', 'name', array('id' => $quizid));
-    //$selectedfpkey = "selectedusersfp".$quizid."popup_assign_addquestions";
+    //$selectedfpkey = "selectedfp".$quizid."popup_assign_addquestions";
     //if (array_key_exists($selectedfpkey, $_POST)) {
     //    $selectedfp = clean_param($_POST[$selectedfpkey], PARAM_INT);
     //    block_exaquest_assign_quiz_addquestions($courseid, $USER, $selectedfp, $comment, $quizid, $quizname, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
     //}
     // not needed anymore, since FP is set in quiz settings
-    // check if selecteduserspmw is set and an array
-    $selectedpmwkey = "selecteduserspmw" . $quizid . "popup_assign_addquestions";
+    // check if selectedpmw is set and an array
+    $selectedpmwkey = "selectedpmw" . $quizid . "popup_assign_addquestions";
     if (array_key_exists($selectedpmwkey, $_POST) && is_array($_POST[$selectedpmwkey])) {
         $selectedpmw = clean_param_array($_POST[$selectedpmwkey], PARAM_INT);
         foreach ($selectedpmw as $pmw) {
@@ -62,7 +62,7 @@ if ($action == 'assign_quiz_addquestions') {
     $quizid = required_param('quizid', PARAM_INT);
     $quizname = $DB->get_field('quiz', 'name', array('id' => $quizid));
 
-    //$selectedfpkey = "selectedusersfp" . $quizid . "popup_assign_check_exam_grading";
+    //$selectedfpkey = "selectedfp" . $quizid . "popup_assign_check_exam_grading";
     //if (array_key_exists($selectedfpkey, $_POST)) {
     //    $selectedfp = clean_param($_POST[$selectedfpkey], PARAM_INT);
     //    block_exaquest_assign_check_exam_grading($courseid, $USER, $selectedfp, $comment, $quizid, $quizname,
@@ -70,7 +70,7 @@ if ($action == 'assign_quiz_addquestions') {
     //}
 
     // TODO: check if teh FP is selected, since this will lead to different behaviour
-    $selectedbmwkey = "selectedusersbmw" . $quizid . "popup_assign_check_exam_grading";
+    $selectedbmwkey = "selectedbmw" . $quizid . "popup_assign_check_exam_grading";
     if (array_key_exists($selectedbmwkey, $_POST) && is_array($_POST[$selectedbmwkey])) {
         $selectedbmw = clean_param_array($_POST[$selectedbmwkey], PARAM_INT);
         foreach ($selectedbmw as $bmw) {
@@ -83,11 +83,19 @@ if ($action == 'assign_quiz_addquestions') {
     $quizid = required_param('quizid', PARAM_INT);
     $quizname = $DB->get_field('quiz', 'name', array('id' => $quizid));
 
-    $selectedbmwkey = "selectedusersbmw" . $quizid . "popup_assign_gradeexam";
+
+    //selectedusersquestions15popup_assign_gradeexam
+    $selectedquestionskey = "selectedquestions" . $quizid . "popup_assign_gradeexam";
+    if (array_key_exists($selectedquestionskey, $_POST) && is_array($_POST[$selectedquestionskey])) {
+        $selectedquestions = clean_param_array($_POST[$selectedquestionskey], PARAM_INT);
+    }
+
+    $selectedbmwkey = "selectedbmw" . $quizid . "popup_assign_gradeexam";
     if (array_key_exists($selectedbmwkey, $_POST) && is_array($_POST[$selectedbmwkey])) {
         $selectedbmw = clean_param_array($_POST[$selectedbmwkey], PARAM_INT);
         foreach ($selectedbmw as $bmw) {
-            block_exaquest_assign_gradeexam($USER, $bmw, $comment, $quizid, $quizname, BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM);
+            // TODO: add the $selectedquestions to the assign_gradeexam function
+            block_exaquest_assign_gradeexam($USER, $bmw, $comment, $quizid, $quizname, BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM, $selectedquestions);
         }
     }
 }

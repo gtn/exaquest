@@ -2256,10 +2256,11 @@ function block_exaquest_assign_check_exam_grading($userfrom, $userto, $comment, 
 
 
 function block_exaquest_assign_gradeexam($userfrom, $userto, $comment, $quizid, $quizname = null,
-        $assigntype = null) {
+        $assigntype = null, $selectedquestions = null) {
     global $COURSE;
 
     block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assigntype);
+    // TODO: questiongradingassign instead of quizassign? or just solve it via comment?
 
     // create the message
     $messageobject = new stdClass;

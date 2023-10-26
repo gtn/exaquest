@@ -22,6 +22,12 @@
                         assign_gradeexam_label, block_exaquest {{/str}}
                         {{{ bmw_autocomplete_html }}}
                     </div>
+
+                    <div class="form-group">{{#str}}
+                        select_questions_label, block_exaquest {{/str}}
+                        {{{ questions_autocomplete_html }}}
+                    </div>
+
                     <div class="form-group">
                         <textarea class="form-control assign_grade_exam_comment" name="assign_grade_exam_comment" id="assign_grade_exam_comment"
                                   rows="3"
@@ -39,3 +45,12 @@
     </div>
 </div>
 
+
+<!--<div class="form-group">-->
+<!--    <label for="question_select">Fragen auswählen:</label>-->
+<!--    <select class="form-control" name="question_select" id="question_select" multiple>-->
+<!--        #significant_questions}}-->
+<!--            <option value="id}}">questionname}}</option>-->
+<!--        /significant_questions}}-->
+<!--    </select>-->
+<!--</div>-->
