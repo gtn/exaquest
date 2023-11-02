@@ -4,7 +4,7 @@
 /* global confirm*/
 /* global alert*/
 
-$(document).on('click', '.selectallornone-userselection', function() {
+$(document).on('click', '.selectallornone-userselection', function () {
     let checkboxes = this.parentElement.getElementsByClassName("userselectioncheckbox");
     if (checkboxes != undefined) {
         if (checkboxes[0].checked == true) {
@@ -30,7 +30,7 @@ const clone = element.clone(true, true);
 clone.appendTo("#popup_create_questions_div");
 
 
-$(document).on('click', '#popup_create_questions_div', function() {
+$(document).on('click', '#popup_create_questions_div', function () {
     const requestsModal = document.getElementById("questionsForMeToCreateModal");
     requestsModal.removeAttribute("tabindex");
     // The clicked button creates a second popup. The 2 opened popups interefere with each other. By removing the tabinex attribute of the lower one, the problem is solved.
@@ -39,6 +39,7 @@ $(document).on('click', '#popup_create_questions_div', function() {
 
 function mark_request_as_done(requestid, requesttype, courseid) {
     console.log('mark_request_as_done', requestid);
+    debugger;
     let action = '';
     if (requesttype == 'exam') {
         action = 'mark_exam_request_as_done';
@@ -46,6 +47,8 @@ function mark_request_as_done(requestid, requesttype, courseid) {
         action = 'mark_fill_exam_request_as_done';
     } else if (requesttype == 'check-grading') {
         action = 'mark_check_exam_grading_request_as_done';
+    } else if (requesttype == 'grade') {
+        action = 'mark_grade_request_as_done';
     } else {
         action = 'mark_question_request_as_done';
     }
@@ -60,10 +63,10 @@ function mark_request_as_done(requestid, requesttype, courseid) {
         method: "POST",
         url: "ajax_dashboard.php",
         data: data
-    }).done(function() {
+    }).done(function () {
         // Console.log(data.action, 'ret', ret);
         // location.reload();
-    }).fail(function(ret) {
+    }).fail(function (ret) {
         var errorMsg = '';
         if (ret.responseText[0] == '<') {
             // Html
@@ -73,7 +76,7 @@ function mark_request_as_done(requestid, requesttype, courseid) {
     });
 }
 
-$(document).on('click', '.mark-question-request-as-done-button', function() {
+$(document).on('click', '.mark-question-request-as-done-button', function () {
     if (confirm("Wirklich als erledigt markieren?")) {
         let requests = this.parentElement.parentElement.getElementsByClassName("request-comment");
         if (requests != undefined) {
@@ -85,7 +88,7 @@ $(document).on('click', '.mark-question-request-as-done-button', function() {
 });
 
 
-$(document).on('click', '.mark-exam-request-as-done-button', function() {
+$(document).on('click', '.mark-exam-request-as-done-button', function () {
     if (confirm("Wirklich als erledigt markieren?")) {
         let requests = this.parentElement.parentElement.getElementsByClassName("request-comment");
         if (requests != undefined) {
@@ -96,9 +99,8 @@ $(document).on('click', '.mark-exam-request-as-done-button', function() {
     }
 });
 
-$(document).on('click', '.mark-fill-exam-request-as-done-button', function() {
+$(document).on('click', '.mark-fill-exam-request-as-done-button', function () {
     if (confirm("Wirklich als erledigt markieren?")) {
-        debugger;
         let requests = this.parentElement.parentElement.getElementsByClassName("fill-exam-request-comment");
         if (requests != undefined) {
             document.getElementById("fill-exam-request").removeChild(document.getElementById("fill-exam-request-comment-li-" + this.getAttribute("requestid")));
@@ -107,8 +109,19 @@ $(document).on('click', '.mark-fill-exam-request-as-done-button', function() {
         }
     }
 });
+$(document).on('click', '.mark-grade-request-as-done-button', function () {
+    if (confirm("Wirklich als erledigt markieren?")) {
+        let requests = this.parentElement.parentElement.getElementsByClassName("grade-request-comment");
+        if (requests != undefined) {
+            debugger;
+            document.getElementById("grade-request").removeChild(document.getElementById("grade-request-comment-li-" + this.getAttribute("requestid")));
+            // Remove that entry from the database with ajax
+            mark_request_as_done(this.getAttribute("requestid"), 'grade', this.attributes.courseid.value);
+        }
+    }
+});
 
-$(document).on('click', '.mark-check-grading-request-as-done-button', function() {
+$(document).on('click', '.mark-check-grading-request-as-done-button', function () {
     if (confirm("Wirklich als erledigt markieren?")) {
         let requests = this.parentElement.parentElement.getElementsByClassName("check-grading-request-comment");
         if (requests != undefined) {
@@ -121,8 +134,8 @@ $(document).on('click', '.mark-check-grading-request-as-done-button', function()
 });
 
 
-$(document).ready(function() {
-    $('#requestquestionsform').on('submit', function() {
+$(document).ready(function () {
+    $('#requestquestionsform').on('submit', function () {
         let $selecteduser = $('#id_selectedusers').val();
         let textarea_value = $('.requestquestionscomment').val();
 
