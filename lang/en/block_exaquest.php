@@ -85,8 +85,6 @@ $string['daily_released_questions_in_course'] =
     '{$a->daily_released_questions} questions released in course <a href="{$a->url}">{$a->fullname}</a><br>';
 
 // Roles and Capabilities
-$string['exaquest:fragenersteller'] = 'Create questions in Exaquest block';
-$string['exaquest:modulverantwortlicher'] = 'Responsible for a module';
 $string['setuproles'] = 'Set up roles and capabilities';
 
 // Exams
@@ -284,9 +282,6 @@ $string['exaquest:similarity_exam_select_label'] = 'Wählen Sie eine Prüfung od
 $string['exaquest:similarity_exam_select_default'] = 'Alle Fragen';
 
 // capabilites
-$string['exaquest:myaddinstance'] = 'myaddinstance';
-$string['exaquest:addinstance'] = 'addinstance';
-
 $string['exaquest:fragenersteller'] = 'Fragenersteller';
 $string['exaquest:modulverantwortlicher'] = 'Modulverantwortlicher';
 $string['exaquest:admintechnpruefungsdurchf'] = 'Admintechnischeprüfungsdurchführung';
