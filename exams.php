@@ -79,7 +79,7 @@ if ($action == 'assign_quiz_addquestions') {
         }
     }
 } else if ($action == 'assign_gradeexam') {
-    $comment = optional_param('assign_gradeexam_comment', '', PARAM_TEXT);
+    $comment = optional_param('assign_grade_exam_comment', '', PARAM_TEXT);
     $quizid = required_param('quizid', PARAM_INT);
     $quizname = $DB->get_field('quiz', 'name', array('id' => $quizid));
 
@@ -94,7 +94,6 @@ if ($action == 'assign_quiz_addquestions') {
     if (array_key_exists($selectedbmwkey, $_POST) && is_array($_POST[$selectedbmwkey])) {
         $selectedbmw = clean_param_array($_POST[$selectedbmwkey], PARAM_INT);
         foreach ($selectedbmw as $bmw) {
-            // TODO: add the $selectedquestions to the assign_gradeexam function
             block_exaquest_assign_gradeexam($USER, $bmw, $comment, $quizid, $quizname, BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM, $selectedquestions);
         }
     }

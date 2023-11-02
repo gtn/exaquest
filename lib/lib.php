@@ -2247,20 +2247,25 @@ function block_exaquest_assign_check_exam_grading($userfrom, $userto, $comment, 
     $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
     $messageobject->url = $messageobject->url->raw_out(false);
     $messageobject->requestcomment = $comment;
-    // TODO message wording
-    $message = get_string('please_fill_exam', 'block_exaquest', $messageobject);
-    $subject = get_string('please_fill_exam_subject', 'block_exaquest', $messageobject);
-    block_exaquest_send_moodle_notification("fillexam", $userfrom->id, $userto, $subject, $message,
-            "fillexam", $messageobject->url);
+    // TODO: create strings
+    $message = get_string('please_check_exam_grading', 'block_exaquest', $messageobject);
+    $subject = get_string('please_check_exam_grading_subject', 'block_exaquest', $messageobject);
+    block_exaquest_send_moodle_notification("checkexamgrading", $userfrom->id, $userto, $subject, $message,
+            "checkexamgrading", $messageobject->url);
 }
 
 
 function block_exaquest_assign_gradeexam($userfrom, $userto, $comment, $quizid, $quizname = null,
         $assigntype = null, $selectedquestions = null) {
-    global $COURSE;
+    global $COURSE, $DB;
+
+    // add the $selectedquestions to the comment
+    $comment .= "\n\n" . get_string('selected_questions', 'block_exaquest') . "\n";
+    foreach ($selectedquestions as $selectedquestion) {
+        $comment .= $DB->get_record('question', array('id' => $selectedquestion))->name . "\n";
+    }
 
     block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assigntype);
-    // TODO: questiongradingassign instead of quizassign? or just solve it via comment?
 
     // create the message
     $messageobject = new stdClass;
@@ -2268,11 +2273,10 @@ function block_exaquest_assign_gradeexam($userfrom, $userto, $comment, $quizid, 
     $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
     $messageobject->url = $messageobject->url->raw_out(false);
     $messageobject->requestcomment = $comment;
-    // TODO: message wording
-    $message = get_string('please_fill_exam', 'block_exaquest', $messageobject);
-    $subject = get_string('please_fill_exam_subject', 'block_exaquest', $messageobject);
-    block_exaquest_send_moodle_notification("fillexam", $userfrom->id, $userto, $subject, $message,
-            "fillexam", $messageobject->url);
+    $message = get_string('please_grade_exam', 'block_exaquest', $messageobject);
+    $subject = get_string('please_grade_exam_subject', 'block_exaquest', $messageobject);
+    block_exaquest_send_moodle_notification("gradeexam", $userfrom->id, $userto, $subject, $message,
+            "gradeexam", $messageobject->url);
 }
 
 

@@ -55,6 +55,18 @@ $string['please_fill_exam'] =
     'Bitte befüllen Sie die Prüfung <a href="{$a->url}">{$a->fullname}</a> mit Fragen. Kommentar: {$a->requestcomment}';
 $string['please_fill_exam_subject'] = 'Bitte befüllen Sie die Prüfung {$a->fullname} mit Fragen';
 
+$string['messageprovider:gradeexam'] = 'Eine Prüfung soll benotet werden';
+$string['please_grade_exam'] =
+        'Bitte benoten Sie die Prüfung <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
+$string['please_grade_exam_subject'] = 'Bitte benoten Sie die Prüfung {$a->fullname}';
+$string['selected_questions'] = 'Folgende Fragen wurden ihnen zugeteilt:';
+
+$string['messageprovider:checkexamgrading'] = 'Prüfungsbewertung soll überprüft werden';
+$string['please_check_exam_grading'] =
+        'Bitte überprüfen Sie die Bewertung der Prüfung <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
+$string['please_check_exam_grading_subject'] = 'Bitte überprüfen Sie die Bewertung der Prüfung {$a->fullname}';
+
+
 $string['messageprovider:newexamsrequest'] = 'Neue Prüfungen wurden angefordert';
 $string['please_create_new_exams'] =
     'Bitte erstellen Sie eine neue Prüfung in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';

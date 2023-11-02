@@ -76,7 +76,7 @@ class popup_assign_gradeexam implements renderable, templatable {
         // the choosable options need to be an array of strings
         $autocompleteoptions = [];
         foreach ($significant_questions as $key => $question) {
-            $autocompleteoptions[$question->id] = $DB->get_record('question', array('id' => $question->id))->name;;
+            $autocompleteoptions[$question->id] = $DB->get_record('question', array('id' => $question->id))->name;
         }
         $questions_autocomplete_html =
                 $mform->create_autocomplete_multi_select_html($autocompleteoptions, "questions" . $data->quizid,
