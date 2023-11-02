@@ -55,11 +55,16 @@ $string['please_fill_exam'] =
     'Bitte befüllen Sie die Prüfung <a href="{$a->url}">{$a->fullname}</a> mit Fragen. Kommentar: {$a->requestcomment}';
 $string['please_fill_exam_subject'] = 'Bitte befüllen Sie die Prüfung {$a->fullname} mit Fragen';
 
+$string['messageprovider:gradeexam'] = 'Eine Prüfung soll benotet werden TODO TRANSLATE';
 $string['messageprovider:newexamsrequest'] = 'New exams have been requested';
 $string['please_create_new_exams'] =
+$string['please_grade_exam_subject'] = 'Bitte benoten Sie die Prüfung {$a->fullname} TODO TRANSLATE';
+$string['selected_questions'] = 'Folgende Fragen wurden ihnen zugeteilt: TODO TRANSLATE';
     'Please create new exams in <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
+$string['messageprovider:checkexamgrading'] = 'Prüfungsbewertung soll überprüft werden TODO TRANSLATE';
 $string['please_create_new_exams_subject'] = 'Please create new exams in {$a->fullname}';
 
+$string['please_check_exam_grading_subject'] = 'Bitte überprüfen Sie die Bewertung der Prüfung {$a->fullname} TODO TRANSLATE';
 $string['messageprovider:revisequestion'] = 'Questions have been assigned for revision';
 $string['please_revise_question'] = 'Please revise question <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['please_revise_question_subject'] = 'Please revise question {$a->fullname}';
@@ -164,6 +169,8 @@ $string['show_questions_for_me_to_release'] = 'Show questions for me to release'
 $string['show_all_released_questions'] = 'Show all released questions';
 $string['show_all_locked_questions'] = 'Show all locked questions';
 
+$string['show_all_fachlich_reviewed_questions_to_review'] = 'Fachlich begutachtete Fragen anzeigen. Formal noch zu begutachten TODO TRANSLATE';
+$string['show_all_formal_reviewed_questions_to_review'] = 'Formal begutachtete Fragen anzeigen. Fachlich noch zu begutachten TODO TRANSLATE';
 $string['created'] = 'Created:';
 $string['review'] = 'Review:';
 $string['revise'] = 'Revise:';
@@ -374,3 +381,4 @@ $string['set_up_roles'] = 'Set up roles for Exaquest.';
 
 $string['points_per'] = 'Points for Fragefach ';
 $string['exaquest_settings'] = 'Exaquest Einstellungen';
+$string['clean_up_tables'] = 'Säubere die Exaquest Tabellen, falls fehlerhafte Daten bestehen. TODO TRANSLATE';
