@@ -344,4 +344,8 @@ $capabilities = array(
                 'captype' => 'write',
                 'contextlevel' => CONTEXT_COURSE,
         ),
+        'block/exaquest:assigngradeexam' => array(
+                'captype' => 'write',
+                'contextlevel' => CONTEXT_COURSE,
+        ),
 );

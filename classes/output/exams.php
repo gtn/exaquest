@@ -89,16 +89,17 @@ class exams implements renderable, templatable {
             $exams_to_check_grading = block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid,
                     BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
             foreach ($exams_to_check_grading as $exam_to_check_grading) {
-                $exam_to_check_grading->mark_check_exam_grading_request_as_done = true;
-                // remove it from the finished exams, since it is already in the exams_to_check_grading array
-                foreach ($finished_exams as $key => $finished_exam) {
-                    if ($finished_exam->quizid == $exam_to_check_grading->quizid) {
-                        unset($finished_exams[$key]);
-                    }
-                }
+                $finished_exams[$exam_to_check_grading->quizid]->mark_check_exam_grading_request_as_done = true;
+            }
+
+            // If exams_to_grade and exams_to_check_grading overlap it does not really make sense, but still it should be covered:
+            $exams_to_grade =
+                    block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM);
+            foreach ($exams_to_grade as $exam_to_grade) {
+                $finished_exams[$exam_to_grade->quizid]->mark_grade_request_as_done = true;
             }
             // combine finished_exams and exams_to_check_grading to one array,
-            $this->finished_exams = array_merge($finished_exams, $exams_to_check_grading);
+            $this->finished_exams = array_merge($finished_exams);
         }
 
         if ($capabilities["viewgradesreleasedexamscard"]) {
@@ -167,7 +168,7 @@ class exams implements renderable, templatable {
 
         $data->courseid = $this->courseid;
 
-        // TODO: later, now the check_exam_grading is more important
+        // TODO: only show when you have been assigned or are PK
         // add popup_assign_gradeexam to every finished exam:
         foreach ($data->finished_exams as $finished_exam) {
             $popup = new popup_assign_gradeexam($this->courseid, $finished_exam->quizid);

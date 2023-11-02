@@ -1065,6 +1065,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:dofachlichreviewexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:assigncheckexamgrading', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:skipandreleaseexam', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:assigngradeexam', CAP_ALLOW, $roleid, $context);
 
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
@@ -1101,6 +1102,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:addquestiontoexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewnewexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:assigngradeexam', CAP_ALLOW, $roleid, $context);
     unassign_capability('block/exaquest:createexam', $roleid, $context->id); // accidentally added, should be deleted
 
     if (!$DB->record_exists('role', ['shortname' => 'modulverantwortlicher'])) {

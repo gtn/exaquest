@@ -55,16 +55,16 @@ $string['please_fill_exam'] =
         'Bitte befüllen Sie die Prüfung <a href="{$a->url}">{$a->fullname}</a> mit Fragen. Kommentar: {$a->requestcomment}';
 $string['please_fill_exam_subject'] = 'Bitte befüllen Sie die Prüfung {$a->fullname} mit Fragen';
 
-$string['messageprovider:gradeexam'] = 'Eine Prüfung soll benotet werden';
+$string['messageprovider:gradeexam'] = 'Eine Prüfung soll beurteilt werden';
 $string['please_grade_exam'] =
-        'Bitte benoten Sie die Prüfung <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
-$string['please_grade_exam_subject'] = 'Bitte benoten Sie die Prüfung {$a->fullname}';
+        'Bitte beurteilen Sie die Prüfung <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
+$string['please_grade_exam_subject'] = 'Bitte beurteilen Sie die Prüfung {$a->fullname}';
 $string['selected_questions'] = 'Folgende Fragen wurden ihnen zugeteilt:';
 
-$string['messageprovider:checkexamgrading'] = 'Prüfungsbewertung soll überprüft werden';
+$string['messageprovider:checkexamgrading'] = 'Prüfungsbeurteilung soll überprüft werden';
 $string['please_check_exam_grading'] =
-        'Bitte überprüfen Sie die Bewertung der Prüfung <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
-$string['please_check_exam_grading_subject'] = 'Bitte überprüfen Sie die Bewertung der Prüfung {$a->fullname}';
+        'Bitte überprüfen Sie die Beurteilung der Prüfung <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
+$string['please_check_exam_grading_subject'] = 'Bitte überprüfen Sie die Beurteilung der Prüfung {$a->fullname}';
 
 $string['messageprovider:newexamsrequest'] = 'Neue Prüfungen wurden angefordert';
 $string['please_create_new_exams'] =
@@ -392,15 +392,15 @@ $string['lock_from_quiz'] = 'Sperren';
 
 $string['send_exam_to_review'] = 'Prüfung zur Überarbeitung schicken';
 $string['fachlich_release_exam'] = 'Prüfung fachlich freigeben';
-$string['assign_check_exam_grading'] = 'Prüfung zur Überprüfung der Bewertung anfordern';
-$string['assign_check_exam_grading_label'] = 'Prüfung zur Überprüfung der Bewertung anfordern';
+$string['assign_check_exam_grading'] = 'Überprüfung der Beurteilung anfordern';
+$string['assign_check_exam_grading_label'] = 'Überprüfung der Beurteilung anfordern';
 $string['assign_check_exam_grading_comment_placeholder'] = 'Kommentar';
 $string['assign_check_exam_grading_button'] = 'Anfordern';
 $string['assign_gradeexam'] = 'Prüfungsbeurteilung anfordern';
 $string['assign_gradeexam_label'] = 'Prüfungsbeurteilung anfordern';
 $string['select_questions_label'] = 'Fragen auswählen';
 $string['assign_gradeexam_comment_placeholder'] = 'Kommentar';
-$string['exams_for_me_to_check_grading'] = 'Prüfungen deren Bewertung ich überprüfen soll';
-$string['exams_for_me_to_check_grading_title'] = 'Prüfungen bei denen ich die Bewertung überprüfen soll';
-$string['exams_for_me_to_grade'] = 'Prüfungen soll ich benoten';
-$string['exams_for_me_to_grade_title'] = 'Prüfungen die ich benoten soll';
+$string['exams_for_me_to_check_grading'] = 'Prüfungen deren Beurteilung ich überprüfen soll';
+$string['exams_for_me_to_check_grading_title'] = 'Prüfungen bei denen ich die Beurteilung überprüfen soll';
+$string['exams_for_me_to_grade'] = 'Prüfungen soll ich beurteilen';
+$string['exams_for_me_to_grade_title'] = 'Prüfungen die ich beurteilen soll';
