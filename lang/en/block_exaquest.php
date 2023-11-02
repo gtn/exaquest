@@ -169,8 +169,6 @@ $string['show_questions_for_me_to_release'] = 'Show questions for me to release'
 $string['show_all_released_questions'] = 'Show all released questions';
 $string['show_all_locked_questions'] = 'Show all locked questions';
 
-$string['show_all_fachlich_reviewed_questions_to_review'] = 'Show fachliche reviewed questions. Formal review still to do.';
-$string['show_all_formal_reviewed_questions_to_review'] = 'Show formal reviewed question. Fachlich review still to do.';
 $string['created'] = 'Created:';
 $string['review'] = 'Review:';
 $string['revise'] = 'Revise:';
@@ -360,7 +358,6 @@ $string['exaquest:viewdashboardoutsidecourse'] = 'View exaquest dashboard in moo
 $string['exaquest:requestnewexam'] = 'Allow requesting a new exam in exaquest';
 $string['exaquest:viewcreatedexams'] = 'View created exams in exaquest';
 $string['exaquest:viewfinishedexams'] = 'View finished exams in exaquest';
-$string['exaquest:viewgradesreleasedexams'] = 'View released exams in exaquest';
 $string['exaquest:viewnewexams'] = 'View new exams in exaquest';
 $string['exaquest:viewgradesreleasedexams'] = 'View exams where grades have been released in exaquest';
 $string['exaquest:assignaddquestions'] = 'Assign user to add questions to exams';
@@ -374,8 +371,6 @@ $string['exaquest:viewreleasedexams'] = 'View released exams in exaquest';
 
 // tasks
 $string['check_active_exams'] = 'Check status of active Exaquest quizzes and update if finished.';
-$string['clean_up_tables'] =
-    'Clean up Exaquest tables, e.g. delete questionstatus entries where there is no questionbankentryid related.';
 $string['create_daily_notifications'] = 'Create daily Exaquest notifications.';
 $string['set_up_roles'] = 'Set up roles for Exaquest.';
 

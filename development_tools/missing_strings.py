@@ -12,7 +12,6 @@ second_parameter = "block_exaquest"
 # Define the language file path
 lang_file_path = os.path.join(root_directory, "lang", "de", "block_exaquest.php")
 
-
 # Extract existing strings from the language file
 existing_strings = set()
 if os.path.exists(lang_file_path):

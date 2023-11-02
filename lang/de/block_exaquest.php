@@ -51,7 +51,6 @@ $string['please_create_new_questions'] =
     'Bitte erstellen Sie eine neue Frage in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
 $string['please_create_new_questions_subject'] = 'Bitte erstellen Sie eine neue Frage in {$a->fullname}';
 
-$string['messageprovider:fillexam'] = 'Eine Prüfung soll befüllt werden';
 $string['please_fill_exam'] =
     'Bitte befüllen Sie die Prüfung <a href="{$a->url}">{$a->fullname}</a> mit Fragen. Kommentar: {$a->requestcomment}';
 $string['please_fill_exam_subject'] = 'Bitte befüllen Sie die Prüfung {$a->fullname} mit Fragen';
@@ -61,7 +60,6 @@ $string['please_grade_exam'] =
         'Bitte benoten Sie die Prüfung <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
 $string['please_grade_exam_subject'] = 'Bitte benoten Sie die Prüfung {$a->fullname}';
 $string['selected_questions'] = 'Folgende Fragen wurden ihnen zugeteilt:';
-$string['please_revise_question'] = 'Bitte überarbeiten Sie Frage <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 
 $string['messageprovider:checkexamgrading'] = 'Prüfungsbewertung soll überprüft werden';
 $string['please_check_exam_grading'] =
@@ -69,7 +67,6 @@ $string['please_check_exam_grading'] =
 $string['please_check_exam_grading_subject'] = 'Bitte überprüfen Sie die Bewertung der Prüfung {$a->fullname}';
 
 
-$string['please_review_question'] = 'Bitte begutachten Sie Frage <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['messageprovider:newexamsrequest'] = 'Neue Prüfungen wurden angefordert';
 $string['please_create_new_exams'] =
     'Bitte erstellen Sie eine neue Prüfung in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
@@ -102,8 +99,7 @@ $string['daily_released_questions_in_course'] =
     '{$a->daily_released_questions} Fragen wurden gestern in  <a href="{$a->url}">{$a->fullname}</a> veröffentlicht.<br>';
 
 // Roles and Capabilities
-$string['exaquest:fragenersteller'] = 'Erstellen von Fragen in Exaquest';
-$string['exaquest:modulverantwortlicher'] = 'Verantwortlich für ein Modul';
+
 $string['setuproles'] = 'Erstellen von Rollen und Erlaubnissen';
 
 // Exams
@@ -176,7 +172,6 @@ $string['show_all_fachlich_reviewed_questions_to_review'] = 'Fachlich begutachte
 $string['show_all_formal_reviewed_questions_to_review'] = 'Formal begutachtete Fragen anzeigen. Fachlich noch zu begutachten';
 $string['show_questions_for_me_to_review'] = 'Meine Fragen zur Begutachtung anzeigen';
 $string['show_questions_to_revise'] = 'Fragen zur Überabeitung anzeigen';
-$string['release_question_warning'] = 'Sind Sie sicher, dass Sie die Begutachtungen überspringen wollen, und die Frage direkt freigeben?';
 $string['show_questions_for_me_to_revise'] = 'Meine Fragen zur Überabeitung anzeigen';
 $string['show_questions_to_release'] = 'Freizugebende Fragen anzeigen';
 $string['show_questions_for_me_to_release'] = 'Meine freizugebenden Fragen anzeigen';
@@ -299,9 +294,6 @@ $string['exaquest:similarity_exam_select_label'] = 'Wählen Sie eine Prüfung od
 $string['exaquest:similarity_exam_select_default'] = 'Alle Fragen';
 
 // capabilites
-$string['exaquest:myaddinstance'] = 'myaddinstance';
-$string['exaquest:addinstance'] = 'addinstance';
-
 $string['exaquest:fragenersteller'] = 'Fragenersteller';
 $string['exaquest:modulverantwortlicher'] = 'Modulverantwortlicher';
 $string['exaquest:admintechnpruefungsdurchf'] = 'Admintechnischeprüfungsdurchführung';
@@ -374,7 +366,6 @@ $string['exaquest:viewdashboardoutsidecourse'] = 'View exaquest dashboard in moo
 $string['exaquest:requestnewexam'] = 'Allow requesting a new exam in exaquest';
 $string['exaquest:viewcreatedexams'] = 'View created exams in exaquest';
 $string['exaquest:viewfinishedexams'] = 'View finished exams in exaquest';
-$string['exaquest:viewgradesreleasedexams'] = 'View released exams in exaquest';
 $string['exaquest:viewnewexams'] = 'View new exams in exaquest';
 $string['exaquest:viewgradesreleasedexams'] = 'View exams where grades have been released in exaquest';
 $string['exaquest:assignaddquestions'] = 'Assign user to add questions to exams';
@@ -387,7 +378,7 @@ $string['exaquest:viewownquestions'] = 'View own questions in exaquest';
 $string['exaquest:viewreleasedexams'] = 'View released exams in exaquest';
 
 // tasks
-$string['check_active_exams'] =
+$string['check_active_exams_task'] =
     'Update alle bereits beendeten Prüfungen welche den Status "aktiv" in Exaquest haben, und aktualisiere den Status.';
 $string['clean_up_tables'] = 'Säubere die Exaquest Tabellen, falls fehlerhafte Daten bestehen.';
 $string['create_daily_notifications'] = 'Erstelle die täglichen Exaquest-Nachrichten.';

@@ -35,7 +35,7 @@ class check_active_exams extends \core\task\scheduled_task {
 
     public function get_name() {
         //return block_exacomp_trans(['en:Import Data with additional functionality', 'de:Daten Importieren mit zusätzlicher Funktionalität']);
-        return get_string('check_active_exams', 'block_exaquest');
+        return get_string('check_active_exams_task', 'block_exaquest');
     }
 }
 
