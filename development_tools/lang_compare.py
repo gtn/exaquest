@@ -7,38 +7,7 @@ import re
 de_file = '../lang/de/block_exaquest.php'
 en_file = '../lang/en/block_exaquest.php'
 
-# Function to extract key-value pairs from content
-def extract_strings_old(content):
-    strings = {}
-    for i, line in enumerate(content):
-        match = re.search(r"\$string\['(.*?)'\]\s*=\s*'(.*)';", line)
-        if match:
-            strings[match.group(1)] = {'line': line, 'index': i}
-    return strings
-
-# Function to extract key-value pairs from content
 def extract_strings(content):
-    strings = {}
-    key = None
-    value = None
-    for i, line in enumerate(content):
-        match = re.search(r"\$string\['(.*?)'\]\s*=\s*(.*);", line)
-        if match:
-            key = match.group(1)
-            value = match.group(2)
-            if value.strip().endswith(";"):
-                strings[key] = {'line': value, 'index': i}
-            else:
-                i += 1
-                while not content[i].strip().endswith(";"):
-                    value += content[i].strip()
-                    i += 1
-                value += content[i].strip()
-                strings[key] = {'line': value, 'index': i}
-    return strings
-
-
-def extract_strings_self(content):
     strings = {}
     for i, line in enumerate(content):
         match = re.search(r"\$string\['(.*?)'\]\s*=\s*(.*);", line)
@@ -63,10 +32,7 @@ with open(en_file, 'r', encoding='utf-8') as f:
     en_content = f.readlines()
 
 # Extracting the key-value pairs from the content
-de_strings_self = extract_strings_self(de_content)
-de_strings_old = extract_strings_old(de_content)
 de_strings = extract_strings(de_content)
-
 en_strings = extract_strings(en_content)
 
 # Synchronize from English to German
