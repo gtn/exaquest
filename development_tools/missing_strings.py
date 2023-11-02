@@ -24,8 +24,8 @@ if os.path.exists(lang_file_path):
 added_strings = set()
 for dirpath, dirnames, filenames in os.walk(root_directory):
     for filename in filenames:
-        if filename.endswith('.mustache'):
-            # if filename.endswith('.php') or filename.endswith('.mustache') or filename.endswith('.html') or filename.endswith('.js'):
+        # if filename.endswith('.mustache'):
+        if filename.endswith('.php') or filename.endswith('.mustache') or filename.endswith('.html') or filename.endswith('.js'):
             file_path = os.path.join(dirpath, filename)
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()

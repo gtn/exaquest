@@ -58,11 +58,13 @@ $string['please_fill_exam_subject'] = 'Bitte befüllen Sie die Prüfung {$a->ful
 $string['messageprovider:gradeexam'] = 'An exam has to be graded';
 $string['messageprovider:newexamsrequest'] = 'New exams have been requested';
 $string['please_create_new_exams'] =
+$string['please_grade_exam'] = 'Please grade the exam <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['please_grade_exam_subject'] = 'Please grade exam {$a->fullname}';
 $string['selected_questions'] = 'The following questions have been assigned to you';
     'Please create new exams in <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['messageprovider:checkexamgrading'] = 'Exam grading has to be reviewed';
 $string['please_create_new_exams_subject'] = 'Please create new exams in {$a->fullname}';
+$string['please_check_exam_grading'] = 'Please check the grading of the exam <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 
 $string['please_check_exam_grading_subject'] = 'Please review the grading of {$a->fullname}';
 $string['messageprovider:revisequestion'] = 'Questions have been assigned for revision';
@@ -377,6 +379,7 @@ $string['set_up_roles'] = 'Set up roles for Exaquest.';
 $string['points_per'] = 'Points for Fragefach ';
 $string['exaquest_settings'] = 'Exaquest Settings';
 $string['clean_up_tables'] = 'Clean the Exaquest tables from orphaned entries';
+$string['check_active_exams_task'] = 'Update the status of all finished exams which have the satus "active" in Exaquest.';
 $string['assign_to_revise_from_quiz'] = 'Assign to revise';
 $string['revise_question_from_quiz'] = 'Revise question';
 $string['lock_from_quiz'] = 'Lock';
