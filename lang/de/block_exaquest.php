@@ -45,8 +45,8 @@ $string['assign_addquestions_label'] = 'Fragenzuweisung anfordern von ...';
 $string['assign_addquestions_comment_placeholder'] = 'Kommentar an die ausgewählten Personen';
 
 // Messages
-$string['messageprovider:newquestionsrequest'] = 'New questions have been requested TODO TRANSLATE';
-$string['messageprovider:fillexam'] = 'Neue Fragen wurden angefordert';
+$string['messageprovider:newquestionsrequest'] = 'Neue Fragen wurden angefordert';
+$string['messageprovider:fillexam'] = 'Befüllen einer Prüfung wurde angefordert';
 $string['please_create_new_questions'] =
     'Bitte erstellen Sie eine neue Frage in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
 $string['please_create_new_questions_subject'] = 'Bitte erstellen Sie eine neue Frage in {$a->fullname}';
@@ -61,7 +61,7 @@ $string['please_grade_exam'] =
         'Bitte benoten Sie die Prüfung <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
 $string['please_grade_exam_subject'] = 'Bitte benoten Sie die Prüfung {$a->fullname}';
 $string['selected_questions'] = 'Folgende Fragen wurden ihnen zugeteilt:';
-$string['please_revise_question'] = 'Please revise question <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment} TODO TRANSLATE';
+$string['please_revise_question'] = 'Bitte überarbeiten Sie Frage <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 
 $string['messageprovider:checkexamgrading'] = 'Prüfungsbewertung soll überprüft werden';
 $string['please_check_exam_grading'] =
@@ -69,7 +69,7 @@ $string['please_check_exam_grading'] =
 $string['please_check_exam_grading_subject'] = 'Bitte überprüfen Sie die Bewertung der Prüfung {$a->fullname}';
 
 
-$string['please_review_question'] = 'Please review question <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment} TODO TRANSLATE';
+$string['please_review_question'] = 'Bitte begutachten Sie Frage <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['messageprovider:newexamsrequest'] = 'Neue Prüfungen wurden angefordert';
 $string['please_create_new_exams'] =
     'Bitte erstellen Sie eine neue Prüfung in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
@@ -176,7 +176,7 @@ $string['show_all_fachlich_reviewed_questions_to_review'] = 'Fachlich begutachte
 $string['show_all_formal_reviewed_questions_to_review'] = 'Formal begutachtete Fragen anzeigen. Fachlich noch zu begutachten';
 $string['show_questions_for_me_to_review'] = 'Meine Fragen zur Begutachtung anzeigen';
 $string['show_questions_to_revise'] = 'Fragen zur Überabeitung anzeigen';
-$string['release_question_warning'] = 'Are you sure you want to skip the review and release the question right away? TODO TRANSLATE';
+$string['release_question_warning'] = 'Sind Sie sicher, dass Sie die Begutachtungen überspringen wollen, und die Frage direkt freigeben?';
 $string['show_questions_for_me_to_revise'] = 'Meine Fragen zur Überabeitung anzeigen';
 $string['show_questions_to_release'] = 'Freizugebende Fragen anzeigen';
 $string['show_questions_for_me_to_release'] = 'Meine freizugebenden Fragen anzeigen';
@@ -366,7 +366,7 @@ $string['exaquest:viewstatistic'] = 'View statistics tab in exaquest';
 $string['exaquest:viewsimilaritytab'] = 'View similarity tab in exaquest';
 $string['exaquest:viewexamstab'] = 'View exams tab in exaquest';
 $string['exaquest:viewcategorytab'] = 'View category tab in exaquest';
-$string['check_active_exams'] = 'Check status of active Exaquest quizzes and update if finished. TODO TRANSLATE';
+$string['check_active_exams'] = 'Überprüfung des Statuses einer aktiven Prüfung und Update falls sie bereits beendet ist.';
 $string['exaquest:viewdashboardtab'] = 'View dashboard tab in exaquest';
 $string['exaquest:viewquestionbanktab'] = 'View question tab in exaquest';
 $string['exaquest:viewquestionstorelease'] = 'View questions to release';
@@ -396,3 +396,6 @@ $string['set_up_roles'] = 'Rollen für Exaquest aufsetzen.';
 $string['points_per'] = 'Punkte für Fragefach ';
 $string['exaquest_settings'] = 'Exaquest Settings';
 
+$string['assign_to_revise_from_quiz'] = 'Zur Überarbeitung zuteilen';
+$string['revise_question_from_quiz'] = 'Überarbeiten';
+$string['lock_from_quiz'] = 'Sperren';
