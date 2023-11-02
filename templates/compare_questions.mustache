@@ -8,7 +8,7 @@
 <div id="exaquest-similarity-comparison">
 
     {{#statistics}}
-        {{! Print similarity statistics. }}
+    {{! Print similarity statistics. }}
         <div id="exaquest-similarity-comparison-statistics">
             <ul class="all-versions" data-target="stats-{{ uniqid }}-{{ id }}">
                 <li class="stat-totalqcount">
@@ -59,7 +59,7 @@
 
 
     {{#showLoading}}
-        {{! Show the loading icon. }}
+    {{! Show the loading icon. }}
         <div class="p-5">
             {{> core/loading }}
         </div>
@@ -74,54 +74,54 @@
         {{> core/single_button }}
     {{/buttons}}
 
-{{!<button data-action="mod_example/helloworld-update_button">Click me</button>}}
+    {{!<button data-action="mod_example/helloworld-update_button">Click me</button>}}
 
 
     {{#similarityrecords.0}}
         {{#isHeader}}
             <table class="exaquest-similarity-comparison-table table-responsive table table-striped table-hover"
-                data-target="{{ uniqid }}-{{ id }}">
+                   data-target="{{ uniqid }}-{{ id }}">
                 <thead>
-                    <tr class="exaquest-similarity-comparison-table-header">
-                        <th class="col-qid1">{{col_qid1}}</th>
-                        <th class="col-qid2">{{col_qid2}}</th>
-                        <th class="col-issimilar">{{col_issimilar}}</th>
-                        <th class="col-similarity">{{col_similarity}}</th>
-                        <th class="col-timestamp">{{col_timestamp}}</th>
-                        <th class="col-threshold">{{col_threshold}}</th>
-                        <th class="col-algorithm">{{col_algorithm}}</th>
-                    </tr>
+                <tr class="exaquest-similarity-comparison-table-header">
+                    <th class="col-qid1">{{col_qid1}}</th>
+                    <th class="col-qid2">{{col_qid2}}</th>
+                    <th class="col-issimilar">{{col_issimilar}}</th>
+                    <th class="col-similarity">{{col_similarity}}</th>
+                    <th class="col-timestamp">{{col_timestamp}}</th>
+                    <th class="col-threshold">{{col_threshold}}</th>
+                    <th class="col-algorithm">{{col_algorithm}}</th>
+                </tr>
                 </thead>
                 {{#similarityrecords}}
                     {{^isHeader}}
                         {{#hightlightClass}}
-                            <tr class="{{hightlightClass}} exaquest-similarity-comparison-table-row">
+                        <tr class="{{hightlightClass}} exaquest-similarity-comparison-table-row">
                         {{/hightlightClass}}
                         {{^hightlightClass}}
-                            <tr class="exaquest-similarity-comparison-table-row">
+                        <tr class="exaquest-similarity-comparison-table-row">
                         {{/hightlightClass}}
-                                <td class="col-qid1">
-                                    {{#edit_q1_button}}
-                                        {{> core/single_button }}
-                                    {{/edit_q1_button}}
-                                    {{^edit_q1_button}}
-                                        {{col_qid1}}
-                                    {{/edit_q1_button}}
-                                </td>
-                                <td class="col-qid2">
-                                    {{#edit_q2_button}}
-                                        {{> core/single_button }}
-                                    {{/edit_q2_button}}
-                                    {{^edit_q2_button}}
-                                        {{col_qid2}}
-                                    {{/edit_q2_button}}
-                                </td>
-                                <td class="col-issimilar"><span class="badge badge-primary">{{col_issimilar}}</span></td>
-                                <td class="col-similarity">{{col_similarity}}</td>
-                                <td class="col-timestamp">{{{col_timestamp}}}</td>
-                                <td class="col-threshold">{{col_threshold}}</td>
-                                <td class="col-algorithm">{{col_algorithm}}</td>
-                            </tr>
+                        <td class="col-qid1">
+                            {{#edit_q1_button}}
+                                {{> core/single_button }}
+                            {{/edit_q1_button}}
+                            {{^edit_q1_button}}
+                                {{col_qid1}}
+                            {{/edit_q1_button}}
+                        </td>
+                        <td class="col-qid2">
+                            {{#edit_q2_button}}
+                                {{> core/single_button }}
+                            {{/edit_q2_button}}
+                            {{^edit_q2_button}}
+                                {{col_qid2}}
+                            {{/edit_q2_button}}
+                        </td>
+                        <td class="col-issimilar"><span class="badge badge-primary">{{col_issimilar}}</span></td>
+                        <td class="col-similarity">{{col_similarity}}</td>
+                        <td class="col-timestamp">{{{col_timestamp}}}</td>
+                        <td class="col-threshold">{{col_threshold}}</td>
+                        <td class="col-algorithm">{{col_algorithm}}</td>
+                    </tr>
                     {{/isHeader}}
                 {{/similarityrecords}}
             </table>

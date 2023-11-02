@@ -390,3 +390,19 @@ $string['exaquest_settings'] = 'Exaquest Settings';
 $string['assign_to_revise_from_quiz'] = 'Zur Überarbeitung zuteilen';
 $string['revise_question_from_quiz'] = 'Überarbeiten';
 $string['lock_from_quiz'] = 'Sperren';
+
+
+$string['send_exam_to_review'] = 'Prüfung zur Überarbeitung schicken';
+$string['fachlich_release_exam'] = 'Prüfung fachlich freigeben';
+$string['assign_check_exam_grading'] = 'Prüfung zur Überprüfung der Bewertung zuteilen';
+$string['assign_check_exam_grading_label'] = 'Prüfung zur Überprüfung der Bewertung zuteilen';
+$string['assign_check_exam_grading_comment_placeholder'] = 'Kommentar';
+$string['assign_check_exam_grading_button'] = 'Zuteilen';
+$string['assign_gradeexam'] = 'Prüfungsbeurteilung zuteilen';
+$string['assign_gradeexam_label'] = 'Prüfungsbeurteilung zuteilen';
+$string['select_questions_label'] = 'Fragen auswählen';
+$string['assign_gradeexam_comment_placeholder'] = 'Kommentar';
+$string['exams_for_me_to_check_grading'] = 'Prüfungen deren Bewertung ich überprüfen soll';
+$string['exams_for_me_to_check_grading_title'] = 'Prüfungen bei denen ich die Bewertung überprüfen soll';
+$string['exams_for_me_to_grade'] = 'Prüfungen soll ich benoten';
+$string['exams_for_me_to_grade_title'] = 'Prüfungen die ich benoten soll';
