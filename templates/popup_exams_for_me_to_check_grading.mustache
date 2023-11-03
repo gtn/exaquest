@@ -27,7 +27,7 @@
                     {{#exams}}
                         <li class="list-group-item d-flex justify-content-between align-items-start check-grading-request-comment"
                             id="check-grading-request-comment-li-{{id}}">
-                            <span class="flex-grow-1">{{name}}: {{comment}}</span>
+                            <span class="flex-grow-1">{{name}}: {{comment}} <a href="{{linktograding}}"> Beurteilung überprüfen</a></span>
                             <button id="check-grading-request-comment-button-{{id}}"
                                     class="mark-check-grading-request-as-done-button btn btn-light btn-sm ml-2"
                                     requestid= {{id}}

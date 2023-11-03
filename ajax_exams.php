@@ -42,7 +42,6 @@ switch ($action) {
         block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_FACHLICH_RELEASED);
         break;
     case ('request_revision'):
-        //TODO: do something else than only revert it to created?
         block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_NEW);
         break;
     case ('formal_release_exam'):

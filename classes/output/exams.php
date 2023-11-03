@@ -155,8 +155,7 @@ class exams implements renderable, templatable {
             $new_exam->link_to_exam = $new_exam->link_to_exam->raw_out(false);
         }
 
-        $data->created_exams =
-                array_values($this->created_exams); // TODO rw: test if they are shown with current mustache (no way to create them in moodle yet --> create one manually)
+        $data->created_exams = array_values($this->created_exams);
         $data->fachlich_released_exams = array_values($this->fachlich_released_exams);
         //$data->formal_released_exams = array_values($this->formal_released_exams);
         $data->active_exams = array_values($this->active_exams);
@@ -167,14 +166,8 @@ class exams implements renderable, templatable {
                 array('add' => 'quiz', 'course' => $COURSE->id, 'section' => 0, 'return' => 0, 'sr' => 0));
         $data->create_exam_link = $data->create_exam_link->raw_out(false);
 
-        //if ($this->capabilities["releasequestion"]) {
-        //    $data->request_exams_popup = $this->popup_assign_addquestions->export_for_template($output);
-        //}
-        //$data->popup_assign_addquestions = $this->popup_assign_addquestions->export_for_template($output);
-
         $data->courseid = $this->courseid;
 
-        // TODO: only show when you have been assigned or are PK
         // add popup_assign_gradeexam to every finished exam:
         foreach ($data->finished_exams as $finished_exam) {
             $popup = new popup_assign_gradeexam($this->courseid, $finished_exam->quizid);
@@ -187,15 +180,11 @@ class exams implements renderable, templatable {
             $finished_exam->popup_assign_check_exam_grading = $popup->export_for_template($output);
         }
 
-
         // add popup_assign_check_exam_grading to every finished exam:
         foreach ($data->finished_exams as $finished_exam) {
             $popup = new popup_assign_change_exam_grading($finished_exam->quizid);
             $finished_exam->popup_assign_change_exam_grading = $popup->export_for_template($output);
         }
-
-
-
 
         return $data;
     }

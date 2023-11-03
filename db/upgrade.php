@@ -482,7 +482,7 @@ function xmldb_block_exaquest_upgrade($oldversion) {
 
     //if ($oldversion < 2023050901) {
     //    // add field subject and field neededpoints to block_exaquestquizassign
-    //    // todo: needepoints vs neededquestions. subject? what is that?
+    //    // TODO: needepoints vs neededquestions. subject? what is that?
     //    $table = new xmldb_table('block_exaquestquizassign');
     //    $field = new xmldb_field('subject', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null,
     //        0); // 0 because non-empty table already exists so it cannot be null

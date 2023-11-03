@@ -55,7 +55,7 @@ function block_exaquest_coursemodule_standard_elements($formwrapper, $mform) {
             $mform->addElement('header', 'exaquest_settings', get_string('exaquest_settings', 'block_exaquest'));
             $mform->setExpanded('exaquest_settings');
             // Add the fachlicherpruefer setting
-            $fachlichepruefer = block_exaquest_get_fachlichepruefer_by_courseid($COURSE->id); // for now I assume: there are only fachlichepruefer, there are no other roles, just other assignments TODO
+            $fachlichepruefer = block_exaquest_get_fachlichepruefer_by_courseid($COURSE->id); // for now I assume: there are only fachlichepruefer, there are no other roles, just other assignments
             if ($fachlichepruefer) {
                 $fachlichepruefer_options = array();
                 foreach ($fachlichepruefer as $fachlicherpruefer) {

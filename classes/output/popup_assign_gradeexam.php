@@ -17,7 +17,6 @@ class popup_assign_gradeexam implements renderable, templatable {
         $this->fp = block_exaquest_get_fachlichepruefer_by_courseid($courseid);
         $this->quizid = $quizid;
 
-        // TODO implement a more specific assignment
         $quiz = new stdClass();
         $quiz->id = $quizid;
         $this->significant_questions = quiz_report_get_significant_questions($quiz);
@@ -36,16 +35,6 @@ class popup_assign_gradeexam implements renderable, templatable {
         $data->fp = $this->fp;
         $data->quizid = $this->quizid;
 
-        //// create the fp autocomplete field with the help of an mform
-        //$mform = new autofill_helper_form($data->fp);
-        //// the choosable options need to be an array of strings
-        //$autocompleteoptions = [];
-        //foreach ($data->fp as $fp) {
-        //    $autocompleteoptions[$fp->id] = $fp->firstname . ' ' . $fp->lastname;
-        //}
-        //$fp_autocomplete_html = $mform->create_autocomplete_single_select_html($autocompleteoptions, "fp".$data->quizid);
-        //$data->fp_autocomplete_html = $fp_autocomplete_html;
-
         // create the bmw autocomplete field with the help of an mform
         $mform = new autofill_helper_form($data->bmw);
         // the choosable options need to be an array of strings
@@ -61,15 +50,8 @@ class popup_assign_gradeexam implements renderable, templatable {
                 'popup_assign_gradeexam');
         $data->bmw_autocomplete_html = $bmw_autocomplete_html;
 
-        // TODO: add questions to select:
         $significant_questions = $this->significant_questions;
         // get the question names
-
-        //foreach ($significant_questions as $key => $question) {
-        //    $significant_questions[$key]->questionname = $DB->get_record('question', array('id' => $question->id))->name;
-        //}
-        //// doesnt work like this, because for the template the array needs to start from 0
-        //$data->significant_questions = array_values($significant_questions);
 
         // create the bmw autocomplete field with the help of an mform
         $mform = new autofill_helper_form($significant_questions);

@@ -32,7 +32,6 @@ switch ($action) {
         // get the quiz with this requestid
         $quizid = $DB->get_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'quizid', array('id' => $requestid));
         $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $requestid));
-        // TODO: check if every assigned bmw and the FP have released.
         // check if every assignment of this kind is done for this quiz
         block_exaquest_check_if_grades_should_be_released($quizid);
 

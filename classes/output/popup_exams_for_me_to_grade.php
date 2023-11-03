@@ -6,6 +6,8 @@ use renderable;
 use renderer_base;
 use stdClass;
 use templatable;
+use moodle_url;
+
 
 class popup_exams_for_me_to_grade implements renderable, templatable {
     /** @var string $questions_to_create Part of the data that should be passed to the template. */
@@ -23,6 +25,16 @@ class popup_exams_for_me_to_grade implements renderable, templatable {
     public function export_for_template(renderer_base $output) {
         global $PAGE, $COURSE;
         $data = new stdClass();
+
+        // link to /mod/quiz/report.php?id=$quizid&mode=grading for every exam
+        foreach ($this->exams as $exam) {
+            $exam->linktograding = new moodle_url('/mod/quiz/report.php',
+                    array('id' => $exam->coursemoduleid,
+                            'mode' => 'grading',
+                    ));
+            $exam->linktograding = $exam->linktograding->raw_out(false);
+        }
+
         // https://www.sitepoint.com/community/t/help-accessing-deep-level-json-in-mustache-template-solved/290780
         // https://stackoverflow.com/questions/35999024/how-to-iterate-an-array-of-objects-in-mustache
         //$data->questions_to_create_selfmade = [(object)["username"  => array_pop($this->questions_to_create)->username], (object)["username"  =>array_pop($this->questions_to_create)->username]];
@@ -36,9 +48,11 @@ class popup_exams_for_me_to_grade implements renderable, templatable {
         //    end($data->exams_to_fill)->comma = false;
         //}
         $data->action =
-            $PAGE->url->out(false, array('action' => 'mark_as_done', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
+                $PAGE->url->out(false, array('action' => 'mark_as_done', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
         $data->sesskey = sesskey();
         $data->courseid = $COURSE->id;
+
         return $data;
+
     }
 }
