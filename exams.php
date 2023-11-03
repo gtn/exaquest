@@ -62,19 +62,12 @@ if ($action == 'assign_quiz_addquestions') {
     $quizid = required_param('quizid', PARAM_INT);
     $quizname = $DB->get_field('quiz', 'name', array('id' => $quizid));
 
-    //$selectedfpkey = "selectedfp" . $quizid . "popup_assign_check_exam_grading";
-    //if (array_key_exists($selectedfpkey, $_POST)) {
-    //    $selectedfp = clean_param($_POST[$selectedfpkey], PARAM_INT);
-    //    block_exaquest_assign_check_exam_grading($courseid, $USER, $selectedfp, $comment, $quizid, $quizname,
-    //            BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
-    //}
-
-    // TODO: check if teh FP is selected, since this will lead to different behaviour
+    // FP and BMW have the same behaviour ==> both are in selectedbmw
     $selectedbmwkey = "selectedbmw" . $quizid . "popup_assign_check_exam_grading";
     if (array_key_exists($selectedbmwkey, $_POST) && is_array($_POST[$selectedbmwkey])) {
-        $selectedbmw = clean_param_array($_POST[$selectedbmwkey], PARAM_INT);
-        foreach ($selectedbmw as $bmw) {
-            block_exaquest_assign_check_exam_grading($USER, $bmw, $comment, $quizid, $quizname,
+        $selectedusers = clean_param_array($_POST[$selectedbmwkey], PARAM_INT);
+        foreach ($selectedusers as $selecteduser) {
+            block_exaquest_assign_check_exam_grading($USER, $selecteduser, $comment, $quizid, $quizname,
                     BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
         }
     }

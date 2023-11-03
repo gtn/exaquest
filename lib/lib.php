@@ -620,8 +620,6 @@ function block_exaquest_get_my_questionbankentries_to_be_reviewed_count($questio
 /**
  * Returns count of
  *
- * TODO: reviewed == finalised ?
- *
  * @param $coursecategoryid
  * @return array
  */
@@ -926,8 +924,9 @@ function block_exaquest_get_questions_for_me_to_revise_count($questioncategoryid
 }
 
 /**
- * Returns count of questions for me to release. TODO: what should that mean? In which case is there a specific person responsible
- * for releasing?
+ * Returns count of questions for me to release.
+ * TODO: what should that mean? In which case is there a specific person responsible for releasing?
+ * most probably: this will not be needed
  *
  * @param $coursecategoryid
  * @return array
@@ -1940,61 +1939,58 @@ function block_exaquest_get_capabilities($context) {
     global $USER;
     $capabilities = [];
     // roles
-    $capabilities["modulverantwortlicher"] = is_enrolled($context, $USER, "block/exaquest:modulverantwortlicher");
-    $capabilities["fragenersteller"] = is_enrolled($context, $USER, "block/exaquest:fragenersteller");
-    $capabilities["fachlfragenreviewer"] = is_enrolled($context, $USER, "block/exaquest:fachlfragenreviewer");
-    $capabilities["pruefungskoordination"] = is_enrolled($context, $USER, "block/exaquest:pruefungskoordination");
-    $capabilities["admintechnpruefungsdurchf"] = is_enrolled($context, $USER, "block/exaquest:admintechnpruefungsdurchf");
-    $capabilities["pruefungsstudmis"] = is_enrolled($context, $USER, "block/exaquest:pruefungsstudmis");
-    $capabilities["beurteilungsmitwirkende"] = is_enrolled($context, $USER, "block/exaquest:beurteilungsmitwirkende");
-    $capabilities["fachlicherpruefer"] = is_enrolled($context, $USER, "block/exaquest:fachlicherpruefer");
-    $capabilities["pruefungsmitwirkende"] = is_enrolled($context, $USER, "block/exaquest:pruefungsmitwirkende");
-    $capabilities["fachlicherzweitpruefer"] = is_enrolled($context, $USER, "block/exaquest:fachlicherzweitpruefer");
+    $capabilities["modulverantwortlicher"] = has_capability("block/exaquest:modulverantwortlicher", $context, $USER);
+    $capabilities["fragenersteller"] = has_capability("block/exaquest:fragenersteller", $context, $USER);
+    $capabilities["fachlfragenreviewer"] = has_capability("block/exaquest:fachlfragenreviewer", $context, $USER);
+    $capabilities["pruefungskoordination"] = has_capability("block/exaquest:pruefungskoordination", $context, $USER);
+    $capabilities["admintechnpruefungsdurchf"] = has_capability("block/exaquest:admintechnpruefungsdurchf", $context, $USER);
+    $capabilities["pruefungsstudmis"] = has_capability("block/exaquest:pruefungsstudmis", $context, $USER);
+    $capabilities["beurteilungsmitwirkende"] = has_capability("block/exaquest:beurteilungsmitwirkende", $context, $USER);
+    $capabilities["fachlicherpruefer"] = has_capability("block/exaquest:fachlicherpruefer", $context, $USER);
+    $capabilities["pruefungsmitwirkende"] = has_capability("block/exaquest:pruefungsmitwirkende", $context, $USER);
+    $capabilities["fachlicherzweitpruefer"] = has_capability("block/exaquest:fachlicherzweitpruefer", $context, $USER);
 
     // capabilities defined by ZML
-    $capabilities["viewquestionstorevise"] = is_enrolled($context, $USER, "block/exaquest:viewquestionstorevise");
-    $capabilities["createquestion"] = is_enrolled($context, $USER, "block/exaquest:createquestion");
-    $capabilities["releasequestion"] = is_enrolled($context, $USER, "block/exaquest:releasequestion");
-    $capabilities["readallquestions"] = is_enrolled($context, $USER, "block/exaquest:readallquestions");
-    $capabilities["readquestionstatistics"] = is_enrolled($context, $USER, "block/exaquest:readquestionstatistics");
-    $capabilities["changestatusofreleasedquestions"] =
-            is_enrolled($context, $USER, "block/exaquest:changestatusofreleasedquestions");
-    $capabilities["setstatustoreview"] = is_enrolled($context, $USER, "block/exaquest:setstatustoreview");
-    $capabilities["reviseownquestion"] = is_enrolled($context, $USER, "block/exaquest:reviseownquestion");
-    $capabilities["setstatustofinalised"] = is_enrolled($context, $USER, "block/exaquest:setstatustofinalised");
-    $capabilities["viewownrevisedquestions"] = is_enrolled($context, $USER, "block/exaquest:viewownrevisedquestions");
-    $capabilities["viewquestionstoreview"] = is_enrolled($context, $USER, "block/exaquest:viewquestionstoreview");
-    $capabilities["editquestiontoreview"] = is_enrolled($context, $USER, "block/exaquest:editquestiontoreview");
-    $capabilities["viewfinalisedquestions"] = is_enrolled($context, $USER, "block/exaquest:viewfinalisedquestions");
-    $capabilities["viewquestionstorevise"] = is_enrolled($context, $USER, "block/exaquest:viewquestionstorevise");
-    $capabilities["editallquestions"] = is_enrolled($context, $USER, "block/exaquest:editallquestions");
-    $capabilities["addquestiontoexam"] = is_enrolled($context, $USER, "block/exaquest:addquestiontoexam");
-    $capabilities["releaseexam"] = is_enrolled($context, $USER, "block/exaquest:releaseexam");
-    $capabilities["doformalreview"] = is_enrolled($context, $USER, "block/exaquest:doformalreview");
-    $capabilities["executeexam"] = is_enrolled($context, $USER, "block/exaquest:executeexam");
-    $capabilities["assignsecondexaminator"] = is_enrolled($context, $USER, "block/exaquest:assignsecondexaminator");
-    $capabilities["definequestionblockingtime"] = is_enrolled($context, $USER, "block/exaquest:definequestionblockingtime");
-    $capabilities["viewexamresults"] = is_enrolled($context, $USER, "block/exaquest:viewexamresults");
-    $capabilities["gradeexam"] = is_enrolled($context, $USER, "block/exaquest:gradeexam");
-    $capabilities["createexamstatistics"] = is_enrolled($context, $USER, "block/exaquest:createexamstatistics");
-    $capabilities["viewexamstatistics"] = is_enrolled($context, $USER, "block/exaquest:viewexamstatistics");
-    $capabilities["correctexam"] = is_enrolled($context, $USER, "block/exaquest:correctexam");
-    $capabilities["acknowledgeexamcorrection"] = is_enrolled($context, $USER, "block/exaquest:acknowledgeexamcorrection");
-    $capabilities["releaseexamgrade"] = is_enrolled($context, $USER, "block/exaquest:releaseexamgrade");
-    $capabilities["releasecommissionalexamgrade"] = is_enrolled($context, $USER, "block/exaquest:releasecommissionalexamgrade");
-    $capabilities["exportgradestokusss"] = is_enrolled($context, $USER, "block/exaquest:exportgradestokusss");
-    $capabilities["executeexamreview"] = is_enrolled($context, $USER, "block/exaquest:executeexamreview");
-    $capabilities["addparticipanttomodule"] = is_enrolled($context, $USER, "block/exaquest:addparticipanttomodule");
-    $capabilities["assignroles"] = is_enrolled($context, $USER, "block/exaquest:assignroles");
-    $capabilities["changerolecapabilities"] = is_enrolled($context, $USER, "block/exaquest:changerolecapabilities");
-    $capabilities["createroles"] = is_enrolled($context, $USER, "block/exaquest:createroles");
+    $capabilities["viewquestionstorevise"] = has_capability("block/exaquest:viewquestionstorevise", $context, $USER);
+    $capabilities["createquestion"] = has_capability("block/exaquest:createquestion", $context, $USER);
+    $capabilities["releasequestion"] = has_capability("block/exaquest:releasequestion", $context, $USER);
+    $capabilities["readallquestions"] = has_capability("block/exaquest:readallquestions", $context, $USER);
+    $capabilities["readquestionstatistics"] = has_capability("block/exaquest:readquestionstatistics", $context, $USER);
+    $capabilities["changestatusofreleasedquestions"] = has_capability("block/exaquest:changestatusofreleasedquestions", $context, $USER);
+    $capabilities["setstatustoreview"] = has_capability("block/exaquest:setstatustoreview", $context, $USER);
+    $capabilities["reviseownquestion"] = has_capability("block/exaquest:reviseownquestion", $context, $USER);
+    $capabilities["setstatustofinalised"] = has_capability("block/exaquest:setstatustofinalised", $context, $USER);
+    $capabilities["viewownrevisedquestions"] = has_capability("block/exaquest:viewownrevisedquestions", $context, $USER);
+    $capabilities["viewquestionstoreview"] = has_capability("block/exaquest:viewquestionstoreview", $context, $USER);
+    $capabilities["editquestiontoreview"] = has_capability("block/exaquest:editquestiontoreview", $context, $USER);
+    $capabilities["viewfinalisedquestions"] = has_capability("block/exaquest:viewfinalisedquestions", $context, $USER);
+    $capabilities["editallquestions"] = has_capability("block/exaquest:editallquestions", $context, $USER);
+    $capabilities["addquestiontoexam"] = has_capability("block/exaquest:addquestiontoexam", $context, $USER);
+    $capabilities["releaseexam"] = has_capability("block/exaquest:releaseexam", $context, $USER);
+    $capabilities["doformalreview"] = has_capability("block/exaquest:doformalreview", $context, $USER);
+    $capabilities["executeexam"] = has_capability("block/exaquest:executeexam", $context, $USER);
+    $capabilities["assignsecondexaminator"] = has_capability("block/exaquest:assignsecondexaminator", $context, $USER);
+    $capabilities["definequestionblockingtime"] = has_capability("block/exaquest:definequestionblockingtime", $context, $USER);
+    $capabilities["viewexamresults"] = has_capability("block/exaquest:viewexamresults", $context, $USER);
+    $capabilities["gradeexam"] = has_capability("block/exaquest:gradeexam", $context, $USER);
+    $capabilities["createexamstatistics"] = has_capability("block/exaquest:createexamstatistics", $context, $USER);
+    $capabilities["viewexamstatistics"] = has_capability("block/exaquest:viewexamstatistics", $context, $USER);
+    $capabilities["correctexam"] = has_capability("block/exaquest:correctexam", $context, $USER);
+    $capabilities["acknowledgeexamcorrection"] = has_capability("block/exaquest:acknowledgeexamcorrection", $context, $USER);
+    $capabilities["releaseexamgrade"] = has_capability("block/exaquest:releaseexamgrade", $context, $USER);
+    $capabilities["releasecommissionalexamgrade"] = has_capability("block/exaquest:releasecommissionalexamgrade", $context, $USER);
+    $capabilities["exportgradestokusss"] = has_capability("block/exaquest:exportgradestokusss", $context, $USER);
+    $capabilities["executeexamreview"] = has_capability("block/exaquest:executeexamreview", $context, $USER);
+    $capabilities["addparticipanttomodule"] = has_capability("block/exaquest:addparticipanttomodule", $context, $USER);
+    $capabilities["assignroles"] = has_capability("block/exaquest:assignroles", $context, $USER);
+    $capabilities["changerolecapabilities"] = has_capability("block/exaquest:changerolecapabilities", $context, $USER);
+    $capabilities["createroles"] = has_capability("block/exaquest:createroles", $context, $USER);
 
     // created during development
-    //$capabilities["viewstatistic"] = is_enrolled($context, $USER, "block/exaquest:viewstatistic");
-    $capabilities["viewquestionstorelease"] = is_enrolled($context, $USER, "block/exaquest:viewquestionstorelease");
-    $capabilities["viewquestionstorevise"] = is_enrolled($context, $USER, "block/exaquest:viewquestionstorevise");
-    $capabilities["createexam"] = has_capability("block/exaquest:viewquestionstorevise", $context,
-            $USER); // has_capability better than is_enrolled in this case, todo: change above
+    //$capabilities["viewstatistic"] = has_capability("block/exaquest:viewstatistic", $context, $USER);
+    $capabilities["viewquestionstorelease"] = has_capability("block/exaquest:viewquestionstorelease", $context, $USER);
+    $capabilities["viewquestionstorevise"] = has_capability("block/exaquest:viewquestionstorevise", $context, $USER);
+    $capabilities["createexam"] = has_capability("block/exaquest:viewquestionstorevise", $context, $USER);
     $capabilities["setquestioncount"] = has_capability("block/exaquest:setquestioncount", $context, $USER);
     $capabilities["checkexamsgrading"] = has_capability("block/exaquest:checkexamsgrading", $context, $USER);
     $capabilities["gradequestion"] = has_capability("block/exaquest:gradequestion", $context, $USER);
@@ -2252,7 +2248,6 @@ function block_exaquest_assign_check_exam_grading($userfrom, $userto, $comment, 
     $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
     $messageobject->url = $messageobject->url->raw_out(false);
     $messageobject->requestcomment = $comment;
-    // TODO: create strings
     $message = get_string('please_check_exam_grading', 'block_exaquest', $messageobject);
     $subject = get_string('please_check_exam_grading_subject', 'block_exaquest', $messageobject);
     block_exaquest_send_moodle_notification("checkexamgrading", $userfrom->id, $userto, $subject, $message,
@@ -2271,7 +2266,6 @@ function block_exaquest_assign_change_exam_grading($userfrom, $userto, $comment,
     $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
     $messageobject->url = $messageobject->url->raw_out(false);
     $messageobject->requestcomment = $comment;
-    // TODO: create strings
     $message = get_string('please_change_exam_grading', 'block_exaquest', $messageobject);
     $subject = get_string('please_change_exam_grading_subject', 'block_exaquest', $messageobject);
     block_exaquest_send_moodle_notification("changeexamgrading", $userfrom->id, $userto, $subject, $message,
@@ -2304,7 +2298,7 @@ function block_exaquest_assign_gradeexam($userfrom, $userto, $comment, $quizid, 
 
 function block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assigntype = null) {
     global $DB;
-    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that exact quizid, assigneeid and assigntype. ? TODO: what to do if 2 requests are made... for now keep them both
+    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that exact quizid, assigneeid and assigntype.
     // enter data into the exaquest tables
     $assigndata = new stdClass;
     $assigndata->quizid = $quizid;
@@ -2613,7 +2607,7 @@ function block_exaquest_check_if_grades_should_be_released($quizid) {
     } else {
         // no records exist ==> every assignment is done
         // set the quizstatus from BLOCK_EXAQUEST_QUIZSTATUS_FINISHED to BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED and release the grades
-        // TODO: release the grades, this has to trigger sometghing from moodle
+        // TODO: release the grades, this has to trigger sometghing from moodle?
         // ACTUALLY release the grades...
         //$quizstatus = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, array('quizid' => $quizid));
         //$quizstatus->status = BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED;

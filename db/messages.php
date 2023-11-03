@@ -21,7 +21,7 @@ $messageproviders = array(
         'newquestionsrequest' => array(
                 'defaults' => [
                         'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
-                    // TODO: this somehow does not work. The admin has to do this manually on ./admin/message.php
+                    // somehow this does not always work. The admin has to do this manually on ./admin/message.php
                         'email' => MESSAGE_PERMITTED,
                 ],
         ),

@@ -37,9 +37,6 @@ function xmldb_block_exaquest_upgrade($oldversion) {
     }
 
     if ($oldversion < 2022062401) {
-
-        // TODO add reference to block_exaquestquestionstatus ? or is it enough to have it in the install.xml?
-
         // Define table block_exaquestreviewassign to be created.
         $table = new xmldb_table('block_exaquestreviewassign');
 
@@ -479,17 +476,6 @@ function xmldb_block_exaquest_upgrade($oldversion) {
 
         upgrade_block_savepoint(true, 2023050900, 'exaquest');
     }
-
-    //if ($oldversion < 2023050901) {
-    //    // add field subject and field neededpoints to block_exaquestquizassign
-    //    // TODO: needepoints vs neededquestions. subject? what is that?
-    //    $table = new xmldb_table('block_exaquestquizassign');
-    //    $field = new xmldb_field('subject', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null,
-    //        0); // 0 because non-empty table already exists so it cannot be null
-    //    $dbman->add_field($table, $field);
-    //
-    //    upgrade_block_savepoint(true, 2023050901, 'exaquest');
-    //}
 
     if ($oldversion < 2023050901) {
         // rename fields of table block_exaquestquizassign

@@ -79,7 +79,7 @@ class dashboard implements renderable, templatable {
         $data->questions_for_me_to_revise_count =
             block_exaquest_get_questions_for_me_to_revise_count($this->questioncategoryid, $this->userid);
         //$data->questions_for_me_to_release_count = block_exaquest_get_questions_for_me_to_release_count($this->coursecategoryid, $this->userid);
-        // TODO what should that mean? questions for me to release? questions_finalised_count for now.
+        // TODO what should that mean? questions for me to release? questions_finalised_count for now. Most likely not needed
         $data->exams_for_me_to_create_count =
             block_exaquest_get_exams_for_me_to_create_count($this->coursecategoryid, $this->userid);
 

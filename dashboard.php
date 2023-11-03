@@ -39,7 +39,8 @@ $action = optional_param('action', "", PARAM_ALPHAEXT);
 if ($action == 'request_questions') {
     // get all the users with role "fragesteller" and send them a notification
 
-    $allfragenersteller = block_exaquest_get_fragenersteller_by_courseid($courseid); // TODO by courseid or coursecategoryid?
+    $allfragenersteller = block_exaquest_get_fragenersteller_by_courseid($courseid);
+    // by courseid or coursecategoryid? --> does not matter, as the role from the category will be used to enrol the user into the course
     if (array_key_exists("selectedusers", $_POST)) {
         if (is_array($_POST["selectedusers"])) {
             $selectedfragenersteller = clean_param_array($_POST["selectedusers"], PARAM_INT);
@@ -57,7 +58,7 @@ if ($action == 'request_questions') {
     }
 } else if ($action == 'request_exams') {
     // get all the users with role "fachlicherpruefer" and send them a notification
-    $allfachlichepruefer = block_exaquest_get_fachlichepruefer_by_courseid($courseid); // TODO by courseid or coursecategoryid?
+    $allfachlichepruefer = block_exaquest_get_fachlichepruefer_by_courseid($courseid);
     if (array_key_exists("selectedusers", $_POST)) {
         if (is_array($_POST["selectedusers"])) {
             $selectedfachlicherpruefer = clean_param_array($_POST["selectedusers"], PARAM_INT);
@@ -80,8 +81,8 @@ $capabilities = block_exaquest_get_capabilities($context);
 
 if ($capabilities["modulverantwortlicher"] || $capabilities["pruefungskoordination"]) {
     if (!isset($fragenersteller) || empty($data->fragenersteller)) {
-        $fragenersteller = block_exaquest_get_fragenersteller_by_courseid($courseid); // TODO: coursecategoryid?
-        $fachlichepruefer = block_exaquest_get_fachlichepruefer_by_courseid($courseid); // TODO: coursecategoryid?
+        $fragenersteller = block_exaquest_get_fragenersteller_by_courseid($courseid);
+        $fachlichepruefer = block_exaquest_get_fachlichepruefer_by_courseid($courseid);
     }
 }
 
