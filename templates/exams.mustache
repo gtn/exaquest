@@ -197,18 +197,23 @@
                                     {{/popup_assign_check_exam_grading}}
                                 </td>
                             {{/assigncheckexamgrading}}
-                            {{#mark_check_exam_grading_request_as_done}}
+                            {{#assigned_to_check_grading}}
                                 <td>
                                     <button type="submit" class="btn btn-primary change-exam-status-button"
                                             value="release_grades" quizid={{quizid}} courseid={{courseid}}>Prüfungsbeurteilung freigeben
                                     </button>
                                 </td>
                                 <td>
+                                    {{#popup_assign_change_exam_grading}}
+                                        {{>block_exaquest/popup_assign_change_exam_grading}}
+                                    {{/popup_assign_change_exam_grading}}
+                                </td>
+                                <td>
                                     {{#popup_assign_check_exam_grading}}
                                         {{>block_exaquest/popup_assign_check_exam_grading}}
                                     {{/popup_assign_check_exam_grading}}
                                 </td>
-                            {{/mark_check_exam_grading_request_as_done}}
+                            {{/assigned_to_check_grading}}
 
 
                             {{#assigngradeexam}}
@@ -218,7 +223,7 @@
                                     {{/popup_assign_gradeexam}}
                                 </td>
                             {{/assigngradeexam}}
-                            {{#mark_grade_request_as_done}}
+                            {{#assigned_to_grade}}
                                 <!-- there is no mark_grade_request_as_done button yet, but the ability to add other persons for grading depends on being assigned to grade-->
 <!--                                TODO: add mark_grade_request_as_done button ??-->
                                 <td>
@@ -226,7 +231,7 @@
                                         {{>block_exaquest/popup_assign_gradeexam}}
                                     {{/popup_assign_check_exam_grading}}
                                 </td>
-                            {{/mark_grade_request_as_done}}
+                            {{/assigned_to_grade}}
                         </tr>
                     {{/finished_exams}}
                     </tbody>

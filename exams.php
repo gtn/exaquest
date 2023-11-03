@@ -97,7 +97,17 @@ if ($action == 'assign_quiz_addquestions') {
             block_exaquest_assign_gradeexam($USER, $bmw, $comment, $quizid, $quizname, BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM, $selectedquestions);
         }
     }
+} else if ($action == 'assign_change_exam_grading') {
+    $comment = optional_param('assign_change_exam_grading_comment', '', PARAM_TEXT);
+    $quizid = required_param('quizid', PARAM_INT);
+    $quizname = $DB->get_field('quiz', 'name', array('id' => $quizid));
+    $pk = block_exaquest_get_pk_by_courseid($courseid);
+    foreach ($pk as $pruefungskoordination) {
+        block_exaquest_assign_change_exam_grading($USER, $pruefungskoordination->id, $comment, $quizid, $quizname,
+                BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHANGE_EXAM_GRADING);
+    }
 }
+
 
 // RENDER:
 $capabilities = [];

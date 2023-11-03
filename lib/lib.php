@@ -82,6 +82,7 @@ const BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM = 5;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING = 6;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERZWEITPRUEFER = 7;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERDRITTPRUEFER = 8;
+const BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHANGE_EXAM_GRADING = 9;
 
 /**
  * Filter Status
@@ -211,11 +212,12 @@ function block_exaquest_request_revision($userfrom, $userto, $comment, $question
     $messageobject = new stdClass;
     $messageobject->fullname = $questionname;
     //$messageobject->url = new moodle_url('/blocks/exaquest/questbank.php', array('courseid' => $courseid, 'category' => $catAndCont[0] . ',' . $catAndCont[1]));
-    if($link_to_released_questions){ // if the question status is NOT changed from the reviseassign, link to editquestion
+    if ($link_to_released_questions) { // if the question status is NOT changed from the reviseassign, link to editquestion
         // e.g. http://localhost/question/bank/editquestion/question.php?returnurl=%2Fblocks%2Fexaquest%2Fquestbank.php%3Fcourseid%3D3&courseid=3&id=1
         $messageobject->url = new moodle_url('/question/bank/editquestion/question.php?',
-                array('courseid' => $courseid, 'id' => $questionid, 'returnurl' => '/blocks/exaquest/dashboard.php?courseid=' . $courseid));
-    } else{
+                array('courseid' => $courseid, 'id' => $questionid,
+                        'returnurl' => '/blocks/exaquest/dashboard.php?courseid=' . $courseid));
+    } else {
         $messageobject->url = new moodle_url('/blocks/exaquest/questbank.php',
                 array('courseid' => $courseid, 'filterstatus' => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE));
     }
@@ -292,7 +294,7 @@ function block_exaquest_get_fragenersteller_by_courseid($courseid) {
 
 /**
  *
- * Returns all fragenersteller of this course
+ * Returns all pk of this course
  *
  * @param $courseid
  * @return array
@@ -1003,7 +1005,6 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewgradesreleasedexamscard', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:doformalreviewexam', CAP_ALLOW, $roleid, $context);
 
-
     if (!$DB->record_exists('role', ['shortname' => 'pruefungskoordination'])) {
         $roleid = create_role('Prüfungskoordination', 'pruefungskoordination', '', 'manager');
         $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // manager archetype
@@ -1066,7 +1067,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:assigncheckexamgrading', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:skipandreleaseexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:assigngradeexam', CAP_ALLOW, $roleid, $context);
-
+    assign_capability('block/exaquest:changeexamsgrading', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
         $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '', 'manager');
@@ -1312,7 +1313,6 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:checkexamsgrading', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:gradequestion', CAP_ALLOW, $roleid, $context);
 
-
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsmitwirkende'])) {
         $roleid = create_role('Prüfungsmitwirkende', 'pruefungsmitwirkende', '', 'manager');
         $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // manager archetype
@@ -1498,8 +1498,6 @@ function block_exaquest_set_up_roles() {
     // set the allowassign, allowoverride, allowswitch and allowview for pk, mover and fp
     // get all roleids that are allowed to assign
 
-
-
     $allowedroles = array();
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'admintechnpruefungsdurchf'])->id;
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'pruefungskoordination'])->id;
@@ -1517,7 +1515,7 @@ function block_exaquest_set_up_roles() {
 
     // for every role, allow VIEWING of role, since this is not a problem and NOT seeing the role leads to confusion
     foreach ($allowedroles as $roleid) {
-        foreach ($allowedroles as $allowedrole){
+        foreach ($allowedroles as $allowedrole) {
             if (!$DB->get_record('role_allow_view', array('roleid' => $roleid, 'allowview' => $allowedrole))) {
                 core_role_set_view_allowed($roleid, $allowedrole);
             }
@@ -1564,11 +1562,6 @@ function block_exaquest_set_up_roles() {
             //core_role_set_view_allowed($roleid, $allowedrole);
         }
     }
-
-
-
-
-
 
     // this approach does not work, since it is designed to be done by the admin via menues, so many of the attributes are private
     //$roleid = $DB->get_record('role', ['shortname' => 'pruefungskoordination'])->id;
@@ -1898,15 +1891,22 @@ function block_exaquest_exams_by_status($courseid = null, $status = BLOCK_EXAQUE
 
 /**
  * Set status of exam.
+ * Use this instead of the update_record function, because it also deletes quizassigns that no longer make sense.
  *
  * @param $quizid
  * @param $status
- * @return array
  */
 function block_exaquest_exams_set_status($quizid, $status) {
     global $DB;
     $record = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, array("quizid" => $quizid));
     $record->status = $status;
+    // if the status is changed to BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED ==> remove all quizassigns for this quiz, as they no longer make any sense
+    if ($status == BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED) {
+        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+                array("quizid" => $quizid, "assigntype" => BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM));
+        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+                array("quizid" => $quizid, "assigntype" => BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING));
+    }
     $DB->update_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, $record);
 }
 
@@ -1996,6 +1996,7 @@ function block_exaquest_get_capabilities($context) {
     $capabilities["setquestioncount"] = has_capability("block/exaquest:setquestioncount", $context, $USER);
     $capabilities["checkexamsgrading"] = has_capability("block/exaquest:checkexamsgrading", $context, $USER);
     $capabilities["gradequestion"] = has_capability("block/exaquest:gradequestion", $context, $USER);
+    $capabilities["changeexamsgrading"] = has_capability("block/exaquest:changeexamsgrading", $context, $USER);
 
     return $capabilities;
 }
@@ -2256,6 +2257,24 @@ function block_exaquest_assign_check_exam_grading($userfrom, $userto, $comment, 
             "checkexamgrading", $messageobject->url);
 }
 
+function block_exaquest_assign_change_exam_grading($userfrom, $userto, $comment, $quizid, $quizname = null,
+        $assigntype = null) {
+    global $COURSE;
+
+    block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assigntype);
+
+    // create the message
+    $messageobject = new stdClass;
+    $messageobject->fullname = $quizname;
+    $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
+    $messageobject->url = $messageobject->url->raw_out(false);
+    $messageobject->requestcomment = $comment;
+    // TODO: create strings
+    $message = get_string('please_change_exam_grading', 'block_exaquest', $messageobject);
+    $subject = get_string('please_change_exam_grading_subject', 'block_exaquest', $messageobject);
+    block_exaquest_send_moodle_notification("changeexamgrading", $userfrom->id, $userto, $subject, $message,
+            "changeexamgrading", $messageobject->url);
+}
 
 function block_exaquest_assign_gradeexam($userfrom, $userto, $comment, $quizid, $quizname = null,
         $assigntype = null, $selectedquestions = null) {
@@ -2280,11 +2299,6 @@ function block_exaquest_assign_gradeexam($userfrom, $userto, $comment, $quizid, 
     block_exaquest_send_moodle_notification("gradeexam", $userfrom->id, $userto, $subject, $message,
             "gradeexam", $messageobject->url);
 }
-
-
-
-
-
 
 function block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assigntype = null) {
     global $DB;
@@ -2576,9 +2590,10 @@ function block_exaquest_check_if_exam_is_ready($quizid) {
     } else {
         // no records exist ==> every assignment is done
         // set the quizstatus from new to BLOCK_EXAQUEST_QUIZSTATUS_CREATED
-        $quizstatus = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, array('quizid' => $quizid));
-        $quizstatus->status = BLOCK_EXAQUEST_QUIZSTATUS_CREATED;
-        $DB->update_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, $quizstatus);
+        //$quizstatus = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, array('quizid' => $quizid));
+        //$quizstatus->status = BLOCK_EXAQUEST_QUIZSTATUS_CREATED;
+        //$DB->update_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, $quizstatus);
+        block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
         return true;
     }
 
@@ -2598,9 +2613,10 @@ function block_exaquest_check_if_grades_should_be_released($quizid) {
         // set the quizstatus from BLOCK_EXAQUEST_QUIZSTATUS_FINISHED to BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED and release the grades
         // TODO: release the grades, this has to trigger sometghing from moodle
         // ACTUALLY release the grades...
-        $quizstatus = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, array('quizid' => $quizid));
-        $quizstatus->status = BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED;
-        $DB->update_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, $quizstatus);
+        //$quizstatus = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, array('quizid' => $quizid));
+        //$quizstatus->status = BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED;
+        //$DB->update_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, $quizstatus);
+        block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED);
 
         return true;
     }

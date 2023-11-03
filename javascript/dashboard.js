@@ -47,6 +47,8 @@ function mark_request_as_done(requestid, requesttype, courseid) {
         action = 'mark_fill_exam_request_as_done';
     } else if (requesttype == 'check-grading') {
         action = 'mark_check_exam_grading_request_as_done';
+    } else if (requesttype == 'change-grading') {
+        action = 'mark_change_exam_grading_request_as_done';
     } else if (requesttype == 'grade') {
         action = 'mark_grade_request_as_done';
     } else {
@@ -126,9 +128,20 @@ $(document).on('click', '.mark-check-grading-request-as-done-button', function (
         let requests = this.parentElement.parentElement.getElementsByClassName("check-grading-request-comment");
         if (requests != undefined) {
             debugger;
-            document.getElementById("grade-requests").removeChild(document.getElementById("check-grading-request-comment-li-" + this.getAttribute("requestid")));
+            document.getElementById("check-grading-requests").removeChild(document.getElementById("check-grading-request-comment-li-" + this.getAttribute("requestid")));
             // Remove that entry from the database with ajax
             mark_request_as_done(this.getAttribute("requestid"), 'check-grading', this.attributes.courseid.value);
+        }
+    }
+});
+$(document).on('click', '.mark-change-grading-request-as-done-button', function () {
+    if (confirm("Wirklich als erledigt markieren?")) {
+        let requests = this.parentElement.parentElement.getElementsByClassName("change-grading-request-comment");
+        if (requests != undefined) {
+            debugger;
+            document.getElementById("change-grading-requests").removeChild(document.getElementById("change-grading-request-comment-li-" + this.getAttribute("requestid")));
+            // Remove that entry from the database with ajax
+            mark_request_as_done(this.getAttribute("requestid"), 'change-grading', this.attributes.courseid.value);
         }
     }
 });

@@ -1,35 +1,35 @@
 <!-- using bootstrap modals to do the popups https://getbootstrap.com/docs/4.6/components/modal/ -->
 
 <a class="btn btn-light w-100 d-flex justify-content-between align-items-center" data-toggle="modal"
-   data-target="#examsForMeToCheckGradingModal">
+   data-target="#examsForMeToChangeGradingModal">
     <span class="badge-outer text-center">
-        <span class="badge  tododoscounter {{#exams_for_me_to_check_grading_count}}badge-primary{{/exams_for_me_to_check_grading_count}}">{{exams_for_me_to_check_grading_count}}</span>
+        <span class="badge  tododoscounter {{#exams_for_me_to_change_grading_count}}badge-primary{{/exams_for_me_to_change_grading_count}}">{{exams_for_me_to_change_grading_count}}</span>
     </span>
     <span class="flex-grow-1"> {{#str}}
-        exams_for_me_to_check_grading, block_exaquest {{/str}}</span>
+        exams_for_me_to_change_grading, block_exaquest {{/str}}</span>
 </a>
 
-<div class="modal fade" id="examsForMeToCheckGradingModal" tabindex="-1"
-     aria-labelledby="examsForMeToCheckGradingModalLabel"
+<div class="modal fade" id="examsForMeToChangeGradingModal" tabindex="-1"
+     aria-labelledby="examsForMeToChangeGradingModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">{{#str}}
-                    exams_for_me_to_check_grading_title, block_exaquest {{/str}}</h5>
+                    exams_for_me_to_change_grading_title, block_exaquest {{/str}}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div id="popup_check_grading_exams_div"></div>
-                <ul class="list-group list-todo-request-quest" id="check-grading-requests">
+                <div id="popup_change_grading_exams_div"></div>
+                <ul class="list-group list-todo-request-quest" id="change-grading-requests">
                     {{#exams}}
-                        <li class="list-group-item d-flex justify-content-between align-items-start check-grading-request-comment"
-                            id="check-grading-request-comment-li-{{id}}">
+                        <li class="list-group-item d-flex justify-content-between align-items-start change-grading-request-comment"
+                            id="change-grading-request-comment-li-{{id}}">
                             <span class="flex-grow-1">{{name}}: {{comment}}</span>
-                            <button id="check-grading-request-comment-button-{{id}}"
-                                    class="mark-check-grading-request-as-done-button btn btn-light btn-sm ml-2"
+                            <button id="change-grading-request-comment-button-{{id}}"
+                                    class="mark-change-grading-request-as-done-button btn btn-light btn-sm ml-2"
                                     requestid= {{id}}
                                     courseid={{courseid}}>
                                 <i class="icon fa fa-times fa-fw mr-1"></i> Erledigt

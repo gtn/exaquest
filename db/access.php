@@ -348,4 +348,8 @@ $capabilities = array(
                 'captype' => 'write',
                 'contextlevel' => CONTEXT_COURSE,
         ),
+        'block/exaquest:changeexamsgrading' => array(
+                'captype' => 'write',
+                'contextlevel' => CONTEXT_COURSE,
+        ),
 );

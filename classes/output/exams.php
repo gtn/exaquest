@@ -89,17 +89,23 @@ class exams implements renderable, templatable {
             $exams_to_check_grading = block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid,
                     BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
             foreach ($exams_to_check_grading as $exam_to_check_grading) {
-                $finished_exams[$exam_to_check_grading->quizid]->mark_check_exam_grading_request_as_done = true;
+                $finished_exams[$exam_to_check_grading->quizid]->assigned_to_check_grading = true;
             }
 
             // If exams_to_grade and exams_to_check_grading overlap it does not really make sense, but still it should be covered:
             $exams_to_grade =
                     block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM);
             foreach ($exams_to_grade as $exam_to_grade) {
-                $finished_exams[$exam_to_grade->quizid]->mark_grade_request_as_done = true;
+                $finished_exams[$exam_to_grade->quizid]->assigned_to_grade = true;
             }
-            // combine finished_exams and exams_to_check_grading to one array,
-            $this->finished_exams = array_merge($finished_exams);
+
+            //$exams_to_change_grading =
+            //        block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHANGE_EXAM_GRADING);
+            //foreach ($exams_to_change_grading as $exam_to_change_grading) {
+            //    $finished_exams[$exam_to_change_grading->quizid]->assigned_to_change_grading = true;
+            //}
+
+            $this->finished_exams = $finished_exams;
         }
 
         if ($capabilities["viewgradesreleasedexamscard"]) {
@@ -180,6 +186,16 @@ class exams implements renderable, templatable {
             $popup = new popup_assign_check_exam_grading($this->courseid, $finished_exam->quizid);
             $finished_exam->popup_assign_check_exam_grading = $popup->export_for_template($output);
         }
+
+
+        // add popup_assign_check_exam_grading to every finished exam:
+        foreach ($data->finished_exams as $finished_exam) {
+            $popup = new popup_assign_change_exam_grading($finished_exam->quizid);
+            $finished_exam->popup_assign_change_exam_grading = $popup->export_for_template($output);
+        }
+
+
+
 
         return $data;
     }

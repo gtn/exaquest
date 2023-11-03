@@ -89,6 +89,11 @@
                             {{#popup_exams_for_me_to_check_grading}}
                                 {{>block_exaquest/popup_exams_for_me_to_check_grading}}
                             {{/popup_exams_for_me_to_check_grading}}
+                            {{#pruefungskoordination}}
+                                {{#popup_exams_for_me_to_change_grading}}
+                                    {{>block_exaquest/popup_exams_for_me_to_change_grading}}
+                                {{/popup_exams_for_me_to_change_grading}}
+                            {{/pruefungskoordination}}
                         </div>
                         {{#request_exams_popup}}
                             <div class="card-footer">

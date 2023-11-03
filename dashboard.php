@@ -102,6 +102,12 @@ if ($capabilities["checkexamsgrading"]) {
             block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
 }
 
+$exams_to_change_grading = [];
+if ($capabilities["changeexamsgrading"]) {
+    $exams_to_change_grading =
+            block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHANGE_EXAM_GRADING);
+}
+
 $exams_to_grade = [];
 if ($capabilities["gradequestion"]) {
     $exams_to_grade =
@@ -109,7 +115,7 @@ if ($capabilities["gradequestion"]) {
 }
 
 $dashboard = new \block_exaquest\output\dashboard($USER->id, $courseid, $capabilities, $fragenersteller, $questions_to_create,
-        $coursecategoryid, $questioncategoryid, $fachlichepruefer, $exams_to_fill, $exams_to_check_grading, $exams_to_grade);
+        $coursecategoryid, $questioncategoryid, $fachlichepruefer, $exams_to_fill, $exams_to_check_grading, $exams_to_grade, $exams_to_change_grading);
 echo $output->render($dashboard);
 
 // This is the code for rendering the create-questions-button with moodle-core functions. It is moved to the correct position with javascript.

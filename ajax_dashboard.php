@@ -52,4 +52,10 @@ switch ($action) {
         $quizid = $DB->get_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'quizid', array('id' => $requestid));
         $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $requestid));
         break;
+    case ('mark_change_exam_grading_request_as_done'):
+        $requestid = required_param('requestid', PARAM_INT);
+        // get the quiz with this requestid
+        $quizid = $DB->get_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'quizid', array('id' => $requestid));
+        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $requestid));
+        break;
 }
