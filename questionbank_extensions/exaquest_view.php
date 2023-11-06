@@ -26,7 +26,7 @@ require_once('question_name_idnumber_tags_column_exaquest.php');
 
 
 use core_plugin_manager;
-use core_question\bank\search\condition;
+use core_question\local\bank\condition;
 use qbank_columnsortorder\column_manager;
 use qbank_editquestion\editquestion_helper;
 use qbank_managecategories\helper;
@@ -155,27 +155,27 @@ class exaquest_view extends view
     }
 
     // The display function is called by the questionbank.php file, it creates the whole view of the questionbank
-    public function display($pagevars, $tabname): void
+    public function display(): void
     {
         global $SESSION;
 
         // retrieving all the pagevars, that got initialized in questionbank.php, it also utilizes $SESSION to save the state when changing pages
-        $page = $pagevars['qpage'];
-        $perpage = $pagevars['qperpage'];
-        $cat = $pagevars['cat'];
-        $recurse = $pagevars['recurse'];
-        $showhidden = $pagevars['showhidden'];
-        $showquestiontext = $pagevars['qbshowtext'];
+        $page = $this->pagevars['qpage'];
+        $perpage = $this->pagevars['qperpage'];
+        $cat = $this->pagevars['cat'];
+        $recurse = $this->pagevars['recurse'];
+        $showhidden = $this->pagevars['showhidden'];
+        $showquestiontext = $this->pagevars['qbshowtext'];
         $tagids = [];
-        $filterstatus = $pagevars['filterstatus'];
-        $fragencharakter = array_key_exists('fragencharakter', $pagevars) ? $pagevars['fragencharakter'] : null;
-        $klassifikation = array_key_exists('klassifikation', $pagevars) ? $pagevars['klassifikation'] : null;
-        $fragefach = array_key_exists('fragefach', $pagevars) ? $pagevars['fragefach'] : null;
-        $lehrinhalt = array_key_exists('lehrinhalt', $pagevars) ? $pagevars['lehrinhalt'] : null;
+        $filterstatus = $this->pagevars['filterstatus'];
+        $fragencharakter = array_key_exists('fragencharakter', $this->pagevars) ? $this->pagevars['fragencharakter'] : null;
+        $klassifikation = array_key_exists('klassifikation', $this->pagevars) ? $this->pagevars['klassifikation'] : null;
+        $fragefach = array_key_exists('fragefach', $this->pagevars) ? $this->pagevars['fragefach'] : null;
+        $lehrinhalt = array_key_exists('lehrinhalt', $this->pagevars) ? $this->pagevars['lehrinhalt'] : null;
 
 
-        if (!empty($pagevars['qtagids'])) {
-            $tagids = $pagevars['qtagids'];
+        if (!empty($this->pagevars['qtagids'])) {
+            $tagids = $this->pagevars['qtagids'];
         }
 
         echo \html_writer::start_div('questionbankwindow boxwidthwide boxaligncenter');
@@ -184,11 +184,13 @@ class exaquest_view extends view
 
 
         // Show the filters and search options.
-        $this->wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus, $fragencharakter, $klassifikation, $fragefach, $lehrinhalt);
+        //$this->wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus, $fragencharakter, $klassifikation, $fragefach, $lehrinhalt);
+        $this->wanted_filters();
 
         // Continues with list of questions.
-        $this->display_question_list($this->baseurl, $cat, null, $page, $perpage,
-            $this->contexts->having_cap('moodle/question:add'));
+        //$this->display_question_list($this->baseurl, $cat, null, $page, $perpage,
+        //    $this->contexts->having_cap('moodle/question:add'));
+        $this->display_question_list();
         echo \html_writer::end_div();
 
     }
@@ -203,10 +205,10 @@ class exaquest_view extends view
      * @param array $editcontexts parent contexts
      * @param bool $showquestiontext whether the text of each question should be shown in the list
      */
-    public function wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus = 0, $fragencharakter = -1, $klassifikation = -1, $fragefach = -1, $lehrinhalt = -1): void
+    public function wanted_filters(): void
     {
         global $CFG;
-        list(, $contextid) = explode(',', $cat);
+        list(, $contextid) = explode(',', $this->pagevars['cat']);
         $catcontext = \context::instance_by_id($contextid);
         $thiscontext = $this->get_most_specific_context();
 
@@ -222,18 +224,19 @@ class exaquest_view extends view
             } else {
                 if ($CFG->usetags) {
                     array_unshift($this->searchconditions,
-                        new \core_question\bank\search\tag_condition([$catcontext, $thiscontext], $tagids));
+                        new \core_question\local\bank\tag_condition([$catcontext, $thiscontext], $this->pagevars['tagids']));
                 }
 
-                //array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
+                //array_unshift($this->searchconditions, new \core_question\local\bank\hidden_condition(!$showhidden));
                 // these are used to add extra filters to this view
-                array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_filters($filterstatus));
-                array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_questioncategoryfilter($fragencharakter, $klassifikation, $fragefach, $lehrinhalt));
-                array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_category_condition(
-                    $cat, $recurse, $editcontexts, $this->baseurl, $this->course));
+                array_unshift($this->searchconditions, new \core_question\local\bank\exaquest_filters($this->pagevars['filterstatus']));
+                array_unshift($this->searchconditions, new \core_question\local\bank\exaquest_filters($this->pagevars['filterstatus']));
+                array_unshift($this->searchconditions, new \core_question\local\bank\exaquest_questioncategoryfilter($this->pagevars['fragencharakter'], $this->pagevars['klassifikation'], $this->pagevars['fragefach'], $this->pagevars['lehrinhalt']));
+                array_unshift($this->searchconditions, new \core_question\local\bank\exaquest_category_condition(
+                    $this->pagevars['cat'], $this->pagevars['recurse'], $this->pagevars['editcontexts'], $this->baseurl, $this->course));
             }
         }
-        $this->display_options_form($showquestiontext);
+        $this->display_options_form($this->pagevars['showquestiontext']);
     }
 
     protected function display_options_form($showquestiontext): void
@@ -289,8 +292,7 @@ class exaquest_view extends view
      * @param int $perpage Number of questions to show per page
      * @param array $addcontexts contexts where the user is allowed to add new questions.
      */
-    protected function display_question_list($pageurl, $categoryandcontext, $recurse = 1, $page = 0,
-                                             $perpage = 100, $addcontexts = []): void
+    public function display_question_list(): void
     {
         global $OUTPUT, $DB;
         // This function can be moderately slow with large question counts and may time out.
@@ -305,10 +307,10 @@ class exaquest_view extends view
             $category = end($DB->get_records('question_categories',['contextid' => $editcontexts[1]->id])); // end gives me the last element
         } else {
             throw new \coding_exception('No parent course category found');*/
-        $category = $this->get_current_category($categoryandcontext);
+        $category = $this->get_current_category($this->pagevars['categoryandcontext']);
         //}
 
-        list($categoryid, $contextid) = explode(',', $categoryandcontext);
+        list($categoryid, $contextid) = explode(',', $this->pagevars['categoryandcontext']);
         $catcontext = \context::instance_by_id($contextid);
 
         $canadd = has_capability('moodle/question:add', $catcontext);
@@ -323,7 +325,7 @@ class exaquest_view extends view
         if ($totalnumber == 0) {
             return;
         }
-        $questionsrs = $this->load_page_questions($page, $perpage);
+        $questionsrs = $this->load_page_questions($this->pagevars['page'], $this->pagevars['perpage']);
         $questions = [];
         foreach ($questionsrs as $question) {
             if (!empty($question->id)) {
@@ -335,8 +337,8 @@ class exaquest_view extends view
             $column->load_additional_data($questions);
         }
 
-        $pageingurl = new \moodle_url($pageurl, $pageurl->params());
-        $pagingbar = new \paging_bar($totalnumber, $page, $perpage, $pageingurl);
+        $pageingurl = new \moodle_url($this->pagevars['pageurl'], $pageurl->params());
+        $pagingbar = new \paging_bar($totalnumber, $this->pagevars['page'], $this->pagevars['perpage'], $pageingurl);
         $pagingbar->pagevar = 'qpage';
 
         $this->display_top_pagnation($OUTPUT->render($pagingbar));
@@ -349,7 +351,7 @@ class exaquest_view extends view
 
         $this->display_questions($questions);
 
-        $this->display_bottom_pagination($OUTPUT->render($pagingbar), $totalnumber, $perpage, $pageurl);
+        $this->display_bottom_pagination($OUTPUT->render($pagingbar), $totalnumber, $this->pagevars['perpage'], $pageurl);
 
         $this->display_bottom_controls($catcontext);
 
@@ -362,7 +364,7 @@ class exaquest_view extends view
      * Get the number of questions.
      * @return int
      */
-    protected function get_question_count(): int
+    public function get_question_count(): int
     {
         global $DB;
         return $DB->count_records_sql($this->countsql, $this->sqlparams);
@@ -416,7 +418,7 @@ class exaquest_view extends view
 
     /**
      * Create the SQL query to retrieve the indicated questions, based on
-     * \core_question\bank\search\condition filters.
+     * \core_question\local\bank\condition filters.
      */
     protected function build_query(): void
     {
@@ -472,18 +474,18 @@ class exaquest_view extends view
         $this->loadsql = 'SELECT DISTINCT ' . implode(', ', $fields) . $sql . ' ORDER BY ' . implode(', ', $sorts);
     }
 
-    protected function load_page_questions($page, $perpage): \moodle_recordset
-    {
-        // here the actual query is called
-        global $DB;
-        $questions = $DB->get_recordset_sql($this->loadsql, $this->sqlparams, $page * $perpage, $perpage);
-        if (empty($questions)) {
-            $questions->close();
-            // No questions on this page. Reset to page 0.
-            $questions = $DB->get_recordset_sql($this->loadsql, $this->sqlparams, 0, $perpage);
-        }
-        return $questions;
-    }
+    //protected function load_page_questions($page, $perpage): \moodle_recordset
+    //{
+    //    // here the actual query is called
+    //    global $DB;
+    //    $questions = $DB->get_recordset_sql($this->loadsql, $this->sqlparams, $page * $perpage, $perpage);
+    //    if (empty($questions)) {
+    //        $questions->close();
+    //        // No questions on this page. Reset to page 0.
+    //        $questions = $DB->get_recordset_sql($this->loadsql, $this->sqlparams, 0, $perpage);
+    //    }
+    //    return $questions;
+    //}
 
     /**
      * Display the controls at the bottom of the list of questions.

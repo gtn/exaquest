@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace core_question\bank\search;
+namespace core_question\local\bank;
 
 /**
  * This class controls whether hidden / deleted questions are hidden in the list.
@@ -34,7 +34,7 @@ namespace core_question\bank\search;
 class exaquest_questioncategoryfilter extends condition {
 
     /** @var string SQL fragment to add to the where clause. */
-    protected $where;
+    protected string $where = '';
 
     protected $fragencharakter;
     protected $klassifikation;
@@ -199,6 +199,14 @@ class exaquest_questioncategoryfilter extends condition {
         $html .= '</select></div></div>';
 
         return $html;
+    }
+
+    public function get_title() {
+        return get_string('exaquest_questioncategoryfilter', 'exaquest');
+    }
+
+    public function get_filter_class() {
+        return null;
     }
 }
 

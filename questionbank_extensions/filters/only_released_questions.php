@@ -23,7 +23,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace core_question\bank\search;
+namespace core_question\local\bank;
 
 /**
  * An abstract class for filtering/searching questions.

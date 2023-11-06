@@ -12,7 +12,7 @@ use core_question\local\bank\menu_action_column_base;
  * @author     Safat Shahin <safatshahin@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class history_action_column_exaquest extends history_action_column {
+class history_action_column_exaquest extends history_action {
 
     protected function get_url_icon_and_label(\stdClass $question): array {
         if (!\question_bank::is_qtype_installed($question->qtype)) {

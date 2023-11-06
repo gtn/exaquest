@@ -154,10 +154,10 @@ class exaquest_history_view extends question_history_view {
             } else {
                 if (get_config('core', 'usetags')) {
                    // array_unshift($this->searchconditions,
-                   //     new \core_question\bank\search\tag_condition([$catcontext, $thiscontext], $tagids));
+                   //     new \core_question\local\bank\tag_condition([$catcontext, $thiscontext], $tagids));
                 }
 
-                //array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
+                //array_unshift($this->searchconditions, new \core_question\local\bank\hidden_condition(!$showhidden));
             }
         }
         $this->display_options_form($showquestiontext);

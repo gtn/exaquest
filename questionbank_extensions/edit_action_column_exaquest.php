@@ -27,7 +27,7 @@ use qbank_previewquestion\helper;
  * @author    2021 Safat Shahin <safatshahin@catalyst-au.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class edit_action_column_exaquest extends edit_action_column {
+class edit_action_column_exaquest extends edit_action {
 
 
     // ideas to change the link from edit to preview:

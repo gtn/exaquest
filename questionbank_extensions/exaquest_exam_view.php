@@ -26,7 +26,7 @@
 namespace core_question\local\bank;
 
 use core_plugin_manager;
-use core_question\bank\search\condition;
+use core_question\local\bank\condition;
 use qbank_columnsortorder\column_manager;
 use qbank_editquestion\editquestion_helper;
 use qbank_managecategories\helper;
@@ -214,16 +214,16 @@ class exaquest_exam_view extends exaquest_view {
             } else {
                 if ($CFG->usetags) {
                     array_unshift($this->searchconditions,
-                        new \core_question\bank\search\tag_condition([$catcontext, $thiscontext], $tagids));
+                        new \core_question\local\bank\tag_condition([$catcontext, $thiscontext], $tagids));
                 }
 
-                //array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
-                //array_unshift($this->searchconditions, new \core_question\bank\search\added_to_quiz_condition($filterstatus));
-                array_unshift($this->searchconditions, new \core_question\bank\search\only_released_questions());
-                array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_category_condition(
+                //array_unshift($this->searchconditions, new \core_question\local\bank\hidden_condition(!$showhidden));
+                //array_unshift($this->searchconditions, new \core_question\local\bank\added_to_quiz_condition($filterstatus));
+                array_unshift($this->searchconditions, new \core_question\local\bank\only_released_questions());
+                array_unshift($this->searchconditions, new \core_question\local\bank\exaquest_category_condition(
                     $cat, $recurse, $editcontexts, $this->baseurl, $this->course));
                 array_unshift($this->searchconditions,
-                    new \core_question\bank\search\exaquest_questioncategoryfilter($fragencharakter, $klassifikation, $fragefach,
+                    new \core_question\local\bank\exaquest_questioncategoryfilter($fragencharakter, $klassifikation, $fragefach,
                         $lehrinhalt));
             }
         }

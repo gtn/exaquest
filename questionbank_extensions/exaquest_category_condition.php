@@ -1,6 +1,8 @@
 <?php
 
-namespace core_question\bank\search;
+//namespace core_question\local\bank;
+namespace qbank_managecategories; // 4.3
+
 
 use qbank_managecategories\helper;
 

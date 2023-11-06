@@ -5,7 +5,7 @@ namespace qbank_deletequestion;
 use core_question\local\bank\question_version_status;
 use core_question\local\bank\menu_action_column_base;
 
-class delete_action_column_exaquest extends delete_action_column {
+class delete_action_column_exaquest extends delete_action {
 
 
     protected function get_url_icon_and_label(\stdClass $question): array {

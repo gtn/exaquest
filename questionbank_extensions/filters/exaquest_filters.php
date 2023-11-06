@@ -22,8 +22,13 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace core_question\bank\search;
+//namespace core_question\local\bank; // Class 'core_question\local\bank\condition' has been renamed for the autoloader and is now deprecated. Please use 'core_question\local\bank\condition'
+namespace core_question\local\bank; // 4.3
 
+//namespace qbank_tagquestion;
+//
+//use core\output\datafilter;
+//use core_question\local\bank\condition;
 /**
  * This class controls whether hidden / deleted questions are hidden in the list.
  *
@@ -34,7 +39,7 @@ namespace core_question\bank\search;
 class exaquest_filters extends condition {
 
     /** @var string SQL fragment to add to the where clause. */
-    protected $where;
+    protected string $where = '';
 
     protected $filterstatus;
 
@@ -202,6 +207,14 @@ class exaquest_filters extends condition {
         $html .= '</select></div></div>';
 
         return $html;
+    }
+
+    public function get_title() {
+        return get_string('exaquest_filters', 'exaquest');
+    }
+
+    public function get_filter_class() {
+        return null;
     }
 }
 
