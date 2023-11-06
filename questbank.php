@@ -90,10 +90,11 @@ if (($lastchanged = optional_param('lastchanged', 0, PARAM_INT)) !== 0) {
 
 
 // call to display view
-$questionbank = new core_question\local\bank\exaquest_view($contexts, $url, $COURSE, $cm);
+$questionbank = new core_question\local\bank\exaquest_view($contexts, $url, $COURSE, $cm, $pagevars);
 
 echo '<div class="questionbankwindow boxwidthwide boxaligncenter">';
-$questionbank->display($pagevars, 'editq');
+//$questionbank->display($pagevars, 'editq');
+$questionbank->display();
 echo "</div>\n";
 
 echo $output->footer();

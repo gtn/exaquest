@@ -33,6 +33,7 @@ use qbank_managecategories\helper;
 use qbank_questiontodescriptor;
 use qbank_setfragenersteller\set_fragenersteller_column;
 
+use qbank_editquestion\output\add_new_question;
 /**
  * main exaquest view for questionbank, this one is also derived by other views
  *
@@ -45,9 +46,9 @@ class exaquest_view extends view
 {
 
 
-    public function __construct($contexts, $pageurl, $course, $cm = null)
+    public function __construct($contexts, $pageurl, $course, $cm = null, $pagevars = null)
     {
-        parent::__construct($contexts, $pageurl, $course, $cm);
+        parent::__construct($contexts, $pageurl, $course, $cm, $pagevars);
 
 
     }
@@ -139,16 +140,18 @@ class exaquest_view extends view
         // it also needs to be added in plugin_feature
         $specialpluginentrypointobject = new \qbank_openquestionforreview\plugin_feature();
         $specialplugincolumnobjects = $specialpluginentrypointobject->get_question_columns($this);
-        $questionbankclasscolumns["question_id_column"] = $specialplugincolumnobjects[8];
-        $questionbankclasscolumns["owner_column"] = $specialplugincolumnobjects[9];
-        $questionbankclasscolumns["last_changed_column"] = $specialplugincolumnobjects[10];
-        $questionbankclasscolumns["status_column"] = $specialplugincolumnobjects[11];
-        $questionbankclasscolumns["change_status"] = $specialplugincolumnobjects[0];
+        // TODO: the order of this changes the order in which extrajoins are added, which determins if the query works or not
+        // e.g. there would be a join that uses qbe.id, before the qbe table has been joined. check out how to solve this in a useful manner.
         $questionbankclasscolumns["edit_action_column"] = $specialplugincolumnobjects[1];
         $questionbankclasscolumns["delete_action_column"] = $specialplugincolumnobjects[2];
         $questionbankclasscolumns["history_action_column"] = $specialplugincolumnobjects[3];
         $questionbankclasscolumns["question_name_idnumber_tags_column"] = $specialplugincolumnobjects[12];
         $questionbankclasscolumns["set_fragenersteller_column"] = $specialplugincolumnobjects[13];
+        $questionbankclasscolumns["question_id_column"] = $specialplugincolumnobjects[8];
+        $questionbankclasscolumns["owner_column"] = $specialplugincolumnobjects[9];
+        $questionbankclasscolumns["last_changed_column"] = $specialplugincolumnobjects[10];
+        $questionbankclasscolumns["status_column"] = $specialplugincolumnobjects[11];
+        $questionbankclasscolumns["change_status"] = $specialplugincolumnobjects[0];
 
 
         return $questionbankclasscolumns;
@@ -190,6 +193,8 @@ class exaquest_view extends view
         // Continues with list of questions.
         //$this->display_question_list($this->baseurl, $cat, null, $page, $perpage,
         //    $this->contexts->having_cap('moodle/question:add'));
+        $this->pagevars['pageurl'] = $this->baseurl;
+
         $this->display_question_list();
         echo \html_writer::end_div();
 
@@ -292,6 +297,8 @@ class exaquest_view extends view
      * @param int $perpage Number of questions to show per page
      * @param array $addcontexts contexts where the user is allowed to add new questions.
      */
+    //protected function display_question_list($pageurl, $categoryandcontext, $recurse = 1, $page = 0,
+    //        $perpage = 100, $addcontexts = []): void
     public function display_question_list(): void
     {
         global $OUTPUT, $DB;
@@ -307,10 +314,11 @@ class exaquest_view extends view
             $category = end($DB->get_records('question_categories',['contextid' => $editcontexts[1]->id])); // end gives me the last element
         } else {
             throw new \coding_exception('No parent course category found');*/
-        $category = $this->get_current_category($this->pagevars['categoryandcontext']);
+        $category = $this->get_current_category($this->pagevars['cat']);
         //}
 
-        list($categoryid, $contextid) = explode(',', $this->pagevars['categoryandcontext']);
+        //list($categoryid, $contextid) = explode(',', $this->pagevars['categoryandcontext']);
+        list($categoryid, $contextid) = explode(',', $this->pagevars['cat']); // TODO: why is it in cat? is this really the correct one?
         $catcontext = \context::instance_by_id($contextid);
 
         $canadd = has_capability('moodle/question:add', $catcontext);
@@ -337,7 +345,7 @@ class exaquest_view extends view
             $column->load_additional_data($questions);
         }
 
-        $pageingurl = new \moodle_url($this->pagevars['pageurl'], $pageurl->params());
+        $pageingurl = new \moodle_url($this->baseurl, $this->baseurl->params());
         $pagingbar = new \paging_bar($totalnumber, $this->pagevars['page'], $this->pagevars['perpage'], $pageingurl);
         $pagingbar->pagevar = 'qpage';
 
@@ -409,10 +417,13 @@ class exaquest_view extends view
      */
     protected function create_new_question_form($category, $canadd): void
     {
-        global $COURSE;
+        global $COURSE, $OUTPUT;
         if (\core\plugininfo\qbank::is_plugin_enabled('qbank_editquestion') && has_capability('block/exaquest:createquestion', \context_course::instance($COURSE->id))) {
-            echo editquestion_helper::create_new_question_button($category->id,
-                $this->requiredcolumns['edit_action_column_exaquest']->editquestionurl->params(), $canadd);
+            //echo editquestion_helper::create_new_question_button($category->id,
+            //    $this->requiredcolumns['edit_action_column_exaquest']->editquestionurl->params(), $canadd);
+
+            // TODO: add the add new question button here. Works differently since moodle 4.3
+            //$OUTPUT->render(new add_new_question($category->id, $this->requiredcolumns['edit_action_column_exaquest']->editquestionurl->params(), $canadd));
         }
     }
 
@@ -439,6 +450,10 @@ class exaquest_view extends view
             }
         }
         $fields = array_unique($fields);
+
+        // flip the order of $joins around
+        //$joins = array_reverse($joins);
+
 
         // Build the order by clause.
         $sorts = [];

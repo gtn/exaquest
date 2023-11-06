@@ -98,7 +98,7 @@ class lock_from_quiz extends column_base {
     }
 
     public function get_extra_joins(): array {
-        return ['qs' => 'JOIN {block_exaquestquestionstatus} qs ON qbe.id = qs.questionbankentryid',
+        return ['qs' => 'JOIN {block_exaquestquestionstatus} qs ON qbeee4.id = qs.questionbankentryid',
                 'qra' => 'LEFT JOIN {block_exaquestreviewassign} qra ON qbe.id = qra.questionbankentryid'];
     }
 }
