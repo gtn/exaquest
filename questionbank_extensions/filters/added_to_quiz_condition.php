@@ -50,4 +50,12 @@ class added_to_quiz_condition extends condition {
         $this->where = "quizid != ". $quizid . " OR quizid IS NULL";
         return $this->where;
     }
+
+    public function get_title() {
+        return get_string('added_to_quiz_condition', 'exaquest');
+    }
+
+    public function get_filter_class() {
+        return null;
+    }
 }

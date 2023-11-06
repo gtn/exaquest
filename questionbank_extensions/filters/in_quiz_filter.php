@@ -50,4 +50,12 @@ class in_quiz_filter extends condition {
         $this->where = "quizid = ". $quizid;
         return $this->where;
     }
+
+    public function get_title() {
+        return get_string('in_quiz_filter', 'exaquest');
+    }
+
+    public function get_filter_class() {
+        return null;
+    }
 }

@@ -43,4 +43,12 @@ class only_released_questions extends condition {
         $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED;
         return $this->where;
     }
+
+    public function get_title() {
+        return get_string('only_released_questions', 'exaquest');
+    }
+
+    public function get_filter_class() {
+        return null;
+    }
 }

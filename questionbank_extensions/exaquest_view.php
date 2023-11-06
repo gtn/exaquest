@@ -1,5 +1,7 @@
 <?php
 
+// based on moodle/question/classes/local/bank/view.php
+
 namespace core_question\local\bank;
 
 defined('MOODLE_INTERNAL') || die();
@@ -23,10 +25,9 @@ require_once('last_changed_column.php');
 require_once('status_column.php');
 require_once('question_name_idnumber_tags_column_exaquest.php');
 
-
-
 use core_plugin_manager;
 use core_question\local\bank\condition;
+use core_question\output\question_bank_filter_ui;
 use qbank_columnsortorder\column_manager;
 use qbank_editquestion\editquestion_helper;
 use qbank_managecategories\helper;
@@ -34,6 +35,7 @@ use qbank_questiontodescriptor;
 use qbank_setfragenersteller\set_fragenersteller_column;
 
 use qbank_editquestion\output\add_new_question;
+
 /**
  * main exaquest view for questionbank, this one is also derived by other views
  *
@@ -41,46 +43,39 @@ use qbank_editquestion\output\add_new_question;
  * @copyright  2022 fabio <>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+class exaquest_view extends view {
 
-class exaquest_view extends view
-{
-
-
-    public function __construct($contexts, $pageurl, $course, $cm = null, $pagevars = null)
-    {
+    public function __construct($contexts, $pageurl, $course, $cm = null, $pagevars = null) {
         parent::__construct($contexts, $pageurl, $course, $cm, $pagevars);
 
-
     }
-
 
     /**
      * Get the list of qbank plugins with available objects for features.
      *
      * @return array
      */
-    protected function get_question_bank_plugins(): array
-    {
+    protected function get_question_bank_plugins(): array {
         $questionbankclasscolumns = [];
         $newpluginclasscolumns = [];
         //edited:
         //Commenting out $corequestionbankcolumns removes them from the questionbank table
         $corequestionbankcolumns = [
-            'checkbox_column',
-            'question_type_column',
-            'question_name_idnumber_tags_column',
-            'edit_menu_column',
-            'edit_action_column',
+                'checkbox_column',
+                'question_type_column',
+                'question_name_idnumber_tags_column',
+                'edit_menu_column',
+                'edit_action_column',
             //'copy_action_column',
-            'tags_action_column',
-            'preview_action_column',
-            'history_action_column',
-            'delete_action_column',
+                'tags_action_column',
+                'preview_action_column',
+                'history_action_column',
+                'delete_action_column',
             //'export_xml_action_column',
             // 'question_status_column',
             //'version_number_column',
             //'creator_name_column',
-            'comment_count_column'
+                'comment_count_column'
         ];
         if (question_get_display_preference('qbshowtext', 0, PARAM_BOOL, new \moodle_url(''))) {
             $corequestionbankcolumns[] = 'question_text_row';
@@ -127,8 +122,6 @@ class exaquest_view extends view
             }
         }
 
-
-
         // Mitigate the error in case of any regression.
         foreach ($questionbankclasscolumns as $shortname => $questionbankclasscolumn) {
             if (empty($questionbankclasscolumn)) {
@@ -153,13 +146,11 @@ class exaquest_view extends view
         $questionbankclasscolumns["status_column"] = $specialplugincolumnobjects[11];
         $questionbankclasscolumns["change_status"] = $specialplugincolumnobjects[0];
 
-
         return $questionbankclasscolumns;
     }
 
     // The display function is called by the questionbank.php file, it creates the whole view of the questionbank
-    public function display(): void
-    {
+    public function display(): void {
         global $SESSION;
 
         // retrieving all the pagevars, that got initialized in questionbank.php, it also utilizes $SESSION to save the state when changing pages
@@ -176,19 +167,17 @@ class exaquest_view extends view
         $fragefach = array_key_exists('fragefach', $this->pagevars) ? $this->pagevars['fragefach'] : null;
         $lehrinhalt = array_key_exists('lehrinhalt', $this->pagevars) ? $this->pagevars['lehrinhalt'] : null;
 
-
         if (!empty($this->pagevars['qtagids'])) {
             $tagids = $this->pagevars['qtagids'];
         }
 
         echo \html_writer::start_div('questionbankwindow boxwidthwide boxaligncenter');
 
-        $editcontexts = $this->contexts->having_one_edit_tab_cap($tabname);
-
+        $editcontexts = $this->contexts->having_one_edit_tab_cap('tabname');
 
         // Show the filters and search options.
         //$this->wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus, $fragencharakter, $klassifikation, $fragefach, $lehrinhalt);
-        $this->wanted_filters();
+        $this->wanted_filters(); // TODO: this does not work in 4.3 yet
 
         // Continues with list of questions.
         //$this->display_question_list($this->baseurl, $cat, null, $page, $perpage,
@@ -210,47 +199,69 @@ class exaquest_view extends view
      * @param array $editcontexts parent contexts
      * @param bool $showquestiontext whether the text of each question should be shown in the list
      */
-    public function wanted_filters(): void
-    {
-        global $CFG;
-        list(, $contextid) = explode(',', $this->pagevars['cat']);
+    public function wanted_filters(): void {
+        global $OUTPUT;
+        [, $contextid] = explode(',', $this->pagevars['cat']);
         $catcontext = \context::instance_by_id($contextid);
-        $thiscontext = $this->get_most_specific_context();
-
         // Category selection form.
         $this->display_question_bank_header();
-        //edited:
-        // Display tag filter if usetags setting is enabled/enablefilters is true.
-        if ($this->enablefilters) {
-            if (is_array($this->customfilterobjects)) {
-                foreach ($this->customfilterobjects as $filterobjects) {
-                    $this->searchconditions[] = $filterobjects;
-                }
-            } else {
-                if ($CFG->usetags) {
-                    array_unshift($this->searchconditions,
-                        new \core_question\local\bank\tag_condition([$catcontext, $thiscontext], $this->pagevars['tagids']));
-                }
+        // Add search conditions.
+        $this->add_standard_search_conditions();
+        // Render the question bank filters.
+        $additionalparams = [
+                'perpage' => $this->pagevars['qperpage'],
+        ];
 
-                //array_unshift($this->searchconditions, new \core_question\local\bank\hidden_condition(!$showhidden));
-                // these are used to add extra filters to this view
-                array_unshift($this->searchconditions, new \core_question\local\bank\exaquest_filters($this->pagevars['filterstatus']));
-                array_unshift($this->searchconditions, new \core_question\local\bank\exaquest_filters($this->pagevars['filterstatus']));
-                array_unshift($this->searchconditions, new \core_question\local\bank\exaquest_questioncategoryfilter($this->pagevars['fragencharakter'], $this->pagevars['klassifikation'], $this->pagevars['fragefach'], $this->pagevars['lehrinhalt']));
-                array_unshift($this->searchconditions, new \core_question\local\bank\exaquest_category_condition(
-                    $this->pagevars['cat'], $this->pagevars['recurse'], $this->pagevars['editcontexts'], $this->baseurl, $this->course));
-            }
-        }
-        $this->display_options_form($this->pagevars['showquestiontext']);
+        // add the filters from exaquest:
+        array_unshift($this->searchconditions, new exaquest_filters($this->pagevars['filterstatus']));
+        // TODO: get the questionstatus filter to work. check out how add_standard_search_conditions works
+        //array_unshift($this->searchconditions,
+        //        new exaquest_questioncategoryfilter($this->pagevars['fragencharakter'], $this->pagevars['klassifikation'],
+        //                $this->pagevars['fragefach'], $this->pagevars['lehrinhalt']));
+        //array_unshift($this->searchconditions, new \qbank_managecategories\exaquest_category_condition(
+        //        $this->pagevars['cat'], $this->pagevars['recurse'], $this->pagevars['editcontexts'], $this->baseurl,
+        //        $this->course));
+        //TODO add the other filters
+
+        $filter = new question_bank_filter_ui($catcontext, $this->searchconditions, $additionalparams, $this->component,
+                $this->callback, static::class, 'qbank-table', $this->cm?->id, $this->pagevars,
+                $this->extraparams);
+        echo $OUTPUT->render($filter);
+
+        //$thiscontext = $this->get_most_specific_context();
+
+        ////edited:
+        //// Display tag filter if usetags setting is enabled/enablefilters is true.
+        //if ($this->enablefilters) {
+        //    if (is_array($this->customfilterobjects)) {
+        //        foreach ($this->customfilterobjects as $filterobjects) {
+        //            $this->searchconditions[] = $filterobjects;
+        //        }
+        //    } else {
+        //        if ($CFG->usetags) {
+        //            array_unshift($this->searchconditions,
+        //                new \core_question\local\bank\tag_condition([$catcontext, $thiscontext], $this->pagevars['tagids']));
+        //        }
+        //
+        //        //array_unshift($this->searchconditions, new \core_question\local\bank\hidden_condition(!$showhidden));
+        //        // these are used to add extra filters to this view
+        //        array_unshift($this->searchconditions, new \core_question\local\bank\exaquest_filters($this->pagevars['filterstatus']));
+        //        array_unshift($this->searchconditions, new \core_question\local\bank\exaquest_filters($this->pagevars['filterstatus']));
+        //        array_unshift($this->searchconditions, new \core_question\local\bank\exaquest_questioncategoryfilter($this->pagevars['fragencharakter'], $this->pagevars['klassifikation'], $this->pagevars['fragefach'], $this->pagevars['lehrinhalt']));
+        //        array_unshift($this->searchconditions, new \core_question\local\bank\exaquest_category_condition(
+        //            $this->pagevars['cat'], $this->pagevars['recurse'], $this->pagevars['editcontexts'], $this->baseurl, $this->course));
+        //    }
+        //}
+        //$this->display_options_form($this->pagevars['showquestiontext']);
     }
 
-    protected function display_options_form($showquestiontext): void
-    {
+
+    protected function display_options_form($showquestiontext): void {
         global $PAGE;
 
         // The html will be refactored in the filter feature implementation.
         echo \html_writer::start_tag('form', ['method' => 'get',
-            'action' => new \moodle_url($this->baseurl), 'id' => 'displayoptions']);
+                'action' => new \moodle_url($this->baseurl), 'id' => 'displayoptions']);
         echo \html_writer::start_div();
 
         $excludes = ['recurse', 'showhidden', 'qbshowtext'];
@@ -299,8 +310,7 @@ class exaquest_view extends view
      */
     //protected function display_question_list($pageurl, $categoryandcontext, $recurse = 1, $page = 0,
     //        $perpage = 100, $addcontexts = []): void
-    public function display_question_list(): void
-    {
+    public function display_question_list(): void {
         global $OUTPUT, $DB;
         // This function can be moderately slow with large question counts and may time out.
         // We probably do not want to raise it to unlimited, so randomly picking 5 minutes.
@@ -318,7 +328,8 @@ class exaquest_view extends view
         //}
 
         //list($categoryid, $contextid) = explode(',', $this->pagevars['categoryandcontext']);
-        list($categoryid, $contextid) = explode(',', $this->pagevars['cat']); // TODO: why is it in cat? is this really the correct one?
+        list($categoryid, $contextid) =
+                explode(',', $this->pagevars['cat']); // TODO: why is it in cat? is this really the correct one?
         $catcontext = \context::instance_by_id($contextid);
 
         $canadd = has_capability('moodle/question:add', $catcontext);
@@ -326,7 +337,6 @@ class exaquest_view extends view
         $this->create_new_question_form($category, $canadd);
 
         $this->build_query();
-
 
         $totalnumber = $this->get_question_count();
 
@@ -352,14 +362,16 @@ class exaquest_view extends view
         $this->display_top_pagnation($OUTPUT->render($pagingbar));
 
         // This html will be refactored in the bulk actions implementation.
-        echo \html_writer::start_tag('form', ['action' => $pageurl, 'method' => 'post', 'id' => 'questionsubmit']);
+        echo \html_writer::start_tag('form',
+                ['action' => $this->pagevars['pageurl'], 'method' => 'post', 'id' => 'questionsubmit']);
         echo \html_writer::start_tag('fieldset', ['class' => 'invisiblefieldset', 'style' => "display: block;"]);
         echo \html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
         echo \html_writer::input_hidden_params($this->baseurl);
 
         $this->display_questions($questions);
 
-        $this->display_bottom_pagination($OUTPUT->render($pagingbar), $totalnumber, $this->pagevars['perpage'], $pageurl);
+        $this->display_bottom_pagination($OUTPUT->render($pagingbar), $totalnumber, $this->pagevars['perpage'],
+                $this->pagevars['pageurl']);
 
         $this->display_bottom_controls($catcontext);
 
@@ -367,17 +379,15 @@ class exaquest_view extends view
         echo \html_writer::end_tag('form');
     }
 
-
     /**
      * Get the number of questions.
+     *
      * @return int
      */
-    public function get_question_count(): int
-    {
+    public function get_question_count(): int {
         global $DB;
         return $DB->count_records_sql($this->countsql, $this->sqlparams);
     }
-
 
     /**
      * Create a new question form in dashboard.
@@ -385,17 +395,15 @@ class exaquest_view extends view
      * @param false|mixed|\stdClass $category
      * @param bool $canadd
      */
-    function create_new_question_form_dashboard($category, $canadd): void
-    {
+    function create_new_question_form_dashboard($category, $canadd): void {
         $this->create_new_question_form($category, $canadd);
     }
 
-    function get_current_category_dashboard($categoryandcontext)
-    {
+    function get_current_category_dashboard($categoryandcontext) {
         global $DB;
 
-        $editcontexts = $this->contexts->having_one_edit_tab_cap('editq'); // tabname just copied for convinience bacause it won't change
-
+        $editcontexts =
+                $this->contexts->having_one_edit_tab_cap('editq'); // tabname just copied for convinience bacause it won't change
 
         // If it is required to create sub question categories i have to iterate over it and find the context_coursecat
         if ($editcontexts[1] instanceof \context_coursecat) {
@@ -415,10 +423,10 @@ class exaquest_view extends view
      * @param false|mixed|\stdClass $category
      * @param bool $canadd
      */
-    protected function create_new_question_form($category, $canadd): void
-    {
+    protected function create_new_question_form($category, $canadd): void {
         global $COURSE, $OUTPUT;
-        if (\core\plugininfo\qbank::is_plugin_enabled('qbank_editquestion') && has_capability('block/exaquest:createquestion', \context_course::instance($COURSE->id))) {
+        if (\core\plugininfo\qbank::is_plugin_enabled('qbank_editquestion') &&
+                has_capability('block/exaquest:createquestion', \context_course::instance($COURSE->id))) {
             //echo editquestion_helper::create_new_question_button($category->id,
             //    $this->requiredcolumns['edit_action_column_exaquest']->editquestionurl->params(), $canadd);
 
@@ -431,12 +439,11 @@ class exaquest_view extends view
      * Create the SQL query to retrieve the indicated questions, based on
      * \core_question\local\bank\condition filters.
      */
-    protected function build_query(): void
-    {
+    protected function build_query(): void {
         // Get the required tables and fields.
         $joins = [];
         // add here extra fields to get from the sql query, but be careful these can cause problems if not the right tables are not joind and the first one in this field determains the indexing of the return array
-        $fields = [ 'qbe.id as questionbankentryid','qv.status', 'qc.id as categoryid', 'qv.version', 'qv.id as versionid'];
+        $fields = ['qbe.id as questionbankentryid', 'qv.status', 'qc.id as categoryid', 'qv.version', 'qv.id as versionid'];
         if (!empty($this->requiredcolumns)) {
             foreach ($this->requiredcolumns as $column) {
                 $extrajoins = $column->get_extra_joins();
@@ -453,7 +460,6 @@ class exaquest_view extends view
 
         // flip the order of $joins around
         //$joins = array_reverse($joins);
-
 
         // Build the order by clause.
         $sorts = [];
@@ -525,7 +531,7 @@ class exaquest_view extends view
                 $capcount = 0;
                 foreach ($action['capabilities'] as $capability) {
                     if (has_capability($capability, $catcontext)) {
-                        $capcount ++;
+                        $capcount++;
                     }
                 }
                 // At least one cap need to be there.
@@ -563,17 +569,17 @@ class exaquest_view extends view
             $bulkactions = $pluginentrypoint->get_bulk_actions();
             if (!is_array($bulkactions)) {
                 debugging("The method {$componentname}::get_bulk_actions() must return an " .
-                    "array of bulk actions instead of a single bulk action. " .
-                    "Please update your implementation of get_bulk_actions() to return an array. " .
-                    "Check out the qbank_bulkmove plugin for a working example.", DEBUG_DEVELOPER);
+                        "array of bulk actions instead of a single bulk action. " .
+                        "Please update your implementation of get_bulk_actions() to return an array. " .
+                        "Check out the qbank_bulkmove plugin for a working example.", DEBUG_DEVELOPER);
                 $bulkactions = [$bulkactions];
             }
 
             foreach ($bulkactions as $bulkactionobject) {
                 $this->bulkactions[$bulkactionobject->get_key()] = [
-                    'title' => $bulkactionobject->get_bulk_action_title(),
-                    'url' => $bulkactionobject->get_bulk_action_url(),
-                    'capabilities' => $bulkactionobject->get_bulk_action_capabilities()
+                        'title' => $bulkactionobject->get_bulk_action_title(),
+                        'url' => $bulkactionobject->get_bulk_action_url(),
+                        'capabilities' => $bulkactionobject->get_bulk_action_capabilities()
                 ];
             }
 

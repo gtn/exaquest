@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-//namespace core_question\local\bank; // Class 'core_question\local\bank\condition' has been renamed for the autoloader and is now deprecated. Please use 'core_question\local\bank\condition'
+//namespace core_question\bank\search; // Class 'core_question\bank\search' has been renamed for the autoloader and is now deprecated. Please use 'core_question\local\bank\condition'
 namespace core_question\local\bank; // 4.3
 
 //namespace qbank_tagquestion;
