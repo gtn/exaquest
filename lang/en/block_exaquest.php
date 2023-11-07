@@ -57,11 +57,11 @@ $string['please_fill_exam_subject'] = 'Bitte befüllen Sie die Prüfung {$a->ful
 
 $string['messageprovider:gradeexam'] = 'An exam has to be graded';
 $string['messageprovider:newexamsrequest'] = 'New exams have been requested';
-$string['please_create_new_exams'] =
+$string['please_create_new_exams'] = 'Please create new exams in <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['please_grade_exam'] = 'Please grade the exam <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['please_grade_exam_subject'] = 'Please grade exam {$a->fullname}';
 $string['selected_questions'] = 'The following questions have been assigned to you';
-    'Please create new exams in <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
+
 $string['messageprovider:checkexamgrading'] = 'Exam grading has to be reviewed';
 $string['please_create_new_exams_subject'] = 'Please create new exams in {$a->fullname}';
 $string['please_check_exam_grading'] = 'Please check the grading of the exam <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
