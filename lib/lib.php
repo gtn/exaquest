@@ -733,7 +733,7 @@ function block_exaquest_get_quizzes_for_me_to_fill_count($userid) {
 }
 
 function block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, $assigntype, $quizstatus) {
-    global $DB, $USER;
+    global $DB, $USER, $COURSE;
 
     if (!$userid) {
         $userid = $USER->id;
@@ -746,12 +746,14 @@ function block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, $
 			JOIN {course_modules} cm on cm.instance = q.id
 			JOIN {modules} m on m.id = cm.module
 			WHERE qa.assigneeid = :userid
-			AND qa.assigntype = ' . $assigntype . '
-			AND qs.status = ' . $quizstatus . '
-            AND m. name = "quiz"';
+			AND qa.assigntype = :assigntype
+			AND qs.status = :quizstatus
+            AND m. name = "quiz"
+            AND q.course = :courseid'; // otherwise you would have a problem when you have 2 different courses in the same category.
+    // The quiz would not show up in the e.g. new-exams but the assignment would
 
     $quizzes = $DB->get_records_sql($sql,
-            array('userid' => $userid));
+            array('userid' => $userid, 'assigntype' => $assigntype, 'quizstatus' => $quizstatus, 'courseid' => $COURSE->id));
     return $quizzes;
 }
 
@@ -2215,6 +2217,7 @@ function block_exaquest_clean_up_tables() {
             BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE . ' OR status = ' .
             BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE .
             ')';
+
     $DB->execute($sql);
 }
 
