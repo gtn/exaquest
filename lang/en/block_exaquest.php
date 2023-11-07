@@ -46,27 +46,28 @@ $string['assign_addquestions_comment_placeholder'] = 'Kommentar an die ausgewäh
 
 // Messages
 $string['messageprovider:newquestionsrequest'] = 'New questions have been requested';
+$string['messageprovider:fillexam'] = 'An exam has to be filled';
 $string['please_create_new_questions'] =
     'Please create new questions in <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['please_create_new_questions_subject'] = 'Please create new questions in {$a->fullname}';
 
-$string['messageprovider:fillexam'] = 'An exam has to be filled';
 $string['please_fill_exam'] =
     'Please fill exam <a href="{$a->url}">{$a->fullname}</a> mit Fragen. Kommentar: {$a->requestcomment}';
 $string['please_fill_exam_subject'] = 'Please fill exam {$a->fullname} mit Fragen';
 
 $string['messageprovider:gradeexam'] = 'An exam has to be graded';
-$string['messageprovider:newexamsrequest'] = 'New exams have been requested';
-$string['please_create_new_exams'] = 'Please create new exams in <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['please_grade_exam'] = 'Please grade the exam <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['please_grade_exam_subject'] = 'Please grade exam {$a->fullname}';
 $string['selected_questions'] = 'The following questions have been assigned to you';
 
 $string['messageprovider:checkexamgrading'] = 'Exam grading has to be reviewed';
-$string['please_create_new_exams_subject'] = 'Please create new exams in {$a->fullname}';
 $string['please_check_exam_grading'] = 'Please check the grading of the exam <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
-
 $string['please_check_exam_grading_subject'] = 'Please review the grading of {$a->fullname}';
+
+$string['messageprovider:newexamsrequest'] = 'New exams have been requested';
+$string['please_create_new_exams'] = 'Please create new exams in <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
+$string['please_create_new_exams_subject'] = 'Please create new exams in {$a->fullname}';
+
 $string['messageprovider:revisequestion'] = 'Questions have been assigned for revision';
 $string['please_revise_question'] = 'Please revise question <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['please_revise_question_subject'] = 'Please revise question {$a->fullname}';
@@ -92,9 +93,11 @@ $string['daily_released_questions_in_course'] =
     '{$a->daily_released_questions} questions released in course <a href="{$a->url}">{$a->fullname}</a><br>';
 
 // Roles and Capabilities
+
 $string['setuproles'] = 'Set up roles and capabilities';
 
 // Exams
+
 $string['create_new_exam'] = 'Create new exam';
 $string['add_questions_to_quiz'] = 'Add Questions to quiz';
 $string['add_to_quiz'] = 'Add to quiz';
@@ -197,8 +200,8 @@ $string['fachlich_done'] = 'Fachlich finalized';
 $string['finalised'] = 'Finalized';
 $string['released'] = 'Released';
 $string['imported_question'] = 'Imported';
-$string['question'] = 'Question:';
 
+$string['question'] = 'Question:';
 
 $string['question_id'] = 'Question ID';
 $string['ownername'] = 'Created by';
@@ -216,8 +219,6 @@ $string['lock_question'] = 'Lock Question';
 $string['locked'] = 'Locked';
 $string['missing_category_tooltip'] = 'Not all categories are assigned to the quesiton';
 
-
-
 //Category Settings
 $string['settings_title'] = 'Category Settings';
 $string['settings_description'] = 'Please enter one category per row';
@@ -230,7 +231,6 @@ $string['add_category'] = "Add Category";
 $string['delete'] = "Delete";
 $string['delete_check'] = "I am certain that I want to delete this category.";
 $string['actions'] = "Actions";
-
 
 // Similarity Comparison
 $string['exaquest:similarity_title'] = 'Similarity Comparison';
@@ -353,6 +353,7 @@ $string['exaquest:viewstatistic'] = 'View statistics tab in exaquest';
 $string['exaquest:viewsimilaritytab'] = 'View similarity tab in exaquest';
 $string['exaquest:viewexamstab'] = 'View exams tab in exaquest';
 $string['exaquest:viewcategorytab'] = 'View category tab in exaquest';
+$string['check_active_exams'] = 'Check status of active Exaquest quizzes and update if finished.';
 $string['exaquest:viewdashboardtab'] = 'View dashboard tab in exaquest';
 $string['exaquest:viewquestionbanktab'] = 'View question tab in exaquest';
 $string['exaquest:viewquestionstorelease'] = 'View questions to release';
@@ -372,17 +373,18 @@ $string['exaquest:viewownquestions'] = 'View own questions in exaquest';
 $string['exaquest:viewreleasedexams'] = 'View released exams in exaquest';
 
 // tasks
-$string['check_active_exams'] = 'Check status of active Exaquest quizzes and update if finished.';
+$string['check_active_exams_task'] = 'Update the status of all finished exams which have the satus "active" in Exaquest.';
+$string['clean_up_tables'] = 'Clean the Exaquest tables from orphaned entries';
 $string['create_daily_notifications'] = 'Create daily Exaquest notifications.';
 $string['set_up_roles'] = 'Set up roles for Exaquest.';
 
 $string['points_per'] = 'Points for Fragefach ';
 $string['exaquest_settings'] = 'Exaquest Settings';
-$string['clean_up_tables'] = 'Clean the Exaquest tables from orphaned entries';
-$string['check_active_exams_task'] = 'Update the status of all finished exams which have the satus "active" in Exaquest.';
+
 $string['assign_to_revise_from_quiz'] = 'Assign to revise';
 $string['revise_question_from_quiz'] = 'Revise question';
 $string['lock_from_quiz'] = 'Lock';
+
 $string['send_exam_to_review'] = 'Send exam to review';
 $string['fachlich_release_exam'] = 'Fachlich release exam';
 $string['assign_check_exam_grading'] = 'Assign exam to check grading';
