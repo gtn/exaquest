@@ -50,10 +50,10 @@ $string['please_create_new_questions'] =
     'Please create new questions in <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
 $string['please_create_new_questions_subject'] = 'Please create new questions in {$a->fullname}';
 
-$string['messageprovider:fillexam'] = 'Eine Prüfung soll befüllt werden';
+$string['messageprovider:fillexam'] = 'An exam has to be filled';
 $string['please_fill_exam'] =
-    'Bitte befüllen Sie die Prüfung <a href="{$a->url}">{$a->fullname}</a> mit Fragen. Kommentar: {$a->requestcomment}';
-$string['please_fill_exam_subject'] = 'Bitte befüllen Sie die Prüfung {$a->fullname} mit Fragen';
+    'Please fill exam <a href="{$a->url}">{$a->fullname}</a> mit Fragen. Kommentar: {$a->requestcomment}';
+$string['please_fill_exam_subject'] = 'Please fill exam {$a->fullname} mit Fragen';
 
 $string['messageprovider:gradeexam'] = 'An exam has to be graded';
 $string['messageprovider:newexamsrequest'] = 'New exams have been requested';
