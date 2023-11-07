@@ -52,7 +52,7 @@ class block_exaquest extends block_list {
 
                     $coursename = $c->fullname;
                     $questioncategoryid = get_question_category_and_context_of_course($c->id)[0];
-                    $todocount = block_exaquest_get_todo_count($USER->id, $c->category, $questioncategoryid, context_course::instance($c->id));
+                    $todocount = block_exaquest_get_todo_count($USER->id, $c->category, $questioncategoryid, context_course::instance($c->id), $c->id);
                     if ($todocount) {
                         $todocountmesssage = '<span class="badge badge-primary ml-3 badge-lg">' .
                             $todocount . get_string('todos_are_open', 'block_exaquest') . ' </span>';

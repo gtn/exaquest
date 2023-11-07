@@ -1803,7 +1803,7 @@ function block_exaquest_get_relevant_courses_for_user($userid = null) {
  *     questions_for_me_to_revise_count + exams_for_me_to_create_count. Depending on your role some of those todos may not exist,
  *     but this will lead to a count of 0 for those todos, which means, it does not matter. No capabilities check needed.
  */
-function block_exaquest_get_todo_count($userid, $coursecategoryid, $questioncategoryid, $context) {
+function block_exaquest_get_todo_count($userid, $coursecategoryid, $questioncategoryid, $context, $courseid) {
     $questions_for_me_to_create_count =
             block_exaquest_get_questions_for_me_to_create_count($coursecategoryid, $userid);
     $questions_for_me_to_review_count =
@@ -1821,11 +1821,19 @@ function block_exaquest_get_todo_count($userid, $coursecategoryid, $questioncate
             block_exaquest_get_my_questionbankentries_to_submit_count($questioncategoryid, $userid);
     //$exams_for_me_to_create_count =
     //    block_exaquest_get_exams_for_me_to_create_count($coursecategoryid, $userid);
-    $exams_for_me_to_fill_count = block_exaquest_get_assigned_exams_by_assigntype_count($coursecategoryid, $userid,
+    $exams_for_me_to_fill_count = block_exaquest_get_assigned_exams_by_assigntype_count($courseid, $userid,
             BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
 
+    $exams_for_me_to_check_grading_count = block_exaquest_get_assigned_exams_by_assigntype_count($courseid, $userid,
+            BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
+    $exams_for_me_to_grade_count = block_exaquest_get_assigned_exams_by_assigntype_count($courseid, $userid,
+            BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM);
+    $exams_for_me_to_change_grading_count = block_exaquest_get_assigned_exams_by_assigntype_count($courseid, $userid,
+            BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHANGE_EXAM_GRADING);
+
     return $questions_for_me_to_create_count + $questions_for_me_to_review_count + $questions_for_me_to_revise_count +
-            $questions_finalised_count + $exams_for_me_to_fill_count + $my_questions_to_submit_count;
+            $questions_finalised_count + $exams_for_me_to_fill_count + $my_questions_to_submit_count +
+            $exams_for_me_to_check_grading_count + $exams_for_me_to_grade_count + $exams_for_me_to_change_grading_count;
 }
 
 function block_exaquest_is_user_in_course($userid, $courseid) {
@@ -1958,7 +1966,8 @@ function block_exaquest_get_capabilities($context) {
     $capabilities["releasequestion"] = has_capability("block/exaquest:releasequestion", $context, $USER);
     $capabilities["readallquestions"] = has_capability("block/exaquest:readallquestions", $context, $USER);
     $capabilities["readquestionstatistics"] = has_capability("block/exaquest:readquestionstatistics", $context, $USER);
-    $capabilities["changestatusofreleasedquestions"] = has_capability("block/exaquest:changestatusofreleasedquestions", $context, $USER);
+    $capabilities["changestatusofreleasedquestions"] =
+            has_capability("block/exaquest:changestatusofreleasedquestions", $context, $USER);
     $capabilities["setstatustoreview"] = has_capability("block/exaquest:setstatustoreview", $context, $USER);
     $capabilities["reviseownquestion"] = has_capability("block/exaquest:reviseownquestion", $context, $USER);
     $capabilities["setstatustofinalised"] = has_capability("block/exaquest:setstatustofinalised", $context, $USER);
@@ -2060,7 +2069,7 @@ function block_exaquest_create_daily_notifications() {
         foreach ($courses as $c) {
             $context = \context_course::instance($c->id);
             $questioncategoryid = get_question_category_and_context_of_course($c->id)[0];
-            $todocount = block_exaquest_get_todo_count($user->id, $c->category, $questioncategoryid, $context);
+            $todocount = block_exaquest_get_todo_count($user->id, $c->category, $questioncategoryid, $context, $c->id);
             if ($todocount) {
                 // create the message
                 $messageobject = new stdClass();
