@@ -44,6 +44,12 @@ for line in en_lines:
             current_key = ''
             current_value = ''
 
+if len(en_dict) != len(de_keys):
+    print("ERROR: NUMBER OF STRINGS IN ENGLISH FILE IS NOT EQUAL TO NUMBER OF STRINGS IN GERMAN FILE")
+    print(f"ENGLISH: {len(en_dict)}")
+    print(f"GERMAN: {len(de_keys)}")
+    print("RUN lang_compare.py FIRST!")
+    exit()
 
 # Write the ordered English file
 with open(en_file_path, 'w') as en_file:
@@ -57,11 +63,14 @@ with open(en_file_path, 'w') as en_file:
                 en_file.write(en_line)
                 del en_dict[key]
             else:
-                en_file.write(line)
+                # if it does NOT exist in the english file, then it is a new string ==> write it in german but also add TRANSLATE to it
+                # match = re.match(r"\$string\['(.*?)'\]\s*=\s*'(.*)';", line)
+                # new_line = f"$string['{match.group(1)}'] = '{match.group(2)} TRANSLATE';\n"
+                # en_file.write(new_line)
+                # en_file.write(line)
+                print(f"ERROR: STRING DOES NOT EXIST IN ENGLISH FILE: {key} \n RUN lang_compare.py FIRST!") # should not happen
         else:
             if not (line_stripped.startswith("\'") or line_stripped.startswith("\"")):
                 en_file.write(line)
                 # if it DOES start with " or with ' then it is a second line of a string, because it is a long string ==> skip, or else it would write the german string
-
-
 
