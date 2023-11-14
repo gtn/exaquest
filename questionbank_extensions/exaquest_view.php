@@ -385,6 +385,10 @@ class exaquest_view extends view
         global $DB;
 
         $editcontexts = $this->contexts->having_one_edit_tab_cap('editq'); // tabname just copied for convinience bacause it won't change
+        // at index 0 is the course
+        // at index 1 is the deepest coursecategory
+        // then there could be arbitrarily many coursecategories
+        // at the last index is the system
 
 
         // If it is required to create sub question categories i have to iterate over it and find the context_coursecat
@@ -392,7 +396,8 @@ class exaquest_view extends view
             // gets the parent course category for this course
             $categories = $DB->get_records('question_categories', ['contextid' => $editcontexts[1]->id]);
             //$category = end($categories); // end gives me the last element
-            $category = array_values($categories)[0]; // gives me the first element. TODO: how can I always get the default?
+            $category = array_values($categories)[0]; // gives me the first element. TODO: how can I always get the default? maybe use sort?
+            // it is always the first element. Index 0 is the default category, index 1 is "top"
         } else {
             throw new \coding_exception('No parent course category found');
             $category = $this->get_current_category($categoryandcontext);
