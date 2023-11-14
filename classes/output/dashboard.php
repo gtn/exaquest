@@ -191,7 +191,7 @@ class dashboard implements renderable, templatable {
             $data->show_exams_heading = true;
         }
 
-        //$data->questions_for_me_to_create_popup = $this->questions_for_me_to_create_popup->export_for_template($output);
+        $data->questions_for_me_to_create_popup = $this->questions_for_me_to_create_popup->export_for_template($output);
 
         $data->popup_exams_for_me_to_fill = $this->popup_exams_for_me_to_fill->export_for_template($output);
         $data->exams_for_me_to_fill_count = $this->exams_for_me_to_fill_count;

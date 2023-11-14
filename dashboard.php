@@ -41,11 +41,11 @@ if ($action == 'request_questions') {
 
     $allfragenersteller = block_exaquest_get_fragenersteller_by_courseid($courseid);
     // by courseid or coursecategoryid? --> does not matter, as the role from the category will be used to enrol the user into the course
-    if (array_key_exists("selectedusers", $_POST)) {
-        if (is_array($_POST["selectedusers"])) {
-            $selectedfragenersteller = clean_param_array($_POST["selectedusers"], PARAM_INT);
+    if (array_key_exists("selectedpopup_request_questions", $_POST)) {
+        if (is_array($_POST["selectedpopup_request_questions"])) {
+            $selectedfragenersteller = clean_param_array($_POST["selectedpopup_request_questions"], PARAM_INT);
         } else {
-            $selectedfragenersteller = clean_param($_POST["selectedusers"], PARAM_INT);
+            $selectedfragenersteller = clean_param($_POST["selectedpopup_request_questions"], PARAM_INT);
         }
         $requestcomment = clean_param($_POST["requestcomment"], PARAM_TEXT);
 
@@ -57,23 +57,23 @@ if ($action == 'request_questions') {
         }
     }
 } else if ($action == 'request_exams') {
-    // get all the users with role "fachlicherpruefer" and send them a notification
-    $allfachlichepruefer = block_exaquest_get_fachlichepruefer_by_courseid($courseid);
-    if (array_key_exists("selectedusers", $_POST)) {
-        if (is_array($_POST["selectedusers"])) {
-            $selectedfachlicherpruefer = clean_param_array($_POST["selectedusers"], PARAM_INT);
-        } else {
-            $selectedfachlicherpruefer = clean_param($_POST["selectedusers"], PARAM_INT);
-        }
-        $requestcomment = clean_param($_POST["requestcomment"], PARAM_TEXT);
-
-        if ($selectedfachlicherpruefer) {
-            $fachlichepruefer = array_intersect_key($allfachlichepruefer, $selectedfachlicherpruefer);
-            foreach ($fachlichepruefer as $pruefer) {
-                block_exaquest_request_exam($USER->id, $pruefer->id, $requestcomment);
-            }
-        }
-    }
+    //// get all the users with role "fachlicherpruefer" and send them a notification
+    //$allfachlichepruefer = block_exaquest_get_fachlichepruefer_by_courseid($courseid);
+    //if (array_key_exists("selectedusers", $_POST)) {
+    //    if (is_array($_POST["selectedusers"])) {
+    //        $selectedfachlicherpruefer = clean_param_array($_POST["selectedusers"], PARAM_INT);
+    //    } else {
+    //        $selectedfachlicherpruefer = clean_param($_POST["selectedusers"], PARAM_INT);
+    //    }
+    //    $requestcomment = clean_param($_POST["requestcomment"], PARAM_TEXT);
+    //
+    //    if ($selectedfachlicherpruefer) {
+    //        $fachlichepruefer = array_intersect_key($allfachlichepruefer, $selectedfachlicherpruefer);
+    //        foreach ($fachlichepruefer as $pruefer) {
+    //            block_exaquest_request_exam($USER->id, $pruefer->id, $requestcomment);
+    //        }
+    //    }
+    //}
 }
 
 // RENDER:
