@@ -391,7 +391,8 @@ class exaquest_view extends view
         if ($editcontexts[1] instanceof \context_coursecat) {
             // gets the parent course category for this course
             $categories = $DB->get_records('question_categories', ['contextid' => $editcontexts[1]->id]);
-            $category = end($categories); // end gives me the last element
+            //$category = end($categories); // end gives me the last element
+            $category = array_values($categories)[0]; // gives me the first element. TODO: how can I always get the default?
         } else {
             throw new \coding_exception('No parent course category found');
             $category = $this->get_current_category($categoryandcontext);
