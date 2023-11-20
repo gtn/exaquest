@@ -50,12 +50,14 @@ class exams implements renderable, templatable {
                 // update the exams that have the addquestionassignment to have the sendexamtoreview property set to true
                 foreach ($addquestionsassignments as $addquestionsassignment) {
                     $this->new_exams[$addquestionsassignment->quizid]->sendexamtoreview = true;
+                    $this->new_exams[$addquestionsassignment->quizid]->assignaddquestions = true;
                 }
                 $fpexams = block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
                         BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER, BLOCK_EXAQUEST_QUIZSTATUS_NEW);
                 // these are the exams for this FP ==> add the button for fachlich releasing
                 foreach ($fpexams as $fpexam) {
                     $this->new_exams[$fpexam->quizid]->fachlichreleaseexam = true;
+                    $this->new_exams[$fpexam->quizid]->assignaddquestions = true;
                     // add info if questions are missing
                     $this->new_exams[$fpexam->quizid]->missingquestionscount =
                             block_exaquest_get_missing_questions_count($fpexam->quizid, $courseid);
