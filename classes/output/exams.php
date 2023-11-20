@@ -39,6 +39,8 @@ class exams implements renderable, templatable {
                 }
             }
             if ($capabilities["addquestiontoexam"]) {
+                // TODO: should only PMWs and FPs that have been assigned be able to add questions and view questions? For now everyone can.
+
                 // new exams can only be seen by PK and Mover, except if you are specifically assigned to an exam, e.g. as a FP or PMW
                 // ==> give the viewnewexams capability to all users who are assigned to an exam, but filter the newexams according to users role
                 $addquestionsassignments = block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
