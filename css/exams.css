@@ -10,7 +10,8 @@
 }
 
 
-#exaquest .examcard th, td {
+#exaquest .examcard th,
+td {
     width: 150px;
     text-align: center;
     /*border: 1px solid black;*/
@@ -20,4 +21,12 @@
 
 #exaquest .examcard .btn {
     white-space: nowrap;
+}
+
+#exaquest li.assignment_done {
+    background: #90EE90;
+}
+
+#exaquest ul.popuplist {
+    list-style: none;
 }

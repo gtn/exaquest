@@ -21,15 +21,16 @@
                     <div>
                         <!--                list of already assigned persons -->
                         <list>
-                            <ul>
+                            <ul class="list-group popuplist">
                                 Bereits angefordert von:
                                 {{#assigned_persons}}
-                                    <li>{{firstname}} {{lastname}}</li>
+                                    <li {{#done}} class="assignment_done" {{/done}}>{{firstname}} {{lastname}}: {{#done}} bereits abgeschlossen {{/done}}</li>
                                 {{/assigned_persons}}
                             </ul>
                         </list>
+                        <p></p>
                         <list>
-                            <ul>
+                            <ul class="list-group popuplist">
                                 Bereits zugewiesene Fragen pro Fragefach:
                                 {{#fragefaecher}}
                                     <li>{{categoryname}}: {{currentquestioncount}} von {{requiredquestioncount}}</li>
@@ -37,7 +38,7 @@
                             </ul>
                         </list>
                     </div>
-
+                    <p></p>
                     <div class="form-group">{{#str}}
                         assign_addquestions_label, block_exaquest {{/str}}
                         {{{ pmw_autocomplete_html }}}

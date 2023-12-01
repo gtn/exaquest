@@ -2511,7 +2511,7 @@ function block_exaquest_get_assigned_fachlicherdrittpruefer($quizid) {
 function block_exaquest_get_assigned_persons_by_quizid_and_assigntype($quizid,
         $assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS) {
     global $DB;
-    $sql = 'SELECT qa.assigneeid, u.*
+    $sql = 'SELECT qa.assigneeid, u.*, qa.done
 			FROM {' . BLOCK_EXAQUEST_DB_QUIZASSIGN . '} qa
 			JOIN {user} u ON u.id = qa.assigneeid
 			WHERE qa.quizid = :quizid
