@@ -876,6 +876,7 @@ function block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid, $as
 			JOIN {course_modules} cm on cm.instance = q.id 
 			LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZCOMMENT . '} qc on qc.quizid = qa.quizid AND qc.quizassignid = qa.id
 			WHERE qa.assigneeid = :assigneeid
+			AND qa.done = 0
 			AND qa.assigntype = :assigntype
             AND q.course = :courseid
             AND cm.module = (SELECT id FROM {modules} WHERE name = "quiz")'; // to get the coursemoduleid for quizzes... "AND cm.module = 17"
