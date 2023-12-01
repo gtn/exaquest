@@ -21,7 +21,8 @@ switch ($action) {
                         'assigneeid' => $USER->id)
         );
 
-        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $quizassignid));
+        //$DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $quizassignid));
+        $DB->set_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'done', 1, array('id' => $requestid));
 
         // check if every assignment of this kind is done for this quiz
         block_exaquest_check_if_exam_is_ready($quizid);
@@ -32,8 +33,9 @@ switch ($action) {
         break;
     case ('skipandrelease_exam'):
         block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE);
-        // remove entries in exaquestquizassign
+        // remove entries in exaquestquizassign, as they don't make sense anymore (set status should actually already do this..)
         $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, ['quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS]);
+        //$DB->set_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'done', 1, array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS));
         break;
     //case ('assign_fp_and_pmw'):
     //    block_exaquest_assign_quiz_addquestions($quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
@@ -61,7 +63,7 @@ switch ($action) {
                         'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING,
                         'assigneeid' => $USER->id)
         );
-        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $quizassignid));
+        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $quizassignid)); // don't set the assignments to done, but DELETE them, as they do NOT make sense anymore
         // check if every assignment of this kind is done for this quiz
         //block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED_BY_FP);
         // only mark the todoo for the FP as done, do NOT release instantly, but first check if the BMWs have also done their part

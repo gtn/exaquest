@@ -18,7 +18,8 @@ switch ($action) {
         // get the quiz with this requestid
         $quizid = $DB->get_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'quizid', array('id' => $requestid));
 
-        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $requestid));
+        //$DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $requestid));
+        $DB->set_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'done', 1, array('id' => $requestid));
 
         // check if every assignment of this kind is done for this quiz
         block_exaquest_check_if_exam_is_ready($quizid);
@@ -31,7 +32,8 @@ switch ($action) {
         $requestid = required_param('requestid', PARAM_INT);
         // get the quiz with this requestid
         $quizid = $DB->get_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'quizid', array('id' => $requestid));
-        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $requestid));
+        //$DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $requestid));
+        $DB->set_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'done', 1, array('id' => $requestid));
         // check if every assignment of this kind is done for this quiz
         block_exaquest_check_if_grades_should_be_released($quizid);
 
@@ -49,12 +51,14 @@ switch ($action) {
         $requestid = required_param('requestid', PARAM_INT);
         // get the quiz with this requestid
         $quizid = $DB->get_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'quizid', array('id' => $requestid));
-        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $requestid));
+        //$DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $requestid));
+        $DB->set_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'done', 1, array('id' => $requestid));
         break;
     case ('mark_change_exam_grading_request_as_done'):
         $requestid = required_param('requestid', PARAM_INT);
         // get the quiz with this requestid
         $quizid = $DB->get_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'quizid', array('id' => $requestid));
-        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $requestid));
+        //$DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $requestid));
+        $DB->set_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'done', 1, array('id' => $requestid));
         break;
 }

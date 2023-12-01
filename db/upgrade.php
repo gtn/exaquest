@@ -678,5 +678,16 @@ function xmldb_block_exaquest_upgrade($oldversion) {
         upgrade_block_savepoint(true, 2023112002, 'exaquest');
     }
 
+    if ($oldversion < 2023120100) {
+        // add boolean field "done" to the table "exaquestquizstatus"
+        $table = new xmldb_table('block_exaquestquizstatus');
+        $field = new xmldb_field('done', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, 0);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2023120100, 'exaquest');
+    }
+
     return $return_result;
 }
