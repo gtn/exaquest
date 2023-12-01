@@ -972,10 +972,43 @@ function block_exaquest_set_up_roles() {
             'allowswitch' => 0,
             'allowview' => 0);
 
+
+
+
+
+    // is this the MUSSS?
+    //if (!$DB->record_exists('role', ['shortname' => 'testroleauto'])) {
+    //    $roleid = create_role('testroleauto', 'testroleauto', 'testroleauto');
+    //    $archetype = 0;
+    //    $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
+    //    $definitiontable->force_duplicate($archetype,
+    //            $options); // overwrites everything that is set in the options. The rest stays.
+    //    $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
+    //    $definitiontable->save_changes();
+    //    $sourcerole = new \stdClass();
+    //    $sourcerole->id = $archetype;
+    //    role_cap_duplicate($sourcerole, $roleid);
+    //
+    //    // allow setting role at context level "course category"
+    //    set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
+    //} else {
+    //    $roleid = $DB->get_record('role', ['shortname' => 'admintechnpruefungsdurchf'])->id;
+    //}
+
+
+
+
+
+
+
+
+
+
     // is this the MUSSS?
     if (!$DB->record_exists('role', ['shortname' => 'admintechnpruefungsdurchf'])) {
         $roleid = create_role('admin./techn. Prüfungsdurchf.', 'admintechnpruefungsdurchf', '', 'editingteacher');
         $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
+        //$archetype = 0;
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
                 $options); // overwrites everything that is set in the options. The rest stays.
@@ -1170,11 +1203,13 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:changeowner', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:skipandreleaseexam', CAP_ALLOW, $roleid, $context);
     unassign_capability('mod/quiz:addinstance', $roleid, $context->id);
-    unassign_capability('mod/quiz:moodle/course:manageactivities', $roleid, $context->id); // "Prüfungen anlegen und Bearbeiten sollen nur MUSSS, PK und StudMA, nicht MOVER oder andere Rolle können"
+    //unassign_capability('mod/quiz:moodle/course:manageactivities', $roleid, $context->id); // "Prüfungen anlegen und Bearbeiten sollen nur MUSSS, PK und StudMA, nicht MOVER oder andere Rolle können"
 
     if (!$DB->record_exists('role', ['shortname' => 'fragenersteller'])) {
-        $roleid = create_role('Fragenersteller', 'fragenersteller', '', 'editingteacher');
-        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
+        //$roleid = create_role('Fragenersteller', 'fragenersteller', '', 'editingteacher');
+        $roleid = create_role('Fragenersteller', 'fragenersteller', 'This user can only create questions and see the dashboard');
+        //$archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
+        $archetype = 0;
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
                 $options); // overwrites everything that is set in the options. The rest stays.
