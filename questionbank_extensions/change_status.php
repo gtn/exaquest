@@ -63,7 +63,8 @@ class change_status extends column_base {
                         get_string('change_owner', 'block_exaquest'), $question, true));
 
                 }
-                if (intval($question->ownerid) == $USER->id &&
+                // the original owner and the assigned reviser can both revise the question
+                if ((intval($question->ownerid) == $USER->id || intval($question->reviserid) == $USER->id) &&
                     has_capability('block/exaquest:setstatustoreview', \context_course::instance($COURSE->id))) {
                     $usertoselect = block_exaquest_get_reviewer_by_courseid($COURSE->id);
                     echo $output->render(new \block_exaquest\output\popup_change_status($usertoselect, 'open_question_for_review',

@@ -429,7 +429,7 @@ class exaquest_view extends view
         // Get the required tables and fields.
         $joins = [];
         // add here extra fields to get from the sql query, but be careful these can cause problems if not the right tables are not joind and the first one in this field determains the indexing of the return array
-        $fields = [ 'qbe.id as questionbankentryid','qv.status', 'qc.id as categoryid', 'qv.version', 'qv.id as versionid'];
+        $fields = [ 'qbe.id as questionbankentryid','qv.status', 'qc.id as categoryid', 'qv.version', 'qv.id as versionid', 'qrevisea.reviserid as reviserid'];
         if (!empty($this->requiredcolumns)) {
             foreach ($this->requiredcolumns as $column) {
                 $extrajoins = $column->get_extra_joins();
