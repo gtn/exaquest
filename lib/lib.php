@@ -972,11 +972,6 @@ function block_exaquest_set_up_roles() {
             'allowswitch' => 0,
             'allowview' => 0);
 
-
-
-
-
-    // is this the MUSSS?
     //if (!$DB->record_exists('role', ['shortname' => 'testroleauto'])) {
     //    $roleid = create_role('testroleauto', 'testroleauto', 'testroleauto');
     //    $archetype = 0;
@@ -994,15 +989,6 @@ function block_exaquest_set_up_roles() {
     //} else {
     //    $roleid = $DB->get_record('role', ['shortname' => 'admintechnpruefungsdurchf'])->id;
     //}
-
-
-
-
-
-
-
-
-
 
     // is this the MUSSS?
     if (!$DB->record_exists('role', ['shortname' => 'admintechnpruefungsdurchf'])) {
@@ -1143,7 +1129,6 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:assigngradeexam', CAP_ALLOW, $roleid, $context);
     unassign_capability('block/exaquest:createexam', $roleid, $context->id); // accidentally added, should be deleted
 
-
     if (!$DB->record_exists('role', ['shortname' => 'modulverantwortlicher'])) {
         $roleid = create_role('Modulverantwortlicher', 'modulverantwortlicher', '', 'editingteacher');
         $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
@@ -1219,8 +1204,8 @@ function block_exaquest_set_up_roles() {
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
 
-        // allow setting role at context level "course category"
-        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
+        // allow setting role at context level "course category" and "course"
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'fragenersteller'])->id;
     }
@@ -1239,6 +1224,21 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
+    //moodle capabilities:
+    assign_capability('moodle/question:add', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:viewmine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:movemine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:tagmine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:commentmine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:editmine', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:viewall', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:moveall', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:tagall', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:commentall', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:editall', CAP_ALLOW, $roleid, $context);
+
+
+
 
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlfragenreviewer'])) {
@@ -1354,7 +1354,8 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:dofachlichreviewexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:checkexamsgrading', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:gradequestion', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:assignaddquestions', $roleid, $context->id); // accidentally added, should be deleted. ONLY allow this for your own exams. Only pk and mover can do it generally
+    unassign_capability('block/exaquest:assignaddquestions', $roleid,
+            $context->id); // accidentally added, should be deleted. ONLY allow this for your own exams. Only pk and mover can do it generally
     // addquestion will be added in the output/exams.php for every exam the FP is FP of and for every PMW that has been assigned.
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsmitwirkende'])) {
