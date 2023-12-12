@@ -28,7 +28,6 @@ use core_question\local\bank\column_base;
 
 class remove_from_quiz extends column_base {
 
-
     public function get_title(): string {
         return get_string('remove_from_quiz', 'block_exaquest');
 
@@ -38,8 +37,7 @@ class remove_from_quiz extends column_base {
         return 'removefromquiz';
     }
 
-    protected function display_content($question, $rowclasses)
-    {
+    protected function display_content($question, $rowclasses) {
 
         $quizid = optional_param('quizid', null, PARAM_INT);
 
@@ -51,58 +49,62 @@ class remove_from_quiz extends column_base {
         $quizslotid = $DB->get_field_sql("SELECT qs.id
                                               FROM {question_references} qr
                                               JOIN {quiz_slots} qs ON qr.itemid = qs.id
-                                              WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?", array($quizid, $question->questionbankentryid));
+                                              WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?",
+                array($quizid, $question->questionbankentryid));
 
         //check if already in the quiz
-        if($DB->record_exists_sql("SELECT *
+        if ($DB->record_exists_sql("SELECT *
                                     FROM {question_references} qr
                                          JOIN {quiz_slots} qs ON qr.itemid = qs.id
-                                   WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?", array($quizid, $question->questionbankentryid))) {
-            echo '<button href="#" id="removequestion' . $question->questionbankentryid . '" class="removequestion' . $question->questionbankentryid . ' btn btn-primary" type="button" value="removequestion"> ' . get_string('remove_from_quiz', 'block_exaquest') . '</button>';
+                                   WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?",
+                array($quizid, $question->questionbankentryid))) {
+            echo '<button href="#" id="removequestion' . $question->questionbankentryid . '" class="removequestion' .
+                    $question->questionbankentryid . ' btn btn-primary" type="button" value="removequestion"> ' .
+                    get_string('remove_from_quiz', 'block_exaquest') . '</button>';
 
+            ?>
 
+            <script type="text/javascript">
 
-        ?>
-
-        <script type="text/javascript">
-
-            $(document).ready(function() {
-                $("#removequestion<?php echo $question->questionbankentryid; ?>").click(function (e) {
-                    debugger
-                    var data = {
-                        action: "DELETE",
-                        class: "resource",
-                        id: <?php echo $quizslotid; ?>,
-                        courseid: <?php echo $COURSE->id; ?>,
-                        quizid: <?php echo $quizid; ?>,
-                        sesskey: "<?php echo sessKey(); ?>"
-                    };
-                    e.preventDefault();
-                    var ajax = $.ajax({
-                        method: "POST",
-                        url: "<?php echo $url; ?>",
-                        data: data
-                    }).done(function (ret) {
-                        console.log(data.action, 'ret', ret);
-                        location.reload();
-                    }).fail(function (ret) {
-                        var errorMsg = '';
-                        if (ret.responseText[0] == '<') {
-                            // html
-                            errorMsg = $(ret.responseText).find('.errormessage').text();
-                        }
-                        console.log("Error in action '" + data.action + "'", errorMsg, 'ret', ret);
+                $(document).ready(function () {
+                    $("#removequestion<?php echo $question->questionbankentryid; ?>").click(function (e) {
+                        debugger
+                        var data = {
+                            action: "DELETE",
+                            class: "resource",
+                            id: <?php echo $quizslotid; ?>,
+                            courseid: <?php echo $COURSE->id; ?>,
+                            quizid: <?php echo $quizid; ?>,
+                            sesskey: "<?php echo sessKey(); ?>"
+                        };
+                        e.preventDefault();
+                        var ajax = $.ajax({
+                            method: "POST",
+                            url: "<?php echo $url; ?>",
+                            data: data
+                        }).done(function (ret) {
+                            console.log(data.action, 'ret', ret);
+                            location.reload();
+                        }).fail(function (ret) {
+                            var errorMsg = '';
+                            if (ret.responseText[0] == '<') {
+                                // html
+                                errorMsg = $(ret.responseText).find('.errormessage').text();
+                            }
+                            console.log("Error in action '" + data.action + "'", errorMsg, 'ret', ret);
+                        });
                     });
                 });
-            });
 
-        </script>
-        <?php
+            </script>
+            <?php
 
         }
     }
+
     public function get_extra_joins(): array {
         return ['qs' => 'JOIN {block_exaquestquestionstatus} qs ON qbe.id = qs.questionbankentryid',
-            'qra' => 'LEFT JOIN {block_exaquestreviewassign} qra ON qbe.id = qra.questionbankentryid'];
+                'qra' => 'LEFT JOIN {block_exaquestreviewassign} qra ON qbe.id = qra.questionbankentryid',
+                'qrevisea' => 'LEFT JOIN {block_exaquestreviseassign} qrevisea ON qbe.id = qrevisea.questionbankentryid'];
     }
 }

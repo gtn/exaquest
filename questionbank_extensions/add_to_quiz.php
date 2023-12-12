@@ -28,7 +28,6 @@ use core_question\local\bank\column_base;
 
 class add_to_quiz extends column_base {
 
-
     public function get_title(): string {
         return get_string('add_to_quiz', 'block_exaquest');
 
@@ -38,8 +37,7 @@ class add_to_quiz extends column_base {
         return 'addtoquiz';
     }
 
-    protected function display_content($question, $rowclasses)
-    {
+    protected function display_content($question, $rowclasses) {
 
         $quizid = optional_param('quizid', null, PARAM_INT);
 
@@ -49,22 +47,24 @@ class add_to_quiz extends column_base {
         $questioncreator->firstname = $question->creatorfirstname;
         $questioncreator->lastname = $question->creatorlastname;
         $questioncreator->id = $question->createdby;
-        $questioncreators= array($questioncreator);#
+        $questioncreators = array($questioncreator);#
 
         //check if already in the quiz
-        if(! $DB->record_exists_sql("SELECT *
+        if (!$DB->record_exists_sql("SELECT *
                                     FROM {question_references} qr
                                          JOIN {quiz_slots} qs ON qr.itemid = qs.id
-                                   WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?", array($quizid, $question->questionbankentryid))){
-            echo '<button href="#" class="addquestion' . $question->questionbankentryid . ' btn btn-primary" role="button" value="addquestion"> ' . get_string('add_to_quiz', 'block_exaquest') . '</button>';
-      }
-
+                                   WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?",
+                array($quizid, $question->questionbankentryid))) {
+            echo '<button href="#" class="addquestion' . $question->questionbankentryid .
+                    ' btn btn-primary" role="button" value="addquestion"> ' . get_string('add_to_quiz', 'block_exaquest') .
+                    '</button>';
+        }
 
         ?>
 
         <script type="text/javascript">
-// redirects event to ajax.php
-            $(document).ready(function() {
+            // redirects event to ajax.php
+            $(document).ready(function () {
                 $(".addquestion<?php echo $question->questionbankentryid; ?>").click(function (e) {
                     var data = {
                         action: $(this).val(),
@@ -98,6 +98,7 @@ class add_to_quiz extends column_base {
 
     public function get_extra_joins(): array {
         return ['qref' => 'LEFT JOIN {question_references} qref ON qbe.id = qref.questionbankentryid',
-            'qusl' => 'LEFT JOIN {quiz_slots} qusl ON qref.itemid = qusl.id'];
+                'qusl' => 'LEFT JOIN {quiz_slots} qusl ON qref.itemid = qusl.id',
+                'qrevisea' => 'LEFT JOIN {block_exaquestreviseassign} qrevisea ON qbe.id = qrevisea.questionbankentryid'];
     }
 }
