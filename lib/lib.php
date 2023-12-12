@@ -1237,10 +1237,6 @@ function block_exaquest_set_up_roles() {
     assign_capability('moodle/question:commentall', CAP_ALLOW, $roleid, $context);
     assign_capability('moodle/question:editall', CAP_ALLOW, $roleid, $context);
 
-
-
-
-
     if (!$DB->record_exists('role', ['shortname' => 'fachlfragenreviewer'])) {
         $roleid = create_role('fachl. Fragenreviewer', 'fachlfragenreviewer', '', 'editingteacher');
         $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
@@ -2495,7 +2491,8 @@ function block_exaquest_get_category_question_count($quizid) {
                                                     FROM   {question_versions} v
                                                     JOIN {question_bank_entries} be
                                                     ON be.id = v.questionbankentryid
-                                                    WHERE  be.id = qref.questionbankentryid) AND qusl.quizid=" . $quizid);
+                                                    WHERE  be.id = qref.questionbankentryid) AND qusl.quizid=:quizid",
+            array('quizid' => $quizid));
 
     $categoryoptionidarray = array();
     foreach ($customfieldvalues as $categoryoptionid) {
@@ -2704,9 +2701,12 @@ function block_exaquest_check_if_question_contains_categories($questionid) {
     return in_array(0, $categorytypes) && in_array(1, $categorytypes) && in_array(2, $categorytypes) && in_array(3, $categorytypes);
 }
 
-function block_exaquest_render_questioncount_per_category(){
-    global $DB, $COURSE, $OUTPUT;
+function block_exaquest_render_questioncount_per_category() {
+    global $DB, $COURSE, $OUTPUT, $SESSION;
     $quizid = optional_param('quizid', null, PARAM_INT);
+    if($quizid == null){
+        $quizid = $SESSION->quizid;
+    }
 
     if ($quizid != null) {
         $quizname = $DB->get_field("quiz", "name", array("id" => $quizid));
