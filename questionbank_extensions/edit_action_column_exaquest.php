@@ -29,7 +29,6 @@ use qbank_previewquestion\helper;
  */
 class edit_action_column_exaquest extends edit_action_column {
 
-
     // ideas to change the link from edit to preview:
     // 1. look at public function question_row(structure $structure... in edit_renderer of the mode/quiz/edit maybe
     // 2. look at the question/bank/previewquestion... the code structure is more similar to what we need
@@ -41,16 +40,22 @@ class edit_action_column_exaquest extends edit_action_column {
             // We cannot do most actions on them, because that leads to errors.
             return [null, null, null];
         }
-        $questionStatus = $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'status', array('questionbankentryid' => $question->questionbankentryid));
+        $questionStatus = $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'status',
+                array('questionbankentryid' => $question->questionbankentryid));
 
-        if (question_has_capability_on($question, 'edit')
-            && ($questionStatus < BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED || $questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED || $questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED)
-            && (($question->ownerid == $USER->id
-                    && has_capability('block/exaquest:setstatustoreview', \context_course::instance($COURSE->id))
-                    && ($questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_NEW || $questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE || $questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED || $questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED))
-            || ((has_capability('block/exaquest:modulverantwortlicher', \context_course::instance($COURSE->id)))
-                    || has_capability('block/exaquest:pruefungskoordination', \context_course::instance($COURSE->id))))
-
+        // if the user can edit this question and it is in the right state, and the user is the owner OR has been assigned to revise then show the edit link.
+        if (question_has_capability_on($question, 'edit') // has to have edit capability
+                && ($questionStatus < BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED || // question has to be in the right state
+                        $questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED ||
+                        $questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED)
+                && (($question->ownerid == $USER->id
+                                // user has to be owner OR modulverantwortlicher OR pruefungskoordination OR assigned reviser
+                                && has_capability('block/exaquest:setstatustoreview', \context_course::instance($COURSE->id)))
+                        || ((has_capability('block/exaquest:modulverantwortlicher', \context_course::instance($COURSE->id)))
+                                || has_capability('block/exaquest:pruefungskoordination', \context_course::instance($COURSE->id)))
+                        ||
+                        (intval($question->reviserid) == $USER->id && $questionStatus == BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE &&
+                                has_capability('block/exaquest:setstatustoreview', \context_course::instance($COURSE->id))))
         ) {
             return [$this->edit_question_moodle_url($question->id), 't/edit', $this->stredit];
             //return [$this->preview_question_moodle_url($question->id), 't/edit', $this->stredit];
