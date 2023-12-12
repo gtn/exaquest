@@ -1722,7 +1722,7 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
     return $rows;
 }
 
-// this is used to get the contexts of the category in the questionbank. The default question category of the coursecategory is used.
+// this is used to get the contexts of the (question!!)category in the questionbank. The default question category of the coursecategory is used.
 
 function get_question_category_and_context_of_course($courseid = null) {
     global $COURSE, $DB;

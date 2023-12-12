@@ -20,6 +20,7 @@ class dashboard implements renderable, templatable {
 
     public function __construct($userid, $courseid, $capabilities, $fragenersteller, $questions_to_create, $coursecategoryid, $questioncategoryid,
         $fachlichepruefer, $exams_to_fill, $exams_to_check_grading, $exams_to_grade, $exams_to_change_grading) {
+        $this->catAndCont = get_question_category_and_context_of_course();
         $this->courseid = $courseid;
         $this->capabilities = $capabilities;
         $this->userid = $userid;
@@ -33,7 +34,7 @@ class dashboard implements renderable, templatable {
         $this->coursecategoryid = $coursecategoryid;
         $this->questioncategoryid = $questioncategoryid;
         //$this->request_exams_popup = new popup_request_exams($fachlichepruefer);
-        $this->popup_exams_for_me_to_fill = new popup_exams_for_me_to_fill($exams_to_fill);
+        $this->popup_exams_for_me_to_fill = new popup_exams_for_me_to_fill($exams_to_fill, $this->catAndCont);
         $this->exams_for_me_to_fill_count = count($exams_to_fill);
 
         $this->popup_exams_for_me_to_check_grading = new popup_exams_for_me_to_check_grading($exams_to_check_grading);
@@ -92,7 +93,7 @@ class dashboard implements renderable, templatable {
         $data->my_questions_finalised_count =
             block_exaquest_get_my_finalised_questionbankentries_count($this->questioncategoryid, $this->userid);
 
-        $catAndCont = get_question_category_and_context_of_course();
+        $catAndCont = $this->catAndCont;
 
         $data->my_questions_to_submit_link = new moodle_url('/blocks/exaquest/questbank.php',
             array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
