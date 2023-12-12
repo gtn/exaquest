@@ -39,32 +39,69 @@ function block_exaquest_coursemodule_definition_after_data($formwrapper, $mform)
             </script>
             <?php
             $mform->addElement('submit', 'saveandreturnexaquest', get_string('save_and_return', 'block_exaquest'),
-                'onClick="changeFormActionExaquest()"');
+                    'onClick="changeFormActionExaquest()"');
         }
     }
 
     return;
 }
 
+// Adds elements to the course module settings form
 function block_exaquest_coursemodule_standard_elements($formwrapper, $mform) {
     global $CFG, $COURSE, $DB, $PAGE;
     if (is_exaquest_active_in_course()) {
         if ($mform->_formName == 'mod_quiz_mod_form') {
+
+            // add the Maximum grade setting
+            // from public function maximum_grade_input in mod/quiz/classes/output/edit_renderer.php
+            //$output = '';
+            //$output .= html_writer::start_div('maxgrade');
+            //$output .= html_writer::start_tag('form', ['method' => 'post', 'action' => 'edit.php',
+            //        'class' => 'quizsavegradesform form-inline']);
+            //$output .= html_writer::start_tag('fieldset', ['class' => 'invisiblefieldset']);
+            //$output .= html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
+            ////$output .= html_writer::input_hidden_params($pageurl);
+            //$output .= html_writer::tag('label', get_string('maximumgrade') . ' ',
+            //        ['for' => 'inputmaxgrade']);
+            ////$output .= html_writer::empty_tag('input', ['type' => 'text', 'id' => 'inputmaxgrade',
+            ////        'name' => 'maxgrade', 'size' => ($structure->get_decimal_places_for_grades() + 2),
+            ////        'value' => $structure->formatted_quiz_grade(),
+            ////        'class' => 'form-control']);
+            //$output .= html_writer::empty_tag('input', ['type' => 'submit', 'class' => 'btn btn-secondary ml-1',
+            //        'name' => 'savechanges', 'value' => get_string('save', 'quiz')]);
+            //$output .= html_writer::end_tag('fieldset');
+            //$output .= html_writer::end_tag('form');
+            //$output .= html_writer::end_tag('div');
+
+            // from lib/form/modgrade.php
+            // Maximum grade textbox.
+            //$langmaxgrade = get_string('modgrademaxgrade', 'grades');
+            //$this->maxgradeformelement = $this->createFormElement('text', 'modgrade_point', $langmaxgrade, array());
+            //$this->maxgradeformelement->setHiddenLabel(true);
+            //$maxgradeformelementid = $this->generate_modgrade_subelement_id('modgrade_point');
+            //$this->maxgradeformelement->updateAttributes(array('id' => $maxgradeformelementid));
+
+
+
             $quizid = $formwrapper->get_instance();
 
             $mform->addElement('header', 'exaquest_settings', get_string('exaquest_settings', 'block_exaquest'));
             $mform->setExpanded('exaquest_settings');
+
             // Add the fachlicherpruefer setting
-            $fachlichepruefer = block_exaquest_get_fachlichepruefer_by_courseid($COURSE->id); // for now I assume: there are only fachlichepruefer, there are no other roles, just other assignments
+            $fachlichepruefer =
+                    block_exaquest_get_fachlichepruefer_by_courseid($COURSE->id); // for now I assume: there are only fachlichepruefer, there are no other roles, just other assignments
             if ($fachlichepruefer) {
                 $fachlichepruefer_options = array();
                 foreach ($fachlichepruefer as $fachlicherpruefer) {
                     $fachlichepruefer_options[$fachlicherpruefer->id] =
-                        $fachlicherpruefer->firstname . ' ' . $fachlicherpruefer->lastname;
+                            $fachlicherpruefer->firstname . ' ' . $fachlicherpruefer->lastname;
                 }
                 $mform->addElement('select', 'assignfachlicherpruefer', 'Fachlichen Prüfer auswählen', $fachlichepruefer_options);
-                $mform->addElement('select', 'assignfachlicherzweitpruefer', 'Fachlichen Zweitprüfer auswählen', array_merge(array(''), $fachlichepruefer_options));
-                $mform->addElement('select', 'assignfachlicherdrittpruefer', 'Fachlichen Drittprüfer auswählen', array_merge(array(''), $fachlichepruefer_options));
+                $mform->addElement('select', 'assignfachlicherzweitpruefer', 'Fachlichen Zweitprüfer auswählen',
+                        array_merge(array(''), $fachlichepruefer_options));
+                $mform->addElement('select', 'assignfachlicherdrittpruefer', 'Fachlichen Drittprüfer auswählen',
+                        array_merge(array(''), $fachlichepruefer_options));
                 if ($quizid) {
                     // get the assigned fachlicherprüfer
                     $assignedfachlicherpruefer = block_exaquest_get_assigned_fachlicherpruefer($quizid);
@@ -117,8 +154,8 @@ function block_exaquest_coursemodule_standard_elements($formwrapper, $mform) {
             // for every fragefach, add one input
             foreach ($fragefaecher as $fragefach) {
                 $mform->addElement('text', 'exaquestquestioncategoryid' . $fragefach->id,
-                    get_string('points_per', 'block_exaquest') . $fragefach->categoryname,
-                    array('size' => '10'));
+                        get_string('points_per', 'block_exaquest') . $fragefach->categoryname,
+                        array('size' => '10'));
                 $mform->setType('exaquestquestioncategoryid' . $fragefach->id, PARAM_INT);
                 if ($quizid) {
                     $mform->setDefault('exaquestquestioncategoryid' . $fragefach->id, $fragefach->questioncount);
@@ -130,10 +167,25 @@ function block_exaquest_coursemodule_standard_elements($formwrapper, $mform) {
     }
 }
 
+// Processes the data from the course module settings form
 function block_exaquest_coursemodule_edit_post_actions($data, $course) {
     global $CFG, $DB;
     if (is_exaquest_active_in_course()) {
         $quizid = $data->instance;
+
+        // from mod/quiz/edit.php
+        //    // If rescaling is required save the new maximum.
+        //    $maxgrade = unformat_float(optional_param('maxgrade', '', PARAM_RAW_TRIMMED), true);
+        //    if (is_float($maxgrade) && $maxgrade >= 0) {
+        //        $gradecalculator->update_quiz_maximum_grade($maxgrade);
+        //    }
+        //$quizobj = new quiz_settings($quiz, $cm, $course);
+        //$gradecalculator = $quizobj->get_grade_calculator();
+        //    $maxgrade = unformat_float(optional_param('maxgrade', '', PARAM_RAW_TRIMMED), true);
+        //    if (is_float($maxgrade) && $maxgrade >= 0) {
+        //        $gradecalculator->update_quiz_maximum_grade($maxgrade);
+        //    }
+
 
         // set the question count per fragefach
         $fragefaecher = block_exaquest_get_fragefaecher_by_courseid($course->id);

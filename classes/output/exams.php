@@ -47,10 +47,12 @@ class exams implements renderable, templatable {
                         BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS,
                         BLOCK_EXAQUEST_QUIZSTATUS_NEW);
 
-                // update the exams that have the addquestionassignment to have the sendexamtoreview property set to true
+                // update the exams that have the addquestionassignment that is not yet finished (done == 0) to have the sendexamtoreview property set to true
                 foreach ($addquestionsassignments as $addquestionsassignment) {
-                    $this->new_exams[$addquestionsassignment->quizid]->sendexamtoreview = true;
-                    $this->new_exams[$addquestionsassignment->quizid]->assignaddquestions = true;
+                    if ($addquestionsassignment->done == 0) {
+                        $this->new_exams[$addquestionsassignment->quizid]->sendexamtoreview = true;
+                        $this->new_exams[$addquestionsassignment->quizid]->assignaddquestions = true;
+                    }
                 }
                 $fpexams = block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
                         BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER, BLOCK_EXAQUEST_QUIZSTATUS_NEW);

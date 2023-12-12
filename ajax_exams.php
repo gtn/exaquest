@@ -22,7 +22,7 @@ switch ($action) {
         );
 
         //$DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $quizassignid));
-        $DB->set_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'done', 1, array('id' => $requestid));
+        $DB->set_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'done', 1, array('id' => $quizassignid));
 
         // check if every assignment of this kind is done for this quiz
         block_exaquest_check_if_exam_is_ready($quizid);

@@ -24,7 +24,7 @@
                             <ul class="list-group popuplist">
                                 Bereits angefordert von:
                                 {{#assigned_persons}}
-                                    <li {{#done}} class="assignment_done" {{/done}}>{{firstname}} {{lastname}}: {{#done}} bereits abgeschlossen {{/done}}</li>
+                                    <li {{#done}} class="assignment_done" {{/done}}>{{firstname}} {{lastname}}{{#done}}: bereits abgeschlossen {{/done}}</li>
                                 {{/assigned_persons}}
                             </ul>
                         </list>
