@@ -49,31 +49,23 @@ class exaquest_exam_view extends exaquest_view {
      * Display the header element for the question bank.
      */
     protected function display_question_bank_header(): void {
-        global $OUTPUT, $DB, $SESSION;
-
-        $quizid = $SESSION->quizid;
-
-        if ($quizid != null) {
-            $quizname = $DB->get_field("quiz", "name", array("id" => $quizid));
-        }
-
-        echo $OUTPUT->heading(get_string('questionbank_selected_quiz', 'block_exaquest') . '' . $quizname, 2);
+        block_exaquest_render_questioncount_per_category();
     }
 
     protected function wanted_columns(): array {
         $this->requiredcolumns = [];
         $excludefeatures = [
-            'question_usage_column',
-            'history_action_column',
-            'edit_menu_column',
-            'edit_action_column',
-            'copy_action_column',
-            'tags_action_column',
-            'export_xml_action_column',
-            'delete_action_column',
-            'question_status_column',
-            'version_number_column',
-            'change_status'
+                'question_usage_column',
+                'history_action_column',
+                'edit_menu_column',
+                'edit_action_column',
+                'copy_action_column',
+                'tags_action_column',
+                'export_xml_action_column',
+                'delete_action_column',
+                'question_status_column',
+                'version_number_column',
+                'change_status'
 
         ];
         $questionbankcolumns = $this->get_question_bank_plugins();
@@ -97,21 +89,21 @@ class exaquest_exam_view extends exaquest_view {
         $newpluginclasscolumns = [];
         //edited:
         $corequestionbankcolumns = [
-            'checkbox_column',
-            'question_type_column',
-            'question_name_idnumber_tags_column',
-            'edit_menu_column',
-            'edit_action_column',
-            'copy_action_column',
-            'tags_action_column',
-            'preview_action_column',
-            'history_action_column',
-            'delete_action_column',
-            'export_xml_action_column',
-            'question_status_column',
-            'version_number_column',
-            'creator_name_column',
-            'comment_count_column'
+                'checkbox_column',
+                'question_type_column',
+                'question_name_idnumber_tags_column',
+                'edit_menu_column',
+                'edit_action_column',
+                'copy_action_column',
+                'tags_action_column',
+                'preview_action_column',
+                'history_action_column',
+                'delete_action_column',
+                'export_xml_action_column',
+                'question_status_column',
+                'version_number_column',
+                'creator_name_column',
+                'comment_count_column'
         ];
         if (question_get_display_preference('qbshowtext', 0, PARAM_BOOL, new \moodle_url(''))) {
             $corequestionbankcolumns[] = 'question_text_row';
@@ -188,12 +180,11 @@ class exaquest_exam_view extends exaquest_view {
         $questionbankclasscolumns["assign_to_revise_from_quiz"] = $specialplugincolumnobjects[14];
         $questionbankclasscolumns["lock_from_quiz"] = $specialplugincolumnobjects[15];
 
-
         return $questionbankclasscolumns;
     }
 
     public function wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus = 0,
-        $fragencharakter = -1, $klassifikation = -1, $fragefach = -1, $lehrinhalt = -1): void {
+            $fragencharakter = -1, $klassifikation = -1, $fragefach = -1, $lehrinhalt = -1): void {
         global $CFG;
         list(, $contextid) = explode(',', $cat);
         $catcontext = \context::instance_by_id($contextid);
@@ -214,17 +205,18 @@ class exaquest_exam_view extends exaquest_view {
             } else {
                 if ($CFG->usetags) {
                     array_unshift($this->searchconditions,
-                        new \core_question\bank\search\tag_condition([$catcontext, $thiscontext], $tagids));
+                            new \core_question\bank\search\tag_condition([$catcontext, $thiscontext], $tagids));
                 }
 
                 //array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
                 //array_unshift($this->searchconditions, new \core_question\bank\search\added_to_quiz_condition($filterstatus));
                 array_unshift($this->searchconditions, new \core_question\bank\search\only_released_questions());
                 array_unshift($this->searchconditions, new \core_question\bank\search\exaquest_category_condition(
-                    $cat, $recurse, $editcontexts, $this->baseurl, $this->course));
+                        $cat, $recurse, $editcontexts, $this->baseurl, $this->course));
                 array_unshift($this->searchconditions,
-                    new \core_question\bank\search\exaquest_questioncategoryfilter($fragencharakter, $klassifikation, $fragefach,
-                        $lehrinhalt));
+                        new \core_question\bank\search\exaquest_questioncategoryfilter($fragencharakter, $klassifikation,
+                                $fragefach,
+                                $lehrinhalt));
             }
         }
         $this->display_options_form($showquestiontext);
@@ -269,11 +261,11 @@ class exaquest_exam_view extends exaquest_view {
         //var_dump($cat);
         // Show the filters and search options.
         $this->wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus,
-            $fragencharakter, $klassifikation, $fragefach, $lehrinhalt);
+                $fragencharakter, $klassifikation, $fragefach, $lehrinhalt);
 
         // Continues with list of questions.
         $this->display_question_list($this->baseurl, $cat, null, $page, $perpage,
-            $this->contexts->having_cap('moodle/question:add'));
+                $this->contexts->having_cap('moodle/question:add'));
         echo \html_writer::end_div();
 
     }
@@ -289,7 +281,7 @@ class exaquest_exam_view extends exaquest_view {
      * @param array $addcontexts contexts where the user is allowed to add new questions.
      */
     protected function display_question_list($pageurl, $categoryandcontext, $recurse = 1, $page = 0,
-        $perpage = null, $addcontexts = []): void {
+            $perpage = null, $addcontexts = []): void {
         global $OUTPUT;
         // This function can be moderately slow with large question counts and may time out.
         // We probably do not want to raise it to unlimited, so randomly picking 5 minutes.
