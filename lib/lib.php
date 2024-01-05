@@ -2769,13 +2769,17 @@ function block_exaquest_render_questioncount_per_category() {
     // add a button that links to exaquest/similarity_comparison.php with questioncategoryid, courseid and examid
     $catAndCont = get_question_category_and_context_of_course();
     $courseid = $COURSE->id;
-    $url = new moodle_url('/blocks/exaquest/similarity_comparison.php',
+    $url_check_similarity = new moodle_url('/blocks/exaquest/similarity_comparison.php',
             array("courseid" => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1], "examid" => $quizid));
+    // add a button that links to exam_view where the user checks the added questions
+    $url_go_to_exam_view = new moodle_url('/blocks/exaquest/finished_exam_questionbank.php',
+            array('courseid' => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1], "quizid" => $quizid));
     $html .= '<br>';
     $html .= '<div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-12">
-                            <a href="' . $url . '" class="btn btn-primary">Ähnlichkeitsvergleich</a>
+                            <a href="' . $url_check_similarity . '" class="btn btn-primary">Ähnlichkeitsvergleich</a>
+                            <a href="' . $url_go_to_exam_view . '" class="btn btn-primary">'. get_string("check_added_questions", "block_exaquest") .'</a>
                         </div>
                     </div>';
     echo "<br/>";
