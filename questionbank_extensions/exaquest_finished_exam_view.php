@@ -30,6 +30,7 @@ class exaquest_finished_exam_view extends exaquest_exam_view {
      */
     protected function display_question_bank_header(): void {
         block_exaquest_render_questioncount_per_category();
+        block_exaquest_render_buttons_for_finished_exam_questionbank();
     }
 
     protected function wanted_columns(): array {

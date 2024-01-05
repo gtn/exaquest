@@ -2701,10 +2701,11 @@ function block_exaquest_check_if_question_contains_categories($questionid) {
     return in_array(0, $categorytypes) && in_array(1, $categorytypes) && in_array(2, $categorytypes) && in_array(3, $categorytypes);
 }
 
+// RENDER... maybe put in separate file
 function block_exaquest_render_questioncount_per_category() {
     global $DB, $COURSE, $OUTPUT, $SESSION;
     $quizid = optional_param('quizid', null, PARAM_INT);
-    if($quizid == null){
+    if ($quizid == null) {
         $quizid = $SESSION->quizid;
     }
 
@@ -2766,23 +2767,91 @@ function block_exaquest_render_questioncount_per_category() {
                         </div>
                     </div>
                 </div>';
-    // add a button that links to exaquest/similarity_comparison.php with questioncategoryid, courseid and examid
+    echo "<br/>";
+    echo $html;
+    echo "<br/>";
+}
+
+function block_exaquest_render_buttons_for_exam_questionbank() {
+    global $SESSION, $COURSE, $OUTPUT;
+    $quizid = optional_param('quizid', null, PARAM_INT);
+    if ($quizid == null) {
+        $quizid = $SESSION->quizid;
+    }
     $catAndCont = get_question_category_and_context_of_course();
     $courseid = $COURSE->id;
+
+    $buttons = block_exaquest_render_check_similiarity_button($quizid, $courseid, $catAndCont);
+    $buttons .= ' ';
+    //$buttons .= block_exaquest_render_go_to_exam_view_button($quizid, $courseid, $catAndCont);
+    // use the mustache template to render this button
+    $go_to_exam_view_button = new \block_exaquest\output\button_go_to_exam_view($quizid, $courseid, $catAndCont);
+    $buttons .= $OUTPUT->render($go_to_exam_view_button);
+    block_exaquest_render_buttons_div_for_exam_questionbank($buttons);
+}
+
+function block_exaquest_render_check_similiarity_button($quizid, $courseid, $catAndCont) {
+    // add a button that links to exaquest/similarity_comparison.php with questioncategoryid, courseid and examid
     $url_check_similarity = new moodle_url('/blocks/exaquest/similarity_comparison.php',
             array("courseid" => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1], "examid" => $quizid));
-    // add a button that links to exam_view where the user checks the added questions
-    $url_go_to_exam_view = new moodle_url('/blocks/exaquest/finished_exam_questionbank.php',
-            array('courseid' => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1], "quizid" => $quizid));
-    $html .= '<br>';
+    return '<a href="' . $url_check_similarity . '" class="btn btn-primary">Ähnlichkeitsvergleich</a>';
+}
+
+// not needed, use mustache instead
+//function block_exaquest_render_go_to_exam_view_button($quizid, $courseid, $catAndCont){
+//    // add a button that links to exam_view where the user checks the added questions
+//    $url_go_to_exam_view = new moodle_url('/blocks/exaquest/finished_exam_questionbank.php',
+//            array('courseid' => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1], "quizid" => $quizid));
+//    return '<a href="' . $url_go_to_exam_view . '" class="btn btn-primary">'. get_string("check_added_questions", "block_exaquest") .'</a>';
+//}
+
+function block_exaquest_render_buttons_for_finished_exam_questionbank() {
+    global $SESSION, $COURSE, $OUTPUT, $USER;
+    $quizid = optional_param('quizid', null, PARAM_INT);
+    if ($quizid == null) {
+        $quizid = $SESSION->quizid;
+    }
+    $catAndCont = get_question_category_and_context_of_course();
+    $courseid = $COURSE->id;
+
+    $buttons = block_exaquest_render_check_similiarity_button($quizid, $courseid, $catAndCont);
+    $buttons .= ' ';
+
+    // sendexamtoreview when you are an assigned to add questions
+    // fachlichreleaseexam when you are the FP of this quiz
+
+    $assigned_to_fill =
+            block_exaquest_get_assigned_quizzes_by_assigntype_and_status($USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS,
+                    BLOCK_EXAQUEST_QUIZSTATUS_NEW);
+    if ($assigned_to_fill[$quizid] && $assigned_to_fill[$quizid]->done == 0) {
+        $sendexamtoreview = new \block_exaquest\output\button_send_exam_to_review($quizid, $courseid);
+        $buttons .= $OUTPUT->render($sendexamtoreview);
+        $buttons .= ' ';
+    }
+
+    $assigned_as_fp =
+            block_exaquest_get_assigned_quizzes_by_assigntype_and_status($USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER,
+                    BLOCK_EXAQUEST_QUIZSTATUS_NEW);
+    if ($assigned_as_fp[$quizid]) {
+        $fachlichreleaseexam = new \block_exaquest\output\button_fachlich_release_exam($quizid, $courseid);
+        $buttons .= $OUTPUT->render($fachlichreleaseexam);
+    }
+
+    block_exaquest_render_buttons_div_for_exam_questionbank($buttons);
+}
+
+function block_exaquest_render_buttons_div_for_exam_questionbank($buttons) {
+    $html = '<br>';
     $html .= '<div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-12">
-                            <a href="' . $url_check_similarity . '" class="btn btn-primary">Ähnlichkeitsvergleich</a>
-                            <a href="' . $url_go_to_exam_view . '" class="btn btn-primary">'. get_string("check_added_questions", "block_exaquest") .'</a>
+                            ' . $buttons . '
                         </div>
                     </div>';
     echo "<br/>";
     echo $html;
     echo "<br/>";
 }
+
+
+

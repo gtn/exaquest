@@ -26,21 +26,16 @@
                                 value="">{{#str}}add_questions_to_quiz, block_exaquest {{/str}}</a>
                             </td>
                             <td>
-                                <a href="{{go_to_exam_view}}&quizid={{quizid}}" type="submit" class="btn btn-primary"
-                                value="">{{#str}}check_added_questions, block_exaquest {{/str}}</a>
+                                {{>block_exaquest/button_go_to_exam_view}}
                             </td>
                             {{#sendexamtoreview}}
                                 <td>
-                                    <button type="submit" class="btn btn-primary change-exam-status-button"
-                                            value="send_exam_to_review" quizid={{quizid}} courseid={{courseid}}>{{#str}}send_exam_to_review, block_exaquest {{/str}}
-                                    </button>
+                                    {{>block_exaquest/button_send_exam_to_review}}
                                 </td>
                             {{/sendexamtoreview}}
                             {{#fachlichreleaseexam}}
                                 <td>
-                                    <button type="submit" class="btn btn-primary change-exam-status-button" missingquestionscount="{{missingquestionscount}}"
-                                            value="fachlich_release_exam" quizid={{quizid}} courseid={{courseid}}>{{#str}}fachlich_release_exam, block_exaquest {{/str}}
-                                    </button>
+                                    {{>block_exaquest/button_fachlich_release_exam}}
                                 </td>
                             {{/fachlichreleaseexam}}
                             {{#skipandreleaseexam}}
@@ -87,9 +82,7 @@
                                     {{name}} </a>
                             </td>
                             <td>
-                                <a href="{{go_to_exam_view}}&quizid={{quizid}}" type="submit" class="btn
-                                btn-primary"
-                                value="">{{#str}}check_added_questions, block_exaquest {{/str}}</a>
+                                {{>block_exaquest/button_go_to_exam_view}}
                             </td>
                             <td>
                                 <!--                    <input type="submit" class="btn btn-primary" value="Prüfung fachlich freigeben">-->
@@ -126,9 +119,7 @@
                                     {{name}} </a>
                             </td>
                             <td>
-                                <a href="{{go_to_exam_view}}&quizid={{quizid}}" type="submit" class="btn
-                                btn-primary"
-                                value="">{{#str}}check_added_questions, block_exaquest {{/str}}</a>
+                                {{>block_exaquest/button_go_to_exam_view}}
                             </td>
                             {{#doformalreviewexam}}
                                 <td>

@@ -51,6 +51,7 @@ class exaquest_exam_view extends exaquest_view {
     protected function display_question_bank_header(): void {
         // TODO: there is no quizid in the params, as opposed to in exaquest_finished_exam_view
         block_exaquest_render_questioncount_per_category();
+        block_exaquest_render_buttons_for_exam_questionbank();
     }
 
     protected function wanted_columns(): array {
