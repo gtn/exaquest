@@ -2636,8 +2636,8 @@ function block_exaquest_check_if_exam_is_ready($quizid) {
     global $DB;
     // check if every assignment of this kind is done for this quiz
     if ($DB->get_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
-            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS))) {
-        // records still exist ==> not every todoo is done
+            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS, 'done' => 0))) {
+        // records still exist and "done" = 0 ==> not every todoo is done
         return false;
     } else {
         // no records exist ==> every assignment is done
