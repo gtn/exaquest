@@ -2,11 +2,18 @@
 // Standard GPL and phpdocs
 namespace block_exaquest\output;
 
+global $CFG;
+
 use moodle_url;
+use question_engine_data_mapper;
+use quiz_grading_report;
 use renderable;
 use renderer_base;
 use stdClass;
 use templatable;
+
+require_once($CFG->dirroot . '/mod/quiz/report/reportlib.php');
+require_once($CFG->dirroot . '/mod/quiz/report/grading/report.php');
 
 class exams implements renderable, templatable {
     var $questions = null;
@@ -174,19 +181,41 @@ class exams implements renderable, templatable {
 
         $data->courseid = $this->courseid;
 
-        // add popup_assign_gradeexam to every finished exam:
+        // add popup_assign_gradeexam to every finished exam that has ungraded questions:
+        // TODO check if ungraded questions exist
+
         foreach ($data->finished_exams as $finished_exam) {
-            $popup = new popup_assign_gradeexam($this->courseid, $finished_exam->quizid);
-            $finished_exam->popup_assign_gradeexam = $popup->export_for_template($output);
+            $quiz = new stdClass();
+            $quiz->id = $finished_exam->quizid;
+
+            // TODO: remove those experimental lines
+            // based on get_question_state_summary() from mod/quiz/report/grading/report.php
+            // get the questions of the quiz:
+            // based on moodle/mod/quiz/report.php
+            //$report = new quiz_grading_report();
+            //$cm = get_coursemodule_from_instance('quiz', $quiz->id, $COURSE->id, false, MUST_EXIST);
+            //$report->display($quiz, $cm, $COURSE);
+            //$report->quiz_report_get_significant_questions($quiz);
+
+            //$questions = quiz_report_get_significant_questions($quiz);
+            //$slots = array_keys($questions);
+            //$dm = new question_engine_data_mapper();
+            //return $dm->load_questions_usages_question_state_summary(
+            //        $this->get_qubaids_condition(), $slots);
+
+            // attempt to get the information if there are ungraded questions by own query:
+            $ungraded_questions_count = $this->get_ungraded_questions_count($quiz);
+            if ($ungraded_questions_count > 0) {
+                $popup = new popup_assign_gradeexam($this->courseid, $finished_exam->quizid);
+                $finished_exam->popup_assign_gradeexam = $popup->export_for_template($output);
+            } else {
+                // add popup_assign_check_exam_grading to every finished exam that is graded:
+                $popup = new popup_assign_check_exam_grading($this->courseid, $finished_exam->quizid);
+                $finished_exam->popup_assign_check_exam_grading = $popup->export_for_template($output);
+            }
         }
 
-        // add popup_assign_check_exam_grading to every finished exam:
-        foreach ($data->finished_exams as $finished_exam) {
-            $popup = new popup_assign_check_exam_grading($this->courseid, $finished_exam->quizid);
-            $finished_exam->popup_assign_check_exam_grading = $popup->export_for_template($output);
-        }
-
-        // add popup_assign_check_exam_grading to every finished exam:
+        // add popup_assign_change_exam_grading to every finished exam: (TODO: when is this shown?)
         foreach ($data->finished_exams as $finished_exam) {
             $popup = new popup_assign_change_exam_grading($finished_exam->quizid);
             $finished_exam->popup_assign_change_exam_grading = $popup->export_for_template($output);
@@ -201,6 +230,28 @@ class exams implements renderable, templatable {
                     new moodle_url('/course/modedit.php', array('update' => $exam->coursemoduleid, 'return' => '1'));
             $exam->link_to_exam = $exam->link_to_exam->raw_out(false);
         }
+    }
+
+    private function get_ungraded_questions_count($quiz) {
+        global $DB;
+        // explanation of query:
+        // quiz_attempts contains every attempt of quizes. use it to get the attempts for this quiz
+        // join questions attempts and the details: questioN_attempt_steps
+        // only get the most current of those steps, as there are multiple steps and we want to current one
+        $sql = "SELECT count(question_attempt.id)
+            FROM {quiz_attempts} quiz_attempt
+            JOIN {question_attempts} question_attempt ON question_attempt.questionusageid = quiz_attempt.uniqueid
+            JOIN {question_attempt_steps} qas ON qas.questionattemptid = question_attempt.id
+            WHERE quiz_attempt.quiz = :quizid
+            AND qas.state = 'needsgrading'
+            AND qas.sequencenumber = (
+                SELECT MAX(qas2.sequencenumber)
+                FROM {question_attempt_steps} qas2
+                WHERE qas2.questionattemptid = question_attempt.id
+            )
+        ";
+        $ungraded_questions_count = $DB->get_field_sql($sql, array('quizid' => $quiz->id));
+        return $ungraded_questions_count;
     }
 
 }
