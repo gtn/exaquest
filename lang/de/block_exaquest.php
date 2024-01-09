@@ -156,6 +156,7 @@ $string['questions_for_me_to_revise'] = 'Fragen soll ich überarbeiten';
 $string['questions_for_me_to_release'] = 'Fragen soll ich freigeben';
 $string['compare_questions'] = 'Fragen vergleichen';
 $string['exams_for_me_to_create'] = 'Prüfungen soll ich erstellen';
+$string['exams_for_me_to_fachlich_release'] = 'Prüfungen soll ich fachlich freigeben';
 $string['exams_for_me_to_fill'] = 'Prüfungen soll ich mit Fragen befüllen';
 $string['exams_for_me_to_fill_title'] = 'Prüfungen die ich mit Fragen befüllen soll';
 

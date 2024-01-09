@@ -1961,6 +1961,10 @@ function block_exaquest_exams_set_status($quizid, $status) {
         $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
                 array("quizid" => $quizid, "assigntype" => BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING));
     }
+    //else if($status == BLOCK_EXAQUEST_QUIZSTATUS_CREATED){
+    //    // create assignment for the fp of the quiz BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICH_RELEASE
+    //
+    //}
     $DB->update_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, $record);
 }
 
@@ -2290,6 +2294,24 @@ function block_exaquest_assign_quiz_addquestions($userfrom, $userto, $comment, $
     block_exaquest_send_moodle_notification("fillexam", $userfrom->id, $userto, $subject, $message,
             "fillexam", $messageobject->url);
 }
+
+//function block_exaquest_assign_quiz_fachlich_release_exam($userfrom, $userto, $comment, $quizid, $quizname = null,
+//        $assigntype = null) {
+//    global $DB, $COURSE;
+//
+//    block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assigntype);
+//
+//    // create the message
+//    $messageobject = new stdClass;
+//    $messageobject->fullname = $quizname;
+//    $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
+//    $messageobject->url = $messageobject->url->raw_out(false);
+//    $messageobject->requestcomment = $comment;
+//    $message = get_string('please_fill_exam', 'block_exaquest', $messageobject);
+//    $subject = get_string('please_fill_exam_subject', 'block_exaquest', $messageobject);
+//    block_exaquest_send_moodle_notification("fillexam", $userfrom->id, $userto, $subject, $message,
+//            "fillexam", $messageobject->url);
+//}
 
 function block_exaquest_assign_check_exam_grading($userfrom, $userto, $comment, $quizid, $quizname = null,
         $assigntype = null) {
@@ -2806,7 +2828,7 @@ function block_exaquest_render_check_similiarity_button($quizid, $courseid, $cat
 //}
 
 function block_exaquest_render_buttons_for_finished_exam_questionbank() {
-    global $SESSION, $COURSE, $OUTPUT, $USER;
+    global $SESSION, $COURSE, $OUTPUT, $USER, $DB;
     $quizid = optional_param('quizid', null, PARAM_INT);
     if ($quizid == null) {
         $quizid = $SESSION->quizid;
@@ -2829,14 +2851,20 @@ function block_exaquest_render_buttons_for_finished_exam_questionbank() {
         $buttons .= ' ';
     }
 
-    $assigned_as_fp =
-            block_exaquest_get_assigned_quizzes_by_assigntype_and_status($USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER,
-                    BLOCK_EXAQUEST_QUIZSTATUS_NEW);
-    if ($assigned_as_fp[$quizid]) {
-        $fachlichreleaseexam = new \block_exaquest\output\button_fachlich_release_exam($quizid, $courseid);
-        $buttons .= $OUTPUT->render($fachlichreleaseexam);
+    // if the quiz is new or created, then the FP can release it
+    $quizstatus = $DB->get_field(BLOCK_EXAQUEST_DB_QUIZSTATUS, "status", array("quizid" => $quizid));
+    if($quizstatus == BLOCK_EXAQUEST_QUIZSTATUS_NEW || $quizstatus == BLOCK_EXAQUEST_QUIZSTATUS_CREATED){
+        $assigned_as_fp =
+                block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER);
+        $assigned_as_fp_filter_quizid = array_filter($assigned_as_fp, function ($exam) use ($quizid) {
+            return $exam->quizid == $quizid;
+        });
+        if (!empty($assigned_as_fp_filter_quizid)) {
+            $missingquestionscount = block_exaquest_get_missing_questions_count($quizid, $courseid);
+            $fachlichreleaseexam = new \block_exaquest\output\button_fachlich_release_exam($quizid, $courseid, $missingquestionscount);
+            $buttons .= $OUTPUT->render($fachlichreleaseexam);
+        }
     }
-
     block_exaquest_render_buttons_div_for_exam_questionbank($buttons);
 }
 
@@ -2851,6 +2879,21 @@ function block_exaquest_render_buttons_div_for_exam_questionbank($buttons) {
     echo "<br/>";
     echo $html;
     echo "<br/>";
+}
+
+function block_exaquest_array_intersect_field($array1, $array2, $field) {
+    $intersected = array();
+    foreach ($array1 as $item1) {
+        $value1 = $item1->$field;
+        foreach ($array2 as $item2) {
+            $value2 = $item2->$field;
+            if ($value1 === $value2) {
+                $intersected[] = $item1;
+                break;
+            }
+        }
+    }
+    return $intersected;
 }
 
 

@@ -85,10 +85,7 @@
                                 {{>block_exaquest/button_go_to_exam_view}}
                             </td>
                             <td>
-                                <!--                    <input type="submit" class="btn btn-primary" value="Prüfung fachlich freigeben">-->
-                                <button type="submit" class="btn btn-primary change-exam-status-button" missingquestionscount="{{missingquestionscount}}"
-                                        value="fachlich_release_exam" quizid={{quizid}} courseid={{courseid}}>{{#str}}fachlich_release_exam, block_exaquest {{/str}}
-                                </button>
+                                {{>block_exaquest/button_fachlich_release_exam}}
                             </td>
                             <td>
                                 <button type="submit" class="btn btn-primary change-exam-status-button"

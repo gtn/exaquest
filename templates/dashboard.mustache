@@ -73,16 +73,16 @@
                             {{#show_exams_heading}}
                                 <h3 class="mb-3">{{#str}}exams_overview_title, block_exaquest {{/str}}</h3>
                             {{/show_exams_heading}}
-                            {{#fachlicherpruefer}}
-                                {{#exams_for_me_to_create_popup}}
-                                    {{>block_exaquest/popup_exams_for_me_to_create}}
-                                {{/exams_for_me_to_create_popup}}
-                            {{/fachlicherpruefer}}
                             {{#addquestiontoexam}}
                                 {{#popup_exams_for_me_to_fill}}
                                     {{>block_exaquest/popup_exams_for_me_to_fill}}
                                 {{/popup_exams_for_me_to_fill}}
                             {{/addquestiontoexam}}
+                            {{#fachlicherpruefer}}
+                                {{#popup_exams_for_me_to_fachlich_release}}
+                                    {{>block_exaquest/popup_exams_for_me_to_fachlich_release}}
+                                {{/popup_exams_for_me_to_fachlich_release}}
+                            {{/fachlicherpruefer}}
                             {{#popup_exams_for_me_to_grade}}
                                 {{>block_exaquest/popup_exams_for_me_to_grade}}
                             {{/popup_exams_for_me_to_grade}}

@@ -8,9 +8,10 @@ use stdClass;
 use templatable;
 use moodle_url;
 
-class popup_exams_for_me_to_fill implements renderable, templatable {
-    public function __construct($exams_to_fill, $catAndCont) {
-        $this->exams_to_fill = $exams_to_fill;
+class popup_exams_for_me_to_fachlich_release implements renderable, templatable {
+
+    public function __construct($exams_to_fachlich_release, $catAndCont) {
+        $this->exams_to_fachlich_release = $exams_to_fachlich_release;
         $this->catAndCont = $catAndCont;
     }
 
@@ -24,8 +25,8 @@ class popup_exams_for_me_to_fill implements renderable, templatable {
         $data = new stdClass();
 
         // link to /mod/quiz/report.php?id=$quizid&mode=grading for every exam
-        foreach ($this->exams_to_fill as $exam) {
-            $exam->linktograding = new moodle_url('/blocks/exaquest/exam_questionbank.php',
+        foreach ($this->exams_to_fachlich_release as $exam) {
+            $exam->linktograding = new moodle_url('/blocks/exaquest/finished_exam_questionbank.php',
                     array('courseid' => $COURSE->id,
                             'category' => $this->catAndCont[0] . ',' . $this->catAndCont[1],
                             'quizid' => $exam->quizid,
@@ -38,7 +39,7 @@ class popup_exams_for_me_to_fill implements renderable, templatable {
         //$data->questions_to_create_selfmade = [(object)["username"  => array_pop($this->questions_to_create)->username], (object)["username"  =>array_pop($this->questions_to_create)->username]];
         // this would work, but is not feasable to write like this
         // The problem with $data->questions_to_create = $this->questions_to_create; is that there is an associative array, e.g. 3 => stdClass(), 10 => stdClass() etc.... it MUST start counting at 0, otherwise it will break mustache
-        $data->exams_to_fill = array_values($this->exams_to_fill);
+        $data->exams_to_fachlich_release = array_values($this->exams_to_fachlich_release);
         //foreach ($data->exams_to_fill as $id => $question) {
         //    $question->comma = true;
         //}

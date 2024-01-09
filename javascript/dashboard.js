@@ -111,6 +111,16 @@ $(document).on('click', '.mark-fill-exam-request-as-done-button', function () {
         }
     }
 });
+// $(document).on('click', '.fachlich-release-exam-request-as-done-button', function () {
+//     if (confirm("Wirklich als erledigt markieren?")) {
+//         let requests = this.parentElement.parentElement.getElementsByClassName("fill-exam-request-comment");
+//         if (requests != undefined) {
+//             document.getElementById("fill-exam-request").removeChild(document.getElementById("fill-exam-request-comment-li-" + this.getAttribute("requestid")));
+//             // Remove that entry from the database with ajax
+//             mark_request_as_done(this.getAttribute("requestid"), 'fill-exam', this.attributes.courseid.value);
+//         }
+//     }
+// });
 $(document).on('click', '.mark-grade-request-as-done-button', function () {
     if (confirm("Wirklich als erledigt markieren?")) {
         let requests = this.parentElement.parentElement.getElementsByClassName("grade-request-comment");

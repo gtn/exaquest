@@ -10,9 +10,10 @@ use templatable;
 
 class button_fachlich_release_exam implements renderable, templatable {
 
-    public function __construct($quizid, $courseid) {
+    public function __construct($quizid, $courseid, $missingquestionscount) {
         $this->quizid = $quizid;
         $this->courseid = $courseid;
+        $this->missingquestionscount = $missingquestionscount;
     }
 
     /**
@@ -24,6 +25,7 @@ class button_fachlich_release_exam implements renderable, templatable {
         $data = new stdClass();
         $data->quizid = $this->quizid;
         $data->courseid = $this->courseid;
+        $data->missingquestionscount = $this->missingquestionscount;
         return $data;
     }
 
