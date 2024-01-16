@@ -33,7 +33,12 @@ $observers = array(
     ),
     array(
         'eventname' => '\core\event\attempt_becameoverdue',
-        'callback' => 'block_exaquest_observer::course_module_completion_updated',
+        'callback' => 'block_exaquest_observer::attempt_becameoverdue',
+        'internal' => false,
+    ),
+    array(
+        'eventname' => '\mod_quiz\event\quiz_grade_updated',
+        'callback' => 'block_exaquest_observer::quiz_grade_updated',
         'internal' => false,
     ),
     //array(

@@ -736,16 +736,16 @@ function block_exaquest_get_quizzes_for_me_to_fill_count($userid) {
 }
 
 function block_exaquest_get_exams_finished_grading_open_count($userid) {
-    return count(block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN,
+    return count(block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
+            BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN,
             BLOCK_EXAQUEST_QUIZSTATUS_FINISHED));
 }
 
 function block_exaquest_get_exams_finished_grading_done_count($userid) {
-    return count(block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE,
+    return count(block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
+            BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE,
             BLOCK_EXAQUEST_QUIZSTATUS_FINISHED));
 }
-
-
 
 function block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, $assigntype, $quizstatus) {
     global $DB, $USER, $COURSE;
@@ -1984,7 +1984,9 @@ function block_exaquest_exams_set_status($quizid, $status) {
         // $userfrom is the system
         $userfrom = \core_user::get_support_user();
         // $userto is the pk
-        $pks = block_exaquest_get_pk_by_courseid($COURSE->id);
+        $courseid = $DB->get_record('quiz', array('id' => $quizid))->course;
+        $pks =
+                block_exaquest_get_pk_by_courseid($courseid); // courseid is the course of the quiz. not $COURSE as this would not work in cronjob
         if ($ungraded_questions_count > 0) {
             // create quizassign for pk with type BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN
             foreach ($pks as $userto) {
@@ -2439,6 +2441,10 @@ function block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assig
             array('quizid' => $quizid, 'assigneeid' => $usertoid, 'assigntype' => $assigntype))->id;
     if (!$quizassignid) {
         $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
+    } else {
+        // already exists, reset the "done" field
+        $DB->set_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'done', 0,
+                array('quizid' => $quizid, 'assigneeid' => $usertoid, 'assigntype' => $assigntype));
     }
 
     // insert comment into BLOCK_EXAQUEST_DB_QUIZCOMMENT
@@ -2455,7 +2461,7 @@ function block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assig
 
 function block_exaquest_assign_quiz_done_to_pk($userfrom, $userto, $comment, $quizid, $quizname = null,
         $assigntype = null) {
-    global $COURSE;
+    global $COURSE, $DB, $CFG;
 
     // check $userto and $userfrom if they are objects or the ids
     if (is_object($userto)) {
@@ -2471,8 +2477,6 @@ function block_exaquest_assign_quiz_done_to_pk($userfrom, $userto, $comment, $qu
 
     block_exaquest_quizassign($userfromid, $usertoid, $comment, $quizid, $assigntype);
 
-
-
     // create the message
     $messageobject = new stdClass;
     $messageobject->fullname = $quizname;
@@ -2480,6 +2484,20 @@ function block_exaquest_assign_quiz_done_to_pk($userfrom, $userto, $comment, $qu
     $messageobject->url = $messageobject->url->raw_out(false);
     $messageobject->requestcomment = $comment;
     if ($assigntype == BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN) {
+        // Retrieve the user record
+        if (!(is_object($userto)) || !empty($userto->lang)) {
+            $userto = $DB->get_record('user', array('id' => $usertoid));
+        }
+
+        // Check if the user record was found and the lang field is set
+        if ($userto) {
+            $preferred_language = $userto->lang;
+        } else {
+            // Fallback to the site's default language if user record is not found or lang is not set
+            $preferred_language = $CFG->lang;
+        }
+
+        force_current_language($preferred_language); // set the language to the receivers language
         $message = get_string('quiz_finished_grading_open', 'block_exaquest', $messageobject);
         $subject = get_string('quiz_finished_grading_open_subject', 'block_exaquest', $messageobject);
         block_exaquest_send_moodle_notification("quizfinishedgradingopen", $userfromid, $usertoid, $subject, $message,
@@ -2488,7 +2506,7 @@ function block_exaquest_assign_quiz_done_to_pk($userfrom, $userto, $comment, $qu
         $message = get_string('quiz_finished_grading_done', 'block_exaquest', $messageobject);
         $subject = get_string('quiz_finished_grading_done_subject', 'block_exaquest', $messageobject);
         block_exaquest_send_moodle_notification("quizfinishedgradingdone", $userfromid, $usertoid, $subject, $message,
-                "quizfinishedgradingdone", $messageobject->url); // TODO the notificationtypes dont exist yet
+                "quizfinishedgradingdone", $messageobject->url);
     }
 }
 
@@ -2786,6 +2804,25 @@ function block_exaquest_check_if_grades_should_be_released($quizid) {
 
         return true;
     }
+}
+
+// TODO: check if all questions have been graded, or if everyone has marked as done? For now: if every question has been graded
+function block_exaquest_check_if_all_gradings_have_been_done($quizid) {
+    global $DB;
+
+    $ungraded_questions_count = block_exaquest_get_ungraded_questions_count($quizid);
+    if ($ungraded_questions_count > 0) {
+        // not done
+        return false;
+    } else {
+        // done
+        block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED);
+        // remove all entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for this quizid and the assigntype BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM
+        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+                array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM));
+        return true;
+    }
+
 }
 
 function block_exaquest_check_if_question_contains_categories($questionid) {

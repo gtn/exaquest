@@ -426,3 +426,4 @@ $string['assign_change_exam_grading_button'] = 'Anfordern';
 $string['exams_for_me_to_change_grading'] = 'Prüfungen deren Beurteilung ich ändern soll';
 $string['exams_for_me_to_change_grading_title'] = 'Prüfungen deren Beurteilung ich ändern soll';
 
+$string['exams_for_me_to_fachlich_release_title'] = 'TODO: create exams_for_me_to_fachlich_release_title';

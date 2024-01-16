@@ -92,6 +92,16 @@ $string['daily_released_questions_subject'] = 'Exaquest questions released';
 $string['daily_released_questions_in_course'] =
     '{$a->daily_released_questions} questions released in course <a href="{$a->url}">{$a->fullname}</a><br>';
 
+
+$string['messageprovider:quizfinishedgradingopen'] = 'Prüfung abgeschlossen und Beurteilung abgeschlossen TODO TRANSLATE';
+$string['quiz_finished_grading_open'] = 'Die Prüfung <a href="{$a->url}">{$a->fullname}</a> wurde abgeschlossen und die Beurteilungen wurden vergeben, müssen aber noch begutachtet werden. TODO TRANSLATE';
+$string['quiz_finished_grading_open_subject'] = 'Prüfung {$a->fullname} abgeschlossen aber nicht beurteilt. TODO TRANSLATE';
+
+$string['messageprovider:quizfinishedgradingdone'] = 'Prüfung abgeschlossen mit unvollständiger Beurteilung TODO TRANSLATE';
+$string['quiz_finished_grading_done'] = 'Die Prüfung <a href="{$a->url}">{$a->fullname}</a> wrude abgeschlossen und es sind noch Beurteilungen offen. TODO TRANSLATE';
+$string['quiz_finished_grading_done_subject'] = 'Prüfung {$a->fullname} abgeschlossen und beurteilt. TODO TRANSLATE';
+
+
 // Roles and Capabilities
 
 $string['setuproles'] = 'Set up roles and capabilities';
@@ -154,6 +164,8 @@ $string['exams_for_me_to_create'] = 'Exams for me to create';
 $string['exams_for_me_to_fachlich_release'] = 'Exams for me to fachlich release';
 $string['exams_for_me_to_fill'] = 'Exams for me to fill with questions';
 $string['exams_for_me_to_fill_title'] = 'Prüfungen die ich mit Fragen befüllen soll';
+$string['exams_finished_grading_open'] = 'Prüfungen wo die Beurteilung noch aussteht TODO TRANSLATE';
+$string['exams_finished_grading_done'] = 'Prüfungen wo die Beurteilung no überprüft werden muss TODO TRANSLATE';
 
 //Questionbank
 
@@ -409,3 +421,4 @@ $string['assign_change_exam_grading_button'] = 'Request';
 $string['exams_for_me_to_change_grading'] = 'Exams for me to change grading';
 $string['exams_for_me_to_change_grading_title'] = 'Exams for me to change grading';
 
+$string['exams_for_me_to_fachlich_release_title'] = 'TODO: create exams_for_me_to_fachlich_release_title TODO TRANSLATE';

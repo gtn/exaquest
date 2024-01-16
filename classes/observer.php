@@ -133,7 +133,7 @@ class block_exaquest_observer {
 
     /**
      * Observer for core\event\attempt_becameoverdue.
-     *
+     * // TODO: is this ever triggered? Or is this whole thing solved only in the cron?
      * @param core\event\attempt_becameoverdue $event
      * @return void
      */
@@ -148,6 +148,17 @@ class block_exaquest_observer {
             //    block_exaquest_get_coursecategoryid_by_courseid($event->courseid); // the context is context_module. The event has the courseid.
             $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, $insert);
         }
+    }
+
+    /**
+     * Observer for core\event\quiz_grade_updated.
+     * // TODO: when is this triggered? 
+     * @param core\event\quiz_grade_updated $event
+     * @return void
+     */
+    public static function quiz_grade_updated(\mod_quiz\event\quiz_grade_updated  $event) {
+        global $DB;
+        $data = $event->get_data();
     }
 
 }

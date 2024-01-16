@@ -53,6 +53,8 @@ switch ($action) {
         $quizid = $DB->get_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'quizid', array('id' => $requestid));
         //$DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $requestid));
         $DB->set_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'done', 1, array('id' => $requestid));
+
+        block_exaquest_check_if_all_gradings_have_been_done($quizid);
         break;
     case ('mark_change_exam_grading_request_as_done'):
         $requestid = required_param('requestid', PARAM_INT);
