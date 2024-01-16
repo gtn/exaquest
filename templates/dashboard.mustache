@@ -83,6 +83,31 @@
                                     {{>block_exaquest/popup_exams_for_me_to_fachlich_release}}
                                 {{/popup_exams_for_me_to_fachlich_release}}
                             {{/fachlicherpruefer}}
+
+                            {{#pruefungskoordination}}
+
+                                <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
+                                   href={{exams_finished_grading_open_link}}>
+                                            <span class="badge-outer text-center">
+                                                <span class="badge  tododoscounter {{#exams_finished_grading_open_count}}badge-primary{{/exams_finished_grading_open_count}}">{{exams_finished_grading_open_count}}</span>
+                                            </span>
+                                    <span class="flex-grow-1"> {{#str}}
+                                        exams_finished_grading_open, block_exaquest {{/str}}</span>
+                                </a>
+
+
+                                <a class="btn btn-light w-100 d-flex justify-content-between align-items-center"
+                                   href={{exams_finished_grading_done_link}}>
+                                            <span class="badge-outer text-center">
+                                                <span class="badge  tododoscounter {{#exams_finished_grading_done_count}}badge-primary{{/exams_finished_grading_done_count}}">{{exams_finished_grading_done_count}}</span>
+                                            </span>
+                                    <span class="flex-grow-1"> {{#str}}
+                                        exams_finished_grading_done, block_exaquest {{/str}}</span>
+                                </a>
+
+                            {{/pruefungskoordination}}
+
+
                             {{#popup_exams_for_me_to_grade}}
                                 {{>block_exaquest/popup_exams_for_me_to_grade}}
                             {{/popup_exams_for_me_to_grade}}

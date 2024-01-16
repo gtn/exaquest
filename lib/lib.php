@@ -83,6 +83,9 @@ const BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING = 6;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERZWEITPRUEFER = 7;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERDRITTPRUEFER = 8;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHANGE_EXAM_GRADING = 9;
+// TODO add quizassigntype for finished exam for the PK
+const BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN = 10;
+const BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE = 11;
 
 /**
  * Filter Status
@@ -731,6 +734,18 @@ function block_exaquest_get_quizzes_for_me_to_fill_count($userid) {
     return count(block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS,
             BLOCK_EXAQUEST_QUIZSTATUS_NEW));
 }
+
+function block_exaquest_get_exams_finished_grading_open_count($userid) {
+    return count(block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN,
+            BLOCK_EXAQUEST_QUIZSTATUS_FINISHED));
+}
+
+function block_exaquest_get_exams_finished_grading_done_count($userid) {
+    return count(block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE,
+            BLOCK_EXAQUEST_QUIZSTATUS_FINISHED));
+}
+
+
 
 function block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, $assigntype, $quizstatus) {
     global $DB, $USER, $COURSE;
@@ -1951,7 +1966,7 @@ function block_exaquest_exams_by_status($courseid = null, $status = BLOCK_EXAQUE
  * @param $status
  */
 function block_exaquest_exams_set_status($quizid, $status) {
-    global $DB;
+    global $DB, $COURSE;
     $record = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, array("quizid" => $quizid));
     $record->status = $status;
     // if the status is changed to BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED ==> remove all quizassigns for this quiz, as they no longer make any sense
@@ -1960,6 +1975,31 @@ function block_exaquest_exams_set_status($quizid, $status) {
                 array("quizid" => $quizid, "assigntype" => BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM));
         $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
                 array("quizid" => $quizid, "assigntype" => BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING));
+    } else if ($status == BLOCK_EXAQUEST_QUIZSTATUS_FINISHED) {
+        // if the status changes to finished, todoos for PK should be sent out
+        // BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN
+        // BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_CLOSED
+        // depending on if every question is graded or not
+        $ungraded_questions_count = block_exaquest_get_ungraded_questions_count($quizid);
+        // $userfrom is the system
+        $userfrom = \core_user::get_support_user();
+        // $userto is the pk
+        $pks = block_exaquest_get_pk_by_courseid($COURSE->id);
+        if ($ungraded_questions_count > 0) {
+            // create quizassign for pk with type BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN
+            foreach ($pks as $userto) {
+                block_exaquest_assign_quiz_done_to_pk($userfrom->id, $userto->id,
+                        'Diese Prüfung ist abgeschlossen, es sind aber noch Fragen zu beurteilen.', $quizid, null,
+                        BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN);
+            }
+        } else {
+            foreach ($pks as $userto) {
+                block_exaquest_assign_quiz_done_to_pk($userfrom->id, $userto->id,
+                        'Diese Prüfung ist abgeschlossen, die Fragen sind beurteilt, die Beurteilungskontrolle steht noch aus.',
+                        $quizid, null, BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE);
+            }
+        }
+
     }
     //else if($status == BLOCK_EXAQUEST_QUIZSTATUS_CREATED){
     //    // create assignment for the fp of the quiz BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICH_RELEASE
@@ -2375,15 +2415,28 @@ function block_exaquest_assign_gradeexam($userfrom, $userto, $comment, $quizid, 
 
 function block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assigntype = null) {
     global $DB;
+
+    // check $userto and $userfrom if they are objects or the ids
+    if (is_object($userto)) {
+        $usertoid = $userto->id;
+    } else {
+        $usertoid = $userto;
+    }
+    if (is_object($userfrom)) {
+        $userfromid = $userfrom->id;
+    } else {
+        $userfromid = $userfrom;
+    }
+
     // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that exact quizid, assigneeid and assigntype.
     // enter data into the exaquest tables
     $assigndata = new stdClass;
     $assigndata->quizid = $quizid;
-    $assigndata->assigneeid = $userto;
+    $assigndata->assigneeid = $usertoid;
     $assigndata->assigntype = $assigntype;
     //if that assignment does not exist yet, create it
     $quizassignid = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZASSIGN,
-            array('quizid' => $quizid, 'assigneeid' => $userto, 'assigntype' => $assigntype))->id;
+            array('quizid' => $quizid, 'assigneeid' => $usertoid, 'assigntype' => $assigntype))->id;
     if (!$quizassignid) {
         $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
     }
@@ -2392,11 +2445,50 @@ function block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assig
     if ($comment != '') {
         $commentdata = new stdClass;
         $commentdata->quizid = $quizid;
-        $commentdata->commentorid = $userfrom->id;
+        $commentdata->commentorid = $userfromid;
         $commentdata->quizassignid = $quizassignid;
         $commentdata->comment = $comment;
         $commentdata->timestamp = time();
         $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZCOMMENT, $commentdata);
+    }
+}
+
+function block_exaquest_assign_quiz_done_to_pk($userfrom, $userto, $comment, $quizid, $quizname = null,
+        $assigntype = null) {
+    global $COURSE;
+
+    // check $userto and $userfrom if they are objects or the ids
+    if (is_object($userto)) {
+        $usertoid = $userto->id;
+    } else {
+        $usertoid = $userto;
+    }
+    if (is_object($userfrom)) {
+        $userfromid = $userfrom->id;
+    } else {
+        $userfromid = $userfrom;
+    }
+
+    block_exaquest_quizassign($userfromid, $usertoid, $comment, $quizid, $assigntype);
+
+
+
+    // create the message
+    $messageobject = new stdClass;
+    $messageobject->fullname = $quizname;
+    $messageobject->url = new moodle_url('/blocks/exaquest/exams.php', ['courseid' => $COURSE->id]);
+    $messageobject->url = $messageobject->url->raw_out(false);
+    $messageobject->requestcomment = $comment;
+    if ($assigntype == BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN) {
+        $message = get_string('quiz_finished_grading_open', 'block_exaquest', $messageobject);
+        $subject = get_string('quiz_finished_grading_open_subject', 'block_exaquest', $messageobject);
+        block_exaquest_send_moodle_notification("quizfinishedgradingopen", $userfromid, $usertoid, $subject, $message,
+                "quizfinishedgradingopen", $messageobject->url);
+    } else if ($assigntype == BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE) {
+        $message = get_string('quiz_finished_grading_done', 'block_exaquest', $messageobject);
+        $subject = get_string('quiz_finished_grading_done_subject', 'block_exaquest', $messageobject);
+        block_exaquest_send_moodle_notification("quizfinishedgradingdone", $userfromid, $usertoid, $subject, $message,
+                "quizfinishedgradingdone", $messageobject->url); // TODO the notificationtypes dont exist yet
     }
 }
 
@@ -2853,15 +2945,17 @@ function block_exaquest_render_buttons_for_finished_exam_questionbank() {
 
     // if the quiz is new or created, then the FP can release it
     $quizstatus = $DB->get_field(BLOCK_EXAQUEST_DB_QUIZSTATUS, "status", array("quizid" => $quizid));
-    if($quizstatus == BLOCK_EXAQUEST_QUIZSTATUS_NEW || $quizstatus == BLOCK_EXAQUEST_QUIZSTATUS_CREATED){
+    if ($quizstatus == BLOCK_EXAQUEST_QUIZSTATUS_NEW || $quizstatus == BLOCK_EXAQUEST_QUIZSTATUS_CREATED) {
         $assigned_as_fp =
-                block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER);
-        $assigned_as_fp_filter_quizid = array_filter($assigned_as_fp, function ($exam) use ($quizid) {
+                block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id,
+                        BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER);
+        $assigned_as_fp_filter_quizid = array_filter($assigned_as_fp, function($exam) use ($quizid) {
             return $exam->quizid == $quizid;
         });
         if (!empty($assigned_as_fp_filter_quizid)) {
             $missingquestionscount = block_exaquest_get_missing_questions_count($quizid, $courseid);
-            $fachlichreleaseexam = new \block_exaquest\output\button_fachlich_release_exam($quizid, $courseid, $missingquestionscount);
+            $fachlichreleaseexam =
+                    new \block_exaquest\output\button_fachlich_release_exam($quizid, $courseid, $missingquestionscount);
             $buttons .= $OUTPUT->render($fachlichreleaseexam);
         }
     }
@@ -2894,6 +2988,36 @@ function block_exaquest_array_intersect_field($array1, $array2, $field) {
         }
     }
     return $intersected;
+}
+
+function block_exaquest_get_ungraded_questions_count($quiz) {
+    global $DB;
+
+    // check if $quiz is an object with $quiz->id or if it is the id itself
+    if (is_object($quiz)) {
+        $quizid = $quiz->id;
+    } else {
+        $quizid = $quiz;
+    }
+
+    // explanation of query:
+    // quiz_attempts contains every attempt of quizes. use it to get the attempts for this quiz
+    // join questions attempts and the details: questioN_attempt_steps
+    // only get the most current of those steps, as there are multiple steps and we want to current one
+    $sql = "SELECT count(question_attempt.id)
+            FROM {quiz_attempts} quiz_attempt
+            JOIN {question_attempts} question_attempt ON question_attempt.questionusageid = quiz_attempt.uniqueid
+            JOIN {question_attempt_steps} qas ON qas.questionattemptid = question_attempt.id
+            WHERE quiz_attempt.quiz = :quizid
+            AND qas.state = 'needsgrading'
+            AND qas.sequencenumber = (
+                SELECT MAX(qas2.sequencenumber)
+                FROM {question_attempt_steps} qas2
+                WHERE qas2.questionattemptid = question_attempt.id
+            )
+        ";
+    $ungraded_questions_count = $DB->get_field_sql($sql, array('quizid' => $quizid));
+    return $ungraded_questions_count;
 }
 
 

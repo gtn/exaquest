@@ -1,6 +1,6 @@
 $(document).on('click', '.change-exam-status-button', function (event) {
 
-    debugger;
+    // debugger;
     if (this.value == 'fachlich_release_exam') {
         if (this.getAttribute("missingquestionscount") > 0) {
             if (!confirm("Es fehlen noch " + this.getAttribute("missingquestionscount") + " Fragen. Wirklich freigeben? Zum Freigeben auf OK klicken.")) {

@@ -689,5 +689,17 @@ function xmldb_block_exaquest_upgrade($oldversion) {
         upgrade_block_savepoint(true, 2023120101, 'exaquest');
     }
 
+    if ($oldversion < 2024011600) {
+        // set the length of the field "comment" in the table "exaquestquizcomment" to 1000
+        $table = new xmldb_table('block_exaquestquizcomment');
+        $field = new xmldb_field('comment', XMLDB_TYPE_CHAR, '1000', null, XMLDB_NOTNULL, null, null);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->change_field_precision($table, $field);
+        }
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2024011600, 'exaquest');
+    }
+
+
     return $return_result;
 }

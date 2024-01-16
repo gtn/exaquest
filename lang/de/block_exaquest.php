@@ -97,6 +97,16 @@ $string['daily_released_questions_subject'] = 'Exaquest veröffentlichte Fragen'
 $string['daily_released_questions_in_course'] =
         '{$a->daily_released_questions} Fragen wurden gestern in  <a href="{$a->url}">{$a->fullname}</a> veröffentlicht.<br>';
 
+
+$string['messageprovider:quizfinishedgradingopen'] = 'Prüfung abgeschlossen und Beurteilung abgeschlossen';
+$string['quiz_finished_grading_open'] = 'Die Prüfung <a href="{$a->url}">{$a->fullname}</a> wurde abgeschlossen und die Beurteilungen wurden vergeben, müssen aber noch begutachtet werden.';
+$string['quiz_finished_grading_open_subject'] = 'Prüfung {$a->fullname} abgeschlossen aber nicht beurteilt.';
+
+$string['messageprovider:quizfinishedgradingdone'] = 'Prüfung abgeschlossen mit unvollständiger Beurteilung';
+$string['quiz_finished_grading_done'] = 'Die Prüfung <a href="{$a->url}">{$a->fullname}</a> wrude abgeschlossen und es sind noch Beurteilungen offen.';
+$string['quiz_finished_grading_done_subject'] = 'Prüfung {$a->fullname} abgeschlossen und beurteilt.';
+
+
 // Roles and Capabilities
 
 $string['setuproles'] = 'Erstellen von Rollen und Erlaubnissen';
@@ -159,6 +169,8 @@ $string['exams_for_me_to_create'] = 'Prüfungen soll ich erstellen';
 $string['exams_for_me_to_fachlich_release'] = 'Prüfungen soll ich fachlich freigeben';
 $string['exams_for_me_to_fill'] = 'Prüfungen soll ich mit Fragen befüllen';
 $string['exams_for_me_to_fill_title'] = 'Prüfungen die ich mit Fragen befüllen soll';
+$string['exams_finished_grading_open'] = 'Prüfungen wo die Beurteilung noch aussteht';
+$string['exams_finished_grading_done'] = 'Prüfungen wo die Beurteilung no überprüft werden muss';
 
 //Questionbank
 

@@ -39,7 +39,7 @@ $(document).on('click', '#popup_create_questions_div', function () {
 
 function mark_request_as_done(requestid, requesttype, courseid) {
     console.log('mark_request_as_done', requestid);
-    debugger;
+    // debugger;
     let action = '';
     if (requesttype == 'exam') {
         action = 'mark_exam_request_as_done';
@@ -125,7 +125,7 @@ $(document).on('click', '.mark-grade-request-as-done-button', function () {
     if (confirm("Wirklich als erledigt markieren?")) {
         let requests = this.parentElement.parentElement.getElementsByClassName("grade-request-comment");
         if (requests != undefined) {
-            debugger;
+            // debugger;
             document.getElementById("grade-request").removeChild(document.getElementById("grade-request-comment-li-" + this.getAttribute("requestid")));
             // Remove that entry from the database with ajax
             mark_request_as_done(this.getAttribute("requestid"), 'grade', this.attributes.courseid.value);
@@ -137,7 +137,7 @@ $(document).on('click', '.mark-check-grading-request-as-done-button', function (
     if (confirm("Wirklich als erledigt markieren?")) {
         let requests = this.parentElement.parentElement.getElementsByClassName("check-grading-request-comment");
         if (requests != undefined) {
-            debugger;
+            // debugger;
             document.getElementById("check-grading-requests").removeChild(document.getElementById("check-grading-request-comment-li-" + this.getAttribute("requestid")));
             // Remove that entry from the database with ajax
             mark_request_as_done(this.getAttribute("requestid"), 'check-grading', this.attributes.courseid.value);
@@ -148,7 +148,7 @@ $(document).on('click', '.mark-change-grading-request-as-done-button', function 
     if (confirm("Wirklich als erledigt markieren?")) {
         let requests = this.parentElement.parentElement.getElementsByClassName("change-grading-request-comment");
         if (requests != undefined) {
-            debugger;
+            // debugger;
             document.getElementById("change-grading-requests").removeChild(document.getElementById("change-grading-request-comment-li-" + this.getAttribute("requestid")));
             // Remove that entry from the database with ajax
             mark_request_as_done(this.getAttribute("requestid"), 'change-grading', this.attributes.courseid.value);

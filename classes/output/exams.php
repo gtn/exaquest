@@ -204,7 +204,7 @@ class exams implements renderable, templatable {
             //        $this->get_qubaids_condition(), $slots);
 
             // attempt to get the information if there are ungraded questions by own query:
-            $ungraded_questions_count = $this->get_ungraded_questions_count($quiz);
+            $ungraded_questions_count = block_exaquest_get_ungraded_questions_count($quiz);
             if ($ungraded_questions_count > 0) {
                 $popup = new popup_assign_gradeexam($this->courseid, $finished_exam->quizid);
                 $finished_exam->popup_assign_gradeexam = $popup->export_for_template($output);
@@ -232,26 +232,6 @@ class exams implements renderable, templatable {
         }
     }
 
-    private function get_ungraded_questions_count($quiz) {
-        global $DB;
-        // explanation of query:
-        // quiz_attempts contains every attempt of quizes. use it to get the attempts for this quiz
-        // join questions attempts and the details: questioN_attempt_steps
-        // only get the most current of those steps, as there are multiple steps and we want to current one
-        $sql = "SELECT count(question_attempt.id)
-            FROM {quiz_attempts} quiz_attempt
-            JOIN {question_attempts} question_attempt ON question_attempt.questionusageid = quiz_attempt.uniqueid
-            JOIN {question_attempt_steps} qas ON qas.questionattemptid = question_attempt.id
-            WHERE quiz_attempt.quiz = :quizid
-            AND qas.state = 'needsgrading'
-            AND qas.sequencenumber = (
-                SELECT MAX(qas2.sequencenumber)
-                FROM {question_attempt_steps} qas2
-                WHERE qas2.questionattemptid = question_attempt.id
-            )
-        ";
-        $ungraded_questions_count = $DB->get_field_sql($sql, array('quizid' => $quiz->id));
-        return $ungraded_questions_count;
-    }
+
 
 }

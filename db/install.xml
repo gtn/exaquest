@@ -117,7 +117,7 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id"/>
                 <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the user"/>
-                <FIELD NAME="comment" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"
+                <FIELD NAME="comment" TYPE="char" LENGTH="1000" NOTNULL="false" SEQUENCE="false"
                        COMMENT="Question description, e.g. 'a simple question'"/>
                 <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
                        COMMENT="coursecategoryid"/>
@@ -134,7 +134,7 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id"/>
                 <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="id of the user"/>
-                <FIELD NAME="comment" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"
+                <FIELD NAME="comment" TYPE="char" LENGTH="1000" NOTNULL="false" SEQUENCE="false"
                        COMMENT="Question description, e.g. 'a simple question'"/>
                 <FIELD NAME="coursecategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
                        COMMENT="coursecategoryid"/>
@@ -189,7 +189,7 @@
                        COMMENT="the id of the commentor"/>
                 <FIELD NAME="quizassignid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"
                        COMMENT="the id of the related quizassign entry, IF there is one. There can be free comments or comments that are attached to an assignment"/>
-                <FIELD NAME="comment" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"
+                <FIELD NAME="comment" TYPE="char" LENGTH="1000" NOTNULL="false" SEQUENCE="false"
                        COMMENT="Any comment to a quiz"/>
                 <FIELD NAME="timestamp" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
             </FIELDS>
