@@ -151,14 +151,36 @@ class block_exaquest_observer {
     }
 
     /**
-     * Observer for core\event\quiz_grade_updated.
-     * // TODO: when is this triggered? 
-     * @param core\event\quiz_grade_updated $event
+     * Observer for mod_quiz\event\attempt_manual_grading_completed.
+     * @param mod_quiz\event\attempt_manual_grading_completed $event
+     * TODO: remove, since it is not used (just keep it for testing now)
      * @return void
      */
-    public static function quiz_grade_updated(\mod_quiz\event\quiz_grade_updated  $event) {
+    public static function attempt_manual_grading_completed(\mod_quiz\event\attempt_manual_grading_completed  $event) {
         global $DB;
         $data = $event->get_data();
+    }
+
+    /**
+     * Observer for mod_quiz\event\question_manually_graded.
+     * @param mod_quiz\event\question_manually_graded $event
+     *
+     * @return void
+     */
+    public static function question_manually_graded(\mod_quiz\event\question_manually_graded  $event) {
+        global $DB;
+        $data = $event->get_data();
+        block_exaquest_check_if_all_gradings_have_been_done($data["other"]["quizid"]);
+    }
+
+    /**
+     * Observer for mod_quiz\event\attempt_submitted.
+     * @param mod_quiz\event\attempt_submitted $event
+     * @return void
+     */
+    public static function attempt_submitted(\mod_quiz\event\attempt_submitted  $event) {
+        global $DB;
+        //$data = $event->get_data();
     }
 
 }

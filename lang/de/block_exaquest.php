@@ -101,11 +101,14 @@ $string['daily_released_questions_in_course'] =
 $string['messageprovider:quizfinishedgradingopen'] = 'Prüfung abgeschlossen und Beurteilung abgeschlossen';
 $string['quiz_finished_grading_open'] = 'Die Prüfung <a href="{$a->url}">{$a->fullname}</a> wurde abgeschlossen und die Beurteilungen wurden vergeben, müssen aber noch begutachtet werden.';
 $string['quiz_finished_grading_open_subject'] = 'Prüfung {$a->fullname} abgeschlossen aber nicht beurteilt.';
+$string['quiz_finished_grading_open_comment'] = 'Diese Prüfung ist abgeschlossen, es sind aber noch Fragen zu beurteilen.';
+
+
 
 $string['messageprovider:quizfinishedgradingdone'] = 'Prüfung abgeschlossen mit unvollständiger Beurteilung';
 $string['quiz_finished_grading_done'] = 'Die Prüfung <a href="{$a->url}">{$a->fullname}</a> wrude abgeschlossen und es sind noch Beurteilungen offen.';
 $string['quiz_finished_grading_done_subject'] = 'Prüfung {$a->fullname} abgeschlossen und beurteilt.';
-
+$string['quiz_finished_grading_done_comment'] = 'Diese Prüfung ist abgeschlossen, die Fragen sind beurteilt, die Beurteilungskontrolle steht noch aus.';
 
 // Roles and Capabilities
 

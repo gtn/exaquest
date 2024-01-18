@@ -1990,15 +1990,13 @@ function block_exaquest_exams_set_status($quizid, $status) {
         if ($ungraded_questions_count > 0) {
             // create quizassign for pk with type BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN
             foreach ($pks as $userto) {
-                block_exaquest_assign_quiz_done_to_pk($userfrom->id, $userto->id,
-                        'Diese Prüfung ist abgeschlossen, es sind aber noch Fragen zu beurteilen.', $quizid, null,
+                block_exaquest_assign_quiz_done_to_pk($userfrom->id, $userto->id, '', $quizid, null,
                         BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN);
             }
         } else {
             foreach ($pks as $userto) {
-                block_exaquest_assign_quiz_done_to_pk($userfrom->id, $userto->id,
-                        'Diese Prüfung ist abgeschlossen, die Fragen sind beurteilt, die Beurteilungskontrolle steht noch aus.',
-                        $quizid, null, BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE);
+                block_exaquest_assign_quiz_done_to_pk($userfrom->id, $userto->id, '', $quizid, null,
+                        BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE);
             }
         }
 
@@ -2415,6 +2413,15 @@ function block_exaquest_assign_gradeexam($userfrom, $userto, $comment, $quizid, 
             "gradeexam", $messageobject->url);
 }
 
+/**
+ * @param $userfrom
+ * @param $userto
+ * @param $comment
+ * @param $quizid
+ * @param $assigntype
+ * @return bool true if a new assignment is made, false if not (if it is just reset to done=false)
+ * @throws dml_exception
+ */
 function block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assigntype = null) {
     global $DB;
 
@@ -2441,10 +2448,12 @@ function block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assig
             array('quizid' => $quizid, 'assigneeid' => $usertoid, 'assigntype' => $assigntype))->id;
     if (!$quizassignid) {
         $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
+        $newlyassigned = true;
     } else {
         // already exists, reset the "done" field
         $DB->set_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'done', 0,
                 array('quizid' => $quizid, 'assigneeid' => $usertoid, 'assigntype' => $assigntype));
+        $newlyassigned = false;
     }
 
     // insert comment into BLOCK_EXAQUEST_DB_QUIZCOMMENT
@@ -2457,6 +2466,7 @@ function block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assig
         $commentdata->timestamp = time();
         $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZCOMMENT, $commentdata);
     }
+    return $newlyassigned;
 }
 
 function block_exaquest_assign_quiz_done_to_pk($userfrom, $userto, $comment, $quizid, $quizname = null,
@@ -2474,39 +2484,47 @@ function block_exaquest_assign_quiz_done_to_pk($userfrom, $userto, $comment, $qu
     } else {
         $userfromid = $userfrom;
     }
+    // Retrieve the user record
+    if (!(is_object($userto)) || !empty($userto->lang)) {
+        $userto = $DB->get_record('user', array('id' => $usertoid));
+    }
 
-    block_exaquest_quizassign($userfromid, $usertoid, $comment, $quizid, $assigntype);
+    // Check if the user record was found and the lang field is set
+    if ($userto) {
+        $preferred_language = $userto->lang;
+    } else {
+        // Fallback to the site's default language if user record is not found or lang is not set
+        $preferred_language = $CFG->lang;
+    }
 
-    // create the message
-    $messageobject = new stdClass;
-    $messageobject->fullname = $quizname;
-    $messageobject->url = new moodle_url('/blocks/exaquest/exams.php', ['courseid' => $COURSE->id]);
-    $messageobject->url = $messageobject->url->raw_out(false);
-    $messageobject->requestcomment = $comment;
-    if ($assigntype == BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN) {
-        // Retrieve the user record
-        if (!(is_object($userto)) || !empty($userto->lang)) {
-            $userto = $DB->get_record('user', array('id' => $usertoid));
+    // block_exaquest_quizassign returns true if a new assignment is made, returns false if not. Only create a notification if a new assignment is done to avoid spam.
+    if (block_exaquest_quizassign($userfromid, $usertoid, $comment, $quizid, $assigntype)) {
+        // create the message
+        $messageobject = new stdClass;
+        $messageobject->fullname = $quizname;
+        $messageobject->url = new moodle_url('/blocks/exaquest/exams.php', ['courseid' => $COURSE->id]);
+        $messageobject->url = $messageobject->url->raw_out(false);
+        if ($assigntype == BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN) {
+            $messageobject->requestcomment =
+                    new lang_string('quiz_finished_grading_open_comment', 'block_exaquest', null, $preferred_language);
+            $messageobject->requestcomment = $messageobject->requestcomment->__toString();
+            $message = new lang_string('quiz_finished_grading_open', 'block_exaquest', $messageobject, $preferred_language);
+            $message = $message->__toString();
+            $subject = new lang_string('quiz_finished_grading_open_subject', 'block_exaquest', $messageobject, $preferred_language);
+            $subject = $subject->__toString();
+            block_exaquest_send_moodle_notification("quizfinishedgradingopen", $userfromid, $usertoid, $subject, $message,
+                    "quizfinishedgradingopen", $messageobject->url);
+        } else if ($assigntype == BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE) {
+            $messageobject->requestcomment =
+                    new lang_string('quiz_finished_grading_done_comment', 'block_exaquest', null,  $preferred_language);
+            $messageobject->requestcomment = $messageobject->requestcomment->__toString();
+            $message = new lang_string('quiz_finished_grading_done', 'block_exaquest', $messageobject, $preferred_language);
+            $message = $message->__toString();
+            $subject = new lang_string('quiz_finished_grading_done_subject', 'block_exaquest', $messageobject, $preferred_language);
+            $subject = $subject->__toString();
+            block_exaquest_send_moodle_notification("quizfinishedgradingdone", $userfromid, $usertoid, $subject, $message,
+                    "quizfinishedgradingdone", $messageobject->url);
         }
-
-        // Check if the user record was found and the lang field is set
-        if ($userto) {
-            $preferred_language = $userto->lang;
-        } else {
-            // Fallback to the site's default language if user record is not found or lang is not set
-            $preferred_language = $CFG->lang;
-        }
-
-        force_current_language($preferred_language); // set the language to the receivers language
-        $message = get_string('quiz_finished_grading_open', 'block_exaquest', $messageobject);
-        $subject = get_string('quiz_finished_grading_open_subject', 'block_exaquest', $messageobject);
-        block_exaquest_send_moodle_notification("quizfinishedgradingopen", $userfromid, $usertoid, $subject, $message,
-                "quizfinishedgradingopen", $messageobject->url);
-    } else if ($assigntype == BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE) {
-        $message = get_string('quiz_finished_grading_done', 'block_exaquest', $messageobject);
-        $subject = get_string('quiz_finished_grading_done_subject', 'block_exaquest', $messageobject);
-        block_exaquest_send_moodle_notification("quizfinishedgradingdone", $userfromid, $usertoid, $subject, $message,
-                "quizfinishedgradingdone", $messageobject->url);
     }
 }
 
@@ -2809,20 +2827,31 @@ function block_exaquest_check_if_grades_should_be_released($quizid) {
 // TODO: check if all questions have been graded, or if everyone has marked as done? For now: if every question has been graded
 function block_exaquest_check_if_all_gradings_have_been_done($quizid) {
     global $DB;
-
     $ungraded_questions_count = block_exaquest_get_ungraded_questions_count($quizid);
     if ($ungraded_questions_count > 0) {
         // not done
         return false;
     } else {
         // done
-        block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED);
+        // delete the grading todoos and inform the PK
+        // this keeps the status at FINISHED but still informs the PK
         // remove all entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for this quizid and the assigntype BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM
+
+        // $userfrom is the system
+        $userfrom = \core_user::get_support_user();
+        // $userto is the pk
+        $courseid = $DB->get_record('quiz', array('id' => $quizid))->course;
+        $pks =
+                block_exaquest_get_pk_by_courseid($courseid); // courseid is the course of the quiz. not $COURSE as this would not work in cronjob
+        foreach ($pks as $userto) {
+            block_exaquest_assign_quiz_done_to_pk($userfrom->id, $userto->id,
+                    '',
+                    $quizid, null, BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE);
+        }
         $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
                 array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM));
         return true;
     }
-
 }
 
 function block_exaquest_check_if_question_contains_categories($questionid) {
