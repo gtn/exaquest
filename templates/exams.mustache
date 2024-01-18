@@ -191,6 +191,16 @@
                                             value="release_grades" quizid={{quizid}} courseid={{courseid}}>Prüfungsbeurteilung freigeben
                                     </button>
                                 </td>
+                                {{#go_to_exam_report_overview}}
+                                    <td>
+                                        {{>block_exaquest/button_go_to_exam_report_overview}}
+                                    </td>
+                                {{/go_to_exam_report_overview}}
+                                {{#go_to_exam_report_grading}}
+                                    <td>
+                                        {{>block_exaquest/button_go_to_exam_report_grading}}
+                                    </td>
+                                {{/go_to_exam_report_grading}}
                                 <td>
                                     {{#popup_assign_change_exam_grading}}
                                         {{>block_exaquest/popup_assign_change_exam_grading}}
@@ -213,7 +223,7 @@
                             {{/assigngradeexam}}
                             {{#assigned_to_grade}}
                                 <!-- there is no mark_grade_request_as_done button yet, but the ability to add other persons for grading depends on being assigned to grade-->
-<!--                                TODO: add mark_grade_request_as_done button ??-->
+                                <!--                                TODO: add mark_grade_request_as_done button ??-->
                                 <td>
                                     {{#popup_assign_check_exam_grading}}
                                         {{>block_exaquest/popup_assign_gradeexam}}

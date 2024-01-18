@@ -153,6 +153,15 @@ class exams implements renderable, templatable {
                 array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1]));
         $data->go_to_exam_view = new moodle_url('/blocks/exaquest/finished_exam_questionbank.php',
                 array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1]));
+
+
+        // TODO: always show the buttons? Or only when you were assigned for example?
+        $data->go_to_exam_report_overview = new moodle_url('/mod/quiz/report.php',
+                array('mode' => 'overview',));
+        $data->go_to_exam_report_grading = new moodle_url('/mod/quiz/report.php',
+                array('mode' => 'grading',));
+
+
         $data->go_to_exam_questionbank = $data->go_to_exam_questionbank->raw_out(false);
         if ($this->new_exams) {
             $data->new_exams = array_values($this->new_exams);
@@ -231,7 +240,5 @@ class exams implements renderable, templatable {
             $exam->link_to_exam = $exam->link_to_exam->raw_out(false);
         }
     }
-
-
 
 }
