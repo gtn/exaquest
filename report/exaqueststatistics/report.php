@@ -70,7 +70,7 @@ class quiz_exaqueststatistics_report extends report_base {
         echo $this->output_quiz_info_table($quizinfo);
 
 
-        echo "hello worlddddd";
+        echo "hello world";
 
 
         return true;

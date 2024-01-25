@@ -27,9 +27,15 @@ class popup_exams_for_me_to_check_grading implements renderable, templatable {
 
         // link to /mod/quiz/report.php?id=$quizid&mode=grading for every exam
         foreach ($this->exams as $exam) {
-            $exam->linktograding = new moodle_url('/mod/quiz/report.php',
+            //$exam->linktograding = new moodle_url('/mod/quiz/report.php',
+            //        array('id' => $exam->coursemoduleid,
+            //                'mode' => 'overview',
+            //        ));
+            // the customer wants it to be on an exaquestpage, not in the moodle report page
+            $exam->linktograding = new moodle_url('/blocks/exaquest/report.php',
                     array('id' => $exam->coursemoduleid,
-                            'mode' => 'overview',
+                            'mode' => 'exaqueststatistics',
+                            'courseid' => $COURSE->id
                     ));
             $exam->linktograding = $exam->linktograding->raw_out(false);
         }

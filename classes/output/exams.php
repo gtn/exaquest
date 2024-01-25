@@ -156,8 +156,11 @@ class exams implements renderable, templatable {
 
 
         // TODO: always show the buttons? Or only when you were assigned for example?
-        $data->go_to_exam_report_overview = new moodle_url('/mod/quiz/report.php',
-                array('mode' => 'overview',));
+        //$data->go_to_exam_report_overview = new moodle_url('/mod/quiz/report.php',
+        //        array('mode' => 'overview',));
+        $data->go_to_exam_report_overview = new moodle_url('/blocks/exaquest/report.php',
+                array('mode' => 'exaqueststatistics', 'courseid' => $this->courseid));
+        $data->go_to_exam_report_overview = $data->go_to_exam_report_overview->raw_out(false); // otherwise the &amp; is not converted to &
         $data->go_to_exam_report_grading = new moodle_url('/mod/quiz/report.php',
                 array('mode' => 'grading',));
 
