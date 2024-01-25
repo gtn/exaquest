@@ -56,10 +56,10 @@ if ($mode !== '') {
     $url->param('mode', $mode);
 }
 $PAGE->set_url($url);
-
+$PAGE->set_heading('Statistik');
+$PAGE->set_title('Statistik');
 $context = context_course::instance($courseid);
 $output = $PAGE->get_renderer('block_exaquest');
-
 echo $output->header($context, $courseid, get_string('get_questionbank', 'block_exaquest'));
 
 

@@ -1,7 +1,0 @@
-bydate,quiz_exaqueststatistics
-bystudentidnumber,quiz_exaqueststatistics
-bystudentfirstname,quiz_exaqueststatistics
-bystudentlastname,quiz_exaqueststatistics
-gradingattemptwithidnumber,quiz_exaqueststatistics
-orderattempts,quiz_exaqueststatistics
-randomly,quiz_exaqueststatistics

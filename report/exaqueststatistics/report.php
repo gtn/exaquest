@@ -20,6 +20,7 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Quiz report for exaquest. Based on the grading report.
+ * Extends report_base but the rest of it is created manually.
  */
 class quiz_exaqueststatistics_report extends report_base {
     const DEFAULT_PAGE_SIZE = 5;
@@ -99,18 +100,18 @@ class quiz_exaqueststatistics_report extends report_base {
         return html_writer::table($quizinfotable);
     }
 
-    /**
-     * Initialise some parts of $PAGE and start output.
-     *
-     * @param stdClass $cm the course_module information.
-     * @param stdClass $course the course settings.
-     * @param stdClass $quiz the quiz settings.
-     * @param string $reportmode the report name.
-     */
-    public function print_header_and_tabs($cm, $course, $quiz, $reportmode = 'overview') {
-        global $PAGE;
-        $this->renderer = $PAGE->get_renderer('quiz_exaqueststatistics');
-        parent::print_header_and_tabs($cm, $course, $quiz, $reportmode);
-    }
+    ///**
+    // * Initialise some parts of $PAGE and start output.
+    // *
+    // * @param stdClass $cm the course_module information.
+    // * @param stdClass $course the course settings.
+    // * @param stdClass $quiz the quiz settings.
+    // * @param string $reportmode the report name.
+    // */
+    //public function print_header_and_tabs($cm, $course, $quiz, $reportmode = 'overview') {
+    //    global $PAGE;
+    //    $this->renderer = $PAGE->get_renderer('quiz_exaqueststatistics');
+    //    parent::print_header_and_tabs($cm, $course, $quiz, $reportmode);
+    //}
 
 }
