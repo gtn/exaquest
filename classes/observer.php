@@ -183,4 +183,24 @@ class block_exaquest_observer {
         //$data = $event->get_data();
     }
 
+    /**
+     * Observer for mod_quiz\event\course_module_viewed.
+     * @param mod_quiz\event\course_module_viewed $event
+     * @return void
+     */
+    public static function course_module_viewed(\mod_quiz\event\course_module_viewed  $event) {
+        global $DB, $OUTPUT;
+        $data = $event->get_data();
+        // TODO: find out if I can change the headers etc of a moodle page here
+        // will not work, since the page is already rendered
+        //echo "course_module_viewed";
+        //
+        //global $PAGE;
+        //if ($event instanceof \mod_quiz\event\course_module_viewed) {
+        //    $PAGE->set_heading("New Heading for Quiz Report");
+        //    echo $OUTPUT->footer();
+        //}
+
+    }
+
 }

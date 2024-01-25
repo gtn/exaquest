@@ -57,4 +57,8 @@ $observers = array(
                 'callback' => 'block_exaquest_observer::attempt_submitted',
                 'internal' => false,
         ),
+        array(
+                'eventname'   => '\mod_quiz\event\course_module_viewed',
+                'callback'    => 'block_exaquest_observer::course_module_viewed',
+        ),
 );
