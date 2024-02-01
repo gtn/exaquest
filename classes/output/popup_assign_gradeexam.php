@@ -20,6 +20,7 @@ class popup_assign_gradeexam implements renderable, templatable {
         $quiz = new stdClass();
         $quiz->id = $quizid;
         $this->significant_questions = quiz_report_get_significant_questions($quiz);
+        $this->assigned_persons = block_exaquest_get_assigned_persons_by_quizid_and_assigntype($quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM);
     }
 
     /**
@@ -34,6 +35,8 @@ class popup_assign_gradeexam implements renderable, templatable {
         $data->bmw = $this->bmw;
         $data->fp = $this->fp;
         $data->quizid = $this->quizid;
+        $data->assigned_persons = array_values($this->assigned_persons); // ARRAY_VALUES is needed, so the array is not indexed by the id of the person. Otherwise in mustache they are not shown
+
 
         // create the bmw autocomplete field with the help of an mform
         $mform = new autofill_helper_form($data->bmw);

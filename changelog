@@ -1,5 +1,5 @@
 #####################################
-xxxx
+2024020100
 -Show only courses that are active or have been active in the last 6 months in moodle dashboard
 -Added filter in questionbank and count in dashboard for: Questions that have been created but not yet submitted for review.
 -Dashboard redesign
@@ -11,7 +11,11 @@ xxxx
 -Streamlined the review process. E.g. if mover does fachlich review, then someone does formal review, the mover does not have to release but it releases automatically.
 -Added filters for different steps in fachlich/formal review
 -Filling exams: Can assign PMW and FP. When every person assigned to fill an exam has finished the assignment, the exam status is automatically changed to the next step.
--
+-Removed redundant status of exam (formally released = active)
+-Added exam todos to dashboard and notifications with links to the exams
+-reworked the exams view (when to change status, e.g. when everyone has finished filling an exam, the status changes automatically, only show certain buttons when assigned, etc, show which person has been assigned in the assign popups)
+-Added buttons to lock questions or assign them to be revised in the fill-exam-view
+-Added exaqueststatistics view for finished exams
 #####################################
 #####################################
 2023041400

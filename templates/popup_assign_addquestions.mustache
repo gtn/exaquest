@@ -22,9 +22,9 @@
                         <!--                list of already assigned persons -->
                         <list>
                             <ul class="list-group popuplist">
-                                Bereits angefordert von:
+                                {{#str}}already_requested_from, block_exaquest {{/str}}
                                 {{#assigned_persons}}
-                                    <li {{#done}} class="assignment_done" {{/done}}>{{firstname}} {{lastname}}{{#done}}: bereits abgeschlossen {{/done}}</li>
+                                    <li {{#done}} class="assignment_done" {{/done}}>{{firstname}} {{lastname}}{{#done}}: {{#str}}already_done, block_exaquest {{/str}} {{/done}}</li>
                                 {{/assigned_persons}}
                             </ul>
                         </list>

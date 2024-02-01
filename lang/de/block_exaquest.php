@@ -173,7 +173,7 @@ $string['exams_for_me_to_fachlich_release'] = 'Prüfungen soll ich fachlich frei
 $string['exams_for_me_to_fill'] = 'Prüfungen soll ich mit Fragen befüllen';
 $string['exams_for_me_to_fill_title'] = 'Prüfungen die ich mit Fragen befüllen soll';
 $string['exams_finished_grading_open'] = 'Prüfungen wo die Beurteilung noch aussteht';
-$string['exams_finished_grading_done'] = 'Prüfungen wo die Beurteilung no überprüft werden muss';
+$string['exams_finished_grading_done'] = 'Prüfungen wo die Beurteilung noch überprüft werden muss';
 
 //Questionbank
 
@@ -420,7 +420,7 @@ $string['exams_for_me_to_check_grading'] = 'Prüfungen deren Beurteilung ich üb
 $string['exams_for_me_to_check_grading_title'] = 'Prüfungen deren Beurteilung ich überprüfen soll';
 $string['exams_for_me_to_grade'] = 'Prüfungen soll ich beurteilen';
 $string['exams_for_me_to_grade_title'] = 'Prüfungen die ich beurteilen soll';
-$string['please_change_exam_grading'] = 'Bitte ändern Sie die Beurteilung der Prüfung <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
+$string['please_change_exam_grading'] = 'Bitte ändern Sie die Beurteilung der Prüfung <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}... Angefordert von: {$a->requester}';
 $string['please_change_exam_grading_subject'] = 'Bitte ändern Sie die Beurteilung der Prüfung {$a->fullname}';
 $string['assign_change_exam_grading'] = 'Änderung der Beurteilung anfordern';
 $string['assign_change_exam_grading_label'] = 'Änderung der Beurteilung anfordern';
@@ -430,3 +430,7 @@ $string['exams_for_me_to_change_grading'] = 'Prüfungen deren Beurteilung ich ä
 $string['exams_for_me_to_change_grading_title'] = 'Prüfungen deren Beurteilung ich ändern soll';
 
 $string['exams_for_me_to_fachlich_release_title'] = 'TODO: create exams_for_me_to_fachlich_release_title';
+
+# popuptexts:
+$string['already_requested_from'] = 'Bereits angefordert von:';
+$string['already_done'] = 'bereits abgeschlossen';

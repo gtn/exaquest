@@ -18,6 +18,16 @@
             <form method="post" action="{{action}}" id="assign_grade_exam_form{{quizid}}">
                 <input type="hidden" id="quizid" name="quizid" value={{quizid}}>
                 <div class="modal-body">
+                    <!--                list of already assigned persons -->
+                    <list>
+                        <ul class="list-group popuplist">
+                            {{#str}}already_requested_from, block_exaquest {{/str}}
+                            {{#assigned_persons}}
+                                <li {{#done}} class="assignment_done" {{/done}}>{{firstname}} {{lastname}}{{#done}}: {{#str}}already_done, block_exaquest {{/str}} {{/done}}</li>
+                            {{/assigned_persons}}
+                        </ul>
+                    </list>
+                    <p></p>
                     <div class="form-group">{{#str}}
                         assign_gradeexam_label, block_exaquest {{/str}}
                         {{{ bmw_autocomplete_html }}}

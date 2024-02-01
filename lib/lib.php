@@ -2383,6 +2383,7 @@ function block_exaquest_assign_change_exam_grading($userfrom, $userto, $comment,
     $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
     $messageobject->url = $messageobject->url->raw_out(false);
     $messageobject->requestcomment = $comment;
+    $messageobject->requester = $userfrom->firstname . ' ' . $userfrom->lastname;
     $message = get_string('please_change_exam_grading', 'block_exaquest', $messageobject);
     $subject = get_string('please_change_exam_grading_subject', 'block_exaquest', $messageobject);
     block_exaquest_send_moodle_notification("changeexamgrading", $userfrom->id, $userto, $subject, $message,
@@ -2442,6 +2443,7 @@ function block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assig
     $assigndata = new stdClass;
     $assigndata->quizid = $quizid;
     $assigndata->assigneeid = $usertoid;
+    $assigndata->assignerid = $userfromid;
     $assigndata->assigntype = $assigntype;
     //if that assignment does not exist yet, create it
     $quizassignid = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZASSIGN,
@@ -2452,7 +2454,7 @@ function block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assig
     } else {
         // already exists, reset the "done" field
         $DB->set_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'done', 0,
-                array('quizid' => $quizid, 'assigneeid' => $usertoid, 'assigntype' => $assigntype));
+                array('id' => $quizassignid));
         $newlyassigned = false;
     }
 

@@ -91,7 +91,6 @@ if ($action == 'assign_quiz_addquestions') {
         }
     }
 } else if ($action == 'assign_change_exam_grading') {
-    // TODO: check if this works / what it does. It should inform the PK....
     $comment = optional_param('assign_change_exam_grading_comment', '', PARAM_TEXT);
     $quizid = required_param('quizid', PARAM_INT);
     $quizname = $DB->get_field('quiz', 'name', array('id' => $quizid));

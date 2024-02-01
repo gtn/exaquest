@@ -17,6 +17,7 @@ class popup_assign_check_exam_grading implements renderable, templatable {
         // get the FP that has been assigned to this quiz
         //$this->fp = block_exaquest_get_assigned_fachlicherpruefer($quizid);
         $this->quizid = $quizid;
+        $this->assigned_persons = block_exaquest_get_assigned_persons_by_quizid_and_assigntype($quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
     }
 
     /**
@@ -31,6 +32,8 @@ class popup_assign_check_exam_grading implements renderable, templatable {
         $data->bmw = $this->bmw;
         $data->fp = $this->fp;
         $data->quizid = $this->quizid;
+        $data->assigned_persons = array_values($this->assigned_persons); // ARRAY_VALUES is needed, so the array is not indexed by the id of the person. Otherwise in mustache they are not shown
+
 
         //// create the fp autocomplete field with the help of an mform
         //$mform = new autofill_helper_form($data->fp);

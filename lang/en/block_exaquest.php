@@ -412,7 +412,7 @@ $string['exams_for_me_to_check_grading'] = 'Exams for me to check grading';
 $string['exams_for_me_to_check_grading_title'] = 'Exams for me to check grading';
 $string['exams_for_me_to_grade'] = 'Exams for me to grade';
 $string['exams_for_me_to_grade_title'] = 'Exams for me to grade';
-$string['please_change_exam_grading'] = 'Please change the grading of the exam <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}';
+$string['please_change_exam_grading'] = 'Please change the grading of the exam <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}... Requested by: {$a->requester}';
 $string['please_change_exam_grading_subject'] = 'Please change the grading of the exam {$a->fullname}';
 $string['assign_change_exam_grading'] = 'Request Change of Grading';
 $string['assign_change_exam_grading_label'] = 'Request Change of Grading';
@@ -422,3 +422,7 @@ $string['exams_for_me_to_change_grading'] = 'Exams for me to change grading';
 $string['exams_for_me_to_change_grading_title'] = 'Exams for me to change grading';
 
 $string['exams_for_me_to_fachlich_release_title'] = 'TODO: create exams_for_me_to_fachlich_release_title TODO TRANSLATE';
+
+# popuptexts:
+$string['already_requested_from'] = 'Already requested from:';
+$string['already_done'] = 'already done';

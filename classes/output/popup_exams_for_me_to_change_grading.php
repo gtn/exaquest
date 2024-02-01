@@ -22,11 +22,14 @@ class popup_exams_for_me_to_change_grading implements renderable, templatable {
      * @return stdClass
      */
     public function export_for_template(renderer_base $output) {
-        global $PAGE, $COURSE;
+        global $PAGE, $COURSE, $DB;
         $data = new stdClass();
 
         // link to /mod/quiz/report.php?id=$quizid&mode=grading for every exam
         foreach ($this->exams as $exam) {
+            // get the fullname of the assigner, so it can be displayed:
+            $assigner = $DB->get_record('user', array('id' => $exam->assignerid));
+            $exam->assignerfullname = fullname($assigner);
             $exam->linktograding = new moodle_url('/mod/quiz/report.php',
                     array('id' => $exam->coursemoduleid,
                             'mode' => 'grading',

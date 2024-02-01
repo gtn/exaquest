@@ -37,13 +37,13 @@ $messageproviders = array(
                         'email' => MESSAGE_PERMITTED,
                 ],
         ),
-        'check_exam_grading' => array(
+        'checkexamgrading' => array(
                 'defaults' => [
                         'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
                         'email' => MESSAGE_PERMITTED,
                 ],
         ),
-        'change_exam_grading' => array(
+        'changeexamgrading' => array(
                 'defaults' => [
                         'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
                         'email' => MESSAGE_PERMITTED,

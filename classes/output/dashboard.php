@@ -207,8 +207,8 @@ class dashboard implements renderable, templatable {
         //    $data->show_exams_heading = true;
         //}
 
-        if ($this->capabilities["fachlicherpruefer"] || $this->capabilities["modulverantwortlicher"] ||
-                $this->capabilities["pruefungskoordination"]) {
+        if ($this->capabilities["fachlicherzweitpruefer"] ||$this->capabilities["fachlicherpruefer"] || $this->capabilities["modulverantwortlicher"] ||
+                $this->capabilities["pruefungskoordination"] || $this->capabilities["beurteilungsmitwirkende"]) { // TODO: who else?
             $data->show_exams_heading = true;
         }
 
