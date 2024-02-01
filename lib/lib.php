@@ -1206,9 +1206,7 @@ function block_exaquest_set_up_roles() {
     //unassign_capability('mod/quiz:moodle/course:manageactivities', $roleid, $context->id); // "Prüfungen anlegen und Bearbeiten sollen nur MUSSS, PK und StudMA, nicht MOVER oder andere Rolle können"
 
     if (!$DB->record_exists('role', ['shortname' => 'fragenersteller'])) {
-        //$roleid = create_role('Fragenersteller', 'fragenersteller', '', 'editingteacher');
         $roleid = create_role('Fragenersteller', 'fragenersteller', 'This user can only create questions and see the dashboard');
-        //$archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
         $archetype = 0;
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
@@ -1218,7 +1216,6 @@ function block_exaquest_set_up_roles() {
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
-
         // allow setting role at context level "course category" and "course"
         set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
     } else {
@@ -1253,8 +1250,8 @@ function block_exaquest_set_up_roles() {
     assign_capability('moodle/question:editall', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlfragenreviewer'])) {
-        $roleid = create_role('fachl. Fragenreviewer', 'fachlfragenreviewer', '', 'editingteacher');
-        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
+        $roleid = create_role('fachl. Fragenreviewer', 'fachlfragenreviewer', 'This user can only create questions and see the dashboard');
+        $archetype = 0;
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
                 $options); // overwrites everything that is set in the options. The rest stays.
@@ -1263,9 +1260,8 @@ function block_exaquest_set_up_roles() {
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
-
-        // allow setting role at context level "course category"
-        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
+        // allow setting role at context level "course category" and "course"
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'fachlfragenreviewer'])->id;
     }
@@ -1286,6 +1282,18 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:dofachlichreview', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
+    //moodle capabilities:
+    //assign_capability('moodle/question:add', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:viewmine', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:movemine', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:tagmine', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:commentmine', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:editmine', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:viewall', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:moveall', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:tagall', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:commentall', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:editall', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'beurteilungsmitwirkende'])) {
         $roleid = create_role('Beurteilungsmitwirkende', 'beurteilungsmitwirkende', '', 'editingteacher');
@@ -1320,6 +1328,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:checkexamsgrading', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:gradequestion', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:gradeexam', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlicherpruefer'])) {
         $roleid = create_role('fachlicher Prüfer', 'fachlicherpruefer', '', 'editingteacher');
@@ -1368,6 +1377,7 @@ function block_exaquest_set_up_roles() {
     unassign_capability('block/exaquest:assignaddquestions', $roleid,
             $context->id); // accidentally added, should be deleted. ONLY allow this for your own exams. Only pk and mover can do it generally
     // addquestion will be added in the output/exams.php for every exam the FP is FP of and for every PMW that has been assigned.
+    assign_capability('block/exaquest:gradeexam', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsmitwirkende'])) {
         $roleid = create_role('Prüfungsmitwirkende', 'pruefungsmitwirkende', '', 'editingteacher');
@@ -1442,6 +1452,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewactiveexamscard', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewfinishedexamscard', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewgradesreleasedexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:gradeexam', CAP_ALLOW, $roleid, $context);
 
     // ---
     if (!$DB->record_exists('role', ['shortname' => 'fragenerstellerlight'])) {

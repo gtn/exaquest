@@ -108,12 +108,15 @@
                             {{/pruefungskoordination}}
 
 
-                            {{#popup_exams_for_me_to_grade}}
-                                {{>block_exaquest/popup_exams_for_me_to_grade}}
-                            {{/popup_exams_for_me_to_grade}}
-                            {{#popup_exams_for_me_to_check_grading}}
-                                {{>block_exaquest/popup_exams_for_me_to_check_grading}}
-                            {{/popup_exams_for_me_to_check_grading}}
+                            <!--                            TODO: hide this. add capability just like for e.g. addquestiontoexam. Otherwise this is shown for every user... exaquest:gradeexam is unused and exactly this capability ==> use it-->
+                            {{#gradeexam}}
+                                {{#popup_exams_for_me_to_grade}}
+                                    {{>block_exaquest/popup_exams_for_me_to_grade}}
+                                {{/popup_exams_for_me_to_grade}}
+                                {{#popup_exams_for_me_to_check_grading}}
+                                    {{>block_exaquest/popup_exams_for_me_to_check_grading}}
+                                {{/popup_exams_for_me_to_check_grading}}
+                            {{/gradeexam}}
                             {{#pruefungskoordination}}
                                 {{#popup_exams_for_me_to_change_grading}}
                                     {{>block_exaquest/popup_exams_for_me_to_change_grading}}
