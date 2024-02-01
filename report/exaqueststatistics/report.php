@@ -72,10 +72,7 @@ class quiz_exaqueststatistics_report extends report_base {
 
         echo "hello world";
 
-
         return true;
-
-
     }
 
 

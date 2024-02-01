@@ -62,36 +62,15 @@ $context = context_course::instance($courseid);
 $output = $PAGE->get_renderer('block_exaquest');
 echo $output->header($context, $courseid, get_string('get_questionbank', 'block_exaquest'));
 
-
-//require_login($course, false, $cm);
 $PAGE->set_pagelayout('report');
-//$PAGE->activityheader->disable();
-//$reportlist = quiz_report_list($quizobj->get_context());
-//if (empty($reportlist)) {
-//    throw new \moodle_exception('erroraccessingreport', 'quiz');
-//}
-//
-//// Validate the requested report name.
-//if ($mode == '') {
-//    // Default to first accessible report and redirect.
-//    $url->param('mode', reset($reportlist));
-//    redirect($url);
-//} else if (!in_array($mode, $reportlist)) {
-//    throw new \moodle_exception('erroraccessingreport', 'quiz');
-//}
-//if (!is_readable("report/$mode/report.php")) {
-//    throw new \moodle_exception('reportnotfound', 'quiz', '', $mode);
-//}
 
-// hardcoded the name, as we only need this one in exaquest
-$mode = 'exaqueststatistics';
 
 // Open the selected quiz report and display it.
-$file = $CFG->dirroot . '/blocks/exaquest/report/' . $mode . '/report.php';
+$file = $CFG->dirroot . '/blocks/exaquest/report/exaqueststatistics/report.php';
 if (is_readable($file)) {
     include_once($file);
 }
-$reportclassname = 'quiz_' . $mode . '_report';
+$reportclassname = 'quiz_exaqueststatistics_report';
 if (!class_exists($reportclassname)) {
     throw new \moodle_exception('preprocesserror', 'quiz');
 }
