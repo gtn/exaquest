@@ -224,10 +224,17 @@
                             {{#assigned_to_grade}}
                                 <!-- there is no mark_grade_request_as_done button yet, but the ability to add other persons for grading depends on being assigned to grade-->
                                 <!--                                TODO: add mark_grade_request_as_done button ??-->
+                                <!--  Similiar to the button with value "release_grades" here we have "grading finished" ? Would be a possibility, but for now no, because marking the grading as done does not make a lot of sense, it is shown in moodle when everything is graded anyways-->
+
+                                {{#go_to_exam_report_grading}}
+                                    <td>
+                                        {{>block_exaquest/button_go_to_exam_report_grading}}
+                                    </td>
+                                {{/go_to_exam_report_grading}}
                                 <td>
-                                    {{#popup_assign_check_exam_grading}}
+                                    {{#popup_assign_gradeexam}}
                                         {{>block_exaquest/popup_assign_gradeexam}}
-                                    {{/popup_assign_check_exam_grading}}
+                                    {{/popup_assign_gradeexam}}
                                 </td>
                             {{/assigned_to_grade}}
                         </tr>
