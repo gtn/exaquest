@@ -700,18 +700,15 @@ function xmldb_block_exaquest_upgrade($oldversion) {
         upgrade_block_savepoint(true, 2024011600, 'exaquest');
     }
 
-    if ($oldversion < 2024020103) {
-        // add the field "assignerid" to block_exaquestquizassign
-        $table = new xmldb_table('block_exaquestquizassign');
-        $field = new xmldb_field('assignerid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0);
-        $key = new xmldb_key('fk_assignerid', XMLDB_KEY_FOREIGN, ['assignerid'], 'user', ['id']);
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-            $dbman->add_key($table, $key);
-        }
-
+    if ($oldversion < 2024020801) {
+        // Creating roles and assigning capabilities
+        // Done as a task AFTER the installation/upgrade, because the capabilities only exist at the end/after the installation/upgrade.
+        // create the instance
+        $setuptask = new \block_exaquest\task\set_up_roles();
+        // queue it
+        \core\task\manager::queue_adhoc_task($setuptask);
         // Exaquest savepoint reached.
-        upgrade_block_savepoint(true, 2024020103, 'exaquest');
+        upgrade_block_savepoint(true, 2024020801, 'exaquest');
     }
 
 
