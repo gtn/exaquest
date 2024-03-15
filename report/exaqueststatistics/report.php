@@ -60,6 +60,7 @@ class quiz_exaqueststatistics_report extends report_base {
     protected $extrauserfields = [];
 
     public function display($quiz, $cm, $course) {
+        global $DB;
         // simply returning true / doing nothing in the display() function leads to an error
         // "Invalid state passed to moodle_page::set_state. We are in state 0 and state 3 was requested."
         //$this->print_header_and_tabs($cm, $course, $quiz, 'grading');
@@ -67,14 +68,55 @@ class quiz_exaqueststatistics_report extends report_base {
         $whichattempts = optional_param('whichattempts', $quiz->grademethod, PARAM_INT);
         $quizstats = new \quiz_statistics\calculated($whichattempts);
         $quizinfo = $quizstats->get_formatted_quiz_info_data($course, $cm, $quiz);
+
+        /** Chandran Code start here **/
+		// Added New info
+		$quizinfo["timelimit"] = format_time($quiz->timelimit);
+		$quizinfo["quizattempt"] = $quizinfo[get_string('allattemptscount', 'quiz_statistics')];
+
+		// Remove unnecessary Info		
+		unset($quizinfo[get_string('quizclose', 'quiz')],$quizinfo[get_string('duration', 'quiz_statistics')], $quizinfo[get_string('firstattemptscount', 'quiz_statistics')], $quizinfo[get_string('allattemptscount', 'quiz_statistics')]);
+		$quizinfo["quizcancelattempt"] = $DB->count_records_sql('SELECT count(*) FROM {quiz_attempts} WHERE quiz = ? AND state IN (?)',[$quiz->id, quiz_attempt::ABANDONED]);		
+		// we change key because get_string not working with umlaut
+		$quizinfo = $this->change_key($quizinfo, get_string('quizopen', 'quiz'), 'quizdatum');
+		// Replace label for german
+		$quizinfo = $this->check_and_replace_plugin_label($quizinfo);		
+		/** Chandran Code end here **/
+
         echo $this->output_quiz_info_table($quizinfo);
-
-
-        echo "hello world";
 
         return true;
     }
 
+    /**
+     * @param mixed $array
+     * @param mixed $old_key
+     * @param mixed $new_key
+     * @return mixed
+     */
+    protected function change_key( $array, $old_key, $new_key ) {
+		if( ! array_key_exists( $old_key, $array ) )
+			return $array;
+
+		$keys = array_keys( $array );
+		$keys[ array_search( $old_key, $keys ) ] = $new_key;
+
+		return array_combine( $keys, $array );
+	}
+	
+    /**
+     * @param mixed $quizinfo
+     * @return mixed
+     */
+	protected function check_and_replace_plugin_label($quizinfo){
+		foreach ($quizinfo as $heading => $value) {
+			if (get_string_manager()->string_exists($heading, 'block_exaquest')) {
+				$quizinfo = $this->change_key($quizinfo, $heading, get_string($heading, 'block_exaquest'));
+			}
+		}
+		
+		return $quizinfo;
+	}
 
     /**
      * Return HTML for table of overall quiz statistics.

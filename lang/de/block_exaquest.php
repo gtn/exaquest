@@ -434,3 +434,9 @@ $string['exams_for_me_to_fachlich_release_title'] = 'TODO: create exams_for_me_t
 # popuptexts:
 $string['already_requested_from'] = 'Bereits angefordert von:';
 $string['already_done'] = 'bereits abgeschlossen';
+
+$string['Test-Name'] = 'Name der Prüfung';
+$string['quizdatum'] = 'Prüfungsdatum &- Uhrzeit';
+$string['timelimit'] = 'Dauer der Prüfung';
+$string['quizattempt'] = 'Anzahl Teilnehmer:innen';
+$string['quizcancelattempt'] = 'Anzahl abgebrochener Prüfungen';
