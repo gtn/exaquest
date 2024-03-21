@@ -39,7 +39,7 @@ $(document).on('click', '#popup_create_questions_div', function () {
 
 function mark_request_as_done(requestid, requesttype, courseid) {
     console.log('mark_request_as_done', requestid);
-    // debugger;
+    debugger;
     let action = '';
     if (requesttype == 'exam') {
         action = 'mark_exam_request_as_done';

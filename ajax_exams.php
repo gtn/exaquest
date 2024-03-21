@@ -68,7 +68,8 @@ switch ($action) {
                         'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING,
                         'assigneeid' => $USER->id)
         );
-        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $quizassignid)); // don't set the assignments to done, but DELETE them, as they do NOT make sense anymore
+        //$DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $quizassignid)); // don't set the assignments to done, but DELETE them, as they do NOT make sense anymore
+        $DB->set_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'done', 1, array('id' => $quizassignid));
         // check if every assignment of this kind is done for this quiz
         //block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED_BY_FP);
         // only mark the todoo for the FP as done, do NOT release instantly, but first check if the BMWs have also done their part

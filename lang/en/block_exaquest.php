@@ -163,9 +163,9 @@ $string['compare_questions'] = 'Compare questions';
 $string['exams_for_me_to_create'] = 'Exams for me to create';
 $string['exams_for_me_to_fachlich_release'] = 'Exams for me to fachlich release';
 $string['exams_for_me_to_fill'] = 'Exams for me to fill with questions';
-$string['exams_for_me_to_fill_title'] = 'Prüfungen die ich mit Fragen befüllen soll';
-$string['exams_finished_grading_open'] = 'Prüfungen wo die Beurteilung noch aussteht TODO TRANSLATE';
-$string['exams_finished_grading_done'] = 'Prüfungen wo die Beurteilung no überprüft werden muss TODO TRANSLATE';
+$string['exams_for_me_to_fill_title'] = 'Exams for me to fill with questions';
+$string['exams_finished_grading_open'] = 'Exams where grading has to be done';
+$string['exams_finished_grading_done'] = 'Exams where grading has to be checked';
 
 //Questionbank
 
