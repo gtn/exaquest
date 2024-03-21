@@ -74,6 +74,10 @@ class add_to_quiz extends column_base {
                         quizid: <?php echo $quizid; ?>,
                     };
                     e.preventDefault();
+
+                    // TODO: remove the button.
+                    // TODO: DO NOT RELOAD THE PAGE.
+
                     var ajax = $.ajax({
                         method: "POST",
                         url: "ajax.php",

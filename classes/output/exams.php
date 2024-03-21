@@ -137,8 +137,7 @@ class exams implements renderable, templatable {
                     // if the $exams_to_check_grading_for_fp array holds an element with the field "quizid" which is the same as finished_exam->quizid, then the PK is assigned to check the grading for this FP
                     foreach ($exams_to_check_grading_for_fp as $exam_to_check_grading_for_fp) {
                         if ($exam_to_check_grading_for_fp->quizid == $finished_exam->quizid) {
-                            $finished_exam->fp_
-                                    = true;
+                            $finished_exam->fp_assigned_to_check_grading = true;
                         }
                     }
                 }
