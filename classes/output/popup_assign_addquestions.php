@@ -19,7 +19,7 @@ class popup_assign_addquestions implements renderable, templatable {
         $this->assigned_persons = block_exaquest_get_assigned_persons_by_quizid_and_assigntype($quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
 
 
-        $categorys_required_counts = block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid);
+        $categorys_required_counts = block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid, false);
         $categorys_current_counts = block_exaquest_get_category_question_count($quizid);
         $categoryoptionidkeys = array_keys($categorys_required_counts);
         $this->fragefaecher = block_exaquest_get_category_names_by_ids($categoryoptionidkeys, true);

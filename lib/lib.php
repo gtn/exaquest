@@ -1254,7 +1254,8 @@ function block_exaquest_set_up_roles() {
     assign_capability('moodle/question:editall', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlfragenreviewer'])) {
-        $roleid = create_role('fachl. Fragenreviewer', 'fachlfragenreviewer', 'This user can only create questions and see the dashboard');
+        $roleid = create_role('fachl. Fragenreviewer', 'fachlfragenreviewer',
+                'This user can only create questions and see the dashboard');
         $archetype = 0;
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
@@ -2533,7 +2534,7 @@ function block_exaquest_assign_quiz_done_to_pk($userfrom, $userto, $comment, $qu
                     "quizfinishedgradingopen", $messageobject->url);
         } else if ($assigntype == BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE) {
             $messageobject->requestcomment =
-                    new lang_string('quiz_finished_grading_done_comment', 'block_exaquest', null,  $preferred_language);
+                    new lang_string('quiz_finished_grading_done_comment', 'block_exaquest', null, $preferred_language);
             $messageobject->requestcomment = $messageobject->requestcomment->__toString();
             $message = new lang_string('quiz_finished_grading_done', 'block_exaquest', $messageobject, $preferred_language);
             $message = $message->__toString();
@@ -2590,17 +2591,26 @@ function block_exaquest_assign_quiz_fdp($userto, $quizid) {
     $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
 }
 
-function block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid) {
+function block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid, $show_deleted = false) {
     global $DB;
 
     // get course
     $course = $DB->get_record('course', array('id' => $courseid));
 
-    $sql = 'SELECT cat.*, qc.questioncount, qc.quizid
+    if ($show_deleted) {
+        $sql = 'SELECT cat.*, qc.questioncount, qc.quizid
             FROM {' . BLOCK_EXAQUEST_DB_CATEGORIES . '} cat
             LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZQCOUNT . '} qc ON qc.exaquestcategoryid = cat.id AND qc.quizid = :quizid
             WHERE cat.coursecategoryid = :coursecategoryid
             AND cat.categorytype = ' . BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH;
+    } else {
+        $sql = 'SELECT cat.*, qc.questioncount, qc.quizid
+            FROM {' . BLOCK_EXAQUEST_DB_CATEGORIES . '} cat
+            LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZQCOUNT . '} qc ON qc.exaquestcategoryid = cat.id AND qc.quizid = :quizid
+            WHERE cat.coursecategoryid = :coursecategoryid
+            AND cat.deleted = 0
+            AND cat.categorytype = ' . BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH;
+    }
 
     $fragefaecher = $DB->get_records_sql($sql, array('coursecategoryid' => $course->category, 'quizid' => $quizid));
 
@@ -2725,16 +2735,24 @@ function block_exaquest_get_assigned_persons_by_quizid_and_assigntype($quizid,
     return $assignedpersons;
 }
 
-function block_exaquest_get_fragefaecher_by_courseid($courseid) {
+function block_exaquest_get_fragefaecher_by_courseid($courseid, $show_deleted = false) {
     global $DB;
 
     // get course
     $course = $DB->get_record('course', array('id' => $courseid));
 
-    $sql = 'SELECT cat.*
+    if ($show_deleted) {
+        $sql = 'SELECT cat.*
             FROM {' . BLOCK_EXAQUEST_DB_CATEGORIES . '} cat
             WHERE cat.coursecategoryid = :coursecategoryid
             AND cat.categorytype = ' . BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH;
+    } else {
+        $sql = 'SELECT cat.*
+            FROM {' . BLOCK_EXAQUEST_DB_CATEGORIES . '} cat
+            WHERE cat.coursecategoryid = :coursecategoryid
+            AND cat.deleted = 0
+            AND cat.categorytype = ' . BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH;
+    }
 
     $fragefaecher = $DB->get_records_sql($sql, array('coursecategoryid' => $course->category));
 

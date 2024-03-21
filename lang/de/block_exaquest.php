@@ -400,7 +400,7 @@ $string['create_daily_notifications'] = 'Erstelle die täglichen Exaquest-Nachri
 $string['set_up_roles'] = 'Rollen für Exaquest aufsetzen.';
 
 $string['points_per'] = 'Punkte für Fragefach ';
-$string['exaquest_settings'] = 'Exaquest Settings';
+$string['exaquest_settings'] = 'Exaquest Einstellungen';
 
 $string['assign_to_revise_from_quiz'] = 'Überarbeitung anfordern';
 $string['revise_question_from_quiz'] = 'Überarbeiten';

@@ -145,9 +145,9 @@ function block_exaquest_coursemodule_standard_elements($formwrapper, $mform) {
 
             // add the question count per quiz and fragefach settings
             if ($quizid) {
-                $fragefaecher = block_exaquest_get_fragefaecher_by_courseid_and_quizid($COURSE->id, $quizid);
+                $fragefaecher = block_exaquest_get_fragefaecher_by_courseid_and_quizid($COURSE->id, $quizid, false);
             } else {
-                $fragefaecher = block_exaquest_get_fragefaecher_by_courseid($COURSE->id);
+                $fragefaecher = block_exaquest_get_fragefaecher_by_courseid($COURSE->id, false);
             }
 
             // Add the quiz questions count / points count settings
