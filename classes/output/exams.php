@@ -106,10 +106,13 @@ class exams implements renderable, templatable {
 
         if ($capabilities["viewfinishedexamscard"]) {
             $finished_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_FINISHED);
+
             $exams_to_check_grading = block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid,
                     BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
             foreach ($exams_to_check_grading as $exam_to_check_grading) {
-                $finished_exams[$exam_to_check_grading->quizid]->assigned_to_check_grading = true;
+                if ($finished_exams[$exam_to_check_grading->quizid]) {
+                    $finished_exams[$exam_to_check_grading->quizid]->assigned_to_check_grading = true;
+                }
             }
 
             // If exams_to_grade and exams_to_check_grading overlap it does not really make sense, but still it should be covered:
@@ -124,6 +127,22 @@ class exams implements renderable, templatable {
             //foreach ($exams_to_change_grading as $exam_to_change_grading) {
             //    $finished_exams[$exam_to_change_grading->quizid]->assigned_to_change_grading = true;
             //}
+
+            if ($capabilities["checkgradingforfp"]) {
+                foreach ($finished_exams as $finished_exam) {
+                    // check if the FP is assigned to check grading. Only then, the PK should have the possibility to check grading FOR the FP
+                    $exams_to_check_grading_for_fp = block_exaquest_get_assigned_exams_by_assigntype($courseid,
+                            block_exaquest_get_assigned_fachlicherpruefer($finished_exam->quizid)->assigneeid,
+                            BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
+                    // if the $exams_to_check_grading_for_fp array holds an element with the field "quizid" which is the same as finished_exam->quizid, then the PK is assigned to check the grading for this FP
+                    foreach ($exams_to_check_grading_for_fp as $exam_to_check_grading_for_fp) {
+                        if ($exam_to_check_grading_for_fp->quizid == $finished_exam->quizid) {
+                            $finished_exam->fp_
+                                    = true;
+                        }
+                    }
+                }
+            }
 
             $this->finished_exams = $finished_exams;
         }
@@ -161,16 +180,15 @@ class exams implements renderable, templatable {
         $data->go_to_exam_view = new moodle_url('/blocks/exaquest/finished_exam_questionbank.php',
                 array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1]));
 
-
         // TODO: always show the buttons? Or only when you were assigned for example?
         //$data->go_to_exam_report_overview = new moodle_url('/mod/quiz/report.php',
         //        array('mode' => 'overview',));
         $data->go_to_exam_report_overview = new moodle_url('/blocks/exaquest/report.php',
                 array('mode' => 'exaqueststatistics', 'courseid' => $this->courseid));
-        $data->go_to_exam_report_overview = $data->go_to_exam_report_overview->raw_out(false); // otherwise the &amp; is not converted to &
+        $data->go_to_exam_report_overview =
+                $data->go_to_exam_report_overview->raw_out(false); // otherwise the &amp; is not converted to &
         $data->go_to_exam_report_grading = new moodle_url('/mod/quiz/report.php',
                 array('mode' => 'grading',));
-
 
         $data->go_to_exam_questionbank = $data->go_to_exam_questionbank->raw_out(false);
         if ($this->new_exams) {

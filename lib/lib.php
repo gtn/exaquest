@@ -1108,6 +1108,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:assigngradeexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:changeexamsgrading', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:forcesendexamtoreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:checkgradingforfp', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
         $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '', 'editingteacher');

@@ -190,6 +190,17 @@
                                     {{/popup_assign_check_exam_grading}}
                                 </td>
                             {{/assigncheckexamgrading}}
+
+
+                            {{#fp_assigned_to_check_grading}}
+                                <td>
+                                    <button type="submit" class="btn btn-secondary change-exam-status-button"
+                                            value="release_grades_for_fp_as_pk" quizid={{quizid}} courseid={{courseid}}>Prüfungsbeurteilung anstelle des Fachlichen Prüfers freigeben
+                                    </button>
+                                </td>
+                            {{/fp_assigned_to_check_grading}}
+
+
                             {{#assigned_to_check_grading}}
                                 <td>
                                     <button type="submit" class="btn btn-primary change-exam-status-button"

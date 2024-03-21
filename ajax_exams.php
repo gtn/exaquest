@@ -39,7 +39,8 @@ switch ($action) {
     case ('skipandrelease_exam'):
         block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE);
         // remove entries in exaquestquizassign, as they don't make sense anymore (set status should actually already do this..)
-        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, ['quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS]);
+        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+                ['quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS]);
         //$DB->set_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'done', 1, array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS));
         break;
     //case ('assign_fp_and_pmw'):
@@ -74,6 +75,16 @@ switch ($action) {
         //block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED_BY_FP);
         // only mark the todoo for the FP as done, do NOT release instantly, but first check if the BMWs have also done their part
         // check if the exam is now completely released
+        block_exaquest_check_if_grades_should_be_released($quizid);
+        break;
+    case ('release_grades_for_fp_as_pk'):
+        // the PK can release the grades for the FP if for example the FP does not log in, but sends an email to the PK
+        $quizassignid = $DB->get_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'id', array(
+                        'quizid' => $quizid,
+                        'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING,
+                        'assigneeid' => block_exaquest_get_assigned_fachlicherpruefer($quizid)->assigneeid) // get the FP
+        );
+        $DB->set_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'done', 1, array('id' => $quizassignid));
         block_exaquest_check_if_grades_should_be_released($quizid);
         break;
 }

@@ -356,5 +356,8 @@ $capabilities = array(
                 'captype' => 'write',
                 'contextlevel' => CONTEXT_COURSE,
         ),
-
+        'block/exaquest:checkgradingforfp' => array(
+                'captype' => 'write',
+                'contextlevel' => CONTEXT_COURSE,
+        ),
 );
