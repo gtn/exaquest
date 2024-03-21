@@ -33,19 +33,24 @@
                                     {{>block_exaquest/button_send_exam_to_review}}
                                 </td>
                             {{/sendexamtoreview}}
+                            {{#forcesendexamtoreview}}
+                                <td>
+                                    {{>block_exaquest/button_force_send_exam_to_review}}
+                                </td>
+                            {{/forcesendexamtoreview}}
                             {{#fachlichreleaseexam}}
                                 <td>
                                     {{>block_exaquest/button_fachlich_release_exam}}
                                 </td>
                             {{/fachlichreleaseexam}}
-                            {{#skipandreleaseexam}}
-                                <td>
-                                    <button type="submit" class="btn btn-primary change-exam-status-button"
-                                            value="skipandrelease_exam" quizid={{quizid}} courseid={{courseid}}>Prüfung
-                                        finalisieren und freigeben
-                                    </button>
-                                </td>
-                            {{/skipandreleaseexam}}
+<!--                            {{#skipandreleaseexam}}-->
+<!--                                <td>-->
+<!--                                    <button type="submit" class="btn btn-primary change-exam-status-button"-->
+<!--                                            value="skipandrelease_exam" quizid={{quizid}} courseid={{courseid}}>Prüfung-->
+<!--                                        finalisieren und freigeben-->
+<!--                                    </button>-->
+<!--                                </td>-->
+<!--                            {{/skipandreleaseexam}}-->
                             {{#assignaddquestions}}
                                 <td>
                                     {{#popup_assign_addquestions}}

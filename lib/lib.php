@@ -1103,9 +1103,11 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:changeowner', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:dofachlichreviewexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:assigncheckexamgrading', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:skipandreleaseexam', CAP_ALLOW, $roleid, $context);
+    //assign_capability('block/exaquest:skipandreleaseexam', CAP_ALLOW, $roleid, $context);
+    //unassign_capability('block/exaquest:skipandreleaseexam', $roleid, $context->id);
     assign_capability('block/exaquest:assigngradeexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:changeexamsgrading', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:forcesendexamtoreview', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
         $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '', 'editingteacher');
@@ -1143,6 +1145,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewnewexamscard', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:assigngradeexam', CAP_ALLOW, $roleid, $context);
     unassign_capability('block/exaquest:createexam', $roleid, $context->id); // accidentally added, should be deleted
+    assign_capability('block/exaquest:forcesendexamtoreview', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'modulverantwortlicher'])) {
         $roleid = create_role('Modulverantwortlicher', 'modulverantwortlicher', '', 'editingteacher');
@@ -1201,8 +1204,9 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:createexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:setquestioncount', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:changeowner', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:skipandreleaseexam', CAP_ALLOW, $roleid, $context);
+    //assign_capability('block/exaquest:skipandreleaseexam', CAP_ALLOW, $roleid, $context);
     unassign_capability('mod/quiz:addinstance', $roleid, $context->id);
+    //unassign_capability('mod/quiz:skipandreleaseexam', $roleid, $context->id);
     //unassign_capability('mod/quiz:moodle/course:manageactivities', $roleid, $context->id); // "Prüfungen anlegen und Bearbeiten sollen nur MUSSS, PK und StudMA, nicht MOVER oder andere Rolle können"
 
     if (!$DB->record_exists('role', ['shortname' => 'fragenersteller'])) {

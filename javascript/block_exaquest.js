@@ -1,9 +1,16 @@
 $(document).on('click', '.change-exam-status-button', function (event) {
 
-    // debugger;
+    debugger;
     if (this.value == 'fachlich_release_exam') {
         if (this.getAttribute("missingquestionscount") > 0) {
             if (!confirm("Es fehlen noch " + this.getAttribute("missingquestionscount") + " Fragen. Wirklich freigeben? Zum Freigeben auf OK klicken.")) {
+                event.preventDefault(); // this prevents the form from being submitted ==> status does not change
+                return false;
+            }
+        }
+    } else if (this.value == 'force_send_exam_to_review') {
+        if (this.getAttribute("missingquestionscount") > 0) {
+            if (!confirm("Es fehlen noch " + this.getAttribute("missingquestionscount") + " Fragen. Wirklich zur Fachlichen überprüfung schicken? Zum schicken auf OK klicken.")) {
                 event.preventDefault(); // this prevents the form from being submitted ==> status does not change
                 return false;
             }

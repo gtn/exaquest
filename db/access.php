@@ -352,4 +352,9 @@ $capabilities = array(
                 'captype' => 'write',
                 'contextlevel' => CONTEXT_COURSE,
         ),
+        'block/exaquest:forcesendexamtoreview' => array( // the PK and PSM can send exam to review, regardless of being assigned to it and regardless of other users that have been assigned
+                'captype' => 'write',
+                'contextlevel' => CONTEXT_COURSE,
+        ),
+
 );

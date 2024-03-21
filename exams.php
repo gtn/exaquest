@@ -119,7 +119,8 @@ $capabilities["setquestioncount"] = has_capability('block/exaquest:setquestionco
 $capabilities["doformalreviewexam"] = has_capability('block/exaquest:doformalreviewexam', $context);
 $capabilities["dofachlichreviewexam"] = has_capability('block/exaquest:dofachlichreviewexam', $context);
 $capabilities["assigncheckexamgrading"] = has_capability("block/exaquest:assigncheckexamgrading", $context, $USER);
-$capabilities["skipandreleaseexam"] = has_capability("block/exaquest:skipandreleaseexam", $context, $USER);
+//$capabilities["skipandreleaseexam"] = has_capability("block/exaquest:skipandreleaseexam", $context, $USER);
+$capabilities["forcesendexamtoreview"] = has_capability("block/exaquest:forcesendexamtoreview", $context, $USER);
 $capabilities["assigngradeexam"] = has_capability("block/exaquest:assigngradeexam", $context, $USER);
 
 $exams = new \block_exaquest\output\exams($USER->id, $courseid, $capabilities);

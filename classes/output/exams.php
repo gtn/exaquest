@@ -40,9 +40,16 @@ class exams implements renderable, templatable {
         $this->capabilities["createnewexam"] = has_capability('mod/quiz:addinstance', \context_course::instance($COURSE->id));
         if ($capabilities["viewnewexamscard"]) {
             $this->new_exams = block_exaquest_exams_by_status($this->courseid, BLOCK_EXAQUEST_QUIZSTATUS_NEW);
-            if ($capabilities["skipandreleaseexams"]) {
+            //if ($capabilities["skipandreleaseexams"]) {
+            //    foreach ($this->new_exams as $new_exam) {
+            //        //$new_exam->skipandreleaseexam = $userid == intval($new_exam->creatorid); // why check if owner? This was never said I think. Maybe mixup with skipandrelease questions?
+            //        $new_exam->skipandreleaseexam = true;
+            //    }
+            //}
+            if ($capabilities["forcesendexamtoreview"]) {
                 foreach ($this->new_exams as $new_exam) {
-                    $new_exam->skipandreleaseexam = $userid == intval($new_exam->creatorid);
+                    $new_exam->forcesendexamtoreview = true;
+                    $new_exam->missingquestionscount = block_exaquest_get_missing_questions_count($new_exam->quizid, $courseid);
                 }
             }
             if ($capabilities["addquestiontoexam"]) {

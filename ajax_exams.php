@@ -31,6 +31,11 @@ switch ($action) {
         // remove entries in exaquestquizassign
         //$DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, ['quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS]);
         break;
+    case ('force_send_exam_to_review'):
+        // PK kann Prüfung auch zur Freigabe schicken, wenn Prüfung fertig (alle Fragen zugewiesen), aber noch nicht
+        //alle ToDos auf "erledigt" gestellt wurden
+        block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
+        break;
     case ('skipandrelease_exam'):
         block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE);
         // remove entries in exaquestquizassign, as they don't make sense anymore (set status should actually already do this..)
