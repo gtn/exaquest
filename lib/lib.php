@@ -2548,6 +2548,7 @@ function block_exaquest_assign_quiz_done_to_pk($userfrom, $userto, $comment, $qu
     }
 }
 
+/** deprecated, use block_exaquest_quizassign() instead */
 function block_exaquest_assign_quiz_fp($userto, $quizid) {
     global $DB, $COURSE;
 
@@ -2563,6 +2564,7 @@ function block_exaquest_assign_quiz_fp($userto, $quizid) {
     $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
 }
 
+/** deprecated, use block_exaquest_quizassign() instead */
 function block_exaquest_assign_quiz_fzp($userto, $quizid) {
     global $DB, $COURSE;
 
@@ -2578,6 +2580,7 @@ function block_exaquest_assign_quiz_fzp($userto, $quizid) {
     $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
 }
 
+/** deprecated, use block_exaquest_quizassign() instead */
 function block_exaquest_assign_quiz_fdp($userto, $quizid) {
     global $DB, $COURSE;
 

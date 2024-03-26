@@ -169,7 +169,7 @@ function block_exaquest_coursemodule_standard_elements($formwrapper, $mform) {
 
 // Processes the data from the course module settings form
 function block_exaquest_coursemodule_edit_post_actions($data, $course) {
-    global $CFG, $DB;
+    global $USER;
     if (is_exaquest_active_in_course()) {
         $quizid = $data->instance;
 
@@ -198,9 +198,9 @@ function block_exaquest_coursemodule_edit_post_actions($data, $course) {
 
         // set the fachlicherprüfer
         if ($data->assignfachlicherpruefer) {
-            block_exaquest_assign_quiz_fp($data->assignfachlicherpruefer, $quizid);
-            block_exaquest_assign_quiz_fzp($data->assignfachlicherzweitpruefer, $quizid);
-            block_exaquest_assign_quiz_fdp($data->assignfachlicherdrittpruefer, $quizid);
+            block_exaquest_quizassign($USER, $data->assignfachlicherpruefer, "", $quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER);
+            block_exaquest_quizassign($USER, $data->assignfachlicherzweitpruefer, "", $quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERZWEITPRUEFER);
+            block_exaquest_quizassign($USER, $data->assignfachlicherdrittpruefer, "", $quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERDRITTPRUEFER);
         }
     }
 
