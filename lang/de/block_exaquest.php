@@ -82,7 +82,7 @@ $string['please_release_question_subject'] = 'Bitte geben Sie die Frage {$a->ful
 
 $string['messageprovider:reviewquestion'] = 'Fragen wurden zum Beurteilen zugeteilt';
 $string['please_review_question'] =
-        'Bitte beurteilen Sie die Frage in <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
+        'Bitte beurteilen Sie die Frage <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}';
 $string['please_review_question_subject'] = 'Bitte beurteilen Sie die Frage {$a->fullname}';
 
 $string['messageprovider:dailytodos'] = 'Tägliche todo Nachricht';
