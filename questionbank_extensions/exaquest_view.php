@@ -396,8 +396,9 @@ class exaquest_view extends view
             // gets the parent course category for this course
             $categories = $DB->get_records('question_categories', ['contextid' => $editcontexts[1]->id]);
             //$category = end($categories); // end gives me the last element
-            $category = array_values($categories)[0]; // gives me the first element. TODO: how can I always get the default? maybe use sort?
-            // it is always the first element. Index 0 is the default category, index 1 is "top"
+            $category = array_values($categories)[1]; // gives me the first element. TODO: how can I always get the default? maybe use sort?
+            // TODO: this is not a good way to find the default category. Probably better: Create an exaquest category e.g. when creating a coursecategory and this way we are able to safely identify it
+            // it is always the first element. Index 1 is the default category, index 0 is "top"
         } else {
             throw new \coding_exception('No parent course category found');
             $category = $this->get_current_category($categoryandcontext);

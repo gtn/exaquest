@@ -1295,10 +1295,10 @@ function block_exaquest_set_up_roles() {
     //assign_capability('moodle/question:tagmine', CAP_ALLOW, $roleid, $context);
     //assign_capability('moodle/question:commentmine', CAP_ALLOW, $roleid, $context);
     //assign_capability('moodle/question:editmine', CAP_ALLOW, $roleid, $context);
-    //assign_capability('moodle/question:viewall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:viewall', CAP_ALLOW, $roleid, $context);
     //assign_capability('moodle/question:moveall', CAP_ALLOW, $roleid, $context);
-    //assign_capability('moodle/question:tagall', CAP_ALLOW, $roleid, $context);
-    //assign_capability('moodle/question:commentall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:tagall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:commentall', CAP_ALLOW, $roleid, $context);
     //assign_capability('moodle/question:editall', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'beurteilungsmitwirkende'])) {
