@@ -1256,7 +1256,7 @@ function block_exaquest_set_up_roles() {
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlfragenreviewer'])) {
         $roleid = create_role('fachl. Fragenreviewer', 'fachlfragenreviewer',
-                'This user can only create questions and see the dashboard');
+                '');
         $archetype = 0;
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
