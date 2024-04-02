@@ -98,7 +98,7 @@ class quiz_exaqueststatistics_report extends report_base {
 		$combined_array = array_combine($labels, $data);
 
 		$gradelabels = self::get_grade_labels($letters);
-		$graderanges = self::get_grade_ranges($letters);
+		$graderanges = self::get_grade_ranges($quiz, $letters);
 
 		$final_data = [];
 		foreach($graderanges as $searched_range){
@@ -109,11 +109,10 @@ class quiz_exaqueststatistics_report extends report_base {
 		$max = 100;
 		$lindex = 0;		
 		foreach($letters as $boundary=>$letter) {			
-			$line = array();			
-			$line[] = format_float($boundary,0).'-'. format_float($max,0);
+			$line = array();
+			$line[] = round($quiz->grade*format_float($boundary,2)/100).' - '. round($quiz->grade*format_float($max,2)/100);
 			$line[] = format_string($letter);
-			$line[] = $final_data[$lindex];
-			$line[] = format_float($final_data[$lindex]*2,2).' %';
+			$line[] = $final_data[$lindex];			
 			$tdata[] = $line;
 			$max = $boundary - 0.01;
 			$lindex++;			
@@ -122,9 +121,19 @@ class quiz_exaqueststatistics_report extends report_base {
 		$ptotal = 0;
 		// calculate total of participants for last row display
 		foreach($tdata as $tabledata){
-			$dtotal = $dtotal + $tabledata[2];
-			$ptotal = $ptotal + $tabledata[2]*2;
+			$dtotal = $dtotal + $tabledata[2];			
 		}
+        // calculate percentage of participants
+        $rowindex = 0;
+        $ptotal = 0;
+        foreach($letters as $boundary=>$letter) {
+                $tdata[$rowindex][3] = format_float(0,2).' %';
+                if($dtotal > 0){
+                        $tdata[$rowindex][3] = format_float(($final_data[$rowindex]/$dtotal)*100,2).' %';
+                }
+                $ptotal = $ptotal + $tdata[$rowindex][3];
+                $rowindex++;
+        }        
 		$tdata[] = array('','',$dtotal,format_float($ptotal, 2).' %');
 		
 		$table = new html_table();
@@ -197,11 +206,11 @@ class quiz_exaqueststatistics_report extends report_base {
      * @param string[] $letters The letter of grades.     
      * @return string[] The labels.
      */
-    public static function get_grade_ranges($letters) {		
+    public static function get_grade_ranges($quiz, $letters) {		
 		$bandlabels = [];
 		$max = 100;
 		foreach($letters as $boundary=>$letter) {
-			$bandlabels[] = format_float($boundary,2).' - '. format_float($max,2);
+			$bandlabels[] = round($quiz->grade*format_float($boundary,2)/100).' - '. round($quiz->grade*format_float($max,2)/100);
 			$max = $boundary - 0.01;
 		}
 
