@@ -426,3 +426,14 @@ $string['exams_for_me_to_fachlich_release_title'] = 'TODO: create exams_for_me_t
 # popuptexts:
 $string['already_requested_from'] = 'Already requested from:';
 $string['already_done'] = 'already done';
+
+$string['Test-Name'] = 'Quiz Name';
+$string['quizdatum'] = 'Quiz date and time';
+$string['timelimit'] = 'Quiz Duration';
+$string['quizattempt'] = 'Number of participants';
+$string['quizcancelattempt'] = 'Number of cancelled attempt';
+$string['statisticsheader'] = 'Distribution';
+$string['statisticspoints'] = 'Points';
+$string['statisticsgrade'] = 'Grade';
+$string['numericaldist'] = 'Numerical Distribution';
+$string['percentagedist'] = 'Percentag Distribution';
