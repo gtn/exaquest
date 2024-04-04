@@ -28,7 +28,7 @@ $output = $PAGE->get_renderer('block_exaquest');
 
 echo $output->header($context, $courseid, get_string('exams_overview', 'block_exaquest'));
 
-    $action = optional_param('action', "", PARAM_ALPHAEXT);
+$action = optional_param('action', "", PARAM_ALPHAEXT);
 if ($action == 'assign_quiz_addquestions') {
     $comment = optional_param('assignaddquestionscomment', '', PARAM_TEXT);
     $quizid = required_param('quizid', PARAM_INT);
@@ -76,7 +76,6 @@ if ($action == 'assign_quiz_addquestions') {
     $quizid = required_param('quizid', PARAM_INT);
     $quizname = $DB->get_field('quiz', 'name', array('id' => $quizid));
 
-
     //selectedusersquestions15popup_assign_gradeexam
     $selectedquestionskey = "selectedquestions" . $quizid . "popup_assign_gradeexam";
     if (array_key_exists($selectedquestionskey, $_POST) && is_array($_POST[$selectedquestionskey])) {
@@ -87,7 +86,27 @@ if ($action == 'assign_quiz_addquestions') {
     if (array_key_exists($selectedbmwkey, $_POST) && is_array($_POST[$selectedbmwkey])) {
         $selectedbmw = clean_param_array($_POST[$selectedbmwkey], PARAM_INT);
         foreach ($selectedbmw as $bmw) {
-            block_exaquest_assign_gradeexam($USER, $bmw, $comment, $quizid, $quizname, BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM, $selectedquestions);
+            block_exaquest_assign_gradeexam($USER, $bmw, $comment, $quizid, $quizname, BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM,
+                    $selectedquestions);
+        }
+    }
+} else if ($action == 'assign_kommissionell_check_exam_grading') {
+    $comment = optional_param('assign_kommissionell_check_exam_grading_comment', '', PARAM_TEXT);
+    $quizid = required_param('quizid', PARAM_INT);
+    $quizname = $DB->get_field('quiz', 'name', array('id' => $quizid));
+
+    //selectedusersquestions15popup_assign_kommissionell_check_exam_grading
+    $selectedstudentskey = "selectedstudent" . $quizid . "popup_assign_kommissionell_check_exam_grading";
+    if (array_key_exists($selectedstudentskey, $_POST) && is_array($_POST[$selectedstudentskey])) {
+        $selectedstudents = clean_param_array($_POST[$selectedstudentskey], PARAM_INT);
+    }
+
+    $selectedfpkey = "selectedfp" . $quizid . "popup_assign_kommissionell_check_exam_grading";
+    if (array_key_exists($selectedfpkey, $_POST) && is_array($_POST[$selectedfpkey])) {
+        $selectedfp = clean_param_array($_POST[$selectedfpkey], PARAM_INT);
+        foreach ($selectedfp as $fp) {
+            block_exaquest_assign_kommissionell_check_exam_grading($USER, $fp, $comment, $quizid, $quizname, BLOCK_EXAQUEST_QUIZASSIGNTYPE_KOMMISSIONELL_CHECK_EXAM_GRADING,
+                    $selectedstudents);
         }
     }
 } else if ($action == 'assign_change_exam_grading') {
@@ -100,7 +119,6 @@ if ($action == 'assign_quiz_addquestions') {
                 BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHANGE_EXAM_GRADING);
     }
 }
-
 
 // RENDER:
 $capabilities = [];

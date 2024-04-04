@@ -232,6 +232,13 @@ class exams implements renderable, templatable {
                 // add popup_assign_check_exam_grading to every finished exam that is graded:
                 $popup = new popup_assign_check_exam_grading($this->courseid, $finished_exam->quizid);
                 $finished_exam->popup_assign_check_exam_grading = $popup->export_for_template($output);
+
+                // add popup_assign_check_exam_grading to every finished exam that is graded:
+                $popup = new popup_assign_kommissionell_check_exam_grading($this->courseid, $finished_exam->quizid);
+                $finished_exam->popup_assign_kommissionell_check_exam_grading = $popup->export_for_template($output);
+
+
+
             }
         }
 

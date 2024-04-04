@@ -98,20 +98,20 @@ function block_exaquest_coursemodule_standard_elements($formwrapper, $mform) {
                             $fachlicherpruefer->firstname . ' ' . $fachlicherpruefer->lastname;
                 }
                 $mform->addElement('select', 'assignfachlicherpruefer', 'Fachlichen Prüfer auswählen', $fachlichepruefer_options);
-                $mform->addElement('select', 'assignfachlicherzweitpruefer', 'Fachlichen Zweitprüfer auswählen',
-                        array_merge(array(''), $fachlichepruefer_options));
-                $mform->addElement('select', 'assignfachlicherdrittpruefer', 'Fachlichen Drittprüfer auswählen',
-                        array_merge(array(''), $fachlichepruefer_options));
+                //$mform->addElement('select', 'assignfachlicherzweitpruefer', 'Fachlichen Zweitprüfer auswählen',
+                //        array_merge(array(''), $fachlichepruefer_options));
+                //$mform->addElement('select', 'assignfachlicherdrittpruefer', 'Fachlichen Drittprüfer auswählen',
+                //        array_merge(array(''), $fachlichepruefer_options));
                 if ($quizid) {
                     // get the assigned fachlicherprüfer
                     $assignedfachlicherpruefer = block_exaquest_get_assigned_fachlicherpruefer($quizid);
                     $mform->setDefault('assignfachlicherpruefer', $assignedfachlicherpruefer->assigneeid);
 
-                    $assignedfachlicherpruefer = block_exaquest_get_assigned_fachlicherzweitpruefer($quizid);
-                    $mform->setDefault('assignfachlicherzweitpruefer', $assignedfachlicherpruefer->assigneeid);
-
-                    $assignedfachlicherpruefer = block_exaquest_get_assigned_fachlicherdrittpruefer($quizid);
-                    $mform->setDefault('assignfachlicherdrittpruefer', $assignedfachlicherpruefer->assigneeid);
+                    //$assignedfachlicherpruefer = block_exaquest_get_assigned_fachlicherzweitpruefer($quizid);
+                    //$mform->setDefault('assignfachlicherzweitpruefer', $assignedfachlicherpruefer->assigneeid);
+                    //
+                    //$assignedfachlicherpruefer = block_exaquest_get_assigned_fachlicherdrittpruefer($quizid);
+                    //$mform->setDefault('assignfachlicherdrittpruefer', $assignedfachlicherpruefer->assigneeid);
                 }
             }
 
@@ -199,8 +199,8 @@ function block_exaquest_coursemodule_edit_post_actions($data, $course) {
         // set the fachlicherprüfer
         if ($data->assignfachlicherpruefer) {
             block_exaquest_quizassign($USER, $data->assignfachlicherpruefer, "", $quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER);
-            block_exaquest_quizassign($USER, $data->assignfachlicherzweitpruefer, "", $quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERZWEITPRUEFER);
-            block_exaquest_quizassign($USER, $data->assignfachlicherdrittpruefer, "", $quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERDRITTPRUEFER);
+            //block_exaquest_quizassign($USER, $data->assignfachlicherzweitpruefer, "", $quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERZWEITPRUEFER);
+            //block_exaquest_quizassign($USER, $data->assignfachlicherdrittpruefer, "", $quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERDRITTPRUEFER);
         }
     }
 

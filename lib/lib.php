@@ -87,6 +87,7 @@ const BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHANGE_EXAM_GRADING = 9;
 // TODO add quizassigntype for finished exam for the PK
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN = 10;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE = 11;
+const BLOCK_EXAQUEST_QUIZASSIGNTYPE_KOMMISSIONELL_CHECK_EXAM_GRADING = 12;
 
 /**
  * Filter Status
@@ -2401,6 +2402,33 @@ function block_exaquest_assign_check_exam_grading($userfrom, $userto, $comment, 
     $subject = get_string('please_check_exam_grading_subject', 'block_exaquest', $messageobject);
     block_exaquest_send_moodle_notification("checkexamgrading", $userfrom->id, $userto, $subject, $message,
             "checkexamgrading", $messageobject->url);
+}
+
+function block_exaquest_assign_kommissionell_check_exam_grading($userfrom, $userto, $comment, $quizid, $quizname = null,
+        $assigntype = null, $selectedstudents = null) {
+    global $COURSE, $DB;
+
+    // TODO adapt for assign_kommissionell instead of gradeexam
+
+    //add the $selectedstudents to the comment
+    $comment .= "\n\n" . get_string('selected_students', 'block_exaquest') . "\n";
+    foreach ($selectedstudents as $selectedstudent) {
+        $student = $DB->get_record('user', array('id' => $selectedstudent));
+        $comment .= $student->firstname . " " . $student->lastname . "\n";
+    }
+
+    block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assigntype);
+
+    // create the message
+    $messageobject = new stdClass;
+    $messageobject->fullname = $quizname;
+    $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
+    $messageobject->url = $messageobject->url->raw_out(false);
+    $messageobject->requestcomment = $comment;
+    $message = get_string('please_kommissionell_check_exam_grading', 'block_exaquest', $messageobject);
+    $subject = get_string('please_kommissionell_check_exam_grading_subject', 'block_exaquest', $messageobject);
+    block_exaquest_send_moodle_notification("kommissionellcheckexamgrading", $userfrom->id, $userto, $subject, $message,
+            "kommissionellcheckexamgrading", $messageobject->url);
 }
 
 function block_exaquest_assign_change_exam_grading($userfrom, $userto, $comment, $quizid, $quizname = null,

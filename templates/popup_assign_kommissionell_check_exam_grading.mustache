@@ -1,0 +1,54 @@
+<button class="btn btn-secondary w-100" data-toggle="modal" data-target="#assignKommissionellCheckExamGradingModal{{quizid}}">
+    {{#str}}assign_kommissionell_check_exam_grading, block_exaquest {{/str}}
+    <!--    <i class="icon fa fa-plus fa-fw "></i>-->
+</button>
+<div class="modal fade" id="assignKommissionellCheckExamGradingModal{{quizid}}" tabindex="-1"
+     aria-labelledby="assignKommissionellCheckExamGradingModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{#str}}assign_kommissionell_check_exam_grading, block_exaquest {{/str}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" action="{{action}}" id="assign_kommissionell_check_exam_grading_form{{quizid}}">
+                <input type="hidden" id="quizid" name="quizid" value={{quizid}}>
+                <div class="modal-body">
+                    <!--                list of already assigned persons -->
+                    <list>
+                        <ul class="list-group popuplist">
+                            {{#str}}already_requested_from, block_exaquest {{/str}}
+                            {{#assigned_persons}}
+                                <li {{#done}} class="assignment_done" {{/done}}>{{firstname}} {{lastname}}{{#done}}: {{#str}}already_done, block_exaquest {{/str}} {{/done}}</li>
+                            {{/assigned_persons}}
+                        </ul>
+                    </list>
+                    <p></p>
+                    <div class="form-group">{{#str}}
+                        assign_kommissionell_check_exam_grading_label, block_exaquest {{/str}}
+                        {{{ fp_autocomplete_html }}}
+                    </div>
+
+                    <div class="form-group">{{#str}}
+                        select_students_label, block_exaquest {{/str}}
+                        {{{ student_autocomplete_html }}}
+                    </div>
+
+                    <div class="form-group">
+                        <textarea class="form-control assign_kommissionell_check_exam_grading_comment" name="assign_kommissionell_check_exam_grading_comment" id="assign_kommissionell_check_exam_grading_comment"
+                                  rows="3"
+                                  placeholder="{{#str}}assign_kommissionell_check_exam_grading_comment_placeholder, block_exaquest {{/str}}"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit"
+                           value="{{#str}} request_questions_button, block_exaquest {{/str}}"
+                           class="btn btn-primary assign_kommissionell_check_exam_grading_submit">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

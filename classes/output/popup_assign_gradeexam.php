@@ -56,7 +56,7 @@ class popup_assign_gradeexam implements renderable, templatable {
         $significant_questions = $this->significant_questions;
         // get the question names
 
-        // create the bmw autocomplete field with the help of an mform
+        // create the question autocomplete field with the help of an mform
         $mform = new autofill_helper_form($significant_questions);
         // the choosable options need to be an array of strings
         $autocompleteoptions = [];

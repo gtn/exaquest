@@ -43,6 +43,12 @@ $messageproviders = array(
                         'email' => MESSAGE_PERMITTED,
                 ],
         ),
+        'kommissionellcheckexamgrading' => array(
+                'defaults' => [
+                        'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+                        'email' => MESSAGE_PERMITTED,
+                ],
+        ),
         'changeexamgrading' => array(
                 'defaults' => [
                         'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
