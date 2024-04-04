@@ -85,6 +85,7 @@ class remove_from_quiz extends column_base {
                         }).done(function (ret) {
                             console.log(data.action, 'ret', ret);
                             location.reload();
+                            // TODO: Instead of pagereload, which would be the simple solution: only update that row, which is far better for usability but more complex to code.
                         }).fail(function (ret) {
                             var errorMsg = '';
                             if (ret.responseText[0] == '<') {

@@ -26,6 +26,7 @@
  * DATABSE TABLE NAMES
  */
 
+use block_exaquest\output\popup_exams_for_me_to_fachlich_release;
 use qbank_managecategories\helper;
 
 const BLOCK_EXAQUEST_DB_QUESTIONSTATUS = 'block_exaquestquestionstatus';
@@ -747,8 +748,12 @@ function block_exaquest_get_exams_finished_grading_done_count($userid) {
             BLOCK_EXAQUEST_QUIZSTATUS_FINISHED));
 }
 
-function block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, $assigntype, $quizstatus) {
+function block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, $assigntype, $quizstatus, $courseid = 0) {
     global $DB, $USER, $COURSE;
+
+    if ($courseid == 0) {
+        $courseid = $COURSE->id;
+    }
 
     if (!$userid) {
         $userid = $USER->id;
@@ -768,7 +773,7 @@ function block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, $
     // The quiz would not show up in the e.g. new-exams but the assignment would
 
     $quizzes = $DB->get_records_sql($sql,
-            array('userid' => $userid, 'assigntype' => $assigntype, 'quizstatus' => $quizstatus, 'courseid' => $COURSE->id));
+            array('userid' => $userid, 'assigntype' => $assigntype, 'quizstatus' => $quizstatus, 'courseid' => $courseid));
     return $quizzes;
 }
 
@@ -908,7 +913,7 @@ function block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid, $as
  * @param $courseid
  * @return array
  */
-function block_exaquest_get_assigned_exams_by_assigntype_count($courseid, $userid, $assigntype) {
+function block_exaquest_get_assigned_quizzes_by_assigntype_count($courseid, $userid, $assigntype) {
     return count(block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid, $assigntype));
 }
 
@@ -1880,6 +1885,7 @@ function block_exaquest_get_relevant_courses_for_user($userid = null) {
  *     but this will lead to a count of 0 for those todos, which means, it does not matter. No capabilities check needed.
  */
 function block_exaquest_get_todo_count($userid, $coursecategoryid, $questioncategoryid, $context, $courseid) {
+    // question todos
     $questions_for_me_to_create_count =
             block_exaquest_get_questions_for_me_to_create_count($coursecategoryid, $userid);
     $questions_for_me_to_review_count =
@@ -1895,21 +1901,29 @@ function block_exaquest_get_todo_count($userid, $coursecategoryid, $questioncate
 
     $my_questions_to_submit_count =
             block_exaquest_get_my_questionbankentries_to_submit_count($questioncategoryid, $userid);
+
+    // exams todos
+
     //$exams_for_me_to_create_count =
     //    block_exaquest_get_exams_for_me_to_create_count($coursecategoryid, $userid);
-    $exams_for_me_to_fill_count = block_exaquest_get_assigned_exams_by_assigntype_count($courseid, $userid,
+    $exams_for_me_to_fill_count = block_exaquest_get_assigned_quizzes_by_assigntype_count($courseid, $userid,
             BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
 
-    $exams_for_me_to_check_grading_count = block_exaquest_get_assigned_exams_by_assigntype_count($courseid, $userid,
+    $exams_for_me_to_check_grading_count = block_exaquest_get_assigned_quizzes_by_assigntype_count($courseid, $userid,
             BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
-    $exams_for_me_to_grade_count = block_exaquest_get_assigned_exams_by_assigntype_count($courseid, $userid,
+    $exams_for_me_to_grade_count = block_exaquest_get_assigned_quizzes_by_assigntype_count($courseid, $userid,
             BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM);
-    $exams_for_me_to_change_grading_count = block_exaquest_get_assigned_exams_by_assigntype_count($courseid, $userid,
+    $exams_for_me_to_change_grading_count = block_exaquest_get_assigned_quizzes_by_assigntype_count($courseid, $userid,
             BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHANGE_EXAM_GRADING);
+
+    // there is no direct assignment to fachlich release, only to be the FACHLICHERPRUEFER and when the status is CREATED it means the FP has a todoo.
+    $exams_to_fachlich_release = count(block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
+            BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER, BLOCK_EXAQUEST_QUIZSTATUS_CREATED, $courseid));
 
     return $questions_for_me_to_create_count + $questions_for_me_to_review_count + $questions_for_me_to_revise_count +
             $questions_finalised_count + $exams_for_me_to_fill_count + $my_questions_to_submit_count +
-            $exams_for_me_to_check_grading_count + $exams_for_me_to_grade_count + $exams_for_me_to_change_grading_count;
+            $exams_for_me_to_check_grading_count + $exams_for_me_to_grade_count + $exams_for_me_to_change_grading_count +
+            $exams_to_fachlich_release;
 }
 
 function block_exaquest_is_user_in_course($userid, $courseid) {
