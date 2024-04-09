@@ -727,5 +727,19 @@ function xmldb_block_exaquest_upgrade($oldversion) {
         upgrade_block_savepoint(true, 2024040400, 'exaquest');
     }
 
+    // add the field "customdata" <FIELD NAME="customdata" TYPE="int" LENGTH="1000" NOTNULL="false" SEQUENCE="false"
+    //                       COMMENT="Customdata. For example for the 'kommissionelle Prüfung' it stores the studentid"/>
+    // to the table "block_exaquestquizassign"
+    if ($oldversion < 2024040902) {
+        $table = new xmldb_table('block_exaquestquizassign');
+        $field = new xmldb_field('customdata', XMLDB_TYPE_CHAR, '1000', null, null, null, null);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2024040902, 'exaquest');
+    }
+
+
     return $return_result;
 }

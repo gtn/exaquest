@@ -103,19 +103,25 @@ if ($capabilities["fachlicherpruefer"]) {
     //$created_exams = block_exaquest_exams_by_status($courseid, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
     //// created exams where the user is fp are the exams_to_fachlich_release. The intersection on the field "quizid" is the result.
     //$exams_to_fachlich_release = block_exaquest_array_intersect_field($created_exams, $exams_fp, 'quizid');
-    $exams_to_fachlich_release = block_exaquest_get_assigned_quizzes_by_assigntype_and_status($USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER, BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
+    $exams_to_fachlich_release =
+            block_exaquest_get_assigned_quizzes_by_assigntype_and_status($USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER,
+                    BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
 }
 
 $exams_to_check_grading = [];
 if ($capabilities["checkexamsgrading"]) {
     $exams_to_check_grading =
             block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
+    $kommissionell_exams_to_check_grading =
+            block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id,
+                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_KOMMISSIONELL_CHECK_EXAM_GRADING);
 }
 
 $exams_to_change_grading = [];
 if ($capabilities["changeexamsgrading"]) {
     $exams_to_change_grading =
-            block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHANGE_EXAM_GRADING);
+            block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id,
+                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHANGE_EXAM_GRADING);
 }
 
 $exams_to_grade = [];
@@ -125,7 +131,8 @@ if ($capabilities["gradequestion"]) {
 }
 
 $dashboard = new \block_exaquest\output\dashboard($USER->id, $courseid, $capabilities, $fragenersteller, $questions_to_create,
-        $coursecategoryid, $questioncategoryid, $fachlichepruefer, $exams_to_fill, $exams_to_check_grading, $exams_to_grade, $exams_to_change_grading, $exams_to_fachlich_release);
+        $coursecategoryid, $questioncategoryid, $fachlichepruefer, $exams_to_fill, $exams_to_check_grading, $exams_to_grade,
+        $exams_to_change_grading, $exams_to_fachlich_release, $kommissionell_exams_to_check_grading);
 echo $output->render($dashboard);
 
 // This is the code for rendering the create-questions-button with moodle-core functions. It is moved to the correct position with javascript.

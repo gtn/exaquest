@@ -2408,27 +2408,25 @@ function block_exaquest_assign_kommissionell_check_exam_grading($userfrom, $user
         $assigntype = null, $selectedstudents = null) {
     global $COURSE, $DB;
 
-    // TODO adapt for assign_kommissionell instead of gradeexam
-
     //add the $selectedstudents to the comment
-    $comment .= "\n\n" . get_string('selected_students', 'block_exaquest') . "\n";
+    $comment .= "\n\n" . get_string('selected_student', 'block_exaquest') . "\n";
     foreach ($selectedstudents as $selectedstudent) {
+        $single_comment = $comment; // a comment per assigned student
         $student = $DB->get_record('user', array('id' => $selectedstudent));
-        $comment .= $student->firstname . " " . $student->lastname . "\n";
+        $single_comment .= $student->firstname . " " . $student->lastname . "\n";
+        block_exaquest_quizassign($userfrom, $userto, $single_comment, $quizid, $assigntype, $selectedstudent);
+
+        // create the message
+        $messageobject = new stdClass;
+        $messageobject->fullname = $quizname;
+        $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
+        $messageobject->url = $messageobject->url->raw_out(false);
+        $messageobject->requestcomment = $single_comment;
+        $message = get_string('please_kommissionell_check_exam_grading', 'block_exaquest', $messageobject);
+        $subject = get_string('please_kommissionell_check_exam_grading_subject', 'block_exaquest', $messageobject);
+        block_exaquest_send_moodle_notification("kommissionellcheckexamgrading", $userfrom->id, $userto, $subject, $message,
+                "kommissionellcheckexamgrading", $messageobject->url);
     }
-
-    block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assigntype);
-
-    // create the message
-    $messageobject = new stdClass;
-    $messageobject->fullname = $quizname;
-    $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
-    $messageobject->url = $messageobject->url->raw_out(false);
-    $messageobject->requestcomment = $comment;
-    $message = get_string('please_kommissionell_check_exam_grading', 'block_exaquest', $messageobject);
-    $subject = get_string('please_kommissionell_check_exam_grading_subject', 'block_exaquest', $messageobject);
-    block_exaquest_send_moodle_notification("kommissionellcheckexamgrading", $userfrom->id, $userto, $subject, $message,
-            "kommissionellcheckexamgrading", $messageobject->url);
 }
 
 function block_exaquest_assign_change_exam_grading($userfrom, $userto, $comment, $quizid, $quizname = null,
@@ -2483,7 +2481,7 @@ function block_exaquest_assign_gradeexam($userfrom, $userto, $comment, $quizid, 
  * @return bool true if a new assignment is made, false if not (if it is just reset to done=false)
  * @throws dml_exception
  */
-function block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assigntype = null) {
+function block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assigntype = null, $customdata = null) {
     global $DB;
 
     // check $userto and $userfrom if they are objects or the ids
@@ -2498,16 +2496,16 @@ function block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assig
         $userfromid = $userfrom;
     }
 
-    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that exact quizid, assigneeid and assigntype.
     // enter data into the exaquest tables
     $assigndata = new stdClass;
     $assigndata->quizid = $quizid;
     $assigndata->assigneeid = $usertoid;
     $assigndata->assignerid = $userfromid;
     $assigndata->assigntype = $assigntype;
+    $assigndata->customdata = $customdata;
     //if that assignment does not exist yet, create it
     $quizassignid = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZASSIGN,
-            array('quizid' => $quizid, 'assigneeid' => $usertoid, 'assigntype' => $assigntype))->id;
+            array('quizid' => $quizid, 'assigneeid' => $usertoid, 'assigntype' => $assigntype, 'customdata' => $customdata))->id;
     if (!$quizassignid) {
         $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
         $newlyassigned = true;
@@ -2591,52 +2589,52 @@ function block_exaquest_assign_quiz_done_to_pk($userfrom, $userto, $comment, $qu
 }
 
 /** deprecated, use block_exaquest_quizassign() instead */
-function block_exaquest_assign_quiz_fp($userto, $quizid) {
-    global $DB, $COURSE;
-
-    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that quizid and assigntype, as it should be overridden (there can only be one)
-    $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
-            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER));
-
-    // enter data into the exaquest tables
-    $assigndata = new stdClass;
-    $assigndata->quizid = $quizid;
-    $assigndata->assigneeid = $userto;
-    $assigndata->assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER;
-    $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
-}
-
-/** deprecated, use block_exaquest_quizassign() instead */
-function block_exaquest_assign_quiz_fzp($userto, $quizid) {
-    global $DB, $COURSE;
-
-    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that quizid and assigntype, as it should be overridden (there can only be one)
-    $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
-            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERZWEITPRUEFER));
-
-    // enter data into the exaquest tables
-    $assigndata = new stdClass;
-    $assigndata->quizid = $quizid;
-    $assigndata->assigneeid = $userto;
-    $assigndata->assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERZWEITPRUEFER;
-    $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
-}
+//function block_exaquest_assign_quiz_fp($userto, $quizid) {
+//    global $DB, $COURSE;
+//
+//    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that quizid and assigntype, as it should be overridden (there can only be one)
+//    $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+//            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER));
+//
+//    // enter data into the exaquest tables
+//    $assigndata = new stdClass;
+//    $assigndata->quizid = $quizid;
+//    $assigndata->assigneeid = $userto;
+//    $assigndata->assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER;
+//    $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
+//}
 
 /** deprecated, use block_exaquest_quizassign() instead */
-function block_exaquest_assign_quiz_fdp($userto, $quizid) {
-    global $DB, $COURSE;
+//function block_exaquest_assign_quiz_fzp($userto, $quizid) {
+//    global $DB, $COURSE;
+//
+//    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that quizid and assigntype, as it should be overridden (there can only be one)
+//    $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+//            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERZWEITPRUEFER));
+//
+//    // enter data into the exaquest tables
+//    $assigndata = new stdClass;
+//    $assigndata->quizid = $quizid;
+//    $assigndata->assigneeid = $userto;
+//    $assigndata->assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERZWEITPRUEFER;
+//    $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
+//}
 
-    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that quizid and assigntype, as it should be overridden (there can only be one)
-    $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
-            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERDRITTPRUEFER));
-
-    // enter data into the exaquest tables
-    $assigndata = new stdClass;
-    $assigndata->quizid = $quizid;
-    $assigndata->assigneeid = $userto;
-    $assigndata->assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERDRITTPRUEFER;
-    $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
-}
+/** deprecated, use block_exaquest_quizassign() instead */
+//function block_exaquest_assign_quiz_fdp($userto, $quizid) {
+//    global $DB, $COURSE;
+//
+//    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that quizid and assigntype, as it should be overridden (there can only be one)
+//    $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+//            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERDRITTPRUEFER));
+//
+//    // enter data into the exaquest tables
+//    $assigndata = new stdClass;
+//    $assigndata->quizid = $quizid;
+//    $assigndata->assigneeid = $userto;
+//    $assigndata->assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERDRITTPRUEFER;
+//    $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
+//}
 
 function block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid, $show_deleted = false) {
     global $DB;

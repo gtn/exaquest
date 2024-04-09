@@ -21,7 +21,7 @@ class dashboard implements renderable, templatable {
     public function __construct($userid, $courseid, $capabilities, $fragenersteller, $questions_to_create, $coursecategoryid,
             $questioncategoryid,
             $fachlichepruefer, $exams_to_fill, $exams_to_check_grading, $exams_to_grade, $exams_to_change_grading,
-            $exams_to_fachlich_release) {
+            $exams_to_fachlich_release, $kommissionell_exams_to_check_grading) {
         $this->catAndCont = get_question_category_and_context_of_course();
         $this->courseid = $courseid;
         $this->capabilities = $capabilities;
@@ -45,6 +45,9 @@ class dashboard implements renderable, templatable {
 
         $this->popup_exams_for_me_to_check_grading = new popup_exams_for_me_to_check_grading($exams_to_check_grading);
         $this->exams_for_me_to_check_grading_count = count($exams_to_check_grading);
+
+        $this->popup_kommissionell_exams_for_me_to_check_grading = new popup_kommissionell_exams_for_me_to_check_grading($kommissionell_exams_to_check_grading);
+        $this->kommissionell_exams_for_me_to_check_grading_count = count($kommissionell_exams_to_check_grading);
 
         $this->popup_exams_for_me_to_grade = new popup_exams_for_me_to_grade($exams_to_grade);
         $this->exams_for_me_to_grade_count = count($exams_to_grade);
@@ -225,6 +228,9 @@ class dashboard implements renderable, templatable {
 
         $data->popup_exams_for_me_to_check_grading = $this->popup_exams_for_me_to_check_grading->export_for_template($output);
         $data->exams_for_me_to_check_grading_count = $this->exams_for_me_to_check_grading_count;
+
+        $data->popup_kommissionell_exams_for_me_to_check_grading = $this->popup_kommissionell_exams_for_me_to_check_grading->export_for_template($output);
+        $data->kommissionell_exams_for_me_to_check_grading_count = $this->kommissionell_exams_for_me_to_check_grading_count;
 
         $data->popup_exams_for_me_to_change_grading = $this->popup_exams_for_me_to_change_grading->export_for_template($output);
         $data->exams_for_me_to_change_grading_count = $this->exams_for_me_to_change_grading_count;

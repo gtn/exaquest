@@ -43,14 +43,14 @@
                                     {{>block_exaquest/button_fachlich_release_exam}}
                                 </td>
                             {{/fachlichreleaseexam}}
-<!--                            {{#skipandreleaseexam}}-->
-<!--                                <td>-->
-<!--                                    <button type="submit" class="btn btn-primary change-exam-status-button"-->
-<!--                                            value="skipandrelease_exam" quizid={{quizid}} courseid={{courseid}}>Prüfung-->
-<!--                                        finalisieren und freigeben-->
-<!--                                    </button>-->
-<!--                                </td>-->
-<!--                            {{/skipandreleaseexam}}-->
+                                <!--                            {{#skipandreleaseexam}}-->
+                            <!--                                <td>-->
+                            <!--                                    <button type="submit" class="btn btn-primary change-exam-status-button"-->
+                            <!--                                            value="skipandrelease_exam" quizid={{quizid}} courseid={{courseid}}>Prüfung-->
+                            <!--                                        finalisieren und freigeben-->
+                            <!--                                    </button>-->
+                            <!--                                </td>-->
+                                <!--                            {{/skipandreleaseexam}}-->
                             {{#assignaddquestions}}
                                 <td>
                                     {{#popup_assign_addquestions}}
@@ -201,7 +201,8 @@
                             {{#fp_assigned_to_check_grading}}
                                 <td>
                                     <button type="submit" class="btn btn-secondary change-exam-status-button"
-                                            value="release_grades_for_fp_as_pk" quizid={{quizid}} courseid={{courseid}}>Prüfungsbeurteilung anstelle des Fachlichen Prüfers freigeben
+                                            value="release_grades_for_fp_as_pk" quizid={{quizid}} courseid={{courseid}}>Prüfungsbeurteilung anstelle des Fachlichen Prüfers
+                                        freigeben
                                     </button>
                                 </td>
                             {{/fp_assigned_to_check_grading}}
@@ -231,9 +232,21 @@
                                 <td>
                                     {{#popup_assign_check_exam_grading}}
                                         {{>block_exaquest/popup_assign_check_exam_grading}}
-                                    {{/popup_assign_check_exam_grading}}
+                                    {{/popup_assign_check_exam_grading}}sss
                                 </td>
                             {{/assigned_to_check_grading}}
+
+<!--                            TODO-->
+                            {{#assigned_to_kommissionell_check_grading}}
+                                <td>
+                                    {{#popup_kommissionell_exams_for_me_to_check_grading}}
+                                        {{>block_exaquest/popup_kommissionell_exams_for_me_to_check_grading}}
+                                    {{/popup_kommissionell_exams_for_me_to_check_grading}}
+<!--                                    <button type="submit" class="btn btn-primary change-exam-status-button"-->
+<!--                                            value="release_grades_for_student" quizid={{quizid}} courseid={{courseid}}>Kommissionelle Prüfungsbeurteilung...-->
+<!--                                    </button>-->
+                                </td>
+                            {{/assigned_to_kommissionell_check_grading}}
 
 
                             {{#assigngradeexam}}

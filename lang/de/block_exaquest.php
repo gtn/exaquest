@@ -418,6 +418,8 @@ $string['select_questions_label'] = 'Fragen auswählen';
 $string['assign_gradeexam_comment_placeholder'] = 'Kommentar';
 $string['exams_for_me_to_check_grading'] = 'Prüfungen deren Beurteilung ich überprüfen soll';
 $string['exams_for_me_to_check_grading_title'] = 'Prüfungen deren Beurteilung ich überprüfen soll';
+$string['kommissionell_exams_for_me_to_check_grading'] = 'Kommissionelle Prüfungen deren Beurteilung ich überprüfen soll';
+$string['kommissionell_exams_for_me_to_check_grading_title'] = 'Kommissionelle Prüfungen deren Beurteilung ich überprüfen soll';
 $string['exams_for_me_to_grade'] = 'Prüfungen soll ich beurteilen';
 $string['exams_for_me_to_grade_title'] = 'Prüfungen die ich beurteilen soll';
 $string['please_change_exam_grading'] = 'Bitte ändern Sie die Beurteilung der Prüfung <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}... Angefordert von: {$a->requester}';

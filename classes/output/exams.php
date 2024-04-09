@@ -115,6 +115,14 @@ class exams implements renderable, templatable {
                 }
             }
 
+            $exams_to_kommissionell_check_grading = block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid,
+                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_KOMMISSIONELL_CHECK_EXAM_GRADING);
+            foreach ($exams_to_kommissionell_check_grading as $exam_to_kommissionell_check_grading) {
+                if ($finished_exams[$exam_to_kommissionell_check_grading->quizid]) {
+                    $finished_exams[$exam_to_kommissionell_check_grading->quizid]->assigned_to_kommissionell_check_grading = true;
+                }
+            }
+
             // If exams_to_grade and exams_to_check_grading overlap it does not really make sense, but still it should be covered:
             $exams_to_grade =
                     block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM);
@@ -236,16 +244,28 @@ class exams implements renderable, templatable {
                 // add popup_assign_check_exam_grading to every finished exam that is graded:
                 $popup = new popup_assign_kommissionell_check_exam_grading($this->courseid, $finished_exam->quizid);
                 $finished_exam->popup_assign_kommissionell_check_exam_grading = $popup->export_for_template($output);
-
-
-
             }
-        }
 
-        // add popup_assign_change_exam_grading to every finished exam: (TODO: when is this shown?)
-        foreach ($data->finished_exams as $finished_exam) {
+            // add popup_assign_change_exam_grading to every finished exam: (TODO: when is this shown?)
             $popup = new popup_assign_change_exam_grading($finished_exam->quizid);
             $finished_exam->popup_assign_change_exam_grading = $popup->export_for_template($output);
+
+            // TODO: show the same as in dashboard, but not for every exam and student combination, but instead of every THIS exam and student combination
+            // TODO: more performant solution possible... for now, get the exams like in dashboard
+            if ($this->capabilities["checkexamsgrading"]) {
+                $kommissionell_exams_to_check_grading =
+                        block_exaquest_get_assigned_exams_by_assigntype($this->courseid, $this->userid,
+                                BLOCK_EXAQUEST_QUIZASSIGNTYPE_KOMMISSIONELL_CHECK_EXAM_GRADING);
+            }
+            // filter for the current exam
+            if($kommissionell_exams_to_check_grading){
+                $kommissionell_exams_to_check_grading = array_filter($kommissionell_exams_to_check_grading,
+                        function($exam) use ($finished_exam) {
+                            return $exam->quizid == $finished_exam->quizid;
+                        });
+                $popup = new popup_kommissionell_exams_for_me_to_check_grading($kommissionell_exams_to_check_grading);
+                $finished_exam->popup_kommissionell_exams_for_me_to_check_grading = $popup->export_for_template($output);
+            }
         }
 
         return $data;
