@@ -1157,9 +1157,10 @@ function block_exaquest_set_up_roles() {
     unassign_capability('block/exaquest:createexam', $roleid, $context->id); // accidentally added, should be deleted
     assign_capability('block/exaquest:forcesendexamtoreview', CAP_ALLOW, $roleid, $context);
 
+    // rework capabilities documentation: start from archetype 0. Almost no rights in exam page needed. Some rights needed for question page.
     if (!$DB->record_exists('role', ['shortname' => 'modulverantwortlicher'])) {
-        $roleid = create_role('Modulverantwortlicher', 'modulverantwortlicher', '', 'editingteacher');
-        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
+        $roleid = create_role('Modulverantwortlicher', 'modulverantwortlicher', '');
+        $archetype = 0; // completely clean, no capabilities
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
                 $options); // overwrites everything that is set in the options. The rest stays.
@@ -1168,9 +1169,8 @@ function block_exaquest_set_up_roles() {
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
-
-        // allow setting role at context level "course category"
-        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
+        // allow setting role at context level "course category" and "course"
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'modulverantwortlicher'])->id;
     }
@@ -1215,13 +1215,30 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:setquestioncount', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:changeowner', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:skipandreleaseexam', CAP_ALLOW, $roleid, $context);
-    unassign_capability('mod/quiz:addinstance', $roleid, $context->id);
     //unassign_capability('mod/quiz:skipandreleaseexam', $roleid, $context->id);
     //unassign_capability('mod/quiz:moodle/course:manageactivities', $roleid, $context->id); // "Prüfungen anlegen und Bearbeiten sollen nur MUSSS, PK und StudMA, nicht MOVER oder andere Rolle können"
 
+    //moodle capabilities:
+    assign_capability('moodle/question:add', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:viewmine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:movemine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:tagmine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:commentmine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:editmine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:viewall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:moveall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:tagall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:commentall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:editall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:usemine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:useall', CAP_ALLOW, $roleid, $context);
+
+    // UNASSIGN CAPABILITIES from editinteacher. probably not the way to go, but instead start with archetype = 0
+    //unassign_capability('mod/quiz:addinstance', $roleid, $context->id);
+
     if (!$DB->record_exists('role', ['shortname' => 'fragenersteller'])) {
         $roleid = create_role('Fragenersteller', 'fragenersteller', 'This user can only create questions and see the dashboard');
-        $archetype = 0;
+        $archetype = 0; // completely clean, no capabilities
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
                 $options); // overwrites everything that is set in the options. The rest stays.
