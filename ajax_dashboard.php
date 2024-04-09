@@ -28,6 +28,7 @@ switch ($action) {
         $requestid = required_param('requestid', PARAM_INT);
         $DB->delete_records(BLOCK_EXAQUEST_DB_REQUESTQUEST, array('id' => $requestid));
         break;
+    case ('mark_kommissionell_check_grading_as_done'): // the logic is the same: set this request to done, check if grading should be released
     case ('mark_check_exam_grading_request_as_done'):
         $requestid = required_param('requestid', PARAM_INT);
         // get the quiz with this requestid
@@ -36,7 +37,6 @@ switch ($action) {
         $DB->set_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'done', 1, array('id' => $requestid));
         // check if every assignment of this kind is done for this quiz
         block_exaquest_check_if_grades_should_be_released($quizid);
-
         /*
          * Wurden mehrere BMW ausgewählt, ist die Beurteilung erst freigeben, sobald
             alle BMWs ihre Teil-Begutachtung/-Freigabe der Beurteilung abgeschlossen

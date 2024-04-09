@@ -2883,6 +2883,7 @@ function block_exaquest_check_if_exam_is_ready($quizid) {
 
 }
 
+/** checks if every assignment of CHECK_EXAM_GRADING has been done as well as every assignment of KOMMISSIONELL_CHECK_EXAM_GRADING */
 function block_exaquest_check_if_grades_should_be_released($quizid) {
     global $DB;
     // check if every assignment of this kind is done for this quiz
@@ -2890,7 +2891,12 @@ function block_exaquest_check_if_grades_should_be_released($quizid) {
             array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING, 'done' => 0))) {
         // records still exist and "done" = 0 ==> not every todoo is done
         return false;
+    } else if ($DB->get_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_KOMMISSIONELL_CHECK_EXAM_GRADING,
+                    'done' => 0))) {
+        return false;
     } else {
+
         // no records exist ==> every assignment is done
         // set the quizstatus from BLOCK_EXAQUEST_QUIZSTATUS_FINISHED to BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED and release the grades
         // TODO: release the grades, this has to trigger sometghing from moodle?
