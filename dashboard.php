@@ -56,7 +56,8 @@ if ($action == 'request_questions') {
             }
         }
     }
-} else if ($action == 'request_exams') {
+}
+//else if ($action == 'request_exams') {
     //// get all the users with role "fachlicherpruefer" and send them a notification
     //$allfachlichepruefer = block_exaquest_get_fachlichepruefer_by_courseid($courseid);
     //if (array_key_exists("selectedusers", $_POST)) {
@@ -74,7 +75,7 @@ if ($action == 'request_questions') {
     //        }
     //    }
     //}
-}
+//}
 
 // RENDER:
 $capabilities = block_exaquest_get_capabilities($context);
@@ -109,6 +110,7 @@ if ($capabilities["fachlicherpruefer"]) {
 }
 
 $exams_to_check_grading = [];
+$kommissionell_exams_to_check_grading = [];
 if ($capabilities["checkexamsgrading"]) {
     $exams_to_check_grading =
             block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);

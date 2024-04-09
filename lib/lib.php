@@ -905,6 +905,9 @@ function block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid, $as
     $exams = $DB->get_records_sql($sql,
             array('assigneeid' => $userid, 'courseid' => $courseid, 'assigntype' => $assigntype));
 
+    // Note: this returns multiple lines if there are multiple comments (the same assignment has been made e.g. twice)
+    // Either the commenting should be changed, or it is fine to simply display the latest comment, which is the case right now
+
     return $exams;
 }
 
@@ -2857,9 +2860,8 @@ function block_exaquest_check_if_questions_imported($questionid, $questionbanken
         $questionstatus->status = BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED;
         $questionstatus->is_imported = 1;
         $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $questionstatus);
-    } else {
-        // it has been created manually --> everything can stay as it is
     }
+    // or it has been created manually --> everything can stay as it is
 }
 
 function block_exaquest_check_if_exam_is_ready($quizid) {
@@ -3001,7 +3003,7 @@ function block_exaquest_render_questioncount_per_category() {
     foreach ($options as $key => $option) {
         foreach ($option as $categoryid => $name) {
             if ($key == BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH) {
-                $qcount = $categoryoptionidcount[$categoryid] ?: 0;
+                $qcount = array_key_exists($categoryid, $categoryoptionidcount) ? $categoryoptionidcount[$categoryid] : 0;
                 $content[$key] .= '<div class="col-lg-12"><span>' . $name . ': ' . $qcount .
                         ' von ' . $categorys_required_counts[$categoryid]->questioncount . '</span></div>';
             } else {
@@ -3089,7 +3091,7 @@ function block_exaquest_render_buttons_for_finished_exam_questionbank() {
     $assigned_to_fill =
             block_exaquest_get_assigned_quizzes_by_assigntype_and_status($USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS,
                     BLOCK_EXAQUEST_QUIZSTATUS_NEW);
-    if ($assigned_to_fill[$quizid] && $assigned_to_fill[$quizid]->done == 0) {
+    if (array_key_exists($quizid, $assigned_to_fill) && $assigned_to_fill[$quizid]->done == 0) {
         $sendexamtoreview = new \block_exaquest\output\button_send_exam_to_review($quizid, $courseid);
         $buttons .= $OUTPUT->render($sendexamtoreview);
         $buttons .= ' ';
