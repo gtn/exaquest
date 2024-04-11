@@ -380,6 +380,7 @@ class exaquest_view extends view
         $this->create_new_question_form($category, $canadd);
     }
 
+    //deprecated. use get_question_category_and_context_of_course instead
     function get_current_category_dashboard($categoryandcontext)
     {
         global $DB;

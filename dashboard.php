@@ -1,4 +1,7 @@
 <?php
+
+use qbank_managecategories\helper;
+
 require __DIR__ . '/inc.php';
 
 global $DB, $CFG, $COURSE, $PAGE, $OUTPUT, $USER;
@@ -14,7 +17,8 @@ require_capability('block/exaquest:viewdashboardtab', context_course::instance($
 $context = context_course::instance($courseid);
 
 $coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($courseid);
-$questioncategoryid = get_question_category_and_context_of_course($courseid)[0];
+[$questioncategoryid, $coursecategorycontextid] = get_question_category_and_context_of_course($courseid);
+
 
 if (is_enrolled($context, $USER, "block/exaquest:createquestion")) {
     list($thispageurl, $contexts, $cmid, $cm, $module, $pagevars) =
@@ -142,11 +146,13 @@ if (is_enrolled($context, $USER, "block/exaquest:createquestion")) {
     // ADD QUESTION
     echo "<div id='createnewquestion_button'>";
     $questionbank = new core_question\local\bank\exaquest_view($contexts, $url, $COURSE, $cm);
-    $categoryandcontext = $pagevars["cat"];
-    list($categoryid, $contextid) = explode(',', $categoryandcontext);
-    $catcontext = \context::instance_by_id($contextid);
-    $category = $questionbank->get_current_category_dashboard($categoryandcontext);
-    $canadd = has_capability('moodle/question:add', $catcontext);
+    //$categoryandcontext = $pagevars["cat"]; // not needed
+    //list($categoryid, $contextid) = explode(',', $categoryandcontext); // not needed
+    $coursecategorycontext = \context::instance_by_id($coursecategorycontextid);
+    //$category = $questionbank->get_current_category_dashboard($categoryandcontext); // deprecated, we have [$questioncategoryid, $coursecategorycontextid] = get_question_category_and_context_of_course($courseid); already
+    $category = helper::get_categories_for_contexts($coursecategorycontextid, 'id', false);
+    $category = array_pop($category);
+    $canadd = has_capability('moodle/question:add', $coursecategorycontext);
     $questionbank->create_new_question_form_dashboard($category, $canadd);
     echo "</div>";
 }
