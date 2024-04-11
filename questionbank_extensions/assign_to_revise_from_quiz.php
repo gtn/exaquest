@@ -48,7 +48,7 @@ class assign_to_revise_from_quiz extends column_base {
         $selectusers = block_exaquest_get_pk_by_courseid($COURSE->id);
 
 
-        echo $OUTPUT->render(new \block_exaquest\output\popup_change_status($selectusers, 'revise_question_from_quiz',
+        echo $OUTPUT->render(new \block_exaquest\output\popup_change_status_secondary_button($selectusers, 'revise_question_from_quiz',
                 get_string('revise_question_from_quiz', 'block_exaquest'), $question));
 
         //echo '<button href="#" id="assign_to_revise_from_quiz' . $question->questionbankentryid .

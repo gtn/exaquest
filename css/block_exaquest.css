@@ -1,9 +1,10 @@
 #exaquest-similarity-comparison .exaquest-similarity-edit-question-btn .btn {
-    NOborder-color: rgba(0,0,200,.7);
-    NOborder-color: rgba(0,0,0,.8);
+    NOborder-color: rgba(0, 0, 200, .7);
+    NOborder-color: rgba(0, 0, 0, .8);
     NOborder-color: transparent;
     NObackground-color: #fff;
 }
+
 /*
 #exaquest-similarity-comparison .identical {
     background-color: rgba(220,53,69,.8)
@@ -36,49 +37,48 @@
 table.exaquest-similarity-comparison-table .col-issimilar .badge {
     padding: .25em .8em;
     font-size: 90%;
-    text-shadow: 
 }
 
 #exaquest-similarity-comparison .identical .badge {
-    background-color: rgba(220,53,69,1)
+    background-color: rgba(220, 53, 69, 1)
 }
 
 #exaquest-similarity-comparison .extremelysimilar .badge {
-    background-color: rgba(220,53,69,.8)
+    background-color: rgba(220, 53, 69, .8)
 }
 
 #exaquest-similarity-comparison .verysimilar .badge {
-    background-color: rgba(220,53,69,.6)
+    background-color: rgba(220, 53, 69, .6)
 }
 
 #exaquest-similarity-comparison .similar .badge {
-    background-color: rgba(220,53,69,.5)
+    background-color: rgba(220, 53, 69, .5)
 }
 
 #exaquest-similarity-comparison .notquitesimilar .badge {
-    background-color: rgba(40,167,69,.6)
+    background-color: rgba(40, 167, 69, .6)
 }
 
 #exaquest-similarity-comparison .notsimilar .badge {
-    background-color: rgba(40,167,69,.8)
+    background-color: rgba(40, 167, 69, .8)
 }
 
 #exaquest-similarity-comparison .different .badge {
-    background-color: rgba(40,167,69,1)
+    background-color: rgba(40, 167, 69, 1)
 }
 
 #exaquest-similarity-comparison .identical .col-similarity,
 #exaquest-similarity-comparison .extremelysimilar .col-similarity,
 #exaquest-similarity-comparison .verysimilar .col-similarity,
 #exaquest-similarity-comparison .similar .col-similarity {
-    color: rgba(220,53,69,1);
+    color: rgba(220, 53, 69, 1);
     color: #b31f2d;
 }
 
 #exaquest-similarity-comparison .different .col-similarity,
 #exaquest-similarity-comparison .notsimilar .col-similarity,
 #exaquest-similarity-comparison .notquitesimilar .col-similarity {
-    color: rgba(40,167,69,1);
+    color: rgba(40, 167, 69, 1);
     color: #147d2c;
 }
 
@@ -95,7 +95,7 @@ table.exaquest-similarity-comparison-table .col-issimilar .badge {
     padding-left: 0;
 }
 
-table.exaquest-similarity-comparison-table  {
+table.exaquest-similarity-comparison-table {
     display: inline-table;
 }
 
@@ -142,7 +142,7 @@ table.exaquest-similarity-comparison-table .col-threshold {
     grid-template-columns: 1fr;
 }
 
-@media (min-width: 1201px) { 
+@media (min-width: 1201px) {
     #block_exaquest #categoryquestions td.changestatus {
         grid-template-columns: 1fr 1fr;
     }
@@ -168,7 +168,7 @@ table.exaquest-similarity-comparison-table .col-threshold {
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: .25rem;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
     padding-right: .6em;
     padding-left: .6em;
     border-radius: 10rem;
@@ -212,6 +212,30 @@ table.exaquest-similarity-comparison-table .col-threshold {
     border-radius: .5rem;
 }
 
+#block_exaquest .exaquest-category-tag-fragencharakter {
+    background-color: #B0B0B0;
+}
+
+#block_exaquest .exaquest-category-tag-klassifikation {
+    background-color: #C4C4C4;
+}
+
+#block_exaquest .exaquest-category-tag-fragefach {
+    background-color: #CECECE;
+}
+
+#block_exaquest .exaquest-category-tag-lerninhalt {
+    background-color: #D8D8D8;
+}
+
+#block_exaquest .exaquest-category-tag-fragencharakter,
+#block_exaquest .exaquest-category-tag-klassifikation,
+#block_exaquest .exaquest-category-tag-fragefach,
+#block_exaquest .exaquest-category-tag-lerninhalt {
+    margin-bottom: 5px; /* Adjusts space between rows */
+    margin-right: 5px; /* Adjusts space between columns */
+}
+
 .quickediticon {
-    
+
 }

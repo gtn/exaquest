@@ -22,7 +22,7 @@
                             </td>
                             <td>
                                 <a href="{{go_to_exam_questionbank}}&quizid={{quizid}}" type="submit" class="btn
-                                btn-primary"
+                                btn-secondary"
                                 value="">{{#str}}add_questions_to_quiz, block_exaquest {{/str}}</a>
                             </td>
                             <td>
@@ -93,10 +93,8 @@
                                 {{>block_exaquest/button_fachlich_release_exam}}
                             </td>
                             <td>
-                                <button type="submit" class="btn btn-primary change-exam-status-button"
-                                        value="request_revision" quizid={{quizid}} courseid={{courseid}}>Prüfung zur
-                                    Überarbeitung
-                                    zurückschicken
+                                <button type="submit" class="btn btn-secondary change-exam-status-button"
+                                        value="request_revision" quizid={{quizid}} courseid={{courseid}}>{{#str}}send_exam_to_revise, block_exaquest {{/str}}
                                 </button>
                             </td>
                         </tr>
@@ -232,7 +230,7 @@
                                 <td>
                                     {{#popup_assign_check_exam_grading}}
                                         {{>block_exaquest/popup_assign_check_exam_grading}}
-                                    {{/popup_assign_check_exam_grading}}sss
+                                    {{/popup_assign_check_exam_grading}}
                                 </td>
                             {{/assigned_to_check_grading}}
 

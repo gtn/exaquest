@@ -3681,19 +3681,19 @@ function block_exaquest_render_questioncount_per_category() {
     $html = '<div class="container-fluid">
                     <div class="row">
                          <div class="col-lg-3">
-                         <div class="col-lg-12 border-bottom"><h6>Fragencharakter</h6></div>
+                         <div class="col-lg-12 border-bottom exaquest-category-tag-fragencharakter"><h6>Fragencharakter</h6></div>
                             ' . $content[0] . '
                         </div>
                         <div class="col-lg-3">
-                        <div class="col-lg-12 border-bottom"><h6>Klassifikation</h6></div>
+                        <div class="col-lg-12 border-bottom exaquest-category-tag-klassifikation"><h6>Klassifikation</h6></div>
                             ' . $content[1] . '
                         </div>
                         <div class="col-lg-3">
-                        <div class="col-lg-12 border-bottom"><h6>Fragefach</h6></div>
+                        <div class="col-lg-12 border-bottom exaquest-category-tag-fragefach"><h6>Fragefach</h6></div>
                             ' . $content[2] . '
                         </div>
                         <div class="col-lg-3">
-                        <div class="col-lg-12 border-bottom"><h6>Lerninhalt</h6></div>
+                        <div class="col-lg-12 border-bottom exaquest-category-tag-lerninhalt"><h6>Lerninhalt</h6></div>
                             ' . $content[3] . '
                         </div>
                     </div>
@@ -3725,7 +3725,7 @@ function block_exaquest_render_check_similiarity_button($quizid, $courseid, $cat
     // add a button that links to exaquest/similarity_comparison.php with questioncategoryid, courseid and examid
     $url_check_similarity = new moodle_url('/blocks/exaquest/similarity_comparison.php',
             array("courseid" => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1], "examid" => $quizid));
-    return '<a href="' . $url_check_similarity . '" class="btn btn-primary">Ähnlichkeitsvergleich</a>';
+    return '<a href="' . $url_check_similarity . '" class="btn btn-secondary">'. get_string("exaquest:similarity_title", "block_exaquest") .'</a>';
 }
 
 // not needed, use mustache instead

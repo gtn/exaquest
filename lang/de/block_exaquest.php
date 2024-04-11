@@ -407,6 +407,7 @@ $string['revise_question_from_quiz'] = 'Überarbeiten';
 $string['lock_from_quiz'] = 'Sperren';
 
 $string['send_exam_to_review'] = 'Prüfung zur Begutachtung schicken';
+$string['force_send_exam_to_review'] = 'Prüfung sofort zur Begutachtung schicken';
 $string['fachlich_release_exam'] = 'Prüfung fachlich freigeben';
 $string['assign_check_exam_grading'] = 'Überprüfung der Beurteilung anfordern';
 $string['assign_check_exam_grading_label'] = 'Überprüfung der Beurteilung anfordern';
@@ -455,3 +456,7 @@ $string['statisticspoints'] = 'Punkte';
 $string['statisticsgrade'] = 'Note';
 $string['numericaldist'] = 'Numerische Verteilung';
 $string['percentagedist'] = 'Prozentuale Verteilung';
+
+$string['go_to_exam_report_overview'] = 'Zum Prüfungsbericht';
+$string['go_to_exam_report_grading'] = 'Zur Prüfungsbeurteilung';
+$string['send_exam_to_revise'] = 'Prüfung zur Überarbeitung zurückschicken';

@@ -8,6 +8,8 @@ use core\event\question_category_viewed;
 require_once($CFG->dirroot . '/question/editlib.php');
 require_once(__DIR__ . '/questionbank_extensions/exaquest_exam_view.php');
 
+block_exaquest_init_js_css();
+
 list($thispageurl, $contexts, $cmid, $cm, $module, $pagevars) =
         question_edit_setup('questions', '/question/edit.php');
 

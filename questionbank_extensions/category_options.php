@@ -70,24 +70,33 @@ class category_options extends column_base {
             }
         }
 
-        $html = '<div class="container">
-  <div class="row">
-    <div class="col-sm-6 bg-secondary text-white rounded">
-    ' . implode(' ', $options[0]) . '
-    </div>
-    <div class="col-sm-6 bg-primary text-white rounded">
-      ' . implode(' ', $options[1]) . '
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-6 bg-success text-white rounded">
-      ' . implode(' ', $options[2]) . '
-    </div>
-    <div class="col-sm-6 bg-danger text-white rounded">
-      ' . implode(' ', $options[3]) . '
-    </div>
-  </div>
-</div>';
+                $html = '<div class="container">
+          <div class="row">
+            <div class="col-sm-6 ">
+                <div class="exaquest-category-tag-fragencharakter rounded">
+                    ' . implode(' ', $options[0]) . '
+                </div>
+            </div>
+            <div class="col-sm-6 ">
+            <div class="exaquest-category-tag-klassifikation rounded">
+                    ' . implode(' ', $options[1]) . '
+                </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6 ">
+                <div class="exaquest-category-tag-fragefach rounded">
+                    ' . implode(' ', $options[2]) . '
+                </div>
+            </div>
+            <div class="col-sm-6 ">
+                <div class="exaquest-category-tag-lerninhalt rounded">
+                    ' . implode(' ', $options[3]) . '
+                </div>
+            </div>
+          </div>
+        </div>';
+
         echo $html;
         //echo '<div class="p-3 mb-2 bg-danger text-center text-white"></div>';
 
