@@ -1942,7 +1942,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('moodle/question:editall', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlfragenreviewer2'])) {
-        $roleid = create_role('fachl. Fragenreviewer', 'fachlfragenreviewer2',
+        $roleid = create_role('fachl. Fragenreviewer2', 'fachlfragenreviewer2',
                 '');
         $archetype = 0;
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
