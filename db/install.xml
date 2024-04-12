@@ -175,7 +175,7 @@
                        COMMENT="type of the assignment, e.g. addquestions"/>
                 <FIELD NAME="done" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"
                        COMMENT="Boolean value, 0 = not done yet, 1 = done (formerly it just got deleted)"/>
-                <FIELD NAME="customdata" TYPE="int" LENGTH="1000" NOTNULL="false" SEQUENCE="false"
+                <FIELD NAME="customdata" TYPE="char" LENGTH="1000" NOTNULL="false" SEQUENCE="false"
                        COMMENT="Customdata. For example for the 'kommissionelle Prüfung' it stores the studentid"/>
             </FIELDS>
             <KEYS>
