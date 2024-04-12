@@ -121,7 +121,7 @@ class block_exaquest extends block_list {
         $instanceconfigs = !empty($this->config) ? $this->config : new stdClass();
         $pluginconfigs = get_config('block_exaquest');
 
-        return (object) [
+        return (object)[
             'instance' => $instanceconfigs,
             'plugin' => $pluginconfigs,
         ];

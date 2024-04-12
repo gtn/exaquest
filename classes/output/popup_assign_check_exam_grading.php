@@ -4,8 +4,8 @@ namespace block_exaquest\output;
 
 use renderable;
 use renderer_base;
-use templatable;
 use stdClass;
+use templatable;
 
 global $CFG;
 require_once($CFG->dirroot . '/blocks/exaquest/classes/form/autofill_helper_form.php');
@@ -57,7 +57,7 @@ class popup_assign_check_exam_grading implements renderable, templatable {
             $autocompleteoptions[$fp->id] = $fp->firstname . ' ' . $fp->lastname;
             $preselectedoption = $fp->id;
         }
-        $bmw_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, "bmw".$data->quizid, 'popup_assign_check_exam_grading', $preselectedoption);
+        $bmw_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, "bmw" . $data->quizid, 'popup_assign_check_exam_grading', $preselectedoption);
         $data->bmw_autocomplete_html = $bmw_autocomplete_html;
 
 

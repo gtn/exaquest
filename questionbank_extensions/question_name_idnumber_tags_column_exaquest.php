@@ -22,6 +22,7 @@ use qbank_editquestion\edit_action_column;
 use qbank_previewquestion\helper;
 use qbank_previewquestion\question_preview_options;
 use qbank_viewquestionname\output\questionname;
+
 require_once($CFG->dirroot . '/lib/classes/task/manager.php');
 
 // require once the questionname_exaquest
@@ -43,9 +44,9 @@ class question_name_idnumber_tags_column_exaquest extends question_name_idnumber
         //$questiondisplay = $OUTPUT->render(new \qbank_viewquestionname\output\questionname($question));
 
         // generate a preview link for the question html
-        $link = helper::question_preview_url($question->id, null, null, null, null, null, $this->qbank->returnurl );
+        $link = helper::question_preview_url($question->id, null, null, null, null, null, $this->qbank->returnurl);
         $questiondisplay = \html_writer::link(
-            //new \moodle_url('/blocks/exaquest/preview_question.php', ['id' => $question->id]),
+        //new \moodle_url('/blocks/exaquest/preview_question.php', ['id' => $question->id]),
             $link,
             $question->name,
             ['class' => 'questionpreviewlink']

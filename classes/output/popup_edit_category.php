@@ -5,8 +5,8 @@ namespace block_exaquest\output;
 use phpDocumentor\Reflection\Types\Self_;
 use renderable;
 use renderer_base;
-use templatable;
 use stdClass;
+use templatable;
 
 global $CFG;
 require_once($CFG->dirroot . '/blocks/exaquest/classes/form/autofill_helper_form.php');

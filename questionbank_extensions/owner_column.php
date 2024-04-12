@@ -1,6 +1,7 @@
 <?php
 
 namespace qbank_openquestionforreview;
+
 use core_question\local\bank\column_base;
 
 /**
@@ -24,7 +25,7 @@ class owner_column extends column_base {
     protected function display_content($question, $rowclasses): void {
         global $PAGE, $DB;
         $displaydata = [];
-        $user = $DB->get_record("user", array("id"=>$question->ownerid));
+        $user = $DB->get_record("user", array("id" => $question->ownerid));
         $question->ownerfirstname = $user->firstname;
         $question->ownerlastname = $user->lastname;
         if (!empty($question->ownerfirstname) && !empty($question->ownerlastname)) {
@@ -54,7 +55,7 @@ class owner_column extends column_base {
         return [
             'firstname' => ['field' => 'uc.firstname', 'title' => get_string('firstname')],
             'lastname' => ['field' => 'uc.lastname', 'title' => get_string('lastname')],
-            'timecreated' => ['field' => 'q.timecreated', 'title' => ""]
+            'timecreated' => ['field' => 'q.timecreated', 'title' => ""],
         ];
     }
 

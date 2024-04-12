@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 global $CFG, $PAGE, $COURSE;
 require_once(__DIR__ . '/../../config.php');
-require_once($CFG->libdir.'/adminlib.php');
+require_once($CFG->libdir . '/adminlib.php');
 
-$courseid=2;
+$courseid = 2;
 require_login($courseid);
 $context = context_course::instance($courseid);
 

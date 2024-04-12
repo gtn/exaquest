@@ -4,8 +4,8 @@ namespace block_exaquest\output;
 
 use renderable;
 use renderer_base;
-use templatable;
 use stdClass;
+use templatable;
 
 global $CFG;
 require_once($CFG->dirroot . '/blocks/exaquest/classes/form/autofill_helper_form.php');
@@ -88,12 +88,12 @@ class popup_change_status_primary_button implements renderable, templatable {
         }
         if ($this->action == 'open_question_for_review' || $this->action == 'revise_question') {
             $selectusers_autocomplete_html =
-                    $mform->create_autocomplete_single_select_html($autocompleteoptions, $this->questionbankentryid,
-                            'popup_change_status');
+                $mform->create_autocomplete_single_select_html($autocompleteoptions, $this->questionbankentryid,
+                    'popup_change_status');
         } else {
             $selectusers_autocomplete_html =
-                    $mform->create_autocomplete_multi_select_html($autocompleteoptions, $this->questionbankentryid,
-                            'popup_change_status');
+                $mform->create_autocomplete_multi_select_html($autocompleteoptions, $this->questionbankentryid,
+                    'popup_change_status');
         }
 
         $data->selectusers_autocomplete_html = $selectusers_autocomplete_html;

@@ -54,10 +54,10 @@ class add_to_quiz extends column_base {
                                     FROM {question_references} qr
                                          JOIN {quiz_slots} qs ON qr.itemid = qs.id
                                    WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?",
-                array($quizid, $question->questionbankentryid))) {
+            array($quizid, $question->questionbankentryid))) {
             echo '<button href="#" class="addquestion' . $question->questionbankentryid .
-                    ' btn btn-primary" role="button" value="addquestion"> ' . get_string('add_to_quiz', 'block_exaquest') .
-                    '</button>';
+                ' btn btn-primary" role="button" value="addquestion"> ' . get_string('add_to_quiz', 'block_exaquest') .
+                '</button>';
         }
 
         ?>
@@ -102,7 +102,7 @@ class add_to_quiz extends column_base {
 
     public function get_extra_joins(): array {
         return ['qref' => 'LEFT JOIN {question_references} qref ON qbe.id = qref.questionbankentryid',
-                'qusl' => 'LEFT JOIN {quiz_slots} qusl ON qref.itemid = qusl.id',
-                'qrevisea' => 'LEFT JOIN {block_exaquestreviseassign} qrevisea ON qbe.id = qrevisea.questionbankentryid'];
+            'qusl' => 'LEFT JOIN {quiz_slots} qusl ON qref.itemid = qusl.id',
+            'qrevisea' => 'LEFT JOIN {block_exaquestreviseassign} qrevisea ON qbe.id = qrevisea.questionbankentryid'];
     }
 }

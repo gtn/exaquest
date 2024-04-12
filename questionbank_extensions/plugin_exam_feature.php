@@ -3,8 +3,8 @@
 
 namespace qbank_openquestionforreview;
 
-use core_question\local\bank\plugin_features_base;
 use core_question\local\bank\menu_action_column_base;
+use core_question\local\bank\plugin_features_base;
 
 /**
  * Class plugin_feature is the entrypoint for the columns.

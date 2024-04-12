@@ -46,7 +46,7 @@ if ($action == 'assign_quiz_addquestions') {
         $selectedpmw = clean_param_array($_POST[$selectedpmwkey], PARAM_INT);
         foreach ($selectedpmw as $pmw) {
             block_exaquest_assign_quiz_addquestions($USER, $pmw, $comment, $quizid, $quizname,
-                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
+                BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
         }
     }
 } else if ($action == 'set_questioncount_per_quiz_and_fragefach') {
@@ -68,7 +68,7 @@ if ($action == 'assign_quiz_addquestions') {
         $selectedusers = clean_param_array($_POST[$selectedbmwkey], PARAM_INT);
         foreach ($selectedusers as $selecteduser) {
             block_exaquest_assign_check_exam_grading($USER, $selecteduser, $comment, $quizid, $quizname,
-                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
+                BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
         }
     }
 } else if ($action == 'assign_gradeexam') {
@@ -87,7 +87,7 @@ if ($action == 'assign_quiz_addquestions') {
         $selectedbmw = clean_param_array($_POST[$selectedbmwkey], PARAM_INT);
         foreach ($selectedbmw as $bmw) {
             block_exaquest_assign_gradeexam($USER, $bmw, $comment, $quizid, $quizname, BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM,
-                    $selectedquestions);
+                $selectedquestions);
         }
     }
 } else if ($action == 'assign_kommissionell_check_exam_grading') {
@@ -106,7 +106,7 @@ if ($action == 'assign_quiz_addquestions') {
         $selectedfp = clean_param_array($_POST[$selectedfpkey], PARAM_INT);
         foreach ($selectedfp as $fp) {
             block_exaquest_assign_kommissionell_check_exam_grading($USER, $fp, $comment, $quizid, $quizname, BLOCK_EXAQUEST_QUIZASSIGNTYPE_KOMMISSIONELL_CHECK_EXAM_GRADING,
-                    $selectedstudents);
+                $selectedstudents);
         }
     }
 } else if ($action == 'assign_change_exam_grading') {
@@ -116,7 +116,7 @@ if ($action == 'assign_quiz_addquestions') {
     $pk = block_exaquest_get_pk_by_courseid($courseid);
     foreach ($pk as $pruefungskoordination) {
         block_exaquest_assign_change_exam_grading($USER, $pruefungskoordination->id, $comment, $quizid, $quizname,
-                BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHANGE_EXAM_GRADING);
+            BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHANGE_EXAM_GRADING);
     }
 }
 
@@ -130,7 +130,7 @@ $capabilities["viewactiveexamscard"] = is_enrolled($context, $USER, "block/exaqu
 $capabilities["viewfinishedexamscard"] = is_enrolled($context, $USER, "block/exaquest:viewfinishedexamscard");
 $capabilities["viewgradesreleasedexamscard"] = is_enrolled($context, $USER, "block/exaquest:viewgradesreleasedexamscard");
 $capabilities["addquestiontoexam"] = has_capability('block/exaquest:addquestiontoexam',
-        $context); // has_capability actually makes more sense than is_enrolled, even though the outcome is the same
+    $context); // has_capability actually makes more sense than is_enrolled, even though the outcome is the same
 $capabilities["assignaddquestions"] = has_capability('block/exaquest:assignaddquestions', $context);
 $capabilities["createexam"] = has_capability('block/exaquest:createexam', $context);
 $capabilities["setquestioncount"] = has_capability('block/exaquest:setquestioncount', $context);

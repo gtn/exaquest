@@ -26,7 +26,7 @@ switch ($action) {
 
         // if there is a reviseassign entry ==> delete that, since it is now revised
         $oldstatus =
-                $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'status', array("questionbankentryid" => $questionbankentryid));
+            $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'status', array("questionbankentryid" => $questionbankentryid));
         if ($oldstatus == BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE) {
             $DB->delete_records(BLOCK_EXAQUEST_DB_REVISEASSIGN, ['questionbankentryid' => $questionbankentryid]);
         }
@@ -44,7 +44,7 @@ switch ($action) {
         if ($users != null) {
             foreach ($users as $user) {
                 block_exaquest_request_review($USER, $user, $commenttext, $questionbankentryid, $questionname,
-                        $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH);
+                    $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH);
             }
         }
         // get the PKs, which are the ones that should be assigned to do the formal review
@@ -52,7 +52,7 @@ switch ($action) {
         if ($formalreviewusers != null) {
             foreach ($formalreviewusers as $user) {
                 block_exaquest_request_review($USER, $user->id, $commenttext, $questionbankentryid, $questionname,
-                        $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FORMAL);
+                    $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FORMAL);
             }
         }
 
@@ -99,7 +99,7 @@ switch ($action) {
         } else {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE;
             $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN,
-                    ['questionbankentryid' => $questionbankentryid, 'reviewtype' => BLOCK_EXAQUEST_REVIEWTYPE_FORMAL]);
+                ['questionbankentryid' => $questionbankentryid, 'reviewtype' => BLOCK_EXAQUEST_REVIEWTYPE_FORMAL]);
         }
         $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
         break;
@@ -135,7 +135,7 @@ switch ($action) {
         } else {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE;
             $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN,
-                    ['questionbankentryid' => $questionbankentryid, 'reviewtype' => BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH]);
+                ['questionbankentryid' => $questionbankentryid, 'reviewtype' => BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH]);
             $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
             break;
         }
@@ -167,7 +167,7 @@ switch ($action) {
                 if ($users != null) {
                     foreach ($users as $user) {
                         block_exaquest_request_revision($USER, $user, $commenttext, $questionbankentryid, $questionname,
-                                $courseid, true, $questionid);
+                            $courseid, true, $questionid);
                     }
                 }
             }
@@ -191,13 +191,13 @@ switch ($action) {
             $slotdetail = $structure->get_slot_by_id($slot->id);
             $context = context::instance_by_id($slotdetail->contextid);
             throw new required_capability_exception($context,
-                    'moodle/question:useall', 'nopermissions', '');
+                'moodle/question:useall', 'nopermissions', '');
         }
         $structure->remove_slot($slot->slot);
         quiz_delete_previews($quiz);
         $gradecalculator->recompute_quiz_sumgrades();
         $result = ['newsummarks' => quiz_format_grade($quiz, $quiz->sumgrades),
-                'deleted' => true, 'newnumquestions' => $structure->get_question_count()];
+            'deleted' => true, 'newnumquestions' => $structure->get_question_count()];
     case ('revise_question'):
         //$DB->record_exists(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, array("questionbankentryid" => $questionbankentryid));
         $data = new stdClass;
@@ -228,7 +228,7 @@ switch ($action) {
             if ($users != null) {
                 foreach ($users as $user) {
                     block_exaquest_request_revision($USER, $user, $commenttext, $questionbankentryid, $questionname,
-                            $courseid);
+                        $courseid);
                 }
             }
         }

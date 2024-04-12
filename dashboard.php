@@ -22,7 +22,7 @@ $coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($courseid);
 
 if (is_enrolled($context, $USER, "block/exaquest:createquestion")) {
     list($thispageurl, $contexts, $cmid, $cm, $module, $pagevars) =
-            question_edit_setup('questions', '/question/edit.php');
+        question_edit_setup('questions', '/question/edit.php');
 }
 
 $page_params = array('courseid' => $courseid);
@@ -62,23 +62,23 @@ if ($action == 'request_questions') {
     }
 }
 //else if ($action == 'request_exams') {
-    //// get all the users with role "fachlicherpruefer" and send them a notification
-    //$allfachlichepruefer = block_exaquest_get_fachlichepruefer_by_courseid($courseid);
-    //if (array_key_exists("selectedusers", $_POST)) {
-    //    if (is_array($_POST["selectedusers"])) {
-    //        $selectedfachlicherpruefer = clean_param_array($_POST["selectedusers"], PARAM_INT);
-    //    } else {
-    //        $selectedfachlicherpruefer = clean_param($_POST["selectedusers"], PARAM_INT);
-    //    }
-    //    $requestcomment = clean_param($_POST["requestcomment"], PARAM_TEXT);
-    //
-    //    if ($selectedfachlicherpruefer) {
-    //        $fachlichepruefer = array_intersect_key($allfachlichepruefer, $selectedfachlicherpruefer);
-    //        foreach ($fachlichepruefer as $pruefer) {
-    //            block_exaquest_request_exam($USER->id, $pruefer->id, $requestcomment);
-    //        }
-    //    }
-    //}
+//// get all the users with role "fachlicherpruefer" and send them a notification
+//$allfachlichepruefer = block_exaquest_get_fachlichepruefer_by_courseid($courseid);
+//if (array_key_exists("selectedusers", $_POST)) {
+//    if (is_array($_POST["selectedusers"])) {
+//        $selectedfachlicherpruefer = clean_param_array($_POST["selectedusers"], PARAM_INT);
+//    } else {
+//        $selectedfachlicherpruefer = clean_param($_POST["selectedusers"], PARAM_INT);
+//    }
+//    $requestcomment = clean_param($_POST["requestcomment"], PARAM_TEXT);
+//
+//    if ($selectedfachlicherpruefer) {
+//        $fachlichepruefer = array_intersect_key($allfachlichepruefer, $selectedfachlicherpruefer);
+//        foreach ($fachlichepruefer as $pruefer) {
+//            block_exaquest_request_exam($USER->id, $pruefer->id, $requestcomment);
+//        }
+//    }
+//}
 //}
 
 // RENDER:
@@ -99,7 +99,7 @@ if ($capabilities["fragenersteller"]) {
 $exams_to_fill = [];
 if ($capabilities["addquestiontoexam"]) {
     $exams_to_fill =
-            block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
+        block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
 }
 
 $exams_to_fachlich_release = [];
@@ -109,36 +109,36 @@ if ($capabilities["fachlicherpruefer"]) {
     //// created exams where the user is fp are the exams_to_fachlich_release. The intersection on the field "quizid" is the result.
     //$exams_to_fachlich_release = block_exaquest_array_intersect_field($created_exams, $exams_fp, 'quizid');
     $exams_to_fachlich_release =
-            block_exaquest_get_assigned_quizzes_by_assigntype_and_status($USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER,
-                    BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
+        block_exaquest_get_assigned_quizzes_by_assigntype_and_status($USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER,
+            BLOCK_EXAQUEST_QUIZSTATUS_CREATED);
 }
 
 $exams_to_check_grading = [];
 $kommissionell_exams_to_check_grading = [];
 if ($capabilities["checkexamsgrading"]) {
     $exams_to_check_grading =
-            block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
+        block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
     $kommissionell_exams_to_check_grading =
-            block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id,
-                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_KOMMISSIONELL_CHECK_EXAM_GRADING);
+        block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id,
+            BLOCK_EXAQUEST_QUIZASSIGNTYPE_KOMMISSIONELL_CHECK_EXAM_GRADING);
 }
 
 $exams_to_change_grading = [];
 if ($capabilities["changeexamsgrading"]) {
     $exams_to_change_grading =
-            block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id,
-                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHANGE_EXAM_GRADING);
+        block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id,
+            BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHANGE_EXAM_GRADING);
 }
 
 $exams_to_grade = [];
 if ($capabilities["gradequestion"]) {
     $exams_to_grade =
-            block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM);
+        block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM);
 }
 
 $dashboard = new \block_exaquest\output\dashboard($USER->id, $courseid, $capabilities, $fragenersteller, $questions_to_create,
-        $coursecategoryid, $questioncategoryid, $fachlichepruefer, $exams_to_fill, $exams_to_check_grading, $exams_to_grade,
-        $exams_to_change_grading, $exams_to_fachlich_release, $kommissionell_exams_to_check_grading);
+    $coursecategoryid, $questioncategoryid, $fachlichepruefer, $exams_to_fill, $exams_to_check_grading, $exams_to_grade,
+    $exams_to_change_grading, $exams_to_fachlich_release, $kommissionell_exams_to_check_grading);
 echo $output->render($dashboard);
 
 // This is the code for rendering the create-questions-button with moodle-core functions. It is moved to the correct position with javascript.

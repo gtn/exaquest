@@ -16,9 +16,9 @@ switch ($action) {
         // dont instantly change the status
         // instead: do the same as when checking the todoo in the dashboard. When every assigned pm and the fp have checked this --> change status to "created"
         $quizassignid = $DB->get_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'id', array(
-                        'quizid' => $quizid,
-                        'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS,
-                        'assigneeid' => $USER->id)
+                'quizid' => $quizid,
+                'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS,
+                'assigneeid' => $USER->id)
         );
 
         //$DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $quizassignid));
@@ -40,7 +40,7 @@ switch ($action) {
         block_exaquest_exams_set_status($quizid, BLOCK_EXAQUEST_QUIZSTATUS_ACTIVE);
         // remove entries in exaquestquizassign, as they don't make sense anymore (set status should actually already do this..)
         $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
-                ['quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS]);
+            ['quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS]);
         //$DB->set_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'done', 1, array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS));
         break;
     //case ('assign_fp_and_pmw'):
@@ -65,9 +65,9 @@ switch ($action) {
         // same as mark_check_exam_grading_request_as_done in ajax_dashboard.php
         // we do not have the quizassignid here, so we need to get it first
         $quizassignid = $DB->get_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'id', array(
-                        'quizid' => $quizid,
-                        'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING,
-                        'assigneeid' => $USER->id)
+                'quizid' => $quizid,
+                'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING,
+                'assigneeid' => $USER->id)
         );
         //$DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN, array('id' => $quizassignid)); // don't set the assignments to done, but DELETE them, as they do NOT make sense anymore
         $DB->set_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'done', 1, array('id' => $quizassignid));
@@ -80,9 +80,9 @@ switch ($action) {
     case ('release_grades_for_fp_as_pk'):
         // the PK can release the grades for the FP if for example the FP does not log in, but sends an email to the PK
         $quizassignid = $DB->get_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'id', array(
-                        'quizid' => $quizid,
-                        'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING,
-                        'assigneeid' => block_exaquest_get_assigned_fachlicherpruefer($quizid)->assigneeid) // get the FP
+            'quizid' => $quizid,
+            'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING,
+            'assigneeid' => block_exaquest_get_assigned_fachlicherpruefer($quizid)->assigneeid) // get the FP
         );
         $DB->set_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'done', 1, array('id' => $quizassignid));
         block_exaquest_check_if_grades_should_be_released($quizid);

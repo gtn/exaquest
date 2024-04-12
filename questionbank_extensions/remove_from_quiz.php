@@ -50,17 +50,17 @@ class remove_from_quiz extends column_base {
                                               FROM {question_references} qr
                                               JOIN {quiz_slots} qs ON qr.itemid = qs.id
                                               WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?",
-                array($quizid, $question->questionbankentryid));
+            array($quizid, $question->questionbankentryid));
 
         //check if already in the quiz
         if ($DB->record_exists_sql("SELECT *
                                     FROM {question_references} qr
                                          JOIN {quiz_slots} qs ON qr.itemid = qs.id
                                    WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?",
-                array($quizid, $question->questionbankentryid))) {
+            array($quizid, $question->questionbankentryid))) {
             echo '<button href="#" id="removequestion' . $question->questionbankentryid . '" class="removequestion' .
-                    $question->questionbankentryid . ' btn btn-primary" type="button" value="removequestion"> ' .
-                    get_string('remove_from_quiz', 'block_exaquest') . '</button>';
+                $question->questionbankentryid . ' btn btn-primary" type="button" value="removequestion"> ' .
+                get_string('remove_from_quiz', 'block_exaquest') . '</button>';
 
             ?>
 
@@ -105,7 +105,7 @@ class remove_from_quiz extends column_base {
 
     public function get_extra_joins(): array {
         return ['qs' => 'JOIN {block_exaquestquestionstatus} qs ON qbe.id = qs.questionbankentryid',
-                'qra' => 'LEFT JOIN {block_exaquestreviewassign} qra ON qbe.id = qra.questionbankentryid',
-                'qrevisea' => 'LEFT JOIN {block_exaquestreviseassign} qrevisea ON qbe.id = qrevisea.questionbankentryid'];
+            'qra' => 'LEFT JOIN {block_exaquestreviewassign} qra ON qbe.id = qra.questionbankentryid',
+            'qrevisea' => 'LEFT JOIN {block_exaquestreviseassign} qrevisea ON qbe.id = qrevisea.questionbankentryid'];
     }
 }

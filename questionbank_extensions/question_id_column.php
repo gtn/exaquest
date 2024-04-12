@@ -38,7 +38,7 @@ class question_id_column extends column_base {
 
     public function is_sortable(): array {
         return [
-            'ID' => ['field' => 'q.id', 'title' => "ID"]
+            'ID' => ['field' => 'q.id', 'title' => "ID"],
         ];
     }
 

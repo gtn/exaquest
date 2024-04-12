@@ -44,13 +44,13 @@ class lock_from_quiz extends column_base {
         $status = $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'status', array("questionbankentryid" => $question->questionbankentryid));
 
         // if the question has NOT been added --> enable locking the question
-        if(!$DB->record_exists_sql("SELECT *
+        if (!$DB->record_exists_sql("SELECT *
                                     FROM {question_references} qr
                                          JOIN {quiz_slots} qs ON qr.itemid = qs.id
                                    WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?", array($quizid, $question->questionbankentryid))) {
             echo '<button href="#" class="changestatus' . $question->questionbankentryid .
-                    ' btn btn-primary" role="button" value="lockquestion"> ' .
-                    get_string('lock_question', 'block_exaquest') . '</button>';
+                ' btn btn-primary" role="button" value="lockquestion"> ' .
+                get_string('lock_question', 'block_exaquest') . '</button>';
         }
 
 
@@ -99,6 +99,6 @@ class lock_from_quiz extends column_base {
 
     public function get_extra_joins(): array {
         return ['qs' => 'JOIN {block_exaquestquestionstatus} qs ON qbe.id = qs.questionbankentryid',
-                'qra' => 'LEFT JOIN {block_exaquestreviewassign} qra ON qbe.id = qra.questionbankentryid'];
+            'qra' => 'LEFT JOIN {block_exaquestreviewassign} qra ON qbe.id = qra.questionbankentryid'];
     }
 }

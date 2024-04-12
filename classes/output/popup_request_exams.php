@@ -4,8 +4,8 @@ namespace block_exaquest\output;
 
 use renderable;
 use renderer_base;
-use templatable;
 use stdClass;
+use templatable;
 
 class popup_request_exams implements renderable, templatable {
     /** @var string $fachlichepruefer Part of the data that should be passed to the template. */
@@ -29,10 +29,10 @@ class popup_request_exams implements renderable, templatable {
         // this would work, but is not feasable to write like this
         // The problem with $data->fragenersteller = $this->fragenersteller; is that there is an associative array, e.g. 3 => stdClass(), 10 => stdClass() etc.... it MUST start counting at 0, otherwise it will break mustache
         $data->fachlichepruefer = array_values($this->fachlichepruefer);
-        foreach ($data->fachlichepruefer as $fachlichepruefer){
+        foreach ($data->fachlichepruefer as $fachlichepruefer) {
             $fachlichepruefer->comma = true;
         }
-        if(isset($data->fachlichepruefer) && !empty($data->fachlichepruefer)){
+        if (isset($data->fachlichepruefer) && !empty($data->fachlichepruefer)) {
             end($data->fachlichepruefer)->comma = false;
         }
 

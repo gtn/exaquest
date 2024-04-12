@@ -4,8 +4,8 @@ namespace block_exaquest\output;
 
 use renderable;
 use renderer_base;
-use templatable;
 use stdClass;
+use templatable;
 
 global $CFG;
 require_once($CFG->dirroot . '/blocks/exaquest/classes/form/autofill_helper_form.php');
@@ -44,14 +44,14 @@ class popup_change_owner implements renderable, templatable {
         $data->require = true;
         $data->text = get_string('change_owner_text', 'block_exaquest');
         $data->title = get_string('change_owner_title', 'block_exaquest');
-            //$data->title = $OUTPUT->pix_icon('i/grades', 'Grades', 'core', ['class' => 'custom-icon-class', 'title' => 'Grades']);
-            //$data->title = $OUTPUT->image_url('i/siteevent', 'core');
+        //$data->title = $OUTPUT->pix_icon('i/grades', 'Grades', 'core', ['class' => 'custom-icon-class', 'title' => 'Grades']);
+        //$data->title = $OUTPUT->image_url('i/siteevent', 'core');
 
 
         $data->selectusers = array_merge($DB->get_records_sql('SELECT DISTINCT u.id, u.firstname, u.lastname
                                            FROM {question_bank_entries} qbe
                                            JOIN {user} u ON qbe.ownerid = u.id
-                                           WHERE qbe.id = '.$this->questionbankentryid), $data->selectusers);
+                                           WHERE qbe.id = ' . $this->questionbankentryid), $data->selectusers);
 
         // create the selectusers autocomplete field with the help of an mform
         $mform = new autofill_helper_form();

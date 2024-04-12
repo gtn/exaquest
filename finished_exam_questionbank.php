@@ -9,7 +9,7 @@ require_once($CFG->dirroot . '/question/editlib.php');
 require_once(__DIR__ . '/questionbank_extensions/exaquest_finished_exam_view.php');
 
 list($thispageurl, $contexts, $cmid, $cm, $module, $pagevars) =
-        question_edit_setup('questions', '/question/edit.php');
+    question_edit_setup('questions', '/question/edit.php');
 
 $courseid = required_param('courseid', PARAM_INT);
 $filterstatus = optional_param('filterstatus', 0, PARAM_INT);

@@ -19,9 +19,9 @@ class dashboard implements renderable, templatable {
     private $questioncategoryid;
 
     public function __construct($userid, $courseid, $capabilities, $fragenersteller, $questions_to_create, $coursecategoryid,
-            $questioncategoryid,
-            $fachlichepruefer, $exams_to_fill, $exams_to_check_grading, $exams_to_grade, $exams_to_change_grading,
-            $exams_to_fachlich_release, $kommissionell_exams_to_check_grading) {
+        $questioncategoryid,
+        $fachlichepruefer, $exams_to_fill, $exams_to_check_grading, $exams_to_grade, $exams_to_change_grading,
+        $exams_to_fachlich_release, $kommissionell_exams_to_check_grading) {
         $this->catAndCont = get_question_category_and_context_of_course();
         $this->courseid = $courseid;
         $this->capabilities = $capabilities;
@@ -40,7 +40,7 @@ class dashboard implements renderable, templatable {
         $this->exams_for_me_to_fill_count = count($exams_to_fill);
 
         $this->popup_exams_for_me_to_fachlich_release =
-                new popup_exams_for_me_to_fachlich_release($exams_to_fachlich_release, $this->catAndCont);
+            new popup_exams_for_me_to_fachlich_release($exams_to_fachlich_release, $this->catAndCont);
         $this->exams_for_me_to_fachlich_release_count = count($exams_to_fachlich_release);
 
         $this->popup_exams_for_me_to_check_grading = new popup_exams_for_me_to_check_grading($exams_to_check_grading);
@@ -68,124 +68,124 @@ class dashboard implements renderable, templatable {
         $data->questions_count = block_exaquest_get_questionbankentries_by_questioncategoryid_count($this->questioncategoryid);
         $data->questions_to_review_count = block_exaquest_get_questionbankentries_to_be_reviewed_count($this->questioncategoryid);
         $data->questions_fachlich_reviewed_count =
-                block_exaquest_get_questionbankentries_fachlich_reviewed_count($this->questioncategoryid);
+            block_exaquest_get_questionbankentries_fachlich_reviewed_count($this->questioncategoryid);
         $data->questions_formal_reviewed_count =
-                block_exaquest_get_questionbankentries_formal_reviewed_count($this->questioncategoryid);
+            block_exaquest_get_questionbankentries_formal_reviewed_count($this->questioncategoryid);
         $data->questions_finalised_count = block_exaquest_get_finalised_questionbankentries_count($this->questioncategoryid);
         $data->questions_released_count = block_exaquest_get_released_questionbankentries_count($this->questioncategoryid);
 
         $data->questions_locked_count = block_exaquest_get_locked_questionbankentries_count($this->questioncategoryid);
         $data->questions_released_and_to_review_count =
-                block_exaquest_get_released_and_to_review_questionbankentries_count($this->questioncategoryid);
+            block_exaquest_get_released_and_to_review_questionbankentries_count($this->questioncategoryid);
         $data->questions_to_revise_count =
-                block_exaquest_get_questionbankentries_to_be_revised_count($this->questioncategoryid);
+            block_exaquest_get_questionbankentries_to_be_revised_count($this->questioncategoryid);
         $data->questions_new_count =
-                block_exaquest_get_questionbankentries_new_count($this->questioncategoryid);
+            block_exaquest_get_questionbankentries_new_count($this->questioncategoryid);
 
         $data->questions_for_me_to_create_count =
-                block_exaquest_get_questions_for_me_to_create_count($this->coursecategoryid, $this->userid);
+            block_exaquest_get_questions_for_me_to_create_count($this->coursecategoryid, $this->userid);
         $data->questions_for_me_to_review_count =
-                block_exaquest_get_questions_for_me_to_review_count($this->questioncategoryid, $this->userid);
+            block_exaquest_get_questions_for_me_to_review_count($this->questioncategoryid, $this->userid);
         $data->questions_for_me_to_revise_count =
-                block_exaquest_get_questions_for_me_to_revise_count($this->questioncategoryid, $this->userid);
+            block_exaquest_get_questions_for_me_to_revise_count($this->questioncategoryid, $this->userid);
         //$data->questions_for_me_to_release_count = block_exaquest_get_questions_for_me_to_release_count($this->coursecategoryid, $this->userid);
         // TODO what should that mean? questions for me to release? questions_finalised_count for now. Most likely not needed
         $data->exams_for_me_to_create_count =
-                block_exaquest_get_exams_for_me_to_create_count($this->coursecategoryid, $this->userid);
+            block_exaquest_get_exams_for_me_to_create_count($this->coursecategoryid, $this->userid);
 
         $data->my_questions_count =
-                block_exaquest_get_my_questionbankentries_count($this->questioncategoryid, $this->userid);
+            block_exaquest_get_my_questionbankentries_count($this->questioncategoryid, $this->userid);
         $data->my_questions_to_submit_count =
-                block_exaquest_get_my_questionbankentries_to_submit_count($this->questioncategoryid, $this->userid);
+            block_exaquest_get_my_questionbankentries_to_submit_count($this->questioncategoryid, $this->userid);
         $data->my_questions_to_review_count =
-                block_exaquest_get_my_questionbankentries_to_be_reviewed_count($this->questioncategoryid, $this->userid);
+            block_exaquest_get_my_questionbankentries_to_be_reviewed_count($this->questioncategoryid, $this->userid);
         $data->my_questions_finalised_count =
-                block_exaquest_get_my_finalised_questionbankentries_count($this->questioncategoryid, $this->userid);
+            block_exaquest_get_my_finalised_questionbankentries_count($this->questioncategoryid, $this->userid);
 
         $catAndCont = $this->catAndCont;
 
         $data->my_questions_to_submit_link = new moodle_url('/blocks/exaquest/questbank.php',
-                array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
-                        "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS_TO_SUBMIT));
+            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_MY_CREATED_QUESTIONS_TO_SUBMIT));
         $data->my_questions_to_submit_link = $data->my_questions_to_submit_link->raw_out(false);
 
         $data->questions_for_me_to_review_link = new moodle_url('/blocks/exaquest/questbank.php',
-                array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
-                        "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW));
+            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW));
         $data->questions_for_me_to_review_link = $data->questions_for_me_to_review_link->raw_out(false);
 
         $data->questions_for_me_to_revise_link = new moodle_url('/blocks/exaquest/questbank.php',
-                array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
-                        "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE));
+            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE));
         $data->questions_for_me_to_revise_link = $data->questions_for_me_to_revise_link->raw_out(false);
 
         $data->questions_for_me_to_release_link = new moodle_url('/blocks/exaquest/questbank.php',
-                array('courseid' => $this->courseid, 'category' => $catAndCont[0] . ',' . $catAndCont[1],
-                        "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE));
+            array('courseid' => $this->courseid, 'category' => $catAndCont[0] . ',' . $catAndCont[1],
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE));
         $data->questions_for_me_to_release_link = $data->questions_for_me_to_release_link->raw_out(false);
 
         $data->questions_overall_link = new moodle_url('/blocks/exaquest/questbank.php',
-                array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
-                        "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS));
+            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS));
         $data->questions_overall_link = $data->questions_overall_link->raw_out(false);
 
         $data->questions_to_review_link = new moodle_url('/blocks/exaquest/questbank.php',
-                array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
-                        "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW));
+            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVIEW));
         $data->questions_to_review_link = $data->questions_to_review_link->raw_out(false);
 
         $data->questions_fachlich_reviewed_link = new moodle_url('/blocks/exaquest/questbank.php',
-                array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
-                        "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FACHLICH_REVIEWED));
+            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FACHLICH_REVIEWED));
         $data->questions_fachlich_reviewed_link = $data->questions_fachlich_reviewed_link->raw_out(false);
 
         $data->questions_formal_reviewed_link = new moodle_url('/blocks/exaquest/questbank.php',
-                array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
-                        "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FORMAL_REVIEWED));
+            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_FORMAL_REVIEWED));
         $data->questions_formal_reviewed_link = $data->questions_formal_reviewed_link->raw_out(false);
 
         $data->questions_finalised_link = new moodle_url('/blocks/exaquest/questbank.php',
-                array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
-                        "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE));
+            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE));
         $data->questions_finalised_link = $data->questions_finalised_link->raw_out(false);
 
         $data->questions_released_link = new moodle_url('/blocks/exaquest/questbank.php',
-                array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
-                        "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS));
+            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_All_RELEASED_QUESTIONS));
         $data->questions_released_link = $data->questions_released_link->raw_out(false);
 
         $data->questions_locked_link = new moodle_url('/blocks/exaquest/questbank.php',
-                array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
-                        "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_LOCKED_QUESTIONS));
+            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_LOCKED_QUESTIONS));
         $data->questions_locked_link = $data->questions_locked_link->raw_out(false);
 
         $data->questions_to_revise_link = new moodle_url('/blocks/exaquest/questbank.php',
-                array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
-                        "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVISE));
+            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVISE));
         $data->questions_to_revise_link = $data->questions_to_revise_link->raw_out(false);
 
         $data->questions_new_link = new moodle_url('/blocks/exaquest/questbank.php',
-                array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
-                        "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_NEW_QUESTIONS));
+            array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1],
+                "filterstatus" => BLOCK_EXAQUEST_FILTERSTATUS_ALL_NEW_QUESTIONS));
         $data->questions_new_link = $data->questions_new_link->raw_out(false);
 
         // links for the exams todos:
         $data->quizzes_for_me_to_fill_link = new moodle_url('/blocks/exaquest/exams.php',
-                array('courseid' => $this->courseid));
+            array('courseid' => $this->courseid));
         $data->quizzes_for_me_to_fill_link = $data->quizzes_for_me_to_fill_link->raw_out(false);
         $data->quizzes_for_me_to_fill_count = block_exaquest_get_quizzes_for_me_to_fill_count($this->userid);
 
         // exams_finished_grading_open and exams_finished_grading_done buttons
         $data->exams_finished_grading_open_count =
-                block_exaquest_get_exams_finished_grading_open_count($this->userid);
+            block_exaquest_get_exams_finished_grading_open_count($this->userid);
         $data->exams_finished_grading_open_link = new moodle_url('/blocks/exaquest/exams.php',
-                array('courseid' => $this->courseid));
+            array('courseid' => $this->courseid));
         $data->exams_finished_grading_open_link = $data->exams_finished_grading_open_link->raw_out(false);
 
         $data->exams_finished_grading_done_count =
-                block_exaquest_get_exams_finished_grading_done_count($this->userid);
+            block_exaquest_get_exams_finished_grading_done_count($this->userid);
         $data->exams_finished_grading_done_link = new moodle_url('/blocks/exaquest/exams.php',
-                array('courseid' => $this->courseid));
+            array('courseid' => $this->courseid));
         $data->exams_finished_grading_done_link = $data->exams_finished_grading_done_link->raw_out(false);
 
         //$data->questions_released_link = new moodle_url('/blocks/exaquest/questbank.php',
@@ -210,8 +210,8 @@ class dashboard implements renderable, templatable {
         //    $data->show_exams_heading = true;
         //}
 
-        if ($this->capabilities["fachlicherzweitpruefer"] ||$this->capabilities["fachlicherpruefer"] || $this->capabilities["modulverantwortlicher"] ||
-                $this->capabilities["pruefungskoordination"] || $this->capabilities["beurteilungsmitwirkende"]) { // TODO: who else?
+        if ($this->capabilities["fachlicherzweitpruefer"] || $this->capabilities["fachlicherpruefer"] || $this->capabilities["modulverantwortlicher"] ||
+            $this->capabilities["pruefungskoordination"] || $this->capabilities["beurteilungsmitwirkende"]) { // TODO: who else?
             $data->show_exams_heading = true;
         }
 
@@ -237,19 +237,19 @@ class dashboard implements renderable, templatable {
 
         // similarity comparison button
         $data->buttons = [
-                compare_questions::createShowOverviewButton(new moodle_url('/blocks/exaquest/similarity_comparison.php',
-                        array('courseid' => $this->courseid,
-                                'substituteid' => 0, 'hidepreviousq' => 0, 'sort' => 0,
-                                'category' => $catAndCont[0] . ',' . $catAndCont[1])),
-                        $this->courseid)
+            compare_questions::createShowOverviewButton(new moodle_url('/blocks/exaquest/similarity_comparison.php',
+                array('courseid' => $this->courseid,
+                    'substituteid' => 0, 'hidepreviousq' => 0, 'sort' => 0,
+                    'category' => $catAndCont[0] . ',' . $catAndCont[1])),
+                $this->courseid),
         ];
 
         $data->buttons = [
-                compare_questions::createShowOverviewButton(new moodle_url('/blocks/exaquest/similarity_comparison.php',
-                        array('courseid' => $this->courseid,
-                                'substituteid' => 0, 'hidepreviousq' => 0, 'sort' => 0,
-                                'category' => $catAndCont[0] . ',' . $catAndCont[1])),
-                        $this->courseid)
+            compare_questions::createShowOverviewButton(new moodle_url('/blocks/exaquest/similarity_comparison.php',
+                array('courseid' => $this->courseid,
+                    'substituteid' => 0, 'hidepreviousq' => 0, 'sort' => 0,
+                    'category' => $catAndCont[0] . ',' . $catAndCont[1])),
+                $this->courseid),
         ];
 
         return $data;

@@ -54,7 +54,7 @@ class last_changed_column extends column_base {
         return [
             'firstname' => ['field' => 'uc.firstname', 'title' => get_string('firstname')],
             'lastname' => ['field' => 'uc.lastname', 'title' => get_string('lastname')],
-            'timecreated' => ['field' => 'q.timecreated', 'title' => get_string('date')]
+            'timecreated' => ['field' => 'q.timecreated', 'title' => get_string('date')],
         ];
     }
 

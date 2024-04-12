@@ -24,7 +24,6 @@ require_once('status_column.php');
 require_once('question_name_idnumber_tags_column_exaquest.php');
 
 
-
 use core_plugin_manager;
 use core_question\bank\search\condition;
 use qbank_columnsortorder\column_manager;
@@ -40,13 +39,10 @@ use qbank_setfragenersteller\set_fragenersteller_column;
  * @copyright  2022 fabio <>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-class exaquest_view extends view
-{
+class exaquest_view extends view {
 
 
-    public function __construct($contexts, $pageurl, $course, $cm = null)
-    {
+    public function __construct($contexts, $pageurl, $course, $cm = null) {
         parent::__construct($contexts, $pageurl, $course, $cm);
 
 
@@ -58,8 +54,7 @@ class exaquest_view extends view
      *
      * @return array
      */
-    protected function get_question_bank_plugins(): array
-    {
+    protected function get_question_bank_plugins(): array {
         $questionbankclasscolumns = [];
         $newpluginclasscolumns = [];
         //edited:
@@ -79,7 +74,7 @@ class exaquest_view extends view
             // 'question_status_column',
             //'version_number_column',
             //'creator_name_column',
-            'comment_count_column'
+            'comment_count_column',
         ];
         if (question_get_display_preference('qbshowtext', 0, PARAM_BOOL, new \moodle_url(''))) {
             $corequestionbankcolumns[] = 'question_text_row';
@@ -127,7 +122,6 @@ class exaquest_view extends view
         }
 
 
-
         // Mitigate the error in case of any regression.
         foreach ($questionbankclasscolumns as $shortname => $questionbankclasscolumn) {
             if (empty($questionbankclasscolumn)) {
@@ -155,8 +149,7 @@ class exaquest_view extends view
     }
 
     // The display function is called by the questionbank.php file, it creates the whole view of the questionbank
-    public function display($pagevars, $tabname): void
-    {
+    public function display($pagevars, $tabname): void {
         global $SESSION;
 
         // retrieving all the pagevars, that got initialized in questionbank.php, it also utilizes $SESSION to save the state when changing pages
@@ -203,8 +196,7 @@ class exaquest_view extends view
      * @param array $editcontexts parent contexts
      * @param bool $showquestiontext whether the text of each question should be shown in the list
      */
-    public function wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus = 0, $fragencharakter = -1, $klassifikation = -1, $fragefach = -1, $lehrinhalt = -1): void
-    {
+    public function wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus = 0, $fragencharakter = -1, $klassifikation = -1, $fragefach = -1, $lehrinhalt = -1): void {
         global $CFG;
         list(, $contextid) = explode(',', $cat);
         $catcontext = \context::instance_by_id($contextid);
@@ -236,8 +228,7 @@ class exaquest_view extends view
         $this->display_options_form($showquestiontext);
     }
 
-    protected function display_options_form($showquestiontext): void
-    {
+    protected function display_options_form($showquestiontext): void {
         global $PAGE;
 
         // The html will be refactored in the filter feature implementation.
@@ -290,8 +281,7 @@ class exaquest_view extends view
      * @param array $addcontexts contexts where the user is allowed to add new questions.
      */
     protected function display_question_list($pageurl, $categoryandcontext, $recurse = 1, $page = 0,
-                                             $perpage = 100, $addcontexts = []): void
-    {
+        $perpage = 100, $addcontexts = []): void {
         global $OUTPUT, $DB;
         // This function can be moderately slow with large question counts and may time out.
         // We probably do not want to raise it to unlimited, so randomly picking 5 minutes.
@@ -362,8 +352,7 @@ class exaquest_view extends view
      * Get the number of questions.
      * @return int
      */
-    protected function get_question_count(): int
-    {
+    protected function get_question_count(): int {
         global $DB;
         return $DB->count_records_sql($this->countsql, $this->sqlparams);
     }
@@ -375,14 +364,12 @@ class exaquest_view extends view
      * @param false|mixed|\stdClass $category
      * @param bool $canadd
      */
-    function create_new_question_form_dashboard($category, $canadd): void
-    {
+    function create_new_question_form_dashboard($category, $canadd): void {
         $this->create_new_question_form($category, $canadd);
     }
 
     //deprecated. use get_question_category_and_context_of_course instead
-    function get_current_category_dashboard($categoryandcontext)
-    {
+    function get_current_category_dashboard($categoryandcontext) {
         global $DB;
 
         $editcontexts = $this->contexts->having_one_edit_tab_cap('editq'); // tabname just copied for convinience bacause it won't change
@@ -413,8 +400,7 @@ class exaquest_view extends view
      * @param false|mixed|\stdClass $category
      * @param bool $canadd
      */
-    protected function create_new_question_form($category, $canadd): void
-    {
+    protected function create_new_question_form($category, $canadd): void {
         global $COURSE;
         if (\core\plugininfo\qbank::is_plugin_enabled('qbank_editquestion') && has_capability('block/exaquest:createquestion', \context_course::instance($COURSE->id))) {
             echo editquestion_helper::create_new_question_button($category->id,
@@ -426,12 +412,11 @@ class exaquest_view extends view
      * Create the SQL query to retrieve the indicated questions, based on
      * \core_question\bank\search\condition filters.
      */
-    protected function build_query(): void
-    {
+    protected function build_query(): void {
         // Get the required tables and fields.
         $joins = [];
         // add here extra fields to get from the sql query, but be careful these can cause problems if not the right tables are not joind and the first one in this field determains the indexing of the return array
-        $fields = [ 'qbe.id as questionbankentryid','qv.status', 'qc.id as categoryid', 'qv.version', 'qv.id as versionid', 'qrevisea.reviserid as reviserid'];
+        $fields = ['qbe.id as questionbankentryid', 'qv.status', 'qc.id as categoryid', 'qv.version', 'qv.id as versionid', 'qrevisea.reviserid as reviserid'];
         if (!empty($this->requiredcolumns)) {
             foreach ($this->requiredcolumns as $column) {
                 $extrajoins = $column->get_extra_joins();
@@ -480,8 +465,7 @@ class exaquest_view extends view
         $this->loadsql = 'SELECT DISTINCT ' . implode(', ', $fields) . $sql . ' ORDER BY ' . implode(', ', $sorts);
     }
 
-    protected function load_page_questions($page, $perpage): \moodle_recordset
-    {
+    protected function load_page_questions($page, $perpage): \moodle_recordset {
         // here the actual query is called
         global $DB;
         $questions = $DB->get_recordset_sql($this->loadsql, $this->sqlparams, $page * $perpage, $perpage);
@@ -516,7 +500,7 @@ class exaquest_view extends view
                 $capcount = 0;
                 foreach ($action['capabilities'] as $capability) {
                     if (has_capability($capability, $catcontext)) {
-                        $capcount ++;
+                        $capcount++;
                     }
                 }
                 // At least one cap need to be there.
@@ -564,7 +548,7 @@ class exaquest_view extends view
                 $this->bulkactions[$bulkactionobject->get_key()] = [
                     'title' => $bulkactionobject->get_bulk_action_title(),
                     'url' => $bulkactionobject->get_bulk_action_url(),
-                    'capabilities' => $bulkactionobject->get_bulk_action_capabilities()
+                    'capabilities' => $bulkactionobject->get_bulk_action_capabilities(),
                 ];
             }
 

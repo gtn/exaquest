@@ -4,8 +4,8 @@ namespace block_exaquest\output;
 
 use renderable;
 use renderer_base;
-use templatable;
 use stdClass;
+use templatable;
 
 global $CFG;
 require_once($CFG->dirroot . '/blocks/exaquest/classes/form/autofill_helper_form.php');
@@ -50,7 +50,7 @@ class popup_assign_gradeexam implements renderable, templatable {
             $autocompleteoptions[$fp->id] = $fp->firstname . ' ' . $fp->lastname;
         }
         $bmw_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, "bmw" . $data->quizid,
-                'popup_assign_gradeexam');
+            'popup_assign_gradeexam');
         $data->bmw_autocomplete_html = $bmw_autocomplete_html;
 
         $significant_questions = $this->significant_questions;
@@ -64,12 +64,12 @@ class popup_assign_gradeexam implements renderable, templatable {
             $autocompleteoptions[$question->id] = $DB->get_record('question', array('id' => $question->id))->name;
         }
         $questions_autocomplete_html =
-                $mform->create_autocomplete_multi_select_html($autocompleteoptions, "questions" . $data->quizid,
-                        'popup_assign_gradeexam');
+            $mform->create_autocomplete_multi_select_html($autocompleteoptions, "questions" . $data->quizid,
+                'popup_assign_gradeexam');
         $data->questions_autocomplete_html = $questions_autocomplete_html;
 
         $data->action =
-                $PAGE->url->out(false, array('action' => 'assign_gradeexam', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
+            $PAGE->url->out(false, array('action' => 'assign_gradeexam', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
         $data->sesskey = sesskey();
 
         return $data;

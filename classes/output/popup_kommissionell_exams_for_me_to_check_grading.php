@@ -2,11 +2,11 @@
 // Standard GPL and phpdocs
 namespace block_exaquest\output;
 
+use moodle_url;
 use renderable;
 use renderer_base;
 use stdClass;
 use templatable;
-use moodle_url;
 
 class popup_kommissionell_exams_for_me_to_check_grading implements renderable, templatable {
     /** @var string $questions_to_create Part of the data that should be passed to the template. */
@@ -33,10 +33,10 @@ class popup_kommissionell_exams_for_me_to_check_grading implements renderable, t
             //        ));
             // the customer wants it to be on an exaquestpage, not in the moodle report page
             $exam->linktograding = new moodle_url('/blocks/exaquest/report.php',
-                    array('id' => $exam->coursemoduleid,
-                            'mode' => 'exaqueststatistics',
-                            'courseid' => $COURSE->id
-                    ));
+                array('id' => $exam->coursemoduleid,
+                    'mode' => 'exaqueststatistics',
+                    'courseid' => $COURSE->id,
+                ));
             $exam->linktograding = $exam->linktograding->raw_out(false);
         }
         // https://www.sitepoint.com/community/t/help-accessing-deep-level-json-in-mustache-template-solved/290780
@@ -52,7 +52,7 @@ class popup_kommissionell_exams_for_me_to_check_grading implements renderable, t
         //    end($data->exams_to_fill)->comma = false;
         //}
         $data->action =
-                $PAGE->url->out(false, array('action' => 'mark_as_done', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
+            $PAGE->url->out(false, array('action' => 'mark_as_done', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
         $data->sesskey = sesskey();
         $data->courseid = $COURSE->id;
         return $data;

@@ -38,7 +38,7 @@ class only_released_questions extends condition {
      * @return string SQL fragment. Must use named parameters.
      */
 
-    public function where(){
+    public function where() {
 
         $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED;
         return $this->where;

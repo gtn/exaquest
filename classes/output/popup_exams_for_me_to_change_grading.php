@@ -2,11 +2,11 @@
 // Standard GPL and phpdocs
 namespace block_exaquest\output;
 
+use moodle_url;
 use renderable;
 use renderer_base;
 use stdClass;
 use templatable;
-use moodle_url;
 
 class popup_exams_for_me_to_change_grading implements renderable, templatable {
     /** @var string $questions_to_create Part of the data that should be passed to the template. */
@@ -31,9 +31,9 @@ class popup_exams_for_me_to_change_grading implements renderable, templatable {
             $assigner = $DB->get_record('user', array('id' => $exam->assignerid));
             $exam->assignerfullname = fullname($assigner);
             $exam->linktograding = new moodle_url('/mod/quiz/report.php',
-                    array('id' => $exam->coursemoduleid,
-                            'mode' => 'grading',
-                    ));
+                array('id' => $exam->coursemoduleid,
+                    'mode' => 'grading',
+                ));
             $exam->linktograding = $exam->linktograding->raw_out(false);
         }
 
@@ -50,7 +50,7 @@ class popup_exams_for_me_to_change_grading implements renderable, templatable {
         //    end($data->exams_to_fill)->comma = false;
         //}
         $data->action =
-                $PAGE->url->out(false, array('action' => 'mark_as_done', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
+            $PAGE->url->out(false, array('action' => 'mark_as_done', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
         $data->sesskey = sesskey();
         $data->courseid = $COURSE->id;
         return $data;

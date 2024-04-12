@@ -25,7 +25,7 @@ class questionname_exaquest extends questionname {
             question_has_capability_on($question, 'edit'),
             format_string($question->name), $question->name,
             get_string('edit_question_name_hint', 'qbank_viewquestionname'),
-            get_string('edit_question_name_label', 'qbank_viewquestionname', (object) [
+            get_string('edit_question_name_label', 'qbank_viewquestionname', (object)[
                 'name' => $question->name,
             ])
         );

@@ -25,8 +25,8 @@
 
 namespace qbank_history;
 
-use qbank_columnsortorder\column_manager;
 use core_plugin_manager;
+use qbank_columnsortorder\column_manager;
 
 
 //class displays the version history of questions
@@ -48,7 +48,6 @@ class exaquest_history_view extends question_history_view {
             'export_xml_action_column',
             'delete_action_column',
             'question_status_column',
-
 
 
         ];
@@ -81,7 +80,7 @@ class exaquest_history_view extends question_history_view {
             'question_status_column',
             'version_number_column',
             'creator_name_column',
-            'comment_count_column'
+            'comment_count_column',
         ];
         if (question_get_display_preference('qbshowtext', 0, PARAM_BOOL, new \moodle_url(''))) {
             $corequestionbankcolumns[] = 'question_text_row';
@@ -138,7 +137,7 @@ class exaquest_history_view extends question_history_view {
         return $questionbankclasscolumns;
     }
 
-    public function wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus=0, $fragencharakter=-1, $klassifikation=-1, $fragefach=-1,  $lehrinhalt=-1): void {
+    public function wanted_filters($cat, $tagids, $showhidden, $recurse, $editcontexts, $showquestiontext, $filterstatus = 0, $fragencharakter = -1, $klassifikation = -1, $fragefach = -1, $lehrinhalt = -1): void {
         $categorydata = explode(',', $cat);
         $contextid = $categorydata[1];
         $catcontext = \context::instance_by_id($contextid);
@@ -153,8 +152,8 @@ class exaquest_history_view extends question_history_view {
                 }
             } else {
                 if (get_config('core', 'usetags')) {
-                   // array_unshift($this->searchconditions,
-                   //     new \core_question\bank\search\tag_condition([$catcontext, $thiscontext], $tagids));
+                    // array_unshift($this->searchconditions,
+                    //     new \core_question\bank\search\tag_condition([$catcontext, $thiscontext], $tagids));
                 }
 
                 //array_unshift($this->searchconditions, new \core_question\bank\search\hidden_condition(!$showhidden));
@@ -162,7 +161,6 @@ class exaquest_history_view extends question_history_view {
         }
         $this->display_options_form($showquestiontext);
     }
-
 
 
 }

@@ -47,7 +47,7 @@ class set_fragenersteller_column extends action_column_base implements menuable_
 
     public function is_sortable(): array {
         return [
-            'ID' => ['field' => 'q.id', 'title' => "ID"]
+            'ID' => ['field' => 'q.id', 'title' => "ID"],
         ];
     }
 
@@ -77,7 +77,7 @@ class set_fragenersteller_column extends action_column_base implements menuable_
         $attributes = [
             'data-action' => 'changeowner' . $question->questionbankentryid,
             'data-contextid' => $this->qbank->get_most_specific_context()->id,
-            'data-questionid' => $question->id
+            'data-questionid' => $question->id,
         ];
 
         return [$url, $attributes];

@@ -39,7 +39,7 @@ function block_exaquest_coursemodule_definition_after_data($formwrapper, $mform)
             </script>
             <?php
             $mform->addElement('submit', 'saveandreturnexaquest', get_string('save_and_return', 'block_exaquest'),
-                    'onClick="changeFormActionExaquest()"');
+                'onClick="changeFormActionExaquest()"');
         }
     }
 
@@ -82,7 +82,6 @@ function block_exaquest_coursemodule_standard_elements($formwrapper, $mform) {
             //$this->maxgradeformelement->updateAttributes(array('id' => $maxgradeformelementid));
 
 
-
             $quizid = $formwrapper->get_instance();
 
             $mform->addElement('header', 'exaquest_settings', get_string('exaquest_settings', 'block_exaquest'));
@@ -90,12 +89,12 @@ function block_exaquest_coursemodule_standard_elements($formwrapper, $mform) {
 
             // Add the fachlicherpruefer setting
             $fachlichepruefer =
-                    block_exaquest_get_fachlichepruefer_by_courseid($COURSE->id); // for now I assume: there are only fachlichepruefer, there are no other roles, just other assignments
+                block_exaquest_get_fachlichepruefer_by_courseid($COURSE->id); // for now I assume: there are only fachlichepruefer, there are no other roles, just other assignments
             if ($fachlichepruefer) {
                 $fachlichepruefer_options = array();
                 foreach ($fachlichepruefer as $fachlicherpruefer) {
                     $fachlichepruefer_options[$fachlicherpruefer->id] =
-                            $fachlicherpruefer->firstname . ' ' . $fachlicherpruefer->lastname;
+                        $fachlicherpruefer->firstname . ' ' . $fachlicherpruefer->lastname;
                 }
                 $mform->addElement('select', 'assignfachlicherpruefer', 'Fachlichen Prüfer auswählen', $fachlichepruefer_options);
                 //$mform->addElement('select', 'assignfachlicherzweitpruefer', 'Fachlichen Zweitprüfer auswählen',
@@ -154,8 +153,8 @@ function block_exaquest_coursemodule_standard_elements($formwrapper, $mform) {
             // for every fragefach, add one input
             foreach ($fragefaecher as $fragefach) {
                 $mform->addElement('text', 'exaquestquestioncategoryid' . $fragefach->id,
-                        get_string('points_per', 'block_exaquest') . $fragefach->categoryname,
-                        array('size' => '10'));
+                    get_string('points_per', 'block_exaquest') . $fragefach->categoryname,
+                    array('size' => '10'));
                 $mform->setType('exaquestquestioncategoryid' . $fragefach->id, PARAM_INT);
                 if ($quizid) {
                     $mform->setDefault('exaquestquestioncategoryid' . $fragefach->id, $fragefach->questioncount);

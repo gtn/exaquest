@@ -11,7 +11,7 @@ require_once(__DIR__ . '/questionbank_extensions/exaquest_exam_view.php');
 block_exaquest_init_js_css();
 
 list($thispageurl, $contexts, $cmid, $cm, $module, $pagevars) =
-        question_edit_setup('questions', '/question/edit.php');
+    question_edit_setup('questions', '/question/edit.php');
 
 $courseid = required_param('courseid', PARAM_INT);
 $filterstatus = optional_param('filterstatus', 0, PARAM_INT);

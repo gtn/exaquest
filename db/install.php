@@ -40,13 +40,13 @@ function xmldb_block_exaquest_install() {
     $configdata += [
         'required' => 0,
         'uniquevalues' => 0,
-        "categorytype"=> 0,
+        "categorytype" => 0,
         'locked' => 0,
         'visibility' => 2,
     ];
 
     $record->configdata = json_encode($configdata);
-    $field = field_controller::create(0, (object) ['type' => $record->type], $c1);
+    $field = field_controller::create(0, (object)['type' => $record->type], $c1);
     $handler->save_field_configuration($field, $record);
 
     $record = new stdClass();
@@ -58,12 +58,12 @@ function xmldb_block_exaquest_install() {
     $configdata += [
         'required' => 0,
         'uniquevalues' => 0,
-        "categorytype"=> 1,
+        "categorytype" => 1,
         'locked' => 0,
         'visibility' => 2,
     ];
     $record->configdata = json_encode($configdata);
-    $field = field_controller::create(0, (object) ['type' => $record->type], $c1);
+    $field = field_controller::create(0, (object)['type' => $record->type], $c1);
     $handler->save_field_configuration($field, $record);
 
     $record = new stdClass();
@@ -75,12 +75,12 @@ function xmldb_block_exaquest_install() {
     $configdata += [
         'required' => 0,
         'uniquevalues' => 0,
-        "categorytype"=> 2,
+        "categorytype" => 2,
         'locked' => 0,
         'visibility' => 2,
     ];
     $record->configdata = json_encode($configdata);
-    $field = field_controller::create(0, (object) ['type' => $record->type], $c1);
+    $field = field_controller::create(0, (object)['type' => $record->type], $c1);
     $handler->save_field_configuration($field, $record);
 
     $record = new stdClass();
@@ -92,12 +92,12 @@ function xmldb_block_exaquest_install() {
     $configdata += [
         'required' => 0,
         'uniquevalues' => 0,
-        "categorytype"=> 3,
+        "categorytype" => 3,
         'locked' => 0,
         'visibility' => 2,
     ];
     $record->configdata = json_encode($configdata);
-    $field = field_controller::create(0, (object) ['type' => $record->type], $c1);
+    $field = field_controller::create(0, (object)['type' => $record->type], $c1);
     $handler->save_field_configuration($field, $record);
 
     // Creating roles and assigning capabilities

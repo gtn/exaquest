@@ -2,11 +2,11 @@
 // Standard GPL and phpdocs
 namespace block_exaquest\output;
 
+use moodle_url;
 use renderable;
 use renderer_base;
 use stdClass;
 use templatable;
-use moodle_url;
 
 class popup_exams_for_me_to_fill implements renderable, templatable {
     public function __construct($exams_to_fill, $catAndCont) {
@@ -26,10 +26,10 @@ class popup_exams_for_me_to_fill implements renderable, templatable {
         // link to /mod/quiz/report.php?id=$quizid&mode=grading for every exam
         foreach ($this->exams_to_fill as $exam) {
             $exam->linktograding = new moodle_url('/blocks/exaquest/exam_questionbank.php',
-                    array('courseid' => $COURSE->id,
-                            'category' => $this->catAndCont[0] . ',' . $this->catAndCont[1],
-                            'quizid' => $exam->quizid,
-                    ));
+                array('courseid' => $COURSE->id,
+                    'category' => $this->catAndCont[0] . ',' . $this->catAndCont[1],
+                    'quizid' => $exam->quizid,
+                ));
             $exam->linktograding = $exam->linktograding->raw_out(false);
         }
 
@@ -46,7 +46,7 @@ class popup_exams_for_me_to_fill implements renderable, templatable {
         //    end($data->exams_to_fill)->comma = false;
         //}
         $data->action =
-                $PAGE->url->out(false, array('action' => 'mark_as_done', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
+            $PAGE->url->out(false, array('action' => 'mark_as_done', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
         $data->sesskey = sesskey();
         $data->courseid = $COURSE->id;
         return $data;

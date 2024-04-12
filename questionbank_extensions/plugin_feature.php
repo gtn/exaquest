@@ -3,8 +3,8 @@
 
 namespace qbank_openquestionforreview;
 
-use core_question\local\bank\plugin_features_base;
 use core_question\local\bank\menu_action_column_base;
+use core_question\local\bank\plugin_features_base;
 
 require_once('add_to_quiz.php');
 require_once('usage_check_column.php');
@@ -40,7 +40,7 @@ class plugin_feature extends \core_question\local\bank\plugin_features_base {
             new \qbank_viewquestionname\question_name_idnumber_tags_column_exaquest($qbank),
             new set_fragenersteller_column($qbank),
             new assign_to_revise_from_quiz($qbank),
-            new lock_from_quiz($qbank)
+            new lock_from_quiz($qbank),
         ];
     }
 }

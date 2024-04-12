@@ -70,113 +70,113 @@ class quiz_exaqueststatistics_report extends report_base {
         $quizinfo = $quizstats->get_formatted_quiz_info_data($course, $cm, $quiz);
 
         /** Chandran Code start here **/
-		// Added New info
-		$quizinfo["timelimit"] = format_time($quiz->timelimit);
-		$quizinfo["quizattempt"] = $quizinfo[get_string('allattemptscount', 'quiz_statistics')];
+        // Added New info
+        $quizinfo["timelimit"] = format_time($quiz->timelimit);
+        $quizinfo["quizattempt"] = $quizinfo[get_string('allattemptscount', 'quiz_statistics')];
 
-		// Remove unnecessary Info		
-		unset($quizinfo[get_string('quizclose', 'quiz')],$quizinfo[get_string('duration', 'quiz_statistics')], $quizinfo[get_string('firstattemptscount', 'quiz_statistics')], $quizinfo[get_string('allattemptscount', 'quiz_statistics')]);
-		$quizinfo["quizcancelattempt"] = $DB->count_records_sql('SELECT count(*) FROM {quiz_attempts} WHERE quiz = ? AND state IN (?)',[$quiz->id, quiz_attempt::ABANDONED]);		
-		// we change key because get_string not working with umlaut
-		$quizinfo = $this->change_key($quizinfo, get_string('quizopen', 'quiz'), 'quizdatum');
-		// Replace label for german
-		$quizinfo = $this->check_and_replace_plugin_label($quizinfo);		
-		/** Chandran Code end here **/
+        // Remove unnecessary Info
+        unset($quizinfo[get_string('quizclose', 'quiz')], $quizinfo[get_string('duration', 'quiz_statistics')], $quizinfo[get_string('firstattemptscount', 'quiz_statistics')], $quizinfo[get_string('allattemptscount', 'quiz_statistics')]);
+        $quizinfo["quizcancelattempt"] = $DB->count_records_sql('SELECT count(*) FROM {quiz_attempts} WHERE quiz = ? AND state IN (?)', [$quiz->id, quiz_attempt::ABANDONED]);
+        // we change key because get_string not working with umlaut
+        $quizinfo = $this->change_key($quizinfo, get_string('quizopen', 'quiz'), 'quizdatum');
+        // Replace label for german
+        $quizinfo = $this->check_and_replace_plugin_label($quizinfo);
+        /** Chandran Code end here **/
 
         echo $this->output_quiz_info_table($quizinfo);
 
-		$context = context_module::instance($cm->id);
-		$letters = grade_get_letters($context);
-		$heading = get_string('statisticsheader', 'block_exaquest');		
+        $context = context_module::instance($cm->id);
+        $letters = grade_get_letters($context);
+        $heading = get_string('statisticsheader', 'block_exaquest');
 
-		echo $OUTPUT->heading($heading);
+        echo $OUTPUT->heading($heading);
 
-		list($bands, $bandwidth) = self::get_bands_count_and_width($quiz);
-		$labels = self::get_bands_labels($bands, $bandwidth, $quiz);
-		$data = quiz_report_grade_bands($bandwidth, $bands, $quiz->id, new \core\dml\sql_join());
+        list($bands, $bandwidth) = self::get_bands_count_and_width($quiz);
+        $labels = self::get_bands_labels($bands, $bandwidth, $quiz);
+        $data = quiz_report_grade_bands($bandwidth, $bands, $quiz->id, new \core\dml\sql_join());
 
-		$combined_array = array_combine($labels, $data);
+        $combined_array = array_combine($labels, $data);
 
-		$gradelabels = self::get_grade_labels($letters);
-		$graderanges = self::get_grade_ranges($quiz, $letters);
+        $gradelabels = self::get_grade_labels($letters);
+        $graderanges = self::get_grade_ranges($quiz, $letters);
 
-		$final_data = [];
-		foreach($graderanges as $searched_range){
-			$final_data[] = self::searchRange($combined_array, $searched_range);			
-		}
+        $final_data = [];
+        foreach ($graderanges as $searched_range) {
+            $final_data[] = self::searchRange($combined_array, $searched_range);
+        }
 
-		$tdata = array();
-		$max = 100;
-		$lindex = 0;		
-		foreach($letters as $boundary=>$letter) {			
-			$line = array();
-			$line[] = round($quiz->grade*format_float($boundary,2)/100).' - '. round($quiz->grade*format_float($max,2)/100);
-			$line[] = format_string($letter);
-			$line[] = $final_data[$lindex];			
-			$tdata[] = $line;
-			$max = $boundary - 0.01;
-			$lindex++;			
-		}
-		$dtotal = 0;
-		$ptotal = 0;
-		// calculate total of participants for last row display
-		foreach($tdata as $tabledata){
-			$dtotal = $dtotal + $tabledata[2];			
-		}
+        $tdata = array();
+        $max = 100;
+        $lindex = 0;
+        foreach ($letters as $boundary => $letter) {
+            $line = array();
+            $line[] = round($quiz->grade * format_float($boundary, 2) / 100) . ' - ' . round($quiz->grade * format_float($max, 2) / 100);
+            $line[] = format_string($letter);
+            $line[] = $final_data[$lindex];
+            $tdata[] = $line;
+            $max = $boundary - 0.01;
+            $lindex++;
+        }
+        $dtotal = 0;
+        $ptotal = 0;
+        // calculate total of participants for last row display
+        foreach ($tdata as $tabledata) {
+            $dtotal = $dtotal + $tabledata[2];
+        }
         // calculate percentage of participants
         $rowindex = 0;
         $ptotal = 0;
-        foreach($letters as $boundary=>$letter) {
-                $tdata[$rowindex][3] = format_float(0,2).' %';
-                if($dtotal > 0){
-                        $tdata[$rowindex][3] = format_float(($final_data[$rowindex]/$dtotal)*100,2).' %';
-                }
-                $ptotal = $ptotal + $tdata[$rowindex][3];
-                $rowindex++;
-        }        
-		$tdata[] = array('','',$dtotal,format_float($ptotal, 2).' %');
-		
-		$table = new html_table();
-		$table->id = 'grade-letters-view';
-		$table->head  = array(get_string('statisticspoints', 'block_exaquest'), get_string('letter', 'grades'),get_string('numericaldist', 'block_exaquest'),get_string('percentagedist', 'block_exaquest'));
-		$table->size  = array('25%', '25%','25%','25%');
-		$table->align = array('left', 'left', 'left', 'left');
-		$table->width = '30%';
-		$table->data  = $tdata;
-		$table->tablealign  = 'center';
-		echo html_writer::table($table);
-				
-		$output = $PAGE->get_renderer('mod_quiz');
-		$chart = self::get_chart($gradelabels, $final_data);
-		$graphname = get_string('overviewreportgraph', 'quiz_overview');
-		// Numerical range data should display in LTR even for RTL languages.
-		echo $output->chart($chart, $graphname, ['dir' => 'ltr']);
+        foreach ($letters as $boundary => $letter) {
+            $tdata[$rowindex][3] = format_float(0, 2) . ' %';
+            if ($dtotal > 0) {
+                $tdata[$rowindex][3] = format_float(($final_data[$rowindex] / $dtotal) * 100, 2) . ' %';
+            }
+            $ptotal = $ptotal + $tdata[$rowindex][3];
+            $rowindex++;
+        }
+        $tdata[] = array('', '', $dtotal, format_float($ptotal, 2) . ' %');
+
+        $table = new html_table();
+        $table->id = 'grade-letters-view';
+        $table->head = array(get_string('statisticspoints', 'block_exaquest'), get_string('letter', 'grades'), get_string('numericaldist', 'block_exaquest'), get_string('percentagedist', 'block_exaquest'));
+        $table->size = array('25%', '25%', '25%', '25%');
+        $table->align = array('left', 'left', 'left', 'left');
+        $table->width = '30%';
+        $table->data = $tdata;
+        $table->tablealign = 'center';
+        echo html_writer::table($table);
+
+        $output = $PAGE->get_renderer('mod_quiz');
+        $chart = self::get_chart($gradelabels, $final_data);
+        $graphname = get_string('overviewreportgraph', 'quiz_overview');
+        // Numerical range data should display in LTR even for RTL languages.
+        echo $output->chart($chart, $graphname, ['dir' => 'ltr']);
 
         return true;
     }
 
-	protected static function searchRange($combined_array, $searched_range) {
-		// Initialize result array
-		$sum = 0;
+    protected static function searchRange($combined_array, $searched_range) {
+        // Initialize result array
+        $sum = 0;
 
-		// Parse the lower and upper bounds of the searched range
-		list($search_lower, $search_upper) = array_map('floatval', explode(' - ', $searched_range));
+        // Parse the lower and upper bounds of the searched range
+        list($search_lower, $search_upper) = array_map('floatval', explode(' - ', $searched_range));
 
-		// Iterate over the combined array
-		foreach ($combined_array as $range => $value) {
-			// Parse the lower and upper bounds of each range in the combined array
-			list($range_lower, $range_upper) = array_map('floatval', explode(' - ', $range));
+        // Iterate over the combined array
+        foreach ($combined_array as $range => $value) {
+            // Parse the lower and upper bounds of each range in the combined array
+            list($range_lower, $range_upper) = array_map('floatval', explode(' - ', $range));
 
-			// Check if the searched range falls within the current range
-			if ($search_lower < $range_upper && $search_upper > $range_lower) {
-				// If it does, add the range and its corresponding value to the result
-				$sum += $value;
-			}
-		}
+            // Check if the searched range falls within the current range
+            if ($search_lower < $range_upper && $search_upper > $range_lower) {
+                // If it does, add the range and its corresponding value to the result
+                $sum += $value;
+            }
+        }
 
-		// Return the result array
-		return $sum;
-	}
+        // Return the result array
+        return $sum;
+    }
 
     /**
      * Get a chart.
@@ -198,21 +198,21 @@ class quiz_exaqueststatistics_report extends report_base {
         $chart->add_series($series);
         return $chart;
     }
-	
+
 
     /**
      * Get the grade ranges.
      *
-     * @param string[] $letters The letter of grades.     
+     * @param string[] $letters The letter of grades.
      * @return string[] The labels.
      */
-    public static function get_grade_ranges($quiz, $letters) {		
-		$bandlabels = [];
-		$max = 100;
-		foreach($letters as $boundary=>$letter) {
-			$bandlabels[] = round($quiz->grade*format_float($boundary,2)/100).' - '. round($quiz->grade*format_float($max,2)/100);
-			$max = $boundary - 0.01;
-		}
+    public static function get_grade_ranges($quiz, $letters) {
+        $bandlabels = [];
+        $max = 100;
+        foreach ($letters as $boundary => $letter) {
+            $bandlabels[] = round($quiz->grade * format_float($boundary, 2) / 100) . ' - ' . round($quiz->grade * format_float($max, 2) / 100);
+            $max = $boundary - 0.01;
+        }
 
         return $bandlabels;
     }
@@ -221,14 +221,14 @@ class quiz_exaqueststatistics_report extends report_base {
     /**
      * Get the grade labels.
      *
-     * @param string[] $letters The letter of grades.     
+     * @param string[] $letters The letter of grades.
      * @return string[] The labels.
      */
-    public static function get_grade_labels($letters) {		
-		$bandlabels = [];
-		foreach($letters as $boundary=>$letter) {
-			$bandlabels[] = format_string($letter);			
-		}
+    public static function get_grade_labels($letters) {
+        $bandlabels = [];
+        foreach ($letters as $boundary => $letter) {
+            $bandlabels[] = format_string($letter);
+        }
 
         return $bandlabels;
     }
@@ -247,8 +247,8 @@ class quiz_exaqueststatistics_report extends report_base {
             $bandlabels[] = quiz_format_grade($quiz, ($i - 1) * $bandwidth) . ' - ' . quiz_format_grade($quiz, $i * $bandwidth);
         }
         return $bandlabels;
-    }	
-	
+    }
+
     /**
      * Get the bands configuration for the quiz.
      *
@@ -261,7 +261,7 @@ class quiz_exaqueststatistics_report extends report_base {
      */
     public static function get_bands_count_and_width($quiz) {
         $bands = $quiz->grade;
-		
+
         while ($bands > 20 || $bands <= 10) {
             if ($bands > 50) {
                 $bands /= 5;
@@ -274,10 +274,10 @@ class quiz_exaqueststatistics_report extends report_base {
                 $bands *= 2;
             }
         }
-		
+
         // See MDL-34589. Using doubles as array keys causes problems in PHP 5.4, hence the explicit cast to int.
-        $bands = (int) ceil($bands);
-		
+        $bands = (int)ceil($bands);
+
         return [$bands, $quiz->grade / $bands];
     }
 
@@ -287,29 +287,29 @@ class quiz_exaqueststatistics_report extends report_base {
      * @param mixed $new_key
      * @return mixed
      */
-    protected function change_key( $array, $old_key, $new_key ) {
-		if( ! array_key_exists( $old_key, $array ) )
-			return $array;
+    protected function change_key($array, $old_key, $new_key) {
+        if (!array_key_exists($old_key, $array))
+            return $array;
 
-		$keys = array_keys( $array );
-		$keys[ array_search( $old_key, $keys ) ] = $new_key;
+        $keys = array_keys($array);
+        $keys[array_search($old_key, $keys)] = $new_key;
 
-		return array_combine( $keys, $array );
-	}
-	
+        return array_combine($keys, $array);
+    }
+
     /**
      * @param mixed $quizinfo
      * @return mixed
      */
-	protected function check_and_replace_plugin_label($quizinfo){
-		foreach ($quizinfo as $heading => $value) {
-			if (get_string_manager()->string_exists($heading, 'block_exaquest')) {
-				$quizinfo = $this->change_key($quizinfo, $heading, get_string($heading, 'block_exaquest'));
-			}
-		}
-		
-		return $quizinfo;
-	}
+    protected function check_and_replace_plugin_label($quizinfo) {
+        foreach ($quizinfo as $heading => $value) {
+            if (get_string_manager()->string_exists($heading, 'block_exaquest')) {
+                $quizinfo = $this->change_key($quizinfo, $heading, get_string($heading, 'block_exaquest'));
+            }
+        }
+
+        return $quizinfo;
+    }
 
     /**
      * Return HTML for table of overall quiz statistics.

@@ -49,7 +49,7 @@ class assign_to_revise_from_quiz extends column_base {
 
 
         echo $OUTPUT->render(new \block_exaquest\output\popup_change_status_secondary_button($selectusers, 'revise_question_from_quiz',
-                get_string('revise_question_from_quiz', 'block_exaquest'), $question));
+            get_string('revise_question_from_quiz', 'block_exaquest'), $question));
 
         //echo '<button href="#" id="assign_to_revise_from_quiz' . $question->questionbankentryid .
         //        '" class="assign_to_revise_from_quiz' .
@@ -106,6 +106,6 @@ class assign_to_revise_from_quiz extends column_base {
 
     public function get_extra_joins(): array {
         return ['qs' => 'JOIN {block_exaquestquestionstatus} qs ON qbe.id = qs.questionbankentryid',
-                'qra' => 'LEFT JOIN {block_exaquestreviewassign} qra ON qbe.id = qra.questionbankentryid'];
+            'qra' => 'LEFT JOIN {block_exaquestreviewassign} qra ON qbe.id = qra.questionbankentryid'];
     }
 }

@@ -1,5 +1,3 @@
-
-
 <?php
 
 global $CFG, $PAGE, $OUTPUT, $COURSE;

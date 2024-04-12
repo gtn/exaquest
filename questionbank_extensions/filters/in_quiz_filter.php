@@ -38,7 +38,7 @@ class in_quiz_filter extends condition {
      * @return string SQL fragment. Must use named parameters.
      */
 
-    public function where(){
+    public function where() {
 
         $quizid = optional_param('quizid', null, PARAM_INT);
 
@@ -47,7 +47,7 @@ class in_quiz_filter extends condition {
                         JOIN {quiz_slots} qusl ON qref.itemid = qusl.id
                         WHERE qref.component='mod_quiz' AND qref.questionarea = 'slot' AND qusl.quizid = qbe.id)";
 */
-        $this->where = "quizid = ". $quizid;
+        $this->where = "quizid = " . $quizid;
         return $this->where;
     }
 }

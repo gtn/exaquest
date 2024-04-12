@@ -4,8 +4,8 @@ namespace block_exaquest\output;
 
 use renderable;
 use renderer_base;
-use templatable;
 use stdClass;
+use templatable;
 
 global $CFG;
 require_once($CFG->dirroot . '/blocks/exaquest/classes/form/autofill_helper_form.php');
@@ -24,9 +24,9 @@ class popup_assign_addquestions implements renderable, templatable {
         $categoryoptionidkeys = array_keys($categorys_required_counts);
         $this->fragefaecher = block_exaquest_get_category_names_by_ids($categoryoptionidkeys, true);
         $this->missingquestionscount = 0;
-        foreach($this->fragefaecher as $key => $option){
+        foreach ($this->fragefaecher as $key => $option) {
             $this->fragefaecher[$key]->requiredquestioncount = $categorys_required_counts[$key]->questioncount;
-            $this->fragefaecher[$key]->currentquestioncount = $categorys_current_counts[$key] ? : 0;
+            $this->fragefaecher[$key]->currentquestioncount = $categorys_current_counts[$key] ?: 0;
             //if($this->fragefaecher[$key]->currentquestioncount < $this->fragefaecher[$key]->requiredquestioncount) {
             //    $this->missingquestionscount += $this->fragefaecher[$key]->requiredquestioncount -
             //            $this->fragefaecher[$key]->currentquestioncount;
@@ -72,7 +72,7 @@ class popup_assign_addquestions implements renderable, templatable {
         foreach ($data->fp as $fp) {
             $autocompleteoptions[$fp->id] = $fp->firstname . ' ' . $fp->lastname;
         }
-        $pmw_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, "pmw".$data->quizid, 'popup_assign_addquestions');
+        $pmw_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, "pmw" . $data->quizid, 'popup_assign_addquestions');
         $data->pmw_autocomplete_html = $pmw_autocomplete_html;
 
 

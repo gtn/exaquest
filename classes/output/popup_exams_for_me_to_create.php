@@ -2,11 +2,11 @@
 // Standard GPL and phpdocs
 namespace block_exaquest\output;
 
+use moodle_url;
 use renderable;
 use renderer_base;
 use stdClass;
 use templatable;
-use moodle_url;
 
 class popup_exams_for_me_to_create implements renderable, templatable {
     /** @var string $exams_to_create Part of the data that should be passed to the template. */
