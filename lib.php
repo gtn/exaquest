@@ -188,7 +188,7 @@ function block_exaquest_coursemodule_standard_elements($formwrapper, $mform) {
             // for every fragefach, add one input
             foreach ($fragefaecher as $fragefach) {
                 $mform->addElement('text', 'exaquest_minimum_required_percentage_per_fragefach' . $fragefach->id,
-                    get_string('minimum_required_percentage', 'block_exaquest') . $fragefach->categoryname,
+                    get_string('exaquest_minimum_required_percentage_per_fragefach', 'block_exaquest') . $fragefach->categoryname,
                     array('size' => '10'));
                 // add help button
                 $mform->addHelpButton('exaquest_minimum_required_percentage_per_fragefach' . $fragefach->id, 'minimum_percentage', 'block_exaquest');

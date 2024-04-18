@@ -36,6 +36,7 @@ $string['request_exams_comment_placeholder'] = 'Which kind of exam is needed? Op
 $string['request_exams_button'] = 'Request';
 
 $string['set_quizquestioncount'] = 'Request';
+$string['exaquest_minimum_required_percentage_per_fragefach'] = 'Minimum % for Fragefach';
 
 $string['mark_as_done'] = 'Mark as done';
 $string['mark_selected_as_done_button'] = 'Mark selected requests as done';
@@ -96,11 +97,13 @@ $string['daily_released_questions_in_course'] =
 $string['messageprovider:quizfinishedgradingopen'] = 'Prüfung abgeschlossen und Beurteilung abgeschlossen TODO TRANSLATE';
 $string['quiz_finished_grading_open'] = 'Die Prüfung <a href="{$a->url}">{$a->fullname}</a> wurde abgeschlossen und die Beurteilungen wurden vergeben, müssen aber noch begutachtet werden. TODO TRANSLATE';
 $string['quiz_finished_grading_open_subject'] = 'Prüfung {$a->fullname} abgeschlossen aber nicht beurteilt. TODO TRANSLATE';
+$string['quiz_finished_grading_open_comment'] = 'Diese Prüfung ist abgeschlossen, es sind aber noch Fragen zu beurteilen. TODO TRANSLATE';
+
 
 $string['messageprovider:quizfinishedgradingdone'] = 'Prüfung abgeschlossen mit unvollständiger Beurteilung TODO TRANSLATE';
 $string['quiz_finished_grading_done'] = 'Die Prüfung <a href="{$a->url}">{$a->fullname}</a> wrude abgeschlossen und es sind noch Beurteilungen offen. TODO TRANSLATE';
 $string['quiz_finished_grading_done_subject'] = 'Prüfung {$a->fullname} abgeschlossen und beurteilt. TODO TRANSLATE';
-
+$string['quiz_finished_grading_done_comment'] = 'Diese Prüfung ist abgeschlossen, die Fragen sind beurteilt, die Beurteilungskontrolle steht noch aus. TODO TRANSLATE';
 
 // Roles and Capabilities
 
@@ -399,6 +402,7 @@ $string['revise_question_from_quiz'] = 'Revise question';
 $string['lock_from_quiz'] = 'Lock';
 
 $string['send_exam_to_review'] = 'Send exam to review';
+$string['force_send_exam_to_review'] = 'Prüfung sofort zur Begutachtung schicken TODO TRANSLATE';
 $string['fachlich_release_exam'] = 'Fachlich release exam';
 $string['assign_check_exam_grading'] = 'Assign exam to check grading';
 $string['assign_check_exam_grading_label'] = 'Assign exam to check grading';
@@ -448,4 +452,9 @@ $string['statisticsgrade'] = 'Grade';
 $string['numericaldist'] = 'Numerical Distribution';
 $string['percentagedist'] = 'Percentag Distribution';
 
+$string['go_to_exam_report_overview'] = 'Zum Prüfungsbericht TODO TRANSLATE';
+$string['go_to_exam_report_grading'] = 'Zur Prüfungsbeurteilung TODO TRANSLATE';
+$string['send_exam_to_revise'] = 'Prüfung zur Überarbeitung zurückschicken TODO TRANSLATE';
+
 $string['points_per_help'] = 'This is the number of points per category. Please specify the points carefully.';
+$string['minimum_percentage_help'] = 'Geben Sie die Bestehensgrenze für dieses Fragefach an, falls es ein Kernfach ist. Wenn es kein Kernfach ist, lassen Sie 0% stehen. TODO TRANSLATE';

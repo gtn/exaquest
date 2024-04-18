@@ -36,7 +36,7 @@ $string['request_exams_comment_placeholder'] = 'Welche Art von Prüfung wird ben
 $string['request_exams_button'] = 'Anfordern';
 
 $string['set_quizquestioncount'] = 'Benötigte Fragenanzahl pro Fragefach festlegen';
-$string['exaquest_minimum_required_percentage_per_fragefach'] = 'Bestehensgrenze in % für dieses Fragefach angeben';
+$string['exaquest_minimum_required_percentage_per_fragefach'] = 'Bestehensgrenze in % für Fragefach';
 
 $string['mark_as_done'] = 'Als erledigt markieren';
 $string['mark_selected_as_done_button'] = 'Selektierte Anfragen als erledigt markieren';
