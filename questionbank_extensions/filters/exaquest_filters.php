@@ -84,7 +84,7 @@ class exaquest_filters extends condition {
             case BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW:
                 $this->where = "(qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS .
                     " OR qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE .
-                    " OR qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE . ") 
+                    " OR qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE . ")
                     AND qra.reviewerid = " . $USER->id;
                 break;
             case BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_REVISE:
@@ -107,6 +107,7 @@ class exaquest_filters extends condition {
                 $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED;
                 break;
         }
+        // TODO this restricts for e.g. the FP as well. It then checks for ownerid... Is this wanted?
         //this is for restricing view of questions for new fragenersteller light role
         if (!has_capability('block/exaquest:readallquestions', \context_course::instance($COURSE->id))) {
             if (!has_capability('block/exaquest:fachlfragenreviewerlight', \context_course::instance($COURSE->id))) {

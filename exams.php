@@ -143,6 +143,7 @@ $capabilities["assigngradeexam"] = has_capability("block/exaquest:assigngradeexa
 $capabilities["checkgradingforfp"] = has_capability("block/exaquest:checkgradingforfp", $context, $USER);
 $capabilities["pruefungskoordination"] = has_capability("block/exaquest:pruefungskoordination", $context, $USER);
 $capabilities["checkexamsgrading"] = has_capability("block/exaquest:checkexamsgrading", $context, $USER);
+$capabilities["manageactivities"] = has_capability("moodle/course:manageactivities", $context, $USER);
 
 $exams = new \block_exaquest\output\exams($USER->id, $courseid, $capabilities);
 echo $output->render($exams);

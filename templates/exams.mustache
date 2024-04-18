@@ -15,10 +15,15 @@
                     {{#new_exams}}
                         <tr>
                             <td>
-                                <a class="link"
-                                   href={{link_to_exam}}
-                                >
-                                    {{name}} </a>
+                                {{#manageactivities}}
+                                    <a class="link"
+                                       href={{link_to_exam}}
+                                    >
+                                        {{name}} </a>
+                                {{/manageactivities}}
+                                {{^manageactivities}}
+                                    {{name}}
+                                {{/manageactivities}}
                             </td>
                             <td>
                                 <a href="{{go_to_exam_questionbank}}&quizid={{quizid}}" type="submit" class="btn

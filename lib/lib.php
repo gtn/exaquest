@@ -1215,7 +1215,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:changeowner', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:skipandreleaseexam', CAP_ALLOW, $roleid, $context);
     //unassign_capability('mod/quiz:skipandreleaseexam', $roleid, $context->id);
-    //unassign_capability('mod/quiz:moodle/course:manageactivities', $roleid, $context->id); // "Prüfungen anlegen und Bearbeiten sollen nur MUSSS, PK und StudMA, nicht MOVER oder andere Rolle können"
+    //unassign_capability('moodle/course:manageactivities', $roleid, $context->id); // "Prüfungen anlegen und Bearbeiten sollen nur MUSSS, PK und StudMA, nicht MOVER oder andere Rolle können"
 
     //moodle capabilities:
     assign_capability('moodle/question:add', CAP_ALLOW, $roleid, $context);
@@ -1817,6 +1817,12 @@ function block_exaquest_set_up_roles() {
     unassign_capability('block/exaquest:createexam', $roleid, $context->id); // accidentally added, should be deleted
     assign_capability('block/exaquest:forcesendexamtoreview', CAP_ALLOW, $roleid, $context);
 
+    // moodle capabilities:
+    assign_capability('moodle/question:viewall', CAP_ALLOW, $roleid, $context); // so they can add questions in the exams tab
+    assign_capability('moodle/question:useall', CAP_ALLOW, $roleid, $context);
+    assign_capability('mod/quiz:manage', CAP_ALLOW, $roleid, $context); // so they can remove questions from exams
+    assign_capability('mod/quiz:view', CAP_ALLOW, $roleid, $context);
+
     // rework capabilities documentation: start from archetype 0. Almost no rights in exam page needed. Some rights needed for question page.
     if (!$DB->record_exists('role', ['shortname' => 'modulverantwortlicher2'])) {
         $roleid = create_role('modulverantwortlicher2', 'modulverantwortlicher2', '');
@@ -2022,6 +2028,12 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:gradequestion', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:gradeexam', CAP_ALLOW, $roleid, $context);
 
+    // moodle capabilities:
+    assign_capability('moodle/question:viewall', CAP_ALLOW, $roleid, $context); // so they can add questions in the exams tab
+    assign_capability('moodle/question:useall', CAP_ALLOW, $roleid, $context);
+    assign_capability('mod/quiz:manage', CAP_ALLOW, $roleid, $context); // so they can remove questions from exams
+    assign_capability('mod/quiz:view', CAP_ALLOW, $roleid, $context);
+
     if (!$DB->record_exists('role', ['shortname' => 'fachlicherpruefer2'])) {
         $roleid = create_role('fachlicher Prüfer2', 'fachlicherpruefer2', '');
         $archetype = 0; // completely clean, no capabilities
@@ -2050,7 +2062,10 @@ function block_exaquest_set_up_roles() {
     //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
     unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
+
+    // assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
+    unassign_capability('block/exaquest:viewquestionbanktab', $roleid, $context->id); // there is actually no reason for the FP to see it (looking at the original capabilities document and the Prüfungsprozess)
+
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
@@ -2069,6 +2084,12 @@ function block_exaquest_set_up_roles() {
         $context->id); // accidentally added, should be deleted. ONLY allow this for your own exams. Only pk and mover can do it generally
     // addquestion will be added in the output/exams.php for every exam the FP is FP of and for every PMW that has been assigned.
     assign_capability('block/exaquest:gradeexam', CAP_ALLOW, $roleid, $context);
+
+    // moodle capabilities:
+    assign_capability('moodle/question:viewall', CAP_ALLOW, $roleid, $context); // so they can add questions in the exams tab
+    assign_capability('moodle/question:useall', CAP_ALLOW, $roleid, $context);
+    assign_capability('mod/quiz:manage', CAP_ALLOW, $roleid, $context); // so they can remove questions from exams
+    assign_capability('mod/quiz:view', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsmitwirkende2'])) {
         $roleid = create_role('Prüfungsmitwirkende2', 'pruefungsmitwirkende2', '');
@@ -2105,6 +2126,14 @@ function block_exaquest_set_up_roles() {
 
     //assign_capability('block/exaquest:addquestiontoexam', CAP_ALLOW, $roleid, $context);
     //unassign_capability('block/exaquest:createexam', $roleid, $context->id); // accidentally added, should be deleted
+
+    // moodle capabilities:
+    assign_capability('moodle/question:viewall', CAP_ALLOW, $roleid, $context); // so they can add questions in the exams tab
+    assign_capability('moodle/question:useall', CAP_ALLOW, $roleid, $context);
+    assign_capability('mod/quiz:manage', CAP_ALLOW, $roleid, $context); // so they can remove questions from exams
+    assign_capability('mod/quiz:view', CAP_ALLOW, $roleid, $context);
+
+
 
     // TODO: is this even a needed role? Or is it actually just "fachlicherpruefer" but assignes as a zweitpruefer to an exam? I guess so...
     if (!$DB->record_exists('role', ['shortname' => 'fachlicherzweitpruefer2'])) {

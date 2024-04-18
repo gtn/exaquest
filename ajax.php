@@ -237,7 +237,7 @@ switch ($action) {
     case ('mark_request_as_done'):
 
         break;
-    case ('addquestion'):#
+    case ('addquestion'):
         //add the quiz question
         $quiz = new stdClass();
         $quiz->id = $quizid;
