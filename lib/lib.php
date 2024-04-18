@@ -336,10 +336,7 @@ function block_exaquest_get_pmw_by_courseid($courseid) {
  */
 function block_exaquest_get_bmw_by_courseid($courseid) {
     $context = context_course::instance($courseid);
-    $userarray = array();
-    $userarray = array_merge($userarray,
-        get_enrolled_users($context, 'block/exaquest:beurteilungsmitwirkende', 0, 'u.*', null, 0, 0, true));
-    return $userarray;
+    return get_enrolled_users($context, 'block/exaquest:beurteilungsmitwirkende', 0, 'u.*', null, 0, 0, true);
 }
 
 /**

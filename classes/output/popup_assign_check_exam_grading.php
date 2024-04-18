@@ -18,6 +18,17 @@ class popup_assign_check_exam_grading implements renderable, templatable {
         //$this->fp = block_exaquest_get_assigned_fachlicherpruefer($quizid);
         $this->quizid = $quizid;
         $this->assigned_persons = block_exaquest_get_assigned_persons_by_quizid_and_assigntype($quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
+
+        // remove the bmw and fp that have already be assigned:
+        foreach ($this->assigned_persons as $assigned_person) {
+            // $this->bmw is not an associative array, but simply from 0 to x
+            if (isset($this->bmw[$assigned_person->id])) {
+                unset($this->bmw[$assigned_person->id]);
+            }
+            if (isset($this->fp[$assigned_person->id])) {
+                unset($this->fp[$assigned_person->id]);
+            }
+        }
     }
 
     /**
