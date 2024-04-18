@@ -60,8 +60,15 @@ class category_options extends column_base {
                                    WHERE eqc.id IN " . $query);
 
         $options = array();
-        foreach ($categoryoptions as $categoryoption) {
-            $options[$categoryoption->categorytype][] = $categoryoption->categoryname;
+        // reindex the array to have 0, 1, 2, 3 etc as keys. Otherwise the ',' setting will not work
+        $categoryoptions = array_values($categoryoptions);
+        foreach ($categoryoptions as $key => $categoryoption) {
+            // if the next object in $categoryoptions is of the same categorytime, add a comma.
+            if (isset($categoryoptions[$key + 1]) && $categoryoptions[$key + 1]->categorytype == $categoryoption->categorytype) {
+                $options[$categoryoption->categorytype][] = $categoryoption->categoryname . ',';
+            } else {
+                $options[$categoryoption->categorytype][] = $categoryoption->categoryname;
+            }
         }
 
         for ($k = 0; $k <= 3; $k++) {

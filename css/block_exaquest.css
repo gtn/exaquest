@@ -228,12 +228,20 @@ table.exaquest-similarity-comparison-table .col-threshold {
     background-color: #D8D8D8;
 }
 
+#block_exaquest .usagecheck div{
+    border-radius: .5rem;
+}
+
 #block_exaquest .exaquest-category-tag-fragencharakter,
 #block_exaquest .exaquest-category-tag-klassifikation,
 #block_exaquest .exaquest-category-tag-fragefach,
 #block_exaquest .exaquest-category-tag-lerninhalt {
     margin-bottom: 5px; /* Adjusts space between rows */
     margin-right: 5px; /* Adjusts space between columns */
+    display: flex;
+    justify-content: center; /* Aligns content horizontally at the center */
+    align-items: center; /* Aligns content vertically at the center */
+    width: 100%;
 }
 
 .quickediticon {
