@@ -447,3 +447,5 @@ $string['statisticspoints'] = 'Points';
 $string['statisticsgrade'] = 'Grade';
 $string['numericaldist'] = 'Numerical Distribution';
 $string['percentagedist'] = 'Percentag Distribution';
+
+$string['points_per_help'] = 'This is the number of points per category. Please specify the points carefully.';

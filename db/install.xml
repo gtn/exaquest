@@ -223,5 +223,22 @@
                      REFTABLE="block_exaquestcategories" REFFIELDS="id"/>
             </KEYS>
         </TABLE>
+        <TABLE NAME="block_exaquestquizminpercent"
+               COMMENT="For each quiz and Fragefach there can be a set minimum percentage that is needed for passing the quiz. This is stored in this table.">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id"/>
+                <FIELD NAME="quizid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="quizid"/>
+                <FIELD NAME="exaquestcategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="the id of the related exaquestcategory entry"/>
+                <FIELD NAME="percentage" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="minimum percentage that is needed for passing for that quiz and exaquestcategory (fragefach)"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="quizid" TYPE="foreign" FIELDS="quizid" REFTABLE="quiz" REFFIELDS="id"/>
+                <KEY NAME="exaquestcategoryid" TYPE="foreign" FIELDS="exaquestcategoryid"
+                     REFTABLE="block_exaquestcategories" REFFIELDS="id"/>
+            </KEYS>
+        </TABLE>
     </TABLES>
 </XMLDB>

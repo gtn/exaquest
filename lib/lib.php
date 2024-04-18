@@ -38,6 +38,7 @@ const BLOCK_EXAQUEST_DB_QUIZASSIGN = 'block_exaquestquizassign';
 const BLOCK_EXAQUEST_DB_CATEGORIES = 'block_exaquestcategories';
 const BLOCK_EXAQUEST_DB_QUIZQCOUNT = 'block_exaquestquizqcount';
 const BLOCK_EXAQUEST_DB_QUIZCOMMENT = 'block_exaquestquizcomment';
+const BLOCK_EXAQUEST_DB_QUIZQMINPERCENTAGE = 'block_exaquestquizminpercent';
 /**
  * Question Status
  */
@@ -3334,21 +3335,23 @@ function block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quiz
     $course = $DB->get_record('course', array('id' => $courseid));
 
     if ($show_deleted) {
-        $sql = 'SELECT cat.*, qc.questioncount, qc.quizid
+        $sql = 'SELECT cat.*, qc.questioncount, qc.quizid, qpercent.percentage
             FROM {' . BLOCK_EXAQUEST_DB_CATEGORIES . '} cat
-            LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZQCOUNT . '} qc ON qc.exaquestcategoryid = cat.id AND qc.quizid = :quizid
+            LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZQCOUNT . '} qc ON qc.exaquestcategoryid = cat.id AND qc.quizid = :quizid1
+            LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZQMINPERCENTAGE . '} qpercent ON qc.exaquestcategoryid = cat.id AND qc.quizid = :quizid2
             WHERE cat.coursecategoryid = :coursecategoryid
             AND cat.categorytype = ' . BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH;
     } else {
-        $sql = 'SELECT cat.*, qc.questioncount, qc.quizid
+        $sql = 'SELECT cat.*, qc.questioncount, qc.quizid, qpercent.percentage
             FROM {' . BLOCK_EXAQUEST_DB_CATEGORIES . '} cat
-            LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZQCOUNT . '} qc ON qc.exaquestcategoryid = cat.id AND qc.quizid = :quizid
+            LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZQCOUNT . '} qc ON qc.exaquestcategoryid = cat.id AND qc.quizid = :quizid1
+            LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZQMINPERCENTAGE . '} qpercent ON qc.exaquestcategoryid = cat.id AND qc.quizid = :quizid2
             WHERE cat.coursecategoryid = :coursecategoryid
             AND cat.deleted = 0
             AND cat.categorytype = ' . BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH;
     }
 
-    $fragefaecher = $DB->get_records_sql($sql, array('coursecategoryid' => $course->category, 'quizid' => $quizid));
+    $fragefaecher = $DB->get_records_sql($sql, array('coursecategoryid' => $course->category, 'quizid1' => $quizid, 'quizid2' => $quizid));
 
     return $fragefaecher;
 }
@@ -3513,6 +3516,26 @@ function block_exaquest_set_questioncount_for_exaquestcategory($quizid, $exaques
         $quizqcount->exaquestcategoryid = $exaquestcategoryid;
         $quizqcount->questioncount = $count;
         $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZQCOUNT, $quizqcount);
+    }
+}
+
+function block_exaquest_set_minimum_required_percentage_for_exaquestcategory($quizid, $exaquestcategoryid, $percentage) {
+    global $DB;
+
+    // get the current percentage for this quiz and exaquestcategory
+    $quizpercentage =
+        $DB->get_record(BLOCK_EXAQUEST_DB_QUIZQMINPERCENTAGE, array('quizid' => $quizid, 'exaquestcategoryid' => $exaquestcategoryid));
+
+    // if it exists: update, else: create new
+    if ($quizpercentage) {
+        $quizpercentage->percentage = $percentage;
+        $DB->update_record(BLOCK_EXAQUEST_DB_QUIZQMINPERCENTAGE, $quizpercentage);
+    } else {
+        $quizpercentage = new stdClass;
+        $quizpercentage->quizid = $quizid;
+        $quizpercentage->exaquestcategoryid = $exaquestcategoryid;
+        $quizpercentage->percentage = $percentage;
+        $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZQMINPERCENTAGE, $quizpercentage);
     }
 }
 

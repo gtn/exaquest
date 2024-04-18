@@ -14,9 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+global $CFG;
 defined('MOODLE_INTERNAL') || die();
 
 require_once __DIR__ . '/inc.php';
+// require_once($CFG->libdir.'/adminlib.php');
+require_once("$CFG->libdir/formslib.php");
+
 
 /**
  * Inject the exaquest element into all moodle module settings forms.
@@ -149,17 +153,50 @@ function block_exaquest_coursemodule_standard_elements($formwrapper, $mform) {
                 $fragefaecher = block_exaquest_get_fragefaecher_by_courseid($COURSE->id, false);
             }
 
+
+            // $mform->addElement(new admin_setting_heading('progress', new lang_string('completion','completion'), ''));
+            // $mform->addElement(new admin_setting_configselect('moodlecourse/enablecompletion', new lang_string('completion', 'completion'),
+            //     new lang_string('enablecompletion_help', 'completion'), 1, array(0 => new lang_string('no'), 1 => new lang_string('yes'))));
+
+            // $a = new admin_setting_heading('progress', new lang_string('completion','completion'), '');
+            // $b = new admin_setting_configselect('moodlecourse/enablecompletion', new lang_string('completion', 'completion'),
+            //     new lang_string('enablecompletion_help', 'completion'), 1, array(0 => new lang_string('no'), 1 => new lang_string('yes')));
+
+
+
             // Add the quiz questions count / points count settings
             // for every fragefach, add one input
             foreach ($fragefaecher as $fragefach) {
-                $mform->addElement('text', 'exaquestquestioncategoryid' . $fragefach->id,
+                $mform->addElement('text', 'exaquest_points_per_fragefach' . $fragefach->id,
                     get_string('points_per', 'block_exaquest') . $fragefach->categoryname,
                     array('size' => '10'));
-                $mform->setType('exaquestquestioncategoryid' . $fragefach->id, PARAM_INT);
+                // add help button
+                $mform->addHelpButton('exaquest_points_per_fragefach' . $fragefach->id, 'points_per', 'block_exaquest');
+                $mform->setType('exaquest_points_per_fragefach' . $fragefach->id, PARAM_INT);
                 if ($quizid) {
-                    $mform->setDefault('exaquestquestioncategoryid' . $fragefach->id, $fragefach->questioncount);
+                    $mform->setDefault('exaquest_points_per_fragefach' . $fragefach->id, $fragefach->questioncount);
                 } else {
-                    $mform->setDefault('exaquestquestioncategoryid' . $fragefach->id, 0);
+                    $mform->setDefault('exaquest_points_per_fragefach' . $fragefach->id, 0);
+                }
+
+
+            }
+
+
+
+            // Add the minimum percentage a student needs per fragefach to pass the exam.
+            // for every fragefach, add one input
+            foreach ($fragefaecher as $fragefach) {
+                $mform->addElement('text', 'exaquest_minimum_required_percentage_per_fragefach' . $fragefach->id,
+                    get_string('minimum_required_percentage', 'block_exaquest') . $fragefach->categoryname,
+                    array('size' => '10'));
+                // add help button
+                $mform->addHelpButton('exaquest_minimum_required_percentage_per_fragefach' . $fragefach->id, 'minimum_percentage', 'block_exaquest');
+                $mform->setType('exaquest_minimum_required_percentage_per_fragefach' . $fragefach->id, PARAM_INT);
+                if ($quizid) {
+                    $mform->setDefault('exaquest_minimum_required_percentage_per_fragefach' . $fragefach->id, $fragefach->percentage);
+                } else {
+                    $mform->setDefault('exaquest_minimum_required_percentage_per_fragefach' . $fragefach->id, 0);
                 }
             }
         }
@@ -186,12 +223,19 @@ function block_exaquest_coursemodule_edit_post_actions($data, $course) {
         //    }
 
 
-        // set the question count per fragefach
+
         $fragefaecher = block_exaquest_get_fragefaecher_by_courseid($course->id);
         foreach ($fragefaecher as $fragefach) {
-            $setting = 'exaquestquestioncategoryid' . $fragefach->id;
+            // set the question count per fragefach
+            $setting = 'exaquest_points_per_fragefach' . $fragefach->id;
             if (isset($data->$setting)) {
                 block_exaquest_set_questioncount_for_exaquestcategory($quizid, $fragefach->id, $data->$setting);
+            }
+
+            // set the minimum required percentage per fragefach
+            $setting = 'exaquest_minimum_required_percentage_per_fragefach' . $fragefach->id;
+            if (isset($data->$setting)) {
+                block_exaquest_set_minimum_required_percentage_for_exaquestcategory($quizid, $fragefach->id, $data->$setting);
             }
         }
 

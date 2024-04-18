@@ -36,6 +36,7 @@ $string['request_exams_comment_placeholder'] = 'Welche Art von Prüfung wird ben
 $string['request_exams_button'] = 'Anfordern';
 
 $string['set_quizquestioncount'] = 'Benötigte Fragenanzahl pro Fragefach festlegen';
+$string['exaquest_minimum_required_percentage_per_fragefach'] = 'Bestehensgrenze in % für dieses Fragefach angeben';
 
 $string['mark_as_done'] = 'Als erledigt markieren';
 $string['mark_selected_as_done_button'] = 'Selektierte Anfragen als erledigt markieren';
@@ -459,3 +460,6 @@ $string['percentagedist'] = 'Prozentuale Verteilung';
 $string['go_to_exam_report_overview'] = 'Zum Prüfungsbericht';
 $string['go_to_exam_report_grading'] = 'Zur Prüfungsbeurteilung';
 $string['send_exam_to_revise'] = 'Prüfung zur Überarbeitung zurückschicken';
+
+$string['points_per_help'] = 'Geben Sie die Anzahl der Punkte an, die in dieser Prüfung für dieses Fragefach hinzugefügt werden sollen.';
+$string['minimum_percentage_help'] = 'Geben Sie die Bestehensgrenze für dieses Fragefach an, falls es ein Kernfach ist. Wenn es kein Kernfach ist, lassen Sie 0% stehen.';

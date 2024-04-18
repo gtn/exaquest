@@ -517,7 +517,7 @@ function xmldb_block_exaquest_upgrade($oldversion) {
         $table->add_key('quizid', XMLDB_KEY_FOREIGN, ['quizid'], 'quiz', ['id']);
         $table->add_key('exaquestcategoryid', XMLDB_KEY_FOREIGN, ['exaquestcategoryid'], 'block_exaquestcategories', ['id']);
 
-        // Conditionally launch create table for block_exaquestquizassign.
+        // Conditionally launch create table for block_exaquestquizqcount.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
@@ -760,6 +760,27 @@ function xmldb_block_exaquest_upgrade($oldversion) {
         \core\task\manager::queue_adhoc_task($setuptask);
         // Exaquest savepoint reached.
         upgrade_block_savepoint(true, 2024041801, 'exaquest');
+    }
+
+    if ($oldversion < 2024041802) {
+        // create the table block_exaquestquizminpercent.
+        $table = new xmldb_table('block_exaquestquizminpercent');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('quizid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('exaquestcategoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('percentage', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table block_exaquestreviseassign.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('quizid', XMLDB_KEY_FOREIGN, ['quizid'], 'quiz', ['id']);
+        $table->add_key('exaquestcategoryid', XMLDB_KEY_FOREIGN, ['exaquestcategoryid'], 'block_exaquestcategories', ['id']);
+
+        // Conditionally launch create table for block_exaquestquizminpercent.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+        // Exaquest savepoint reached.
+        upgrade_block_savepoint(true, 2024041802, 'exaquest');
     }
 
 
