@@ -29,6 +29,9 @@ $output = $PAGE->get_renderer('block_exaquest');
 echo $output->header($context, $courseid, get_string('exams_overview', 'block_exaquest'));
 
 $action = optional_param('action', "", PARAM_ALPHAEXT);
+if($action){
+    require_sesskey();
+}
 if ($action == 'assign_quiz_addquestions') {
     $comment = optional_param('assignaddquestionscomment', '', PARAM_TEXT);
     $quizid = required_param('quizid', PARAM_INT);

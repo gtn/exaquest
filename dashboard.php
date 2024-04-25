@@ -40,6 +40,9 @@ echo $output->header($context, $courseid, get_string('dashboard', 'block_exaques
 $fragenersteller = array();
 $fachlichepruefer = array();
 $action = optional_param('action', "", PARAM_ALPHAEXT);
+if($action){
+    require_sesskey();
+}
 if ($action == 'request_questions') {
     // get all the users with role "fragesteller" and send them a notification
 

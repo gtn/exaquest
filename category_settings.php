@@ -41,6 +41,10 @@ $output = $PAGE->get_renderer('block_exaquest');
 
 echo $output->header($context, $courseid, get_string('exams_overview', 'block_exaquest'));
 
+if ($action) {
+    require_sesskey();
+}
+
 //edit name of category
 if ($action == "edit") {
     $currcat = $DB->get_records(BLOCK_EXAQUEST_DB_CATEGORIES, array("coursecategoryid" => $COURSE->category, "deleted" => 0));
@@ -53,10 +57,8 @@ if ($action == "edit") {
             break;
         }
     }
-}
-
-// delete category by setting the state to deleted in database
-if ($action == "delete") {
+} else if ($action == "delete") {
+    // delete category by setting the state to deleted in database
     $obj = new stdClass();
     $obj->deleted = 1;
     $obj->id = $deleteid;
@@ -83,10 +85,8 @@ if ($action == "delete") {
             $DB->update_record("block_exaquestquestionstatus", $obj);
         }
     }
-
-}
-// add new category
-if ($action == "add") {
+} else if ($action == "add") {
+    // add new category
     if (!$DB->record_exists(BLOCK_EXAQUEST_DB_CATEGORIES, array("coursecategoryid" => $COURSE->category, "categoryname" => $addcategory, "categorytype" => $categorytype))) {
         $DB->insert_record(BLOCK_EXAQUEST_DB_CATEGORIES, array("coursecategoryid" => $COURSE->category, "categoryname" => $addcategory, "categorytype" => $categorytype));
     }

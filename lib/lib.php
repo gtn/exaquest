@@ -2132,7 +2132,6 @@ function block_exaquest_set_up_roles() {
     assign_capability('mod/quiz:view', CAP_ALLOW, $roleid, $context);
 
 
-
     // TODO: is this even a needed role? Or is it actually just "fachlicherpruefer" but assignes as a zweitpruefer to an exam? I guess so...
     if (!$DB->record_exists('role', ['shortname' => 'fachlicherzweitpruefer2'])) {
         $roleid = create_role('Fachlicherzweitpruefer2', 'fachlicherzweitpruefer2', '');
@@ -2695,9 +2694,10 @@ function block_exaquest_exams_set_status($quizid, $status) {
     $record = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, array("quizid" => $quizid));
     $record->status = $status;
 
-    if ($status == BLOCK_EXAQUEST_QUIZSTATUS_) {
-      // TODO: if status is changed to fachlich review
-
+    if ($status == BLOCK_EXAQUEST_QUIZSTATUS_CREATED) {
+        // if the status is changed to BLOCK_EXAQUEST_QUIZSTATUS_CREATED remove all quizassigns assigntype BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS
+        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+            array("quizid" => $quizid, "assigntype" => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS));
     } else if ($status == BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED) {
         // if the status is changed to BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED ==> remove all quizassigns for this quiz, as they no longer make any sense
         $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
