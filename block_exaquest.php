@@ -11,7 +11,6 @@ class block_exaquest extends block_list {
         global $CFG, $COURSE, $PAGE, $DB, $USER;
 
         $context = context_block::instance($this->instance->id);
-        //$context = context_system::instance(); // TODO: system? or block? think of dashboard. for now solved with viewdashboardoutsidecourse cap
 
         // get all courses where exaquest is added as a block:
         $courses = block_exaquest_get_relevant_courses_for_user($USER->id);

@@ -246,12 +246,12 @@ class exams implements renderable, templatable {
                 $finished_exam->popup_assign_kommissionell_check_exam_grading = $popup->export_for_template($output);
             }
 
-            // add popup_assign_change_exam_grading to every finished exam: (TODO: when is this shown?)
+            // add popup_assign_change_exam_grading to every finished exam:
             $popup = new popup_assign_change_exam_grading($finished_exam->quizid);
             $finished_exam->popup_assign_change_exam_grading = $popup->export_for_template($output);
 
-            // TODO: show the same as in dashboard, but not for every exam and student combination, but instead of every THIS exam and student combination
-            // TODO: more performant solution possible... for now, get the exams like in dashboard
+            // show the same as in dashboard, but not for every exam and student combination, but instead of every THIS exam and student combination
+            // more performant solution possible... for now, get the exams like in dashboard
             if ($this->capabilities["checkexamsgrading"]) {
                 $kommissionell_exams_to_check_grading =
                     block_exaquest_get_assigned_exams_by_assigntype($this->courseid, $this->userid,

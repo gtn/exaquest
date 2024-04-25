@@ -34,7 +34,6 @@ class block_exaquest_observer {
      */
     public static function question_created(\core\event\question_created $event) {
         global $DB;
-        // TODO: use $event->courseid as a parameters?
         if (is_exaquest_active_in_course()) {
             // first check if for this questionbankentry there already exists an entry in our table:
             $questionbankentry = get_question_bank_entry($event->objectid); // $event->objecid is the questionid
@@ -45,16 +44,6 @@ class block_exaquest_observer {
                 $insert->is_imported = 0;
                 // get the questionbankentry via a moodle function (simply a join from questions over the versions to the banke_entry)
                 $insert->questionbankentryid = $questionbankentry->id;
-                //                if ($event->get_context() instanceof \context_coursecat) {
-                //                    $insert->coursecategoryid = $event->contextinstanceid;
-                //                } else if ($event->get_context() instanceof
-                //                    \context_course) { // TODO: this should NOT happen anyways. Otherwise the question is in the wrong place and will not be seen.
-                //                    //$course = $DB->get_record('course', array('id' => $event->contextinstanceid));
-                //                    throw new Exception("questions should be created in coursecategory context, not course context");
-                //                    //$insert->coursecategoryid = block_exaquest_get_coursecategoryid_by_courseid($event->contextinstanceid);
-                //                } else {
-                //                    throw new Exception("neither course nor coursecategory context"); // TODO, what else could there be?
-                //                }
                 $DB->insert_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $insert);
 
                 // schedule a task to check if the question is imported or not, IF the question is marked as imported (sometimes the customfield data is not yet available)
@@ -150,16 +139,15 @@ class block_exaquest_observer {
         }
     }
 
-    /**
-     * Observer for mod_quiz\event\attempt_manual_grading_completed.
-     * @param mod_quiz\event\attempt_manual_grading_completed $event
-     * TODO: remove, since it is not used (just keep it for testing now)
-     * @return void
-     */
-    public static function attempt_manual_grading_completed(\mod_quiz\event\attempt_manual_grading_completed $event) {
-        global $DB;
-        $data = $event->get_data();
-    }
+    // /**
+    //  * Observer for mod_quiz\event\attempt_manual_grading_completed.
+    //  * @param mod_quiz\event\attempt_manual_grading_completed $event
+    //  * @return void
+    //  */
+    // public static function attempt_manual_grading_completed(\mod_quiz\event\attempt_manual_grading_completed $event) {
+    //     global $DB;
+    //     $data = $event->get_data();
+    // }
 
     /**
      * Observer for mod_quiz\event\question_manually_graded.
@@ -173,14 +161,14 @@ class block_exaquest_observer {
         block_exaquest_check_if_all_gradings_have_been_done($data["other"]["quizid"]);
     }
 
-    /**
-     * Observer for mod_quiz\event\attempt_submitted.
-     * @param mod_quiz\event\attempt_submitted $event
-     * @return void
-     */
-    public static function attempt_submitted(\mod_quiz\event\attempt_submitted $event) {
-        global $DB;
-        //$data = $event->get_data();
-    }
+    // /**
+    //  * Observer for mod_quiz\event\attempt_submitted.
+    //  * @param mod_quiz\event\attempt_submitted $event
+    //  * @return void
+    //  */
+    // public static function attempt_submitted(\mod_quiz\event\attempt_submitted $event) {
+    //     global $DB;
+    //     //$data = $event->get_data();
+    // }
 
 }

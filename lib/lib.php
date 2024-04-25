@@ -84,10 +84,15 @@ const BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING = 6;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERZWEITPRUEFER = 7;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERDRITTPRUEFER = 8;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHANGE_EXAM_GRADING = 9;
-// TODO add quizassigntype for finished exam for the PK
+
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN = 10;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE = 11;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_KOMMISSIONELL_CHECK_EXAM_GRADING = 12;
+
+// TODO add quizassigntype for finished exam for the PK... is this not BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN. TODOs are already created? TEST THIS 25.04.2024
+// yes, already done in: just test if the notifications work
+// block_exaquest_assign_quiz_done_to_pk($userfrom->id, $userto->id, '', $quizid, null,
+//                     BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE);
 
 /**
  * Filter Status
@@ -1389,7 +1394,10 @@ function block_exaquest_set_up_roles() {
     //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
     unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
+
+    // assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
+    unassign_capability('block/exaquest:viewquestionbanktab', $roleid, $context->id); // there is actually no reason for the FP to see it (looking at the original capabilities document and the Prüfungsprozess)
+
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
@@ -2822,6 +2830,7 @@ function block_exaquest_get_capabilities($context) {
     $capabilities["checkexamsgrading"] = has_capability("block/exaquest:checkexamsgrading", $context, $USER);
     $capabilities["gradequestion"] = has_capability("block/exaquest:gradequestion", $context, $USER);
     $capabilities["changeexamsgrading"] = has_capability("block/exaquest:changeexamsgrading", $context, $USER);
+    $capabilities["viewexamstab"] = has_capability("block/exaquest:viewexamstab", $context, $USER);
 
     return $capabilities;
 }

@@ -107,7 +107,7 @@ class exaquest_filters extends condition {
                 $this->where = "qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED;
                 break;
         }
-        // TODO this restricts for e.g. the FP as well. It then checks for ownerid... Is this wanted?
+        // TODO this restricts for e.g. the FP as well. It then checks for ownerid... Is this wanted? Actually, the FP should not see the questionbank at all.
         //this is for restricing view of questions for new fragenersteller light role
         if (!has_capability('block/exaquest:readallquestions', \context_course::instance($COURSE->id))) {
             if (!has_capability('block/exaquest:fachlfragenreviewerlight', \context_course::instance($COURSE->id))) {

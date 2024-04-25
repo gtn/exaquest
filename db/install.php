@@ -22,83 +22,105 @@ use core_customfield\field_controller;
 function xmldb_block_exaquest_install() {
     global $DB;
 
-    // TODO: only do it once, if those fields do not exist yet
-    // TODO: check if the created fields work as intended
+    $existingCategory = $DB->get_records('customfield_category', array('name' => 'Exaquest Kategorie'));
+    if(!$existingCategory) {
+        $handler = qbank_customfields\customfield\question_handler::create();
+        $c1id = $handler->create_category();
+        $c1 = $handler->get_categories_with_fields()[$c1id];
+        $handler->rename_category($c1, 'Exaquest Kategorie');
 
-    $handler = qbank_customfields\customfield\question_handler::create();
-    $c1id = $handler->create_category();
-    $c1 = $handler->get_categories_with_fields()[$c1id];
-    $handler->rename_category($c1, 'Exaquest Kategorie');
+        // create the categories:
+        // Fragencharacter
+        // Check if the field already exists
+        $existingField = $DB->get_record('customfield_field', array('shortname' => 'fragencharakter'));
+        if (!$existingField) {
+            $record = new stdClass();
+            $record->name = 'Fragencharakter';
+            $record->shortname = "fragencharakter";
+            $record->type = 'exaquestcategory';
+            $record->sortorder = 0;
+            $configdata = [];
+            $configdata += [
+                'required' => 0,
+                'uniquevalues' => 0,
+                "categorytype" => 0,
+                'locked' => 0,
+                'visibility' => 2,
+            ];
 
-    // create the categories:
-    $record = new stdClass();
-    $record->name = 'Fragencharakter';
-    $record->shortname = "fragencharakter";
-    $record->type = 'exaquestcategory';
-    $record->sortorder = 0;
-    $configdata = [];
-    $configdata += [
-        'required' => 0,
-        'uniquevalues' => 0,
-        "categorytype" => 0,
-        'locked' => 0,
-        'visibility' => 2,
-    ];
+            $record->configdata = json_encode($configdata);
+            $field = field_controller::create(0, (object)['type' => $record->type], $c1);
+            // check if this field already exists
 
-    $record->configdata = json_encode($configdata);
-    $field = field_controller::create(0, (object)['type' => $record->type], $c1);
-    $handler->save_field_configuration($field, $record);
+            $handler->save_field_configuration($field, $record);
+        }
 
-    $record = new stdClass();
-    $record->name = 'Klassifikation';
-    $record->shortname = "klassifikation";
-    $record->type = 'exaquestcategory';
-    $record->sortorder = 0;
-    $configdata = [];
-    $configdata += [
-        'required' => 0,
-        'uniquevalues' => 0,
-        "categorytype" => 1,
-        'locked' => 0,
-        'visibility' => 2,
-    ];
-    $record->configdata = json_encode($configdata);
-    $field = field_controller::create(0, (object)['type' => $record->type], $c1);
-    $handler->save_field_configuration($field, $record);
+        // Klassifikation
+        // Check if the field already exists
+        $existingField = $DB->get_record('customfield_field', array('shortname' => 'klassifikation'));
+        if (!$existingField) {
+            $record = new stdClass();
+            $record->name = 'Klassifikation';
+            $record->shortname = "klassifikation";
+            $record->type = 'exaquestcategory';
+            $record->sortorder = 0;
+            $configdata = [];
+            $configdata += [
+                'required' => 0,
+                'uniquevalues' => 0,
+                "categorytype" => 1,
+                'locked' => 0,
+                'visibility' => 2,
+            ];
+            $record->configdata = json_encode($configdata);
+            $field = field_controller::create(0, (object)['type' => $record->type], $c1);
+            $handler->save_field_configuration($field, $record);
+        }
 
-    $record = new stdClass();
-    $record->name = 'Fragefach';
-    $record->shortname = "fragefach";
-    $record->type = 'exaquestcategory';
-    $record->sortorder = 0;
-    $configdata = [];
-    $configdata += [
-        'required' => 0,
-        'uniquevalues' => 0,
-        "categorytype" => 2,
-        'locked' => 0,
-        'visibility' => 2,
-    ];
-    $record->configdata = json_encode($configdata);
-    $field = field_controller::create(0, (object)['type' => $record->type], $c1);
-    $handler->save_field_configuration($field, $record);
+        // Fragefach
+        // Check if the field already exists
+        $existingField = $DB->get_record('customfield_field', array('shortname' => 'fragefach'));
+        if(!$existingField){
+            $record = new stdClass();
+            $record->name = 'Fragefach';
+            $record->shortname = "fragefach";
+            $record->type = 'exaquestcategory';
+            $record->sortorder = 0;
+            $configdata = [];
+            $configdata += [
+                'required' => 0,
+                'uniquevalues' => 0,
+                "categorytype" => 2,
+                'locked' => 0,
+                'visibility' => 2,
+            ];
+            $record->configdata = json_encode($configdata);
+            $field = field_controller::create(0, (object)['type' => $record->type], $c1);
+            $handler->save_field_configuration($field, $record);
+        }
 
-    $record = new stdClass();
-    $record->name = 'Lehrinhalt';
-    $record->shortname = "lehrinhalt";
-    $record->type = 'exaquestcategory';
-    $record->sortorder = 0;
-    $configdata = [];
-    $configdata += [
-        'required' => 0,
-        'uniquevalues' => 0,
-        "categorytype" => 3,
-        'locked' => 0,
-        'visibility' => 2,
-    ];
-    $record->configdata = json_encode($configdata);
-    $field = field_controller::create(0, (object)['type' => $record->type], $c1);
-    $handler->save_field_configuration($field, $record);
+        // Lehrinhalt
+        // Check if the field already exists
+        $existingField = $DB->get_record('customfield_field', array('shortname' => 'lehrinhalt'));
+        if(!$existingField){
+            $record = new stdClass();
+            $record->name = 'Lehrinhalt';
+            $record->shortname = "lehrinhalt";
+            $record->type = 'exaquestcategory';
+            $record->sortorder = 0;
+            $configdata = [];
+            $configdata += [
+                'required' => 0,
+                'uniquevalues' => 0,
+                "categorytype" => 3,
+                'locked' => 0,
+                'visibility' => 2,
+            ];
+            $record->configdata = json_encode($configdata);
+            $field = field_controller::create(0, (object)['type' => $record->type], $c1);
+            $handler->save_field_configuration($field, $record);
+        }
+    }
 
     // Creating roles and assigning capabilities
     // Done as a task AFTER the installation, because the capabilities only exist at the end/after the installation.

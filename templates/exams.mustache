@@ -48,14 +48,14 @@
                                     {{>block_exaquest/button_fachlich_release_exam}}
                                 </td>
                             {{/fachlichreleaseexam}}
-                                <!--                            {{#skipandreleaseexam}}-->
+                            <!--                            {{#skipandreleaseexam}}-->
                             <!--                                <td>-->
                             <!--                                    <button type="submit" class="btn btn-primary change-exam-status-button"-->
                             <!--                                            value="skipandrelease_exam" quizid={{quizid}} courseid={{courseid}}>Prüfung-->
                             <!--                                        finalisieren und freigeben-->
                             <!--                                    </button>-->
                             <!--                                </td>-->
-                                <!--                            {{/skipandreleaseexam}}-->
+                            <!--                            {{/skipandreleaseexam}}-->
                             {{#assignaddquestions}}
                                 <td>
                                     {{#popup_assign_addquestions}}
@@ -239,15 +239,14 @@
                                 </td>
                             {{/assigned_to_check_grading}}
 
-<!--                            TODO-->
                             {{#assigned_to_kommissionell_check_grading}}
                                 <td>
                                     {{#popup_kommissionell_exams_for_me_to_check_grading}}
                                         {{>block_exaquest/popup_kommissionell_exams_for_me_to_check_grading}}
                                     {{/popup_kommissionell_exams_for_me_to_check_grading}}
-<!--                                    <button type="submit" class="btn btn-primary change-exam-status-button"-->
-<!--                                            value="release_grades_for_student" quizid={{quizid}} courseid={{courseid}}>Kommissionelle Prüfungsbeurteilung...-->
-<!--                                    </button>-->
+                                    <!--                                    <button type="submit" class="btn btn-primary change-exam-status-button"-->
+                                    <!--                                            value="release_grades_for_student" quizid={{quizid}} courseid={{courseid}}>Kommissionelle Prüfungsbeurteilung...-->
+                                    <!--                                    </button>-->
                                 </td>
                             {{/assigned_to_kommissionell_check_grading}}
 
@@ -261,7 +260,7 @@
                             {{/assigngradeexam}}
                             {{#assigned_to_grade}}
                                 <!-- there is no mark_grade_request_as_done button yet, but the ability to add other persons for grading depends on being assigned to grade-->
-                                <!--                                TODO: add mark_grade_request_as_done button ??-->
+                                <!--                                add mark_grade_request_as_done button ?? ==> no, you can mark it as done in the dashboard or simply do it and it is marked as done automatically in the observer-->
                                 <!--  Similiar to the button with value "release_grades" here we have "grading finished" ? Would be a possibility, but for now no, because marking the grading as done does not make a lot of sense, it is shown in moodle when everything is graded anyways-->
 
                                 {{#go_to_exam_report_grading}}
