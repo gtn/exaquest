@@ -10,6 +10,7 @@ $courseid = required_param('courseid', PARAM_INT);
 require_login($courseid);
 $context = context_course::instance($COURSE->id);
 require_capability('block/exaquest:viewexamstab', $context);
+require_sesskey();
 
 switch ($action) {
     case ('send_exam_to_review'):

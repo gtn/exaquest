@@ -2694,8 +2694,12 @@ function block_exaquest_exams_set_status($quizid, $status) {
     global $DB, $COURSE;
     $record = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, array("quizid" => $quizid));
     $record->status = $status;
-    // if the status is changed to BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED ==> remove all quizassigns for this quiz, as they no longer make any sense
-    if ($status == BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED) {
+
+    if ($status == BLOCK_EXAQUEST_QUIZSTATUS_) {
+      // TODO: if status is changed to fachlich review
+
+    } else if ($status == BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED) {
+        // if the status is changed to BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED ==> remove all quizassigns for this quiz, as they no longer make any sense
         $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
             array("quizid" => $quizid, "assigntype" => BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM));
         $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,

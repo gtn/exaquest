@@ -458,3 +458,4 @@ $string['send_exam_to_revise'] = 'Prüfung zur Überarbeitung zurückschicken TO
 
 $string['points_per_help'] = 'This is the number of points per category. Please specify the points carefully.';
 $string['minimum_percentage_help'] = 'Geben Sie die Bestehensgrenze für dieses Fragefach an, falls es ein Kernfach ist. Wenn es kein Kernfach ist, lassen Sie 0% stehen. TODO TRANSLATE';
+$string['change_status_and_remove_from_quiz'] = 'Change status of question to "to revise" and remove from quiz';

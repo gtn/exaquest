@@ -73,6 +73,7 @@ class add_to_quiz extends column_base {
                         questionid: <?php echo $question->id; ?>,
                         courseid: <?php echo $COURSE->id; ?>,
                         quizid: <?php echo $quizid; ?>,
+                        sesskey: "<?php echo sessKey(); ?>"
                     };
                     e.preventDefault();
 

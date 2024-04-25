@@ -19,6 +19,7 @@ $quizid = optional_param('quizid', null, PARAM_INT);
 
 require_login($courseid);
 require_capability('block/exaquest:viewquestionbanktab', context_course::instance($courseid));
+require_sesskey();
 
 switch ($action) {
     case ('open_question_for_review'):
@@ -175,7 +176,7 @@ switch ($action) {
         }
         // if not break, then continue to revise_question and also remove the question from the quiz
         // code for removing from quiz is from edit_rest.php from mod/quiz
-        require_sesskey();
+        // require_sesskey();
         $id = optional_param('id', 0, PARAM_INT);
         $quizobj = quiz_settings::create($quizid);
         $quiz = $quizobj->get_quiz();

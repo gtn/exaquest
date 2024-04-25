@@ -6,6 +6,7 @@ global $DB, $CFG, $COURSE, $USER;
 $action = required_param('action', PARAM_TEXT);
 $courseid = required_param('courseid', PARAM_INT);
 require_login($courseid);
+require_sesskey();
 
 switch ($action) {
     case ('mark_exam_request_as_done'):

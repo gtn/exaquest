@@ -239,6 +239,7 @@ class change_status extends column_base {
                             return $(this).attr("data-value");
                         }).get(),
                         commenttext: $('.commenttext<?php echo $question->questionbankentryid; ?>').val(),
+                        sesskey: "<?php echo sessKey(); ?>"
                     };
                     e.preventDefault();
                     var ajax = $.ajax({
@@ -266,6 +267,7 @@ class change_status extends column_base {
                         questionbankentryid: <?php echo $question->questionbankentryid; ?>,
                         questionid: <?php echo $question->id; ?>,
                         courseid: <?php echo $COURSE->id; ?>,
+                        sesskey: "<?php echo sessKey(); ?>",
                         //users: $('.userselectioncheckbox<?php //echo $question->questionbankentryid; ?>//:checkbox:checked').map(function () {
                         //    return $(this).val();
                         //}).get(), this was the code for the checkboxes, now we have a multiselect
