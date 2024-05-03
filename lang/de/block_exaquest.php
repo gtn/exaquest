@@ -44,6 +44,7 @@ $string['mark_selected_as_done_button'] = 'Selektierte Anfragen als erledigt mar
 $string['assign_addquestions'] = 'Fragenzuweisung anfordern';
 $string['assign_addquestions_label'] = 'Fragenzuweisung anfordern von ...';
 $string['assign_addquestions_comment_placeholder'] = 'Kommentar an die ausgewählten Personen';
+$string['assign_add_questions_button'] = 'Anfordern';
 
 // Messages
 $string['messageprovider:newquestionsrequest'] = 'Neue Fragen wurden angefordert';

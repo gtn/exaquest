@@ -17,8 +17,8 @@ require_capability('block/exaquest:viewexamstab', $context);
 
 $page_params = array('courseid' => $courseid);
 
-$url = new moodle_url('/blocks/exaquest/exams.php', $page_params);
-$PAGE->set_url($url);
+// $url = new moodle_url('/blocks/exaquest/exams.php', $page_params);
+// $PAGE->set_url($url);
 $PAGE->set_heading(get_string('exams_of_course', 'block_exaquest', $COURSE->fullname));
 $PAGE->set_title(get_string('exams_of_course', 'block_exaquest', $COURSE->fullname));
 
