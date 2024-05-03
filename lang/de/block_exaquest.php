@@ -36,7 +36,7 @@ $string['request_exams_comment_placeholder'] = 'Welche Art von Prüfung wird ben
 $string['request_exams_button'] = 'Anfordern';
 
 $string['set_quizquestioncount'] = 'Benötigte Fragenanzahl pro Fragefach festlegen';
-$string['exaquest_minimum_required_percentage_per_fragefach'] = 'Bestehensgrenze in % für Fragefach';
+$string['exaquest_minimum_required_percentage_per_fragefach'] = 'Bestehensgrenze in % pro Fragefach';
 
 $string['mark_as_done'] = 'Als erledigt markieren';
 $string['mark_selected_as_done_button'] = 'Selektierte Anfragen als erledigt markieren';
@@ -399,7 +399,7 @@ $string['clean_up_tables'] = 'Säubere die Exaquest Tabellen, falls fehlerhafte 
 $string['create_daily_notifications'] = 'Erstelle die täglichen Exaquest-Nachrichten.';
 $string['set_up_roles'] = 'Rollen für Exaquest aufsetzen.';
 
-$string['points_per'] = 'Punkte für Fragefach ';
+$string['points_per'] = 'Punkte pro Fragefach ';
 $string['exaquest_settings'] = 'Exaquest Einstellungen';
 
 $string['assign_to_revise_from_quiz'] = 'Überarbeitung anfordern';

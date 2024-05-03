@@ -6,10 +6,10 @@
             btn-secondary"
                    value="">{{#str}}create_new_exam_button, block_exaquest {{/str}}</a>
         {{/createnewexam}}
-            <div class="examcard">
+            <div class="examcard card">
                 <h4>{{#str}}new_exams, block_exaquest {{/str}}</h4>
                 <p>{{#str}}add_questions_to_these_exams, block_exaquest {{/str}}</p>
-                <table>
+                <table class="examstable">
                     <thead></thead>
                     <tbody>
                     {{#new_exams}}
@@ -25,51 +25,50 @@
                                     {{name}}
                                 {{/manageactivities}}
                             </td>
-                            <td>
+                            <td class="changestatus">
+                                <!--                                <div class="button-container">-->
                                 <a href="{{go_to_exam_questionbank}}&quizid={{quizid}}" type="submit" class="btn
                                 btn-secondary"
                                 value="">{{#str}}add_questions_to_quiz, block_exaquest {{/str}}</a>
-                            </td>
-                            <td>
+
                                 {{>block_exaquest/button_go_to_exam_view}}
-                            </td>
-                            {{#sendexamtoreview}}
-                                <td>
+
+                                {{#sendexamtoreview}}
+
                                     {{>block_exaquest/button_send_exam_to_review}}
-                                </td>
-                            {{/sendexamtoreview}}
-                            {{#forcesendexamtoreview}}
-                                <td>
-                                    {{>block_exaquest/button_force_send_exam_to_review}}
-                                </td>
-                            {{/forcesendexamtoreview}}
-                            {{#fachlichreleaseexam}}
-                                <td>
+
+                                {{/sendexamtoreview}}
+
+                                {{#fachlichreleaseexam}}
+
                                     {{>block_exaquest/button_fachlich_release_exam}}
-                                </td>
-                            {{/fachlichreleaseexam}}
-                            <!--                            {{#skipandreleaseexam}}-->
-                            <!--                                <td>-->
-                            <!--                                    <button type="submit" class="btn btn-primary change-exam-status-button"-->
-                            <!--                                            value="skipandrelease_exam" quizid={{quizid}} courseid={{courseid}}>Prüfung-->
-                            <!--                                        finalisieren und freigeben-->
-                            <!--                                    </button>-->
-                            <!--                                </td>-->
-                            <!--                            {{/skipandreleaseexam}}-->
-                            {{#assignaddquestions}}
-                                <td>
+
+                                {{/fachlichreleaseexam}}
+                                <!--                            {{#skipandreleaseexam}}-->
+                                <!--                                <td>-->
+                                <!--                                    <button type="submit" class="btn btn-primary change-exam-status-button"-->
+                                <!--                                            value="skipandrelease_exam" quizid={{quizid}} courseid={{courseid}}>Prüfung-->
+                                <!--                                        finalisieren und freigeben-->
+                                <!--                                    </button>-->
+                                <!--                                </td>-->
+                                <!--                            {{/skipandreleaseexam}}-->
+                                {{#assignaddquestions}}
+
                                     {{#popup_assign_addquestions}}
                                         {{>block_exaquest/popup_assign_addquestions}}
                                     {{/popup_assign_addquestions}}
-                                </td>
-                            {{/assignaddquestions}}
-                            {{#setquestioncount}}
-                                <td>
+
+                                {{/assignaddquestions}}
+                                {{#setquestioncount}}
                                     {{#popup_setquizquestioncount}}
                                         {{>block_exaquest/popup_setquizquestioncount}}
                                     {{/popup_setquizquestioncount}}
-                                </td>
-                            {{/setquestioncount}}
+                                {{/setquestioncount}}
+                                {{#forcesendexamtoreview}}
+                                    {{>block_exaquest/button_force_send_exam_to_review}}
+                                {{/forcesendexamtoreview}}
+                                <!--                                </div>-->
+                            </td>
                         </tr>
                     {{/new_exams}}
                     </tbody>
@@ -77,10 +76,10 @@
             </div>
     {{/viewnewexamscard}}
     {{#viewcreatedexamscard}}
-            <div class="examcard">
+            <div class="examcard card">
                 <h4>{{#str}}created_exams, block_exaquest {{/str}}</h4>
                 <p>Diese Prüfungen wurden befüllt. Fachliche Begutachtung notwendig.</p>
-                <table>
+                <table class="examstable">
                     <thead></thead>
                     <tbody>
                     {{#created_exams}}
@@ -91,13 +90,11 @@
                                 >
                                     {{name}} </a>
                             </td>
-                            <td>
+                            <td class="changestatus">
                                 {{>block_exaquest/button_go_to_exam_view}}
-                            </td>
-                            <td>
+
                                 {{>block_exaquest/button_fachlich_release_exam}}
-                            </td>
-                            <td>
+
                                 <button type="submit" class="btn btn-primary change-exam-status-button"
                                         value="request_revision" quizid={{quizid}} courseid={{courseid}}>{{#str}}send_exam_to_revise, block_exaquest {{/str}}
                                 </button>
@@ -109,10 +106,10 @@
             </div>
     {{/viewcreatedexamscard}}
     {{#viewreleasedexamscard}}
-            <div class="examcard">
+            <div class="examcard card">
                 <h4>{{#str}}fachlich_released_exams, block_exaquest {{/str}}</h4>
                 <p>Diese Prüfungen wurden fachlich begutachtet.</p>
-                <table>
+                <table class="examstable">
                     <thead></thead>
                     <tbody>
                     {{#fachlich_released_exams}}
@@ -123,17 +120,16 @@
                                 >
                                     {{name}} </a>
                             </td>
-                            <td>
+                            <td class="changestatus">
                                 {{>block_exaquest/button_go_to_exam_view}}
-                            </td>
-                            {{#doformalreviewexam}}
-                                <td>
+
+                                {{#doformalreviewexam}}
                                     <button type="submit" class="btn btn-primary change-exam-status-button"
                                             value="formal_release_exam" quizid={{quizid}} courseid={{courseid}}>Zur Durchführung
                                         freigeben
                                     </button>
-                                </td>
-                            {{/doformalreviewexam}}
+                                {{/doformalreviewexam}}
+                            </td>
                         </tr>
                     {{/fachlich_released_exams}}
                     </tbody>
@@ -143,11 +139,11 @@
     {{#viewactiveexamscard}}
 
 
-            <div class="examcard">
+            <div class="examcard card">
                 <h4>{{#str}}active_exams, block_exaquest {{/str}}</h4>
                 <p>Fachlich und formal freigegebene Prüfungen. Diese sind aktiv. SuS können diese Prüfung
                     durchführen.</p>
-                <table>
+                <table class="examstable">
                     <thead></thead>
                     <tbody>
                     {{#active_exams}}
@@ -158,7 +154,7 @@
                                 >
                                     {{name}} </a>
                             </td>
-                            <td>
+                            <td class="changestatus">
                                 <button type="submit" class="btn btn-primary change-exam-status-button"
                                         value="finish_exam" quizid={{quizid}} courseid={{courseid}}>Prüfung beenden
                                 </button>
@@ -171,10 +167,10 @@
     {{/viewactiveexamscard}}
 
     {{#viewfinishedexamscard}}
-            <div class="examcard">
+            <div class="examcard card">
                 <h4>{{#str}}finished_exams, block_exaquest {{/str}}</h4>
                 <p>Abgeschlossene Prüfungen.</p>
-                <table>
+                <table class="examstable">
                     <thead></thead>
                     <tbody>
                     {{#finished_exams}}
@@ -186,94 +182,93 @@
                                     {{name}} </a>
                             </td>
 
-                            {{#assigncheckexamgrading}}
-                                <td>
+                            <td class="changestatus">
+                                {{#assigncheckexamgrading}}
                                     {{#popup_assign_check_exam_grading}}
                                         {{>block_exaquest/popup_assign_check_exam_grading}}
                                     {{/popup_assign_check_exam_grading}}
-                                </td>
 
-                                <td>
                                     {{#popup_assign_kommissionell_check_exam_grading}}
                                         {{>block_exaquest/popup_assign_kommissionell_check_exam_grading}}
                                     {{/popup_assign_kommissionell_check_exam_grading}}
-                                </td>
-                            {{/assigncheckexamgrading}}
+
+                                {{/assigncheckexamgrading}}
 
 
-                            {{#fp_assigned_to_check_grading}}
-                                <td>
+                                {{#fp_assigned_to_check_grading}}
+
                                     <button type="submit" class="btn btn-secondary change-exam-status-button"
                                             value="release_grades_for_fp_as_pk" quizid={{quizid}} courseid={{courseid}}>Prüfungsbeurteilung anstelle des Fachlichen Prüfers
                                         freigeben
                                     </button>
-                                </td>
-                            {{/fp_assigned_to_check_grading}}
+
+                                {{/fp_assigned_to_check_grading}}
 
 
-                            {{#assigned_to_check_grading}}
-                                <td>
+                                {{#assigned_to_check_grading}}
+
                                     <button type="submit" class="btn btn-primary change-exam-status-button"
                                             value="release_grades" quizid={{quizid}} courseid={{courseid}}>Prüfungsbeurteilung freigeben
                                     </button>
-                                </td>
-                                {{#go_to_exam_report_overview}}
-                                    <td>
+
+                                    {{#go_to_exam_report_overview}}
+
                                         {{>block_exaquest/button_go_to_exam_report_overview}}
-                                    </td>
-                                {{/go_to_exam_report_overview}}
-                                {{#go_to_exam_report_grading}}
-                                    <td>
+
+                                    {{/go_to_exam_report_overview}}
+                                    {{#go_to_exam_report_grading}}
+
                                         {{>block_exaquest/button_go_to_exam_report_grading}}
-                                    </td>
-                                {{/go_to_exam_report_grading}}
-                                <td>
+
+                                    {{/go_to_exam_report_grading}}
+
                                     {{#popup_assign_change_exam_grading}}
                                         {{>block_exaquest/popup_assign_change_exam_grading}}
                                     {{/popup_assign_change_exam_grading}}
-                                </td>
-                                <td>
+
+
                                     {{#popup_assign_check_exam_grading}}
                                         {{>block_exaquest/popup_assign_check_exam_grading}}
                                     {{/popup_assign_check_exam_grading}}
-                                </td>
-                            {{/assigned_to_check_grading}}
 
-                            {{#assigned_to_kommissionell_check_grading}}
-                                <td>
+                                {{/assigned_to_check_grading}}
+
+                                {{#assigned_to_kommissionell_check_grading}}
+
                                     {{#popup_kommissionell_exams_for_me_to_check_grading}}
                                         {{>block_exaquest/popup_kommissionell_exams_for_me_to_check_grading}}
                                     {{/popup_kommissionell_exams_for_me_to_check_grading}}
                                     <!--                                    <button type="submit" class="btn btn-primary change-exam-status-button"-->
                                     <!--                                            value="release_grades_for_student" quizid={{quizid}} courseid={{courseid}}>Kommissionelle Prüfungsbeurteilung...-->
                                     <!--                                    </button>-->
-                                </td>
-                            {{/assigned_to_kommissionell_check_grading}}
+
+                                {{/assigned_to_kommissionell_check_grading}}
 
 
-                            {{#assigngradeexam}}
-                                <td>
+                                {{#assigngradeexam}}
+
                                     {{#popup_assign_gradeexam}}
                                         {{>block_exaquest/popup_assign_gradeexam}}
                                     {{/popup_assign_gradeexam}}
-                                </td>
-                            {{/assigngradeexam}}
-                            {{#assigned_to_grade}}
-                                <!-- there is no mark_grade_request_as_done button yet, but the ability to add other persons for grading depends on being assigned to grade-->
-                                <!--                                add mark_grade_request_as_done button ?? ==> no, you can mark it as done in the dashboard or simply do it and it is marked as done automatically in the observer-->
-                                <!--  Similiar to the button with value "release_grades" here we have "grading finished" ? Would be a possibility, but for now no, because marking the grading as done does not make a lot of sense, it is shown in moodle when everything is graded anyways-->
 
-                                {{#go_to_exam_report_grading}}
-                                    <td>
+                                {{/assigngradeexam}}
+                                {{#assigned_to_grade}}
+                                    <!-- there is no mark_grade_request_as_done button yet, but the ability to add other persons for grading depends on being assigned to grade-->
+                                    <!--                                add mark_grade_request_as_done button ?? ==> no, you can mark it as done in the dashboard or simply do it and it is marked as done automatically in the observer-->
+                                    <!--  Similiar to the button with value "release_grades" here we have "grading finished" ? Would be a possibility, but for now no, because marking the grading as done does not make a lot of sense, it is shown in moodle when everything is graded anyways-->
+
+                                    {{#go_to_exam_report_grading}}
+
                                         {{>block_exaquest/button_go_to_exam_report_grading}}
-                                    </td>
-                                {{/go_to_exam_report_grading}}
-                                <td>
+
+                                    {{/go_to_exam_report_grading}}
+
                                     {{#popup_assign_gradeexam}}
                                         {{>block_exaquest/popup_assign_gradeexam}}
                                     {{/popup_assign_gradeexam}}
-                                </td>
-                            {{/assigned_to_grade}}
+
+                                {{/assigned_to_grade}}
+                            </td>
                         </tr>
                     {{/finished_exams}}
                     </tbody>
@@ -282,9 +277,9 @@
     {{/viewfinishedexamscard}}
 
     {{#viewgradesreleasedexamscard}}
-            <div class="examcard">
+            <div class="examcard card">
                 <h4>{{#str}}exams_grades_released, block_exaquest {{/str}}</h4>
-                <table>
+                <table class="examstable">
                     <thead></thead>
                     <tbody>
                     {{#grading_released_exams}}
@@ -295,7 +290,7 @@
                                 >
                                     {{name}} </a>
                             </td>
-                            <!--                    <td>-->
+                            <!--                    <td class="changestatus"> -->
                             <!--                        <button type="submit" class="btn btn-primary change-exam-status-button"-->
                             <!--                                value="release_grades" quizid={{quizid}}>Noten freigeben-->
                             <!--                        </button>-->

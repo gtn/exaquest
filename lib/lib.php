@@ -2745,6 +2745,23 @@ function block_exaquest_exams_set_status($quizid, $status) {
     $DB->update_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, $record);
 }
 
+
+// /**
+//  * Set status of question.
+//  * Use this instead of the update_record function, because it also deletes assignments that no longer make sense.
+//  *
+//  * @param $questionbankentryid
+//  * @param $status
+//  */
+// function block_exaquest_question_set_status($questionbankentryid, $status) {
+//     global $DB, $COURSE;
+//     $record = $DB->get_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, array("quizid" => $questionbankentryid));
+//     $record->status = $status;
+//
+//
+//     $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $record);
+// }
+
 function is_exaquest_active_in_course() {
     global $COURSE, $PAGE, $CFG;
 
@@ -3742,19 +3759,19 @@ function block_exaquest_render_questioncount_per_category() {
     $html = '<div class="container-fluid">
                     <div class="row">
                          <div class="col-lg-3">
-                         <div class="col-lg-12 border-bottom exaquest-category-tag-fragencharakter"><h6>Fragencharakter</h6></div>
+                         <div class="col-lg-12 border-bottom exaquest-category-tag-fragencharakter rounded"><h6>Fragencharakter</h6></div>
                             ' . $content[0] . '
                         </div>
                         <div class="col-lg-3">
-                        <div class="col-lg-12 border-bottom exaquest-category-tag-klassifikation"><h6>Klassifikation</h6></div>
+                        <div class="col-lg-12 border-bottom exaquest-category-tag-klassifikation rounded"><h6>Klassifikation</h6></div>
                             ' . $content[1] . '
                         </div>
                         <div class="col-lg-3">
-                        <div class="col-lg-12 border-bottom exaquest-category-tag-fragefach"><h6>Fragefach</h6></div>
+                        <div class="col-lg-12 border-bottom exaquest-category-tag-fragefach rounded"><h6>Fragefach</h6></div>
                             ' . $content[2] . '
                         </div>
                         <div class="col-lg-3">
-                        <div class="col-lg-12 border-bottom exaquest-category-tag-lerninhalt"><h6>Lerninhalt</h6></div>
+                        <div class="col-lg-12 border-bottom exaquest-category-tag-lerninhalt rounded"><h6>Lerninhalt</h6></div>
                             ' . $content[3] . '
                         </div>
                     </div>

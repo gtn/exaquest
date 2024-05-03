@@ -163,13 +163,12 @@ function block_exaquest_coursemodule_standard_elements($formwrapper, $mform) {
             //     new lang_string('enablecompletion_help', 'completion'), 1, array(0 => new lang_string('no'), 1 => new lang_string('yes')));
 
 
-
+            // before printing the fragefaecher: write a title that explains what to do
+            $mform->addElement('html', '<h5>' . get_string('points_per', 'block_exaquest') . '</h5>');
             // Add the quiz questions count / points count settings
             // for every fragefach, add one input
             foreach ($fragefaecher as $fragefach) {
-                $mform->addElement('text', 'exaquest_points_per_fragefach' . $fragefach->id,
-                    get_string('points_per', 'block_exaquest') . $fragefach->categoryname,
-                    array('size' => '10'));
+                $mform->addElement('text', 'exaquest_points_per_fragefach' . $fragefach->id, $fragefach->categoryname, array('size' => '10'));
                 // add help button
                 $mform->addHelpButton('exaquest_points_per_fragefach' . $fragefach->id, 'points_per', 'block_exaquest');
                 $mform->setType('exaquest_points_per_fragefach' . $fragefach->id, PARAM_INT);
@@ -183,13 +182,12 @@ function block_exaquest_coursemodule_standard_elements($formwrapper, $mform) {
             }
 
 
-
+            // before printing the fragefaecher: write a title that explains what to do
+            $mform->addElement('html', '<h5>' . get_string('exaquest_minimum_required_percentage_per_fragefach', 'block_exaquest') . '</h5>');
             // Add the minimum percentage a student needs per fragefach to pass the exam.
             // for every fragefach, add one input
             foreach ($fragefaecher as $fragefach) {
-                $mform->addElement('text', 'exaquest_minimum_required_percentage_per_fragefach' . $fragefach->id,
-                    get_string('exaquest_minimum_required_percentage_per_fragefach', 'block_exaquest') . $fragefach->categoryname,
-                    array('size' => '10'));
+                $mform->addElement('text', 'exaquest_minimum_required_percentage_per_fragefach' . $fragefach->id, $fragefach->categoryname, array('size' => '10'));
                 // add help button
                 $mform->addHelpButton('exaquest_minimum_required_percentage_per_fragefach' . $fragefach->id, 'minimum_percentage', 'block_exaquest');
                 $mform->setType('exaquest_minimum_required_percentage_per_fragefach' . $fragefach->id, PARAM_INT);
@@ -221,7 +219,6 @@ function block_exaquest_coursemodule_edit_post_actions($data, $course) {
         //    if (is_float($maxgrade) && $maxgrade >= 0) {
         //        $gradecalculator->update_quiz_maximum_grade($maxgrade);
         //    }
-
 
 
         $fragefaecher = block_exaquest_get_fragefaecher_by_courseid($course->id);

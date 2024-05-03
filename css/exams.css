@@ -1,6 +1,6 @@
 
 #exaquest .examcard {
-    border: 1px solid #ddd;
+    /*border: 1px solid #ddd;*/
     padding: 10px;
     margin: 10px;
 }
@@ -30,3 +30,43 @@ td {
 #exaquest ul.popuplist {
     list-style: none;
 }
+
+
+/* ------------------- */
+#block_exaquest .examstable {
+    width: 100%;
+}
+
+#block_exaquest .examstable tr{
+    display: grid;
+    grid-template-columns: 1fr 7fr;
+}
+
+
+
+#block_exaquest .examstable .qtype {
+    padding: 0.75rem;
+}
+
+#block_exaquest .examstable td.changestatus {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+#block_exaquest .examstable td.changestatus .btn {
+    /*margin-bottom: .5rem;*/
+    /*margin-right: .5rem;*/
+    /*display: block;*/
+    /*flex: 1;*/
+    margin-right: 10px; /* Adjust as needed */
+
+}
+
+#block_exaquest .examstable td.commentcount {
+    text-align: center;
+}
+
+
+
+

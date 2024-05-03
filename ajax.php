@@ -174,7 +174,7 @@ switch ($action) {
             }
             break;
         }
-        // if not break, then continue to revise_question and also remove the question from the quiz
+        // if no break, then continue to revise_question and also remove the question from the quiz
         // code for removing from quiz is from edit_rest.php from mod/quiz
         // require_sesskey();
         $id = optional_param('id', 0, PARAM_INT);
@@ -233,6 +233,9 @@ switch ($action) {
                 }
             }
         }
+
+        // delete the entry in exaquestreviewassign, since no review can be done, while it is in revise status
+        $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN, ['questionbankentryid' => $questionbankentryid]);
         break;
 
     case ('mark_request_as_done'):
@@ -292,4 +295,7 @@ function realease_question($questionbankentryid) {
     $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED;
     $data->id = $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'id', array("questionbankentryid" => $questionbankentryid));
     $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
+
+    // delete any entry for this questinbankentryid in exaquestreviewassign, since no review has to be done anymore once it is released.
+    $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN, ['questionbankentryid' => $questionbankentryid]);
 }

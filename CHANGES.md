@@ -1,4 +1,10 @@
 #####################################
+xxxxxxxx
+-"kommissionelle Prüfung" functionality added.
+-design changes, e.g. button colors describing functionlity
+-"Kernfach" functionality added
+#####################################
+#####################################
 2024020100
 -Show only courses that are active or have been active in the last 6 months in moodle dashboard
 -Added filter in questionbank and count in dashboard for: Questions that have been created but not yet submitted for review.
