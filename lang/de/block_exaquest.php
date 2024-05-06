@@ -131,6 +131,7 @@ $string['exams_grades_released'] = 'Prüfungen, von denen die Noten freigegeben 
 $string['add_questions_to_these_exams'] = 'Fügen Sie Fragen zu folgenden Prüfungen hinzu:';
 $string['usage_check_column'] = 'Verwendungsüberprüfung';
 $string['check_added_questions'] = 'Zugeordnete Fragen überprüfen';
+$string['go_to_exam_report_overview'] = 'Zu den Statistiken';
 $string['remove_from_quiz'] = 'Frage von Prüfung entfernen';
 
 // Dasboardcard
@@ -445,3 +446,8 @@ $string['statisticspoints'] = 'Punkte';
 $string['statisticsgrade'] = 'Note';
 $string['numericaldist'] = 'Numerische Verteilung';
 $string['percentagedist'] = 'Prozentuale Verteilung';
+$string['questionstatisticsheader'] = 'Verteilung Fragenfächer';
+$string['questiontype'] = 'Fragenfach';
+$string['numberofquestion'] = 'Anzahl Fragen';
+$string['difficultyavg'] = 'Durchschn. Schwierigkeit (p) * in Prozent';
+$string['selectnessavg'] = 'Durchschn. Trennschärfe (r) * in Prozent';

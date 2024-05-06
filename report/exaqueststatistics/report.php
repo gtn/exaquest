@@ -58,9 +58,9 @@ class quiz_exaqueststatistics_report extends report_base {
 
     /** @var array extra user fields. */
     protected $extrauserfields = [];
-
+	
     public function display($quiz, $cm, $course) {
-        global $DB, $OUTPUT, $PAGE;
+		global $DB, $OUTPUT, $PAGE;
         // simply returning true / doing nothing in the display() function leads to an error
         // "Invalid state passed to moodle_page::set_state. We are in state 0 and state 3 was requested."
         //$this->print_header_and_tabs($cm, $course, $quiz, 'grading');
@@ -68,8 +68,8 @@ class quiz_exaqueststatistics_report extends report_base {
         $whichattempts = optional_param('whichattempts', $quiz->grademethod, PARAM_INT);
         $quizstats = new \quiz_statistics\calculated($whichattempts);
         $quizinfo = $quizstats->get_formatted_quiz_info_data($course, $cm, $quiz);
-
-        /** Chandran Code start here **/
+		
+		/** Chandran Code start here **/
 		// Added New info
 		$quizinfo["timelimit"] = format_time($quiz->timelimit);
 		$quizinfo["quizattempt"] = $quizinfo[get_string('allattemptscount', 'quiz_statistics')];
@@ -82,9 +82,9 @@ class quiz_exaqueststatistics_report extends report_base {
 		// Replace label for german
 		$quizinfo = $this->check_and_replace_plugin_label($quizinfo);		
 		/** Chandran Code end here **/
-
+		
         echo $this->output_quiz_info_table($quizinfo);
-
+		
 		$context = context_module::instance($cm->id);
 		$letters = grade_get_letters($context);
 		$heading = get_string('statisticsheader', 'block_exaquest');		
@@ -108,32 +108,31 @@ class quiz_exaqueststatistics_report extends report_base {
 		$tdata = array();
 		$max = 100;
 		$lindex = 0;		
-		foreach($letters as $boundary=>$letter) {			
+		foreach($letters as $boundary=>$letter) {		
 			$line = array();
-			$line[] = round($quiz->grade*format_float($boundary,2)/100).' - '. round($quiz->grade*format_float($max,2)/100);
+			$line[] = round($quiz->grade*format_float($boundary,2)/100).' - '. round($quiz->grade*format_float($max,2)/100);			
 			$line[] = format_string($letter);
-			$line[] = $final_data[$lindex];			
+			$line[] = $final_data[$lindex];
 			$tdata[] = $line;
 			$max = $boundary - 0.01;
 			$lindex++;			
 		}
-		$dtotal = 0;
-		$ptotal = 0;
+		$dtotal = 0;		
 		// calculate total of participants for last row display
 		foreach($tdata as $tabledata){
-			$dtotal = $dtotal + $tabledata[2];			
+			$dtotal = $dtotal + $tabledata[2];
 		}
-        // calculate percentage of participants
-        $rowindex = 0;
-        $ptotal = 0;
-        foreach($letters as $boundary=>$letter) {
-                $tdata[$rowindex][3] = format_float(0,2).' %';
-                if($dtotal > 0){
-                        $tdata[$rowindex][3] = format_float(($final_data[$rowindex]/$dtotal)*100,2).' %';
-                }
-                $ptotal = $ptotal + $tdata[$rowindex][3];
-                $rowindex++;
-        }        
+		// calculate percentage of participants
+		$rowindex = 0;
+		$ptotal = 0;
+		foreach($letters as $boundary=>$letter) {
+				$tdata[$rowindex][3] = format_float(0,2).' %';
+				if($dtotal > 0){
+					$tdata[$rowindex][3] = format_float(($final_data[$rowindex]/$dtotal)*100,2).' %';
+				}
+				$ptotal = $ptotal + $tdata[$rowindex][3];
+				$rowindex++;
+		}
 		$tdata[] = array('','',$dtotal,format_float($ptotal, 2).' %');
 		
 		$table = new html_table();
@@ -152,8 +151,274 @@ class quiz_exaqueststatistics_report extends report_base {
 		// Numerical range data should display in LTR even for RTL languages.
 		echo $output->chart($chart, $graphname, ['dir' => 'ltr']);
 
+		$heading = get_string('questionstatisticsheader', 'block_exaquest');	
+
+		echo $OUTPUT->heading($heading);
+
+		$questionDetails = self::block_exaquest_get_category_question($quiz->id);
+		$categoryoptionidcount = block_exaquest_get_category_question_count($quiz->id);		
+		$categoryoptionidkeys = array_keys($categoryoptionidcount);
+		$categoryoptions = block_exaquest_get_category_names_by_ids($categoryoptionidkeys,true);
+		$options = [];
+		foreach ($categoryoptions as $categoryoption) {
+			$options[$categoryoption->categorytype][$categoryoption->id] = $categoryoption->categoryname;
+		}		
+		$categorys_required_counts = block_exaquest_get_fragefaecher_by_courseid_and_quizid($course->id, $quiz->id);
+		// if there are no questions of a category, this category will now show up in the options. ==> add the required fragefaecher so they always show up
+		foreach ($categorys_required_counts as $cat_required) {
+			// first check if it is even an array, or if it is completely empty still
+			// then check, if for THIS specific cat there is already an entry in the array or not
+			if (!is_array($options[BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH]) ||
+					!array_key_exists($cat_required->id, $options[BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH])) {
+				
+				$options[BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH][$cat_required->id] = $cat_required->categoryname;
+			}
+		}
+		$quiz = $DB->get_record('quiz', ['id' => $quiz->id], '*', MUST_EXIST);		
+		$questions = self::load_and_initialise_questions_for_calculations($quiz);		
+		
+        $questionstats = self::block_exaquest_get_all_stats_and_analysis($quiz,
+            $quiz->grademethod, question_attempt::ALL_TRIES, new \core\dml\sql_join(),
+            $questions, null);
+		/**echo '<pre>';
+		print_r($questionstats->questionstats);
+		echo '</pre>';
+		echo '<pre>';
+		print_r($questionDetails);
+		echo '</pre>';**/
+		
+		$tcontent = array();
+		foreach ($options as $key => $option) {
+			foreach ($option as $categoryid => $name) {
+				if ($key == BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH) {					
+					[$points,$questionids] = self::block_exaquest_calculate_question_points($questionDetails,$categoryid);
+					[$facilityValue,$discriminationValue] = self::block_exaquest_calculate_avg_index($questionstats->questionstats, $questionids[$categoryid]); 
+					$line = array();
+					$line[] = $name;
+					$line[] = $categoryoptionidcount[$categoryid] ?: 0;
+					$line[] = $facilityValue;
+					$line[] = $discriminationValue;
+					$line[] = $points;
+					$tcontent[] = $line;
+				}
+			}
+		}		
+		
+		$table = new html_table();
+		$table->id = 'question-type-view';
+		$table->head  = array(get_string('questiontype', 'block_exaquest'), get_string('numberofquestion', 'block_exaquest'),get_string('difficultyavg', 'block_exaquest'),get_string('selectnessavg', 'block_exaquest') , get_string('statisticspoints', 'block_exaquest'));
+		$table->size  = array('30%', '15%','20%','20%','15%');
+		$table->align = array('left', 'left', 'left', 'left');
+		$table->width = '30%';
+		$table->data  = $tcontent;
+		$table->tablealign  = 'center';
+		echo html_writer::table($table);
+
         return true;
     }
+
+    protected static function block_exaquest_get_all_stats_and_analysis(
+            $quiz, $whichattempts, $whichtries, \core\dml\sql_join $groupstudentsjoins,
+            $questions, $progress = null) {
+
+        $qubaids = self::block_exaquest_qubaids_condition($quiz->id, $groupstudentsjoins, $whichattempts);
+
+        $qcalc = new \core_question\statistics\questions\calculator($questions, $progress);
+		
+		// Recalculate now.
+		$questionstats = $qcalc->calculate($qubaids);
+
+        return $questionstats;
+    }
+		
+	protected static function block_exaquest_grade_method_sql($grademethod, $quizattemptsalias = 'quiza') {
+		switch ($grademethod) {
+			case QUIZ_GRADEHIGHEST :
+				return "($quizattemptsalias.state = 'finished' AND NOT EXISTS (
+							   SELECT 1 FROM {quiz_attempts} qa2
+								WHERE qa2.quiz = $quizattemptsalias.quiz AND
+									qa2.userid = $quizattemptsalias.userid AND
+									 qa2.state = 'finished' AND (
+					COALESCE(qa2.sumgrades, 0) > COALESCE($quizattemptsalias.sumgrades, 0) OR
+				   (COALESCE(qa2.sumgrades, 0) = COALESCE($quizattemptsalias.sumgrades, 0) AND qa2.attempt < $quizattemptsalias.attempt)
+									)))";
+
+			case QUIZ_GRADEAVERAGE :
+				return '';
+
+			case QUIZ_ATTEMPTFIRST :
+				return "($quizattemptsalias.state = 'finished' AND NOT EXISTS (
+							   SELECT 1 FROM {quiz_attempts} qa2
+								WHERE qa2.quiz = $quizattemptsalias.quiz AND
+									qa2.userid = $quizattemptsalias.userid AND
+									 qa2.state = 'finished' AND
+								   qa2.attempt < $quizattemptsalias.attempt))";
+
+			case QUIZ_ATTEMPTLAST :
+				return "($quizattemptsalias.state = 'finished' AND NOT EXISTS (
+							   SELECT 1 FROM {quiz_attempts} qa2
+								WHERE qa2.quiz = $quizattemptsalias.quiz AND
+									qa2.userid = $quizattemptsalias.userid AND
+									 qa2.state = 'finished' AND
+								   qa2.attempt > $quizattemptsalias.attempt))";
+		}
+	}
+
+	protected static function block_exaquest_attempts_sql($quizid, \core\dml\sql_join $groupstudentsjoins,
+        $whichattempts = QUIZ_GRADEAVERAGE, $includeungraded = false) {
+		$fromqa = "{quiz_attempts} quiza ";
+		$whereqa = 'quiza.quiz = :quizid AND quiza.preview = 0 AND quiza.state = :quizstatefinished';
+		$qaparams = ['quizid' => (int)$quizid, 'quizstatefinished' => quiz_attempt::FINISHED];
+
+		if (!empty($groupstudentsjoins->joins)) {
+			$fromqa .= "\nJOIN {user} u ON u.id = quiza.userid
+				{$groupstudentsjoins->joins} ";
+			$whereqa .= " AND {$groupstudentsjoins->wheres}";
+			$qaparams += $groupstudentsjoins->params;
+		}
+
+		$whichattemptsql = self::block_exaquest_grade_method_sql($whichattempts);
+		if ($whichattemptsql) {
+			$whereqa .= ' AND ' . $whichattemptsql;
+		}
+
+		if (!$includeungraded) {
+			$whereqa .= ' AND quiza.sumgrades IS NOT NULL';
+		}
+
+		return [$fromqa, $whereqa, $qaparams];
+	}
+
+	protected static function block_exaquest_qubaids_condition($quizid, \core\dml\sql_join $groupstudentsjoins,
+			$whichattempts = QUIZ_GRADEAVERAGE, $includeungraded = false) {
+		list($fromqa, $whereqa, $qaparams) = self::block_exaquest_attempts_sql(
+				$quizid, $groupstudentsjoins, $whichattempts, $includeungraded);
+		return new qubaid_join($fromqa, 'quiza.uniqueid', $whereqa, $qaparams);
+	}
+	
+	protected static function block_exaquest_calculate_avg_index($questionstats, $indexarray){
+		$avgvalue = 0;
+		$avgindex = 0;
+		$results = self::filterObjectsByIds($questionstats, $indexarray);
+		foreach ($results as $result) {
+			$avgvalue = $avgvalue + ($result->facility*100);
+			$avgindex = $avgindex + ($result->discriminationindex);
+		}
+		$facilityValue = format_float(($avgvalue/count($results)),2).' %'; 
+		$discriminationValue = format_float(($avgindex/count($results)),2).' %'; 
+		
+		return [$facilityValue,$discriminationValue];
+	}
+
+	// Define the function to filter the array of objects based on the provided IDs.
+	protected static function filterObjectsByIds($objects, $ids) {
+		// Create an empty array to store the filtered results.
+		$filteredResults = [];
+		
+		// Iterate over the array of objects.
+		foreach ($objects as $key => $object) {
+			// Check if the object has a 'questionid' property.
+			if (isset($object->questionid)) {
+				// Check if the 'questionid' is in the list of provided IDs.
+				if (in_array($object->questionid, $ids)) {
+					// Add the object to the filtered results.
+					$filteredResults[$key] = $object;
+				}
+			}
+		}
+		
+		// Return the filtered results.
+		return $filteredResults;
+	}
+	protected static function block_exaquest_calculate_question_points($questiondetails, $categoryid){
+		$points = 0;		
+		foreach ($questiondetails as $questiondetail) {
+			if($questiondetail->value == $categoryid){
+				$questionids[$categoryid][] = $questiondetail->questionid;
+				$points = $points + $questiondetail->maxmark;
+			}
+		}
+
+		return [$points, $questionids];
+	}
+	
+	protected static  function block_exaquest_get_category_question($quizid) {
+		global $DB;
+		// sql retrieves all categories for each questions inside this view
+		$customfieldvalues = $DB->get_records_sql("SELECT *
+		  FROM {quiz_slots} qusl
+		  JOIN {question_references} qref ON qusl.id = qref.itemid
+		  JOIN {question_versions} qv ON qv.questionbankentryid = qref.questionbankentryid
+		  JOIN {customfield_data} cfd ON cfd.instanceid = qv.questionid
+		  WHERE qv.version = (SELECT Max(v.version)
+				FROM   {question_versions} v
+				JOIN {question_bank_entries} be
+				ON be.id = v.questionbankentryid
+				WHERE  be.id = qref.questionbankentryid) AND qusl.quizid=:quizid",
+		  array('quizid' => $quizid));
+
+		return $customfieldvalues;
+	}
+
+
+	protected static function load_and_initialise_questions_for_calculations($quiz) {
+        // Load the questions.
+        $questions = quiz_report_get_significant_questions($quiz);
+
+        $questiondata = [];
+        foreach ($questions as $qs => $question) {
+            if ($question->qtype === 'random') {
+                $question->id = 0;
+                $question->name = get_string('random', 'quiz');
+                $question->questiontext = get_string('random', 'quiz');
+                $question->parenttype = 'random';
+                $questiondata[$question->slot] = $question;
+            } else if ($question->qtype === 'missingtype') {
+                $question->id = is_numeric($question->id) ? (int) $question->id : 0;
+                $questiondata[$question->slot] = $question;
+                $question->name = get_string('deletedquestion', 'qtype_missingtype');
+                $question->questiontext = get_string('deletedquestiontext', 'qtype_missingtype');
+            } else {
+                $q = question_bank::load_question_data($question->id);
+                $q->maxmark = $question->maxmark;
+                $q->slot = $question->slot;
+                $q->number = $question->number;
+                $q->parenttype = null;
+                $questiondata[$question->slot] = $q;
+            }
+        }
+
+        return $questiondata;
+    }
+	
+	protected static function quiz_report_get_significant_questions($quiz) {
+		$quizobj = mod_quiz\quiz_settings::create($quiz->id);
+		$structure = \mod_quiz\structure::create_for_quiz($quizobj);
+		$slots = $structure->get_slots();
+
+		$qsbyslot = [];
+		$number = 1;
+		foreach ($slots as $slot) {
+			// Ignore 'questions' of zero length.
+			if ($slot->length == 0) {
+				continue;
+			}
+
+			$slotreport = new \stdClass();
+			$slotreport->slot = $slot->slot;
+			$slotreport->id = $slot->questionid;
+			$slotreport->qtype = $slot->qtype;
+			$slotreport->length = $slot->length;
+			$slotreport->number = $number;
+			$number += $slot->length;
+			$slotreport->maxmark = $slot->maxmark;
+			$slotreport->category = $slot->category;
+
+			$qsbyslot[$slotreport->slot] = $slotreport;
+		}
+
+		return $qsbyslot;
+	}
 
 	protected static function searchRange($combined_array, $searched_range) {
 		// Initialize result array
@@ -177,7 +442,6 @@ class quiz_exaqueststatistics_report extends report_base {
 		// Return the result array
 		return $sum;
 	}
-
     /**
      * Get a chart.
      *
@@ -310,7 +574,7 @@ class quiz_exaqueststatistics_report extends report_base {
 		
 		return $quizinfo;
 	}
-
+	
     /**
      * Return HTML for table of overall quiz statistics.
      *

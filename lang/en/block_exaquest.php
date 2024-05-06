@@ -124,7 +124,7 @@ $string['add_questions_to_these_exams'] = 'Add questions to these exams';
 $string['usage_check_column'] = 'Usage checker';
 $string['check_added_questions'] = 'Check added questions';
 $string['remove_from_quiz'] = 'Remove question from exam';
-
+$string['go_to_exam_report_overview'] = 'go to reports';
 // Dasboardcard
 $string['questions_overview_title'] = 'QUESTIONS';
 $string['exams_overview_title'] = 'EXAMS';
@@ -427,7 +427,7 @@ $string['exams_for_me_to_fachlich_release_title'] = 'TODO: create exams_for_me_t
 $string['already_requested_from'] = 'Already requested from:';
 $string['already_done'] = 'already done';
 
-$string['Test-Name'] = 'Quiz Name';
+$string['Test-Name'] = 'Name der Prüfung';
 $string['quizdatum'] = 'Quiz date and time';
 $string['timelimit'] = 'Quiz Duration';
 $string['quizattempt'] = 'Number of participants';
@@ -437,3 +437,8 @@ $string['statisticspoints'] = 'Points';
 $string['statisticsgrade'] = 'Grade';
 $string['numericaldist'] = 'Numerical Distribution';
 $string['percentagedist'] = 'Percentag Distribution';
+$string['questionstatisticsheader'] = 'Distribution of question subjects';
+$string['questiontype'] = 'Question Type';
+$string['numberofquestion'] = 'Number of Questions';
+$string['difficultyavg'] = 'Avg. Difficulty (p) * in percent';
+$string['selectnessavg'] = 'Avg. Selectiveness (r) * in percent';
