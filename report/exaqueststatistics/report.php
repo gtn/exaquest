@@ -252,24 +252,22 @@ class quiz_exaqueststatistics_report extends report_base {
             }
             $locktimeout = get_config('quiz_statistics', 'getstatslocktimeout');
             $lock = \core\lock\lock_utils::wait_for_lock_with_progress(
-                $lockfactory,
-                $qubaids->get_hash_code(),
-                $progress,
-                $locktimeout,
-                get_string('getstatslockprogress', 'quiz_statistics'),
+                    $lockfactory,
+                    $qubaids->get_hash_code(),
+                    $progress,
+                    $locktimeout,
+                    get_string('getstatslockprogress', 'quiz_statistics'),
             );
             if (!$lock) {
                 // Lock attempt timed out.
                 $progress->progress(4);
                 $progress->end_progress();
                 debugging('Could not get lock on ' .
-                    $qubaids->get_hash_code() . ' (Quiz ID ' . $quiz->id . ') after ' .
-                    $locktimeout . ' seconds');
+                        $qubaids->get_hash_code() . ' (Quiz ID ' . $quiz->id . ') after ' .
+                        $locktimeout . ' seconds');
                 return [null, null];
             }
         }
-
-        // sleep(10); // to test lock
 
         try {
             if ($quizcalc->get_last_calculated_time($qubaids) === false) {
@@ -285,11 +283,11 @@ class quiz_exaqueststatistics_report extends report_base {
                 $progress->progress(2);
 
                 $quizstats = $quizcalc->calculate(
-                    $quiz->id,
-                    $whichattempts,
-                    $groupstudentsjoins,
-                    count($questions),
-                    $qcalc->get_sum_of_mark_variance()
+                        $quiz->id,
+                        $whichattempts,
+                        $groupstudentsjoins,
+                        count($questions),
+                        $qcalc->get_sum_of_mark_variance()
                 );
                 $progress->progress(3);
             } else {
@@ -302,11 +300,11 @@ class quiz_exaqueststatistics_report extends report_base {
             if ($quizstats->s() && $performanalysis) {
                 $subquestions = $questionstats->get_sub_questions();
                 $this->analyse_responses_for_all_questions_and_subquestions(
-                    $questions,
-                    $subquestions,
-                    $qubaids,
-                    $whichtries,
-                    $progress
+                        $questions,
+                        $subquestions,
+                        $qubaids,
+                        $whichtries,
+                        $progress
                 );
             }
             $progress->progress(4);
