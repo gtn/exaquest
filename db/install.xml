@@ -11,7 +11,7 @@
                        COMMENT="questionbankentryid"/>
                 <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="status"/>
                 <FIELD NAME="timestamp" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
-                <FIELD NAME="is_imported" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"
+                <FIELD NAME="is_imported" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" DEFAULT="0"
                        COMMENT="Boolean value, 0 = not imported, 1 = imported"/>
                 <FIELD NAME="reviewed_by_mover" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"
                        COMMENT="Boolean value, 0 = not reviewed by mover, 1 = reviewed by mover. Needed for skipping steps if reviewed by mover (directly release once it is formal reviewed)"/>
