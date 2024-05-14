@@ -132,6 +132,7 @@ $string['exams_grades_released'] = 'Prüfungen, von denen die Noten freigegeben 
 $string['add_questions_to_these_exams'] = 'Fügen Sie Fragen zu folgenden Prüfungen hinzu:';
 $string['usage_check_column'] = 'Verwendungsüberprüfung';
 $string['check_added_questions'] = 'Zugeordnete Fragen überprüfen';
+$string['go_to_exam_report_overview'] = 'Zu den Statistiken';
 $string['remove_from_quiz'] = 'Frage von Prüfung entfernen';
 
 // Dasboardcard
@@ -465,3 +466,9 @@ $string['send_exam_to_revise'] = 'Prüfung zur Überarbeitung zurückschicken';
 $string['points_per_help'] = 'Geben Sie die Anzahl der Punkte an, die in dieser Prüfung für dieses Fragefach hinzugefügt werden sollen.';
 $string['minimum_percentage_help'] = 'Geben Sie die Bestehensgrenze für dieses Fragefach an, falls es ein Kernfach ist. Wenn es kein Kernfach ist, lassen Sie 0% stehen.';
 $string['change_status_and_remove_from_quiz'] = 'Status der Frage auf "zu überarbeiten" ändern und aus der Prüfung entfernen';
+
+$string['questionstatisticsheader'] = 'Verteilung Fragenfächer';
+$string['questiontype'] = 'Fragenfach';
+$string['numberofquestion'] = 'Anzahl Fragen';
+$string['difficultyavg'] = 'Durchschn. Schwierigkeit (p) * in Prozent';
+$string['selectnessavg'] = 'Durchschn. Trennschärfe (r) * in Prozent';
