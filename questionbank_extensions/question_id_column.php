@@ -38,14 +38,14 @@ class question_id_column extends column_base {
 
     public function is_sortable(): array {
         return [
-            'ID' => ['field' => 'q.id', 'title' => "ID"],
+            'ID' => ['field' => 'qbe.id', 'title' => "ID"],
         ];
     }
 
     protected function display_content($question, $rowclasses): void {
 
-        if (!empty($question->id)) {
-            echo $question->id;
+        if (!empty($question->questionbankentryid)) {
+            echo $question->questionbankentryid;
         }
     }
 
