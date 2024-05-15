@@ -86,6 +86,8 @@ if (@$_REQUEST['table_sql']) {
     $questionbank_table->out();
 
     echo $output->footer();
+
+    exit;
 }
 
 echo $output->header($context, $courseid, get_string('get_questionbank', 'block_exaquest'));

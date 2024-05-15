@@ -86,28 +86,19 @@ class questionbank_table extends \local_table_sql\table_sql {
             $this->categoryid,
         ]);
 
-        $this->set_row_actions_display_as_menu(true);
-        $this->add_row_action(
-            id: 'lock_question',
-            label: get_string('lock_question', 'block_exaquest'),
-        );
-        $this->add_row_action(
-            id: 'revise_question',
-            label: get_string('revise_question', 'block_exaquest'),
-        );
+        // $this->set_row_actions_display_as_menu(true);
+        // $this->add_row_action(
+        //     id: 'lock_question',
+        //     label: get_string('lock_question', 'block_exaquest'),
+        // );
+        // $this->add_row_action(
+        //     id: 'revise_question',
+        //     label: get_string('revise_question', 'block_exaquest'),
+        // );
 
         $this->enable_row_selection();
 
-        return;
         $this->sortable(true, 'timecreated', SORT_DESC);
-
-        $this->add_row_action(
-            type: 'delete'
-        );
-        $this->add_row_action(
-            $_SERVER['REQUEST_URI'],
-            label: 'Test',
-        );
     }
 
     public function col_qtype($question) {
