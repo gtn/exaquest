@@ -38,6 +38,10 @@ class change_status extends column_base {
     }
 
     protected function display_content($question, $rowclasses): void {
+        static::display_content_static($question);
+    }
+
+    public static function display_content_static($question) {
         global $USER, $DB, $COURSE, $PAGE;
         //echo '<div class="container"><div class="row"><div class="col-md-12 text-right">';
         $output = $PAGE->get_renderer('block_exaquest');
@@ -77,7 +81,7 @@ class change_status extends column_base {
                     echo $output->render(new \block_exaquest\output\popup_change_status_warning('release_question',
                         get_string('skip_and_release_question', 'block_exaquest'), $question));
                 }
-                //echo '<a href="#" class="changestatus'.$question->questionbankentryid.' btn btn-primary btn-sm" role="button" value="open_question_for_review"> '.get_string('open_question_for_review', 'block_exaquest').'</a>';
+                //echo '<a href="#" class="exaquest-changequestionstatus changestatus'.$question->questionbankentryid.' btn btn-primary btn-sm" role="button" value="open_question_for_review"> '.get_string('open_question_for_review', 'block_exaquest').'</a>';
                 break;
             case BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS:
                 if (has_capability('block/exaquest:changeowner', \context_course::instance($COURSE->id))) {
@@ -88,12 +92,12 @@ class change_status extends column_base {
                     echo $output->render(new \block_exaquest\output\popup_change_status_secondary_button($fragenersteller, 'revise_question',
                         get_string('revise_question', 'block_exaquest'), $question));
                     if (has_capability('block/exaquest:dofachlichreview', \context_course::instance($COURSE->id))) {
-                        echo '<button href="#" class="changestatus' . $question->questionbankentryid .
+                        echo '<button href="#" class="exaquest-changequestionstatus changestatus' . $question->questionbankentryid .
                             ' btn btn-primary" role="button" value="fachlich_review_done"> ' .
                             get_string('fachlich_review_done', 'block_exaquest') . '</button>';
                     }
                     if (has_capability('block/exaquest:doformalreview', \context_course::instance($COURSE->id))) {
-                        echo '<button href="#" class="changestatus' . $question->questionbankentryid .
+                        echo '<button href="#" class="exaquest-changequestionstatus changestatus' . $question->questionbankentryid .
                             ' btn btn-primary" role="button" value="formal_review_done"> ' .
                             get_string('formal_review_done', 'block_exaquest') . '</button>';
                     }
@@ -114,7 +118,7 @@ class change_status extends column_base {
                         get_string('revise_question', 'block_exaquest'), $question));
                 }
                 if (has_capability('block/exaquest:dofachlichreview', \context_course::instance($COURSE->id))) {
-                    echo '<button href="#" class="changestatus' . $question->questionbankentryid .
+                    echo '<button href="#" class="exaquest-changequestionstatus changestatus' . $question->questionbankentryid .
                         ' btn btn-primary" role="button" value="fachlich_review_done"> ' .
                         get_string('fachlich_review_done', 'block_exaquest') . '</button>';
                 }
@@ -133,7 +137,7 @@ class change_status extends column_base {
                     echo $output->render(new \block_exaquest\output\popup_change_status_secondary_button($fragenersteller, 'revise_question',
                         get_string('revise_question', 'block_exaquest'), $question));
                     if (has_capability('block/exaquest:doformalreview', \context_course::instance($COURSE->id))) {
-                        echo '<button href="#" class="changestatus' . $question->questionbankentryid .
+                        echo '<button href="#" class="exaquest-changequestionstatus changestatus' . $question->questionbankentryid .
                             ' btn btn-primary" role="button" value="formal_review_done"> ' .
                             get_string('formal_review_done', 'block_exaquest') . '</button>';
                     }
@@ -150,7 +154,7 @@ class change_status extends column_base {
                         get_string('change_owner', 'block_exaquest'), $question, true));
                 }
                 if (has_capability('block/exaquest:releasequestion', \context_course::instance($COURSE->id))) {
-                    echo '<button href="#" class="changestatus' . $question->questionbankentryid .
+                    echo '<button href="#" class="exaquest-changequestionstatus changestatus' . $question->questionbankentryid .
                         ' btn btn-primary" role="button" value="release_question"> ' .
                         get_string('release_question', 'block_exaquest') . '</button>';
                 }
@@ -167,7 +171,7 @@ class change_status extends column_base {
                 if (has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
                     echo $output->render(new \block_exaquest\output\popup_change_status_secondary_button($fragenersteller, 'revise_question',
                         get_string('revise_question', 'block_exaquest'), $question));
-                    echo '<button href="#" class="changestatus' . $question->questionbankentryid .
+                    echo '<button href="#" class="exaquest-changequestionstatus changestatus' . $question->questionbankentryid .
                         ' btn btn-primary" role="button" value="lockquestion"> ' .
                         get_string('lock_question', 'block_exaquest') . '</button>';
                 }
@@ -185,11 +189,11 @@ class change_status extends column_base {
                 }
                 if (has_capability('block/exaquest:editquestiontoreview', \context_course::instance($COURSE->id))) {
                     if (block_exaquest_check_if_question_contains_categories($question->id)) {
-                        echo '<button href="#" class="changestatus' . $question->questionbankentryid .
+                        echo '<button href="#" class="exaquest-changequestionstatus changestatus' . $question->questionbankentryid .
                             ' btn btn-primary" role="button" value="unlockquestion"> ' .
                             get_string('unlock_question', 'block_exaquest') . '</button>';
                     } else {
-                        echo '<button href="#" class="changestatus' . $question->questionbankentryid .
+                        echo '<button href="#" class="exaquest-changequestionstatus changestatus' . $question->questionbankentryid .
                             ' btn btn-primary disabled" disabled data-toggle="tooltip" role="button" value="unlockquestion" title="' .
                             get_string('missing_category_tooltip', 'block_exaquest') . '"> ' .
                             get_string('unlock_question', 'block_exaquest') . '</button>';
@@ -323,6 +327,7 @@ class change_status extends column_base {
     public function load_additional_data(array $questions) {
         global $DB;
 
+        // TODO: optimieren!
         $questionstatusdb = $DB->get_records("block_exaquestquestionstatus");
 
         $questionbankentries = $DB->get_records("question_bank_entries");

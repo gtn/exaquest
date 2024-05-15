@@ -3,8 +3,6 @@ require __DIR__ . '/inc.php';
 
 global $CFG, $COURSE, $PAGE, $OUTPUT, $SESSION;
 
-use core\event\question_category_viewed;
-
 
 require_once($CFG->dirroot . '/question/editlib.php');
 require_once(__DIR__ . '/questionbank_extensions/exaquest_view.php');
@@ -77,16 +75,24 @@ $PAGE->set_url($url);
 $PAGE->set_heading(get_string('questionbank_of_course', 'block_exaquest', $COURSE->fullname));
 $PAGE->set_title(get_string('questionbank_of_course', 'block_exaquest', $COURSE->fullname));
 
-
 $context = context_course::instance($courseid);
 $output = $PAGE->get_renderer('block_exaquest');
-echo $output->header($context, $courseid, get_string('get_questionbank', 'block_exaquest'));
 
+if (@$_REQUEST['table_sql']) {
+    $questionbank_table = new \block_exaquest\tables\questionbank_table(preg_replace('!,.*!', '', $category) ?: 0);
+
+    echo $output->header($context, $courseid, get_string('get_questionbank', 'block_exaquest'));
+
+    $questionbank_table->out();
+
+    echo $output->footer();
+}
+
+echo $output->header($context, $courseid, get_string('get_questionbank', 'block_exaquest'));
 
 if (($lastchanged = optional_param('lastchanged', 0, PARAM_INT)) !== 0) {
     $url->param('lastchanged', $lastchanged);
 }
-
 
 // call to display view
 $questionbank = new core_question\local\bank\exaquest_view($contexts, $url, $COURSE, $cm);
