@@ -137,18 +137,18 @@ table.exaquest-similarity-comparison-table .col-threshold {
     padding: 0.75rem;
 }
 
-#block_exaquest #categoryquestions td.changestatus {
+#block_exaquest #categoryquestions td.changestatus, .changestatus-button-container {
     display: grid;
     grid-template-columns: 1fr;
 }
 
 @media (min-width: 1201px) {
-    #block_exaquest #categoryquestions td.changestatus {
+    #block_exaquest #categoryquestions td.changestatus, .changestatus-button-container {
         grid-template-columns: 1fr 1fr;
     }
 }
 
-#block_exaquest #categoryquestions td.changestatus .btn {
+#block_exaquest #categoryquestions td.changestatus .btn, .changestatus-button-container .btn {
     margin-bottom: .5rem;
     margin-right: .5rem;
     display: block;

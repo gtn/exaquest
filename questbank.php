@@ -78,8 +78,14 @@ $PAGE->set_title(get_string('questionbank_of_course', 'block_exaquest', $COURSE-
 $context = context_course::instance($courseid);
 $output = $PAGE->get_renderer('block_exaquest');
 
+// call to display view
+$questionbank = new core_question\local\bank\exaquest_view($contexts, $url, $COURSE, $cm);
+
 if (@$_REQUEST['table_sql']) {
-    $questionbank_table = new \block_exaquest\tables\questionbank_table(preg_replace('!,.*!', '', $category) ?: 0);
+    $questionbank_table = new \block_exaquest\tables\questionbank_table(
+        $questionbank,
+        preg_replace('!,.*!', '', $category) ?: 0 // TODO: gibts da mehrere ids?!?
+    );
 
     echo $output->header($context, $courseid, get_string('get_questionbank', 'block_exaquest'));
 
@@ -95,9 +101,6 @@ echo $output->header($context, $courseid, get_string('get_questionbank', 'block_
 if (($lastchanged = optional_param('lastchanged', 0, PARAM_INT)) !== 0) {
     $url->param('lastchanged', $lastchanged);
 }
-
-// call to display view
-$questionbank = new core_question\local\bank\exaquest_view($contexts, $url, $COURSE, $cm);
 
 echo '<div class="questionbankwindow boxwidthwide boxaligncenter">';
 $questionbank->display($pagevars, 'editq');
