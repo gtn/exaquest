@@ -24,7 +24,7 @@ class questionbank_table extends \local_table_sql\table_sql {
     protected function define_table_configs() {
 
         $cols = [
-            'id' => 'Id',
+            'questionbankentryid' => 'Id',
             'qtype' => 'T',
             'name' => 'Name',
             'ucname' => get_string('ownername', 'block_exaquest'),
