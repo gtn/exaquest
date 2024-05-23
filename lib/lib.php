@@ -1155,6 +1155,9 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:assigngradeexam', CAP_ALLOW, $roleid, $context);
     unassign_capability('block/exaquest:createexam', $roleid, $context->id); // accidentally added, should be deleted
     assign_capability('block/exaquest:forcesendexamtoreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:doformalreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionstoreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:editquestiontoreview', CAP_ALLOW, $roleid, $context);
 
     // rework capabilities documentation: start from archetype 0. Almost no rights in exam page needed. Some rights needed for question page.
     if (!$DB->record_exists('role', ['shortname' => 'modulverantwortlicher'])) {
@@ -1451,7 +1454,7 @@ function block_exaquest_set_up_roles() {
     //assign_capability('block/exaquest:addquestiontoexam', CAP_ALLOW, $roleid, $context);
     //unassign_capability('block/exaquest:createexam', $roleid, $context->id); // accidentally added, should be deleted
 
-    // TODO: is this even a needed role? Or is it actually just "fachlicherpruefer" but assignes as a zweitpruefer to an exam? I guess so...
+    // is this even a needed role? Or is it actually just "fachlicherpruefer" but assignes as a zweitpruefer to an exam? I guess so...
     // Zweitpruefer is an assignment, not a role
     // if (!$DB->record_exists('role', ['shortname' => 'fachlicherzweitpruefer'])) {
     //     $roleid = create_role('Fachlicher Zweitprüfer', 'fachlicherzweitpruefer', '', 'editingteacher');
@@ -1820,6 +1823,9 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:assigngradeexam', CAP_ALLOW, $roleid, $context);
     unassign_capability('block/exaquest:createexam', $roleid, $context->id); // accidentally added, should be deleted
     assign_capability('block/exaquest:forcesendexamtoreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:doformalreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionstoreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:editquestiontoreview', CAP_ALLOW, $roleid, $context);
 
     // moodle capabilities:
     assign_capability('moodle/question:viewall', CAP_ALLOW, $roleid, $context); // so they can add questions in the exams tab
@@ -2138,7 +2144,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('mod/quiz:view', CAP_ALLOW, $roleid, $context);
 
 
-    // // TODO: is this even a needed role? Or is it actually just "fachlicherpruefer" but assignes as a zweitpruefer to an exam? I guess so...
+    // // is this even a needed role? Or is it actually just "fachlicherpruefer" but assignes as a zweitpruefer to an exam? I guess so...
     // // just an assignment
     // if (!$DB->record_exists('role', ['shortname' => 'fachlicherzweitpruefer2'])) {
     //     $roleid = create_role('Fachlicherzweitpruefer2', 'fachlicherzweitpruefer2', '');
