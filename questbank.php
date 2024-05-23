@@ -6,6 +6,7 @@ global $CFG, $COURSE, $PAGE, $OUTPUT, $SESSION;
 
 require_once($CFG->dirroot . '/question/editlib.php');
 require_once(__DIR__ . '/questionbank_extensions/exaquest_view.php');
+use qbank_managecategories\helper;
 
 list($thispageurl, $contexts, $cmid, $cm, $module, $pagevars) =
     question_edit_setup('questions', '/question/edit.php');
@@ -84,10 +85,19 @@ $questionbank = new core_question\local\bank\exaquest_view($contexts, $url, $COU
 if (@$_REQUEST['table_sql']) {
     $questionbank_table = new \block_exaquest\tables\questionbank_table(
         $questionbank,
-        preg_replace('!,.*!', '', $category) ?: 0 // TODO: gibts da mehrere ids?!?
+        preg_replace('!,.*!', '', $category) ?: 0 // TODO: gibts da mehrere ids?!?. Die erste Zahl ist die question_cateogry_id, die zweite die context_id. Kommt von "get_question_category_and_context_of_course", da ist es genauer beschrieben
     );
 
     echo $output->header($context, $courseid, get_string('get_questionbank', 'block_exaquest'));
+
+    // print the create_question_button
+    $coursecategorycontextid = $catAndCont[1];
+    $coursecategory = helper::get_categories_for_contexts($coursecategorycontextid, 'id', false);
+    $coursecategory = array_pop($coursecategory);
+    $coursecategorycontext = \context::instance_by_id($coursecategorycontextid);
+    $canadd = has_capability('moodle/question:add', $coursecategorycontext);
+    $questionbank->create_new_question_form_dashboard($coursecategory, $canadd);
+
 
     $questionbank_table->out();
 
