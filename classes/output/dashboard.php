@@ -200,7 +200,7 @@ class dashboard implements renderable, templatable {
 
         // REQUEST NEW QUESTIONS
         // this adds the subtemplate. The data, in this case fragenersteller, does not have to be given to THIS data, because it is in the data for request_questions_popup already
-        if ($this->capabilities["releasequestion"]) {
+        if ($this->capabilities["requestquestions"]) {
             $data->request_questions_popup = $this->request_questions_popup->export_for_template($output);
         }
 

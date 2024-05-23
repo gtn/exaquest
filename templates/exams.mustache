@@ -184,6 +184,12 @@
 
                             <td class="changestatus">
                                 {{#assigncheckexamgrading}}
+                                    <!--show exam report for PK and StudMA. If you are able to assign someone to check grading you are also able to see the gradings/statistics -->
+                                    {{#go_to_exam_report_overview}}
+                                        {{>block_exaquest/button_go_to_exam_report_overview}}
+                                    {{/go_to_exam_report_overview}}
+
+
                                     {{#popup_assign_check_exam_grading}}
                                         {{>block_exaquest/popup_assign_check_exam_grading}}
                                     {{/popup_assign_check_exam_grading}}
@@ -196,7 +202,7 @@
 
 
                                 {{#fp_assigned_to_check_grading}}
-
+<!--if an FP is assigned to check the grading, the PK can release the grading instead -->
                                     <button type="submit" class="btn btn-secondary change-exam-status-button"
                                             value="release_grades_for_fp_as_pk" quizid={{quizid}} courseid={{courseid}}>Prüfungsbeurteilung anstelle des Fachlichen Prüfers
                                         freigeben
@@ -212,14 +218,11 @@
                                     </button>
 
                                     {{#go_to_exam_report_overview}}
-
                                         {{>block_exaquest/button_go_to_exam_report_overview}}
-
                                     {{/go_to_exam_report_overview}}
+
                                     {{#go_to_exam_report_grading}}
-
                                         {{>block_exaquest/button_go_to_exam_report_grading}}
-
                                     {{/go_to_exam_report_grading}}
 
                                     {{#popup_assign_change_exam_grading}}
@@ -246,21 +249,22 @@
 
 
                                 {{#assigngradeexam}}
-
                                     {{#popup_assign_gradeexam}}
                                         {{>block_exaquest/popup_assign_gradeexam}}
+                                        <!--show exam report for PK and StudMA. If you are able to assign someone to check grading you are also able to see the gradings/statistics -->
+                                        <!--only show it when there is something to grade ==> when popup_assign_gradeexam exists-->
+                                        {{#go_to_exam_report_grading}}
+                                            {{>block_exaquest/button_go_to_exam_report_grading}}
+                                        {{/go_to_exam_report_grading}}
                                     {{/popup_assign_gradeexam}}
-
                                 {{/assigngradeexam}}
+
                                 {{#assigned_to_grade}}
                                     <!-- there is no mark_grade_request_as_done button yet, but the ability to add other persons for grading depends on being assigned to grade-->
                                     <!--                                add mark_grade_request_as_done button ?? ==> no, you can mark it as done in the dashboard or simply do it and it is marked as done automatically in the observer-->
                                     <!--  Similiar to the button with value "release_grades" here we have "grading finished" ? Would be a possibility, but for now no, because marking the grading as done does not make a lot of sense, it is shown in moodle when everything is graded anyways-->
-
                                     {{#go_to_exam_report_grading}}
-
                                         {{>block_exaquest/button_go_to_exam_report_grading}}
-
                                     {{/go_to_exam_report_grading}}
 
                                     {{#popup_assign_gradeexam}}

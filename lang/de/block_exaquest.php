@@ -153,7 +153,7 @@ $string['questions_fachlich_reviewed_count'] = 'Nur fachlich begutachtete Fragen
 $string['questions_formal_reviewed_count'] = 'Nur formal begutachtete Fragen. Fachlich noch zu begutachten';
 $string['questions_finalised_count'] = 'Finalisierte Fragen';
 $string['questions_released_count'] = 'Freigegebene Fragen';
-$string['questions_locked_count'] = 'Gepserrte Fragen';
+$string['questions_locked_count'] = 'Gesperrte Fragen';
 $string['questions_released_and_to_review_count'] = 'Freigegebene Fragen die überarbeitet werden müssen';
 
 $string['my_questions_count'] = 'Fragen von mir erstellt';

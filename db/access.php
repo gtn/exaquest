@@ -360,4 +360,8 @@ $capabilities = array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
     ),
+    'block/exaquest:requestquestions' => array( // request new questions in the dashboard tab
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+    ),
 );

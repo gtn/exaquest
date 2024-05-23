@@ -188,6 +188,7 @@ class exams implements renderable, templatable {
             array('courseid' => $this->courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1]));
 
         // TODO: always show the buttons? Or only when you were assigned for example?
+        // --> it only makes sense to also show it to PK and StudMA / just anyone who can assign to check grading or to grade
         //$data->go_to_exam_report_overview = new moodle_url('/mod/quiz/report.php',
         //        array('mode' => 'overview',));
         $data->go_to_exam_report_overview = new moodle_url('/blocks/exaquest/report.php',
