@@ -357,29 +357,29 @@ function block_exaquest_get_fachlichepruefer_by_courseid($courseid) {
     return get_enrolled_users($context, 'block/exaquest:fachlicherpruefer', 0, 'u.*', null, 0, 0, true);
 }
 
-/**
- *
- * Returns all fachlichezweitpruefer of this course
- *
- * @param $courseid
- * @return array
- */
-function block_exaquest_get_fachlichezweitpruefer_by_courseid($courseid) {
-    $context = context_course::instance($courseid);
-    return get_enrolled_users($context, 'block/exaquest:fachlichezweitpruefer', 0, 'u.*', null, 0, 0, true);
-}
+// /**
+//  *
+//  * Returns all fachlichezweitpruefer of this course
+//  *
+//  * @param $courseid
+//  * @return array
+//  */
+// function block_exaquest_get_fachlichezweitpruefer_by_courseid($courseid) {
+//     $context = context_course::instance($courseid);
+//     return get_enrolled_users($context, 'block/exaquest:fachlichezweitpruefer', 0, 'u.*', null, 0, 0, true);
+// }
 
-/**
- *
- * Returns all fachlichedrittpruefer of this course
- *
- * @param $courseid
- * @return array
- */
-function block_exaquest_get_fachlichedrittpruefer_by_courseid($courseid) {
-    $context = context_course::instance($courseid);
-    return get_enrolled_users($context, 'block/exaquest:fachlichedrittpruefer', 0, 'u.*', null, 0, 0, true);
-}
+// /**
+//  *
+//  * Returns all fachlichedrittpruefer of this course
+//  *
+//  * @param $courseid
+//  * @return array
+//  */
+// function block_exaquest_get_fachlichedrittpruefer_by_courseid($courseid) {
+//     $context = context_course::instance($courseid);
+//     return get_enrolled_users($context, 'block/exaquest:fachlichedrittpruefer', 0, 'u.*', null, 0, 0, true);
+// }
 
 /**
  *
@@ -1020,7 +1020,6 @@ function block_exaquest_set_up_roles() {
     if (!$DB->record_exists('role', ['shortname' => 'admintechnpruefungsdurchf'])) {
         $roleid = create_role('admin./techn. Prüfungsdurchf.', 'admintechnpruefungsdurchf', '', 'editingteacher');
         $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
-        //$archetype = 0;
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
             $options); // overwrites everything that is set in the options. The rest stays.
@@ -1029,7 +1028,6 @@ function block_exaquest_set_up_roles() {
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
-
         // allow setting role at context level "course category"
         set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
@@ -1065,7 +1063,6 @@ function block_exaquest_set_up_roles() {
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
-
         // allow setting role at context level "course category"
         set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
@@ -1455,42 +1452,43 @@ function block_exaquest_set_up_roles() {
     //unassign_capability('block/exaquest:createexam', $roleid, $context->id); // accidentally added, should be deleted
 
     // TODO: is this even a needed role? Or is it actually just "fachlicherpruefer" but assignes as a zweitpruefer to an exam? I guess so...
-    if (!$DB->record_exists('role', ['shortname' => 'fachlicherzweitpruefer'])) {
-        $roleid = create_role('Fachlicher Zweitprüfer', 'fachlicherzweitpruefer', '', 'editingteacher');
-        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
-        $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
-        $definitiontable->force_duplicate($archetype,
-            $options); // overwrites everything that is set in the options. The rest stays.
-        $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
-        $definitiontable->save_changes();
-        $sourcerole = new \stdClass();
-        $sourcerole->id = $archetype;
-        role_cap_duplicate($sourcerole, $roleid);
-
-        // allow setting role at context level "course category"
-        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
-    } else {
-        $roleid = $DB->get_record('role', ['shortname' => 'fachlicherzweitpruefer'])->id;
-    }
-    assign_capability('block/exaquest:fachlicherzweitpruefer', CAP_ALLOW, $roleid, $context);
-    assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
-    //added during development:
-    assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
-    //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
-    assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
-
-    assign_capability('block/exaquest:viewnewexamscard', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewcreatedexamscard', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewreleasedexamscard', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewactiveexamscard', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewfinishedexamscard', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewgradesreleasedexamscard', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:gradeexam', CAP_ALLOW, $roleid, $context);
+    // Zweitpruefer is an assignment, not a role
+    // if (!$DB->record_exists('role', ['shortname' => 'fachlicherzweitpruefer'])) {
+    //     $roleid = create_role('Fachlicher Zweitprüfer', 'fachlicherzweitpruefer', '', 'editingteacher');
+    //     $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
+    //     $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
+    //     $definitiontable->force_duplicate($archetype,
+    //         $options); // overwrites everything that is set in the options. The rest stays.
+    //     $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
+    //     $definitiontable->save_changes();
+    //     $sourcerole = new \stdClass();
+    //     $sourcerole->id = $archetype;
+    //     role_cap_duplicate($sourcerole, $roleid);
+    //
+    //     // allow setting role at context level "course category"
+    //     set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
+    // } else {
+    //     $roleid = $DB->get_record('role', ['shortname' => 'fachlicherzweitpruefer'])->id;
+    // }
+    // assign_capability('block/exaquest:fachlicherzweitpruefer', CAP_ALLOW, $roleid, $context);
+    // assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
+    // //added during development:
+    // assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
+    // //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    // unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
+    // assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
+    //
+    // assign_capability('block/exaquest:viewnewexamscard', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewcreatedexamscard', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewreleasedexamscard', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewactiveexamscard', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewfinishedexamscard', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewgradesreleasedexamscard', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:gradeexam', CAP_ALLOW, $roleid, $context);
 
     // ---
     if (!$DB->record_exists('role', ['shortname' => 'fragenerstellerlight'])) {
@@ -1618,7 +1616,7 @@ function block_exaquest_set_up_roles() {
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'beurteilungsmitwirkende'])->id;
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'fachlicherpruefer'])->id;
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'pruefungsmitwirkende'])->id;
-    $allowedroles[] = $DB->get_record('role', ['shortname' => 'fachlicherzweitpruefer'])->id;
+    // $allowedroles[] = $DB->get_record('role', ['shortname' => 'fachlicherzweitpruefer'])->id;
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'fragenerstellerlight'])->id;
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'fachlfragenreviewerlight'])->id;
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'sekretariat'])->id;
@@ -2140,42 +2138,43 @@ function block_exaquest_set_up_roles() {
     assign_capability('mod/quiz:view', CAP_ALLOW, $roleid, $context);
 
 
-    // TODO: is this even a needed role? Or is it actually just "fachlicherpruefer" but assignes as a zweitpruefer to an exam? I guess so...
-    if (!$DB->record_exists('role', ['shortname' => 'fachlicherzweitpruefer2'])) {
-        $roleid = create_role('Fachlicherzweitpruefer2', 'fachlicherzweitpruefer2', '');
-        $archetype = 0; // completely clean, no capabilities
-        $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
-        $definitiontable->force_duplicate($archetype,
-            $options); // overwrites everything that is set in the options. The rest stays.
-        $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
-        $definitiontable->save_changes();
-        $sourcerole = new \stdClass();
-        $sourcerole->id = $archetype;
-        role_cap_duplicate($sourcerole, $roleid);
-        // allow setting role at context level "course category" and "course"
-        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
-    } else {
-        $roleid = $DB->get_record('role', ['shortname' => 'fachlicherzweitpruefer2'])->id;
-    }
-    assign_capability('block/exaquest:fachlicherzweitpruefer', CAP_ALLOW, $roleid, $context);
-    assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
-    //added during development:
-    assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
-    //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
-    assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
-
-    assign_capability('block/exaquest:viewnewexamscard', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewcreatedexamscard', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewreleasedexamscard', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewactiveexamscard', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewfinishedexamscard', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewgradesreleasedexamscard', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:gradeexam', CAP_ALLOW, $roleid, $context);
+    // // TODO: is this even a needed role? Or is it actually just "fachlicherpruefer" but assignes as a zweitpruefer to an exam? I guess so...
+    // // just an assignment
+    // if (!$DB->record_exists('role', ['shortname' => 'fachlicherzweitpruefer2'])) {
+    //     $roleid = create_role('Fachlicherzweitpruefer2', 'fachlicherzweitpruefer2', '');
+    //     $archetype = 0; // completely clean, no capabilities
+    //     $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
+    //     $definitiontable->force_duplicate($archetype,
+    //         $options); // overwrites everything that is set in the options. The rest stays.
+    //     $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
+    //     $definitiontable->save_changes();
+    //     $sourcerole = new \stdClass();
+    //     $sourcerole->id = $archetype;
+    //     role_cap_duplicate($sourcerole, $roleid);
+    //     // allow setting role at context level "course category" and "course"
+    //     set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
+    // } else {
+    //     $roleid = $DB->get_record('role', ['shortname' => 'fachlicherzweitpruefer2'])->id;
+    // }
+    // assign_capability('block/exaquest:fachlicherzweitpruefer', CAP_ALLOW, $roleid, $context);
+    // assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
+    // //added during development:
+    // assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
+    // //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    // unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
+    // assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
+    //
+    // assign_capability('block/exaquest:viewnewexamscard', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewcreatedexamscard', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewreleasedexamscard', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewactiveexamscard', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewfinishedexamscard', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewgradesreleasedexamscard', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:gradeexam', CAP_ALLOW, $roleid, $context);
 
     // ---
     if (!$DB->record_exists('role', ['shortname' => 'fragenerstellerlight2'])) {
@@ -2300,7 +2299,7 @@ function block_exaquest_set_up_roles() {
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'beurteilungsmitwirkende2'])->id;
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'fachlicherpruefer2'])->id;
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'pruefungsmitwirkende2'])->id;
-    $allowedroles[] = $DB->get_record('role', ['shortname' => 'fachlicherzweitpruefer2'])->id;
+    // $allowedroles[] = $DB->get_record('role', ['shortname' => 'fachlicherzweitpruefer2'])->id;
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'fragenerstellerlight2'])->id;
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'fachlfragenreviewerlight2'])->id;
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'sekretariat2'])->id;
@@ -2799,7 +2798,7 @@ function block_exaquest_get_capabilities($context) {
     $capabilities["beurteilungsmitwirkende"] = has_capability("block/exaquest:beurteilungsmitwirkende", $context, $USER);
     $capabilities["fachlicherpruefer"] = has_capability("block/exaquest:fachlicherpruefer", $context, $USER);
     $capabilities["pruefungsmitwirkende"] = has_capability("block/exaquest:pruefungsmitwirkende", $context, $USER);
-    $capabilities["fachlicherzweitpruefer"] = has_capability("block/exaquest:fachlicherzweitpruefer", $context, $USER);
+    // $capabilities["fachlicherzweitpruefer"] = has_capability("block/exaquest:fachlicherzweitpruefer", $context, $USER);
 
     // capabilities defined by ZML
     $capabilities["viewquestionstorevise"] = has_capability("block/exaquest:viewquestionstorevise", $context, $USER);

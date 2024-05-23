@@ -71,10 +71,10 @@ $capabilities = array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
     ),
-    'block/exaquest:fachlicherzweitpruefer' => array(
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
-    ),
+    // 'block/exaquest:fachlicherzweitpruefer' => array(
+    //     'captype' => 'write',
+    //     'contextlevel' => CONTEXT_COURSE,
+    // ),
     'block/exaquest:fragenerstellerlight' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
