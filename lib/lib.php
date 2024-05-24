@@ -187,6 +187,9 @@ function block_exaquest_request_review($userfrom, $userto, $comment, $questionba
     $courseid,
     $reviewtype) {
     global $DB, $COURSE;
+
+    $catAndCont = get_question_category_and_context_of_course($courseid);
+
     // enter data into the exaquest tables
     $assigndata = new stdClass;
     $assigndata->questionbankentryid = $questionbankentryid;
@@ -200,7 +203,8 @@ function block_exaquest_request_review($userfrom, $userto, $comment, $questionba
     $messageobject->fullname = $questionname;
     //$messageobject->url = new moodle_url('/blocks/exaquest/questbank.php', array('courseid' => $courseid, 'category' => $catAndCont[0] . ',' . $catAndCont[1]));
     $messageobject->url = new moodle_url('/blocks/exaquest/questbank.php',
-        array('courseid' => $courseid, 'filterstatus' => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW));
+        array('courseid' => $courseid, 'filterstatus' => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW, 'category' => $catAndCont[0] . ',' . $catAndCont[1]));
+    // like in output/dashboard.php: $data->questions_for_me_to_review_link = ...
     $messageobject->url = $messageobject->url->raw_out(false);
     $messageobject->requestcomment = $comment;
     $message = get_string('please_review_question', 'block_exaquest', $messageobject);
@@ -1295,6 +1299,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('moodle/question:tagall', CAP_ALLOW, $roleid, $context);
     assign_capability('moodle/question:commentall', CAP_ALLOW, $roleid, $context);
     assign_capability('moodle/question:editall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:usemine', CAP_ALLOW, $roleid, $context); // needed for getting the preview of a question when clicking on it
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlfragenreviewer'])) {
         $roleid = create_role('fachl. Fragenreviewer', 'fachlfragenreviewer',

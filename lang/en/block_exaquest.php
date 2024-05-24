@@ -466,3 +466,5 @@ $string['questiontype'] = 'Question Type';
 $string['numberofquestion'] = 'Number of Questions';
 $string['difficultyavg'] = 'Avg. Difficulty (p) * in percent';
 $string['selectnessavg'] = 'Avg. Selectiveness (r) * in percent';
+
+$string['send'] = 'Send';

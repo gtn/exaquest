@@ -39,9 +39,9 @@ switch ($action) {
         $data->timestamp = time();
         $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
         $questionname = $DB->get_record('question', array('id' => $questionid))->name;
-        //$catAndCont = get_question_category_and_context_of_course($courseid);
-        $course = get_course($courseid);
-        $coursecategoryid = $course->category;
+        //$catAndCont = get_question_category_and_context_of_course($courseid); // this IS relevant, but it is done in the request_review_function
+        // $course = get_course($courseid);
+        // $coursecategoryid = $course->category;
         if ($users != null) {
             foreach ($users as $user) {
                 block_exaquest_request_review($USER, $user, $commenttext, $questionbankentryid, $questionname,

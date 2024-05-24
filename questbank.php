@@ -82,11 +82,14 @@ $output = $PAGE->get_renderer('block_exaquest');
 // call to display view
 $questionbank = new core_question\local\bank\exaquest_view($contexts, $url, $COURSE, $cm);
 
-if (@$_REQUEST['table_sql']) {
+if (!@$_REQUEST['table_sql']) { // ! for easier testing
     $questionbank_table = new \block_exaquest\tables\questionbank_table(
         $questionbank,
-        preg_replace('!,.*!', '', $category) ?: 0 // TODO: gibts da mehrere ids?!?. Die erste Zahl ist die question_cateogry_id, die zweite die context_id. Kommt von "get_question_category_and_context_of_course", da ist es genauer beschrieben
+        preg_replace('!,.*!', '', $category) ?: 0 // TODO: gibts da mehrere ids?!?.
+    // Die erste Zahl ist die question_cateogry_id, die zweite die context_id (coursecategorycontextid). Kommt von "get_question_category_and_context_of_course", da ist es genauer beschrieben
     );
+
+
 
     echo $output->header($context, $courseid, get_string('get_questionbank', 'block_exaquest'));
 

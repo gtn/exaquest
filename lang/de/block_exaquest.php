@@ -472,3 +472,5 @@ $string['questiontype'] = 'Fragenfach';
 $string['numberofquestion'] = 'Anzahl Fragen';
 $string['difficultyavg'] = 'Durchschn. Schwierigkeit (p) * in Prozent';
 $string['selectnessavg'] = 'Durchschn. Trennschärfe (r) * in Prozent';
+
+$string['send'] = 'Absenden';
