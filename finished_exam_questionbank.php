@@ -1,4 +1,5 @@
 <?php
+global $DB;
 require __DIR__ . '/inc.php';
 
 global $CFG, $COURSE, $PAGE, $OUTPUT;
@@ -16,6 +17,20 @@ $filterstatus = optional_param('filterstatus', 0, PARAM_INT);
 
 require_login($courseid);
 //require_capability('block/exaquest:viewcategorytab', context_course::instance($courseid));
+
+$quizid = required_param('quizid', PARAM_INT);
+// check the status of the quiz. If it is not BLOCK_EXAQUEST_QUIZSTATUS_CREATED or BLOCK_EXAQUEST_QUIZSTATUS_NEW it is not allowed to edit the questions
+if ($quizid != null) {
+    $quiz = $DB->get_record_sql('SELECT qs.status
+        FROM {' . BLOCK_EXAQUEST_DB_QUIZSTATUS . '} qs
+         WHERE qs.quizid = ?',
+        array($quizid));
+
+    if ($quiz->status != BLOCK_EXAQUEST_QUIZSTATUS_CREATED && $quiz->status != BLOCK_EXAQUEST_QUIZSTATUS_NEW) {
+        // throw exception
+        throw new moodle_exception('block_exaquest:quiz_not_editable', 'block_exaquest');
+    }
+}
 
 $pagevars['filterstatus'] = $filterstatus;
 $catAndCont = get_question_category_and_context_of_course();

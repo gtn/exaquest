@@ -1617,6 +1617,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewownquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:dofachlichreview', CAP_ALLOW, $roleid, $context);
     //moodle capabilities:
     //assign_capability('moodle/question:add', CAP_ALLOW, $roleid, $context);
     //assign_capability('moodle/question:viewmine', CAP_ALLOW, $roleid, $context);
@@ -2130,8 +2131,8 @@ function block_exaquest_exams_set_status($quizid, $status) {
     $record = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, array("quizid" => $quizid));
     $record->status = $status;
 
-    if ($status == BLOCK_EXAQUEST_QUIZSTATUS_CREATED) {
-        // if the status is changed to BLOCK_EXAQUEST_QUIZSTATUS_CREATED remove all quizassigns assigntype BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS
+    if ($status == BLOCK_EXAQUEST_QUIZSTATUS_CREATED || $status == BLOCK_EXAQUEST_QUIZSTATUS_FACHLICH_RELEASED) {
+        // if the status is changed to BLOCK_EXAQUEST_QUIZSTATUS_CREATED or BLOCK_EXAQUEST_QUIZSTATUS_FACHLICH_RELEASED remove all quizassigns assigntype BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS
         $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
             array("quizid" => $quizid, "assigntype" => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS));
     } else if ($status == BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED) {

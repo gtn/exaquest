@@ -465,6 +465,7 @@ $string['send_exam_to_revise'] = 'Prüfung zur Überarbeitung zurückschicken';
 
 $string['points_per_help'] = 'Geben Sie die Anzahl der Punkte an, die in dieser Prüfung für dieses Fragefach hinzugefügt werden sollen.';
 $string['minimum_percentage_help'] = 'Geben Sie die Bestehensgrenze für dieses Fragefach an, falls es ein Kernfach ist. Wenn es kein Kernfach ist, lassen Sie 0% stehen.';
+$string['minimum_percentage'] = 'Bestehensgrenze in Prozent';
 $string['change_status_and_remove_from_quiz'] = 'Status der Frage auf "zu überarbeiten" ändern und aus der Prüfung entfernen';
 
 $string['questionstatisticsheader'] = 'Verteilung Fragenfächer';

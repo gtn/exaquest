@@ -1,4 +1,5 @@
 <?php
+global $DB;
 require __DIR__ . '/inc.php';
 
 global $CFG, $COURSE, $PAGE, $OUTPUT, $SESSION;
@@ -19,10 +20,23 @@ $fragencharakter = optional_param('fragencharakter', -2, PARAM_INT);
 $klassifikation = optional_param('klassifikation', -2, PARAM_INT);
 $fragefach = optional_param('fragefach', -2, PARAM_INT);
 $lehrinhalt = optional_param('lehrinhalt', -2, PARAM_INT);
-$quizid = optional_param('quizid', null, PARAM_INT);
+$quizid = required_param('quizid', PARAM_INT);
 
 require_login($courseid);
 //require_capability('block/exaquest:viewcategorytab', context_course::instance($courseid));
+
+// check the status of the quiz. If it is not BLOCK_EXAQUEST_QUIZSTATUS_CREATED or BLOCK_EXAQUEST_QUIZSTATUS_NEW it is not allowed to edit the questions
+if ($quizid != null) {
+    $quiz = $DB->get_record_sql('SELECT qs.status
+        FROM {' . BLOCK_EXAQUEST_DB_QUIZSTATUS . '} qs
+         WHERE qs.quizid = ?',
+        array($quizid));
+
+    if ($quiz->status != BLOCK_EXAQUEST_QUIZSTATUS_CREATED && $quiz->status != BLOCK_EXAQUEST_QUIZSTATUS_NEW) {
+        // throw exception
+        throw new moodle_exception('block_exaquest:quiz_not_editable', 'block_exaquest');
+    }
+}
 
 if (!property_exists($SESSION, 'filterstatus')) {
     $SESSION->filterstatus = 0;
