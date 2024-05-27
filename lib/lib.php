@@ -1039,7 +1039,7 @@ function block_exaquest_set_up_roles() {
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
         // allow setting role at context level "course category"
-        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'admintechnpruefungsdurchf'])->id;
     }
@@ -1074,7 +1074,7 @@ function block_exaquest_set_up_roles() {
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
         // allow setting role at context level "course category"
-        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'pruefungskoordination'])->id;
     }
@@ -1128,6 +1128,9 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:forcesendexamtoreview', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:checkgradingforfp', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:requestquestions', CAP_ALLOW, $roleid, $context);
+    // moodle capabilities:
+    // for managing categories:
+    assign_capability('moodle/category:manage', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
         $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '');
@@ -1141,7 +1144,7 @@ function block_exaquest_set_up_roles() {
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
         // allow setting role at context level "course category" and "course"
-        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'pruefungsstudmis'])->id;
     }
@@ -1194,7 +1197,7 @@ function block_exaquest_set_up_roles() {
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
         // allow setting role at context level "course category" and "course"
-        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'modulverantwortlicher'])->id;
     }
@@ -1273,7 +1276,7 @@ function block_exaquest_set_up_roles() {
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
         // allow setting role at context level "course category" and "course"
-        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'fragenersteller'])->id;
     }
@@ -1319,7 +1322,7 @@ function block_exaquest_set_up_roles() {
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
         // allow setting role at context level "course category" and "course"
-        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'fachlfragenreviewer'])->id;
     }
@@ -1366,7 +1369,7 @@ function block_exaquest_set_up_roles() {
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
         // allow setting role at context level "course category" and "course"
-        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'beurteilungsmitwirkende'])->id;
     }
@@ -1406,7 +1409,7 @@ function block_exaquest_set_up_roles() {
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
         // allow setting role at context level "course category" and "course"
-        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'fachlicherpruefer'])->id;
     }
@@ -1468,7 +1471,7 @@ function block_exaquest_set_up_roles() {
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
         // allow setting role at context level "course category" and "course"
-        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'pruefungsmitwirkende'])->id;
     }
@@ -1550,7 +1553,7 @@ function block_exaquest_set_up_roles() {
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
         // allow setting role at context level "course category" and "course"
-        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'fragenerstellerlight'])->id;
     }
@@ -1597,7 +1600,7 @@ function block_exaquest_set_up_roles() {
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
         // allow setting role at context level "course category" and "course"
-        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'fachlfragenreviewerlight'])->id;
     }
@@ -1650,7 +1653,7 @@ function block_exaquest_set_up_roles() {
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
         // allow setting role at context level "course category" and "course"
-        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'sekretariat'])->id;
     }
