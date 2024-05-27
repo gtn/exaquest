@@ -59,6 +59,8 @@ class popup_change_status_secondary_button implements renderable, templatable {
             $data->text = get_string('revise_text', 'block_exaquest');
             $data->title = get_string('revise_title', 'block_exaquest');
             $data->commentplaceholder = get_string('comment_placeholder_mandatory', 'block_exaquest');
+            // add all the users that have ever worked on this question
+            // this allows e.g. the fragenerstellerlight to be assigned to revising the question (fragenerstellerlight is normally not selectable, as they can only see their own questions)
             $data->selectusers = array_merge($data->selectusers, $DB->get_records_sql('SELECT DISTINCT u.id, u.firstname, u.lastname
                                                FROM {question_versions} qv
                                                JOIN {question} q ON qv.questionid = q.id

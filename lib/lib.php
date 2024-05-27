@@ -186,7 +186,7 @@ function block_exaquest_request_exam($userfrom, $userto, $comment) {
 function block_exaquest_request_review($userfrom, $userto, $comment, $questionbankentryid, $questionname,
     $courseid,
     $reviewtype) {
-    global $DB, $COURSE;
+    global $DB;
 
     $catAndCont = get_question_category_and_context_of_course($courseid);
 
@@ -215,7 +215,10 @@ function block_exaquest_request_review($userfrom, $userto, $comment, $questionba
 
 function block_exaquest_request_revision($userfrom, $userto, $comment, $questionbankentryid, $questionname,
     $courseid, $link_to_released_questions = false, $questionid = 0) {
-    global $DB, $COURSE;
+    global $DB;
+
+    $catAndCont = get_question_category_and_context_of_course($courseid);
+
     // enter data into the exaquest tables
     $assigndata = new stdClass;
     $assigndata->questionbankentryid = $questionbankentryid;
@@ -230,10 +233,10 @@ function block_exaquest_request_revision($userfrom, $userto, $comment, $question
         // e.g. http://localhost/question/bank/editquestion/question.php?returnurl=%2Fblocks%2Fexaquest%2Fquestbank.php%3Fcourseid%3D3&courseid=3&id=1
         $messageobject->url = new moodle_url('/question/bank/editquestion/question.php?',
             array('courseid' => $courseid, 'id' => $questionid,
-                'returnurl' => '/blocks/exaquest/dashboard.php?courseid=' . $courseid));
+                'returnurl' => '/blocks/exaquest/dashboard.php?courseid=' . $courseid, 'category' => $catAndCont[0] . ',' . $catAndCont[1]));
     } else {
         $messageobject->url = new moodle_url('/blocks/exaquest/questbank.php',
-            array('courseid' => $courseid, 'filterstatus' => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE));
+            array('courseid' => $courseid, 'filterstatus' => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE, 'category' => $catAndCont[0] . ',' . $catAndCont[1]));
     }
     $messageobject->url = $messageobject->url->raw_out(false);
     $messageobject->requestcomment = $comment;
@@ -295,11 +298,13 @@ function block_exaquest_send_moodle_notification($notificationtype, $userfrom, $
  * @param $courseid
  * @return array
  */
-function block_exaquest_get_fragenersteller_by_courseid($courseid) {
+function block_exaquest_get_fragenersteller_by_courseid($courseid, $withlight = true) {
     $context = context_course::instance($courseid);
     $userarray = array();
-    $userarray = array_replace($userarray,
-        get_enrolled_users($context, 'block/exaquest:fragenerstellerlight', 0, 'u.*', null, 0, 0, true));
+    if ($withlight) {
+        $userarray = array_replace($userarray,
+            get_enrolled_users($context, 'block/exaquest:fragenerstellerlight', 0, 'u.*', null, 0, 0, true));
+    }
 
     $userarray = array_replace($userarray,
         get_enrolled_users($context, 'block/exaquest:fragenersteller', 0, 'u.*', null, 0, 0, true));
@@ -1875,8 +1880,12 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
     return $rows;
 }
 
-// this is used to get the contexts of the (question!!)category in the questionbank. The default question category of the coursecategory is used.
 
+/**
+ * @param $courseid
+ * @return array
+ * this is used to get the contexts of the (question!!)category in the questionbank. The default question category of the coursecategory is used.
+ */
 function get_question_category_and_context_of_course($courseid = null) {
     global $COURSE, $DB;
     if ($courseid == null) {

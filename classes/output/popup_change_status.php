@@ -10,6 +10,7 @@ use templatable;
 global $CFG;
 require_once($CFG->dirroot . '/blocks/exaquest/classes/form/autofill_helper_form.php');
 
+// deprecated. popup_change_status_secondary_button is used instead
 class popup_change_status implements renderable, templatable {
     var $selectusers = null;
     var $name = null;

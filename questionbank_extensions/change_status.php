@@ -46,7 +46,7 @@ class change_status extends column_base {
         //echo '<div class="container"><div class="row"><div class="col-md-12 text-right">';
         $output = $PAGE->get_renderer('block_exaquest');
 
-        $fragenersteller = block_exaquest_get_fragenersteller_by_courseid($COURSE->id);
+        $fragenersteller = block_exaquest_get_fragenersteller_by_courseid($COURSE->id, false);
 
         //decides which button is visible to whom
         switch (intval($question->teststatus)) {
