@@ -61,6 +61,7 @@ class exams implements renderable, templatable {
                     BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS,
                     BLOCK_EXAQUEST_QUIZSTATUS_NEW);
 
+                // TODO: does this make sense? The FP can "sendexamtoreview" AND simultaneously just simply fachlich review the exam themselves.
                 // update the exams that have the addquestionassignment that is not yet finished (done == 0) to have the sendexamtoreview property set to true
                 foreach ($addquestionsassignments as $addquestionsassignment) {
                     if ($addquestionsassignment->done == 0) {

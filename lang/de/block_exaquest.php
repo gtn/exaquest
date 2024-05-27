@@ -442,7 +442,7 @@ $string['exams_for_me_to_change_grading'] = 'Prüfungen deren Beurteilung ich ä
 $string['exams_for_me_to_change_grading_title'] = 'Prüfungen deren Beurteilung ich ändern soll';
 $string['selected_student'] = 'Ausgewählte Schüler:in';
 
-$string['exams_for_me_to_fachlich_release_title'] = 'TODO: create exams_for_me_to_fachlich_release_title';
+$string['exams_for_me_to_fachlich_release_title'] = 'Prüfungen die ich noch fachlich Freigeben muss.';
 
 # popuptexts:
 $string['already_requested_from'] = 'Bereits angefordert von:';

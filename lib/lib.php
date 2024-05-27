@@ -2799,14 +2799,14 @@ function block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quiz
         $sql = 'SELECT cat.*, qc.questioncount, qc.quizid, qpercent.percentage
             FROM {' . BLOCK_EXAQUEST_DB_CATEGORIES . '} cat
             LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZQCOUNT . '} qc ON qc.exaquestcategoryid = cat.id AND qc.quizid = :quizid1
-            LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZQMINPERCENTAGE . '} qpercent ON qc.exaquestcategoryid = cat.id AND qc.quizid = :quizid2
+            LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZQMINPERCENTAGE . '} qpercent ON qpercent.exaquestcategoryid = cat.id AND qc.quizid = :quizid2
             WHERE cat.coursecategoryid = :coursecategoryid
             AND cat.categorytype = ' . BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH;
     } else {
         $sql = 'SELECT cat.*, qc.questioncount, qc.quizid, qpercent.percentage
             FROM {' . BLOCK_EXAQUEST_DB_CATEGORIES . '} cat
             LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZQCOUNT . '} qc ON qc.exaquestcategoryid = cat.id AND qc.quizid = :quizid1
-            LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZQMINPERCENTAGE . '} qpercent ON qc.exaquestcategoryid = cat.id AND qc.quizid = :quizid2
+            LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZQMINPERCENTAGE . '} qpercent ON qpercent.exaquestcategoryid = cat.id AND qc.quizid = :quizid2
             WHERE cat.coursecategoryid = :coursecategoryid
             AND cat.deleted = 0
             AND cat.categorytype = ' . BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH;
@@ -3269,7 +3269,7 @@ function block_exaquest_render_buttons_for_finished_exam_questionbank() {
         $buttons .= ' ';
     }
 
-    // if the quiz is new or created, then the FP can release it
+    // if the quiz is new or created, then the FP can fachlich review it
     $quizstatus = $DB->get_field(BLOCK_EXAQUEST_DB_QUIZSTATUS, "status", array("quizid" => $quizid));
     if ($quizstatus == BLOCK_EXAQUEST_QUIZSTATUS_NEW || $quizstatus == BLOCK_EXAQUEST_QUIZSTATUS_CREATED) {
         $assigned_as_fp =

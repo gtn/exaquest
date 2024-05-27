@@ -436,7 +436,7 @@ $string['exams_for_me_to_change_grading'] = 'Exams for me to change grading';
 $string['exams_for_me_to_change_grading_title'] = 'Exams for me to change grading';
 $string['selected_student'] = 'Selected student';
 
-$string['exams_for_me_to_fachlich_release_title'] = 'TODO: create exams_for_me_to_fachlich_release_title TODO TRANSLATE';
+$string['exams_for_me_to_fachlich_release_title'] = 'Exams to fachlich release';
 
 # popuptexts:
 $string['already_requested_from'] = 'Already requested from:';
