@@ -200,6 +200,7 @@ $string['review'] = 'Begutachten:';
 $string['revise'] = 'Überarbeiten:';
 $string['release'] = 'Freigeben:';
 $string['locked_filter'] = 'Gesperrt:';
+$string['imported_questions'] = 'Importiert';
 
 $string['open_question_for_review'] = 'Frage zur Begutachtung freigeben';
 $string['formal_review_done'] = 'Formal finalisieren';
@@ -423,6 +424,7 @@ $string['select_students_label'] = 'Anfordern von folgenden Schüler:innen';
 $string['assign_gradeexam'] = 'Prüfungsbeurteilung anfordern';
 $string['assign_gradeexam_label'] = 'Prüfungsbeurteilung anfordern';
 $string['select_questions_label'] = 'Fragen auswählen';
+$string['select_filter_label'] = 'Filter auswählen:';
 $string['assign_gradeexam_comment_placeholder'] = 'Kommentar';
 $string['exams_for_me_to_check_grading'] = 'Prüfungen deren Beurteilung ich überprüfen soll';
 $string['exams_for_me_to_check_grading_title'] = 'Prüfungen deren Beurteilung ich überprüfen soll';

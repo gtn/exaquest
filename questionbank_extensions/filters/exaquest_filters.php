@@ -143,14 +143,11 @@ class exaquest_filters extends condition {
         $selected[$this->filterstatus] = 'selected="selected"';
 
         $html =
-            '<div class="form-group row"><label class="col-sm-2 col-form-label">Select Questions:</label><div class="col-sm-10"><select class="form-control select searchoptions" id="id_filterstatus" name="filterstatus">';
-        if (has_capability('block/exaquest:readallquestions', \context_course::instance($COURSE->id))) {
-            $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_IMPORTED_QUESTIONS] . ' value="' .
-                BLOCK_EXAQUEST_FILTERSTATUS_ALL_IMPORTED_QUESTIONS . '">' . get_string('show_all_imported_questions', 'block_exaquest') .
-                '</option>';
-            $html .= '<option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS] . ' value="' .
-                BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS . '">' . get_string('show_all_questions', 'block_exaquest') . '</option>';
-        }
+            '<div class="form-group row"><label class="col-sm-2 col-form-label">' . get_string('select_filter_label', 'block_exaquest') . '</label><div class="col-sm-10"><select class="form-control select searchoptions" id="id_filterstatus" name="filterstatus">';
+        // if (has_capability('block/exaquest:readallquestions', \context_course::instance($COURSE->id))) { // TODO: for now every user can see every filter. if we ever change this: take care of tracking which filter is selected when loading the page. e.g. required param "selected"
+        $html .= '<option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS] . ' value="' .
+            BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS . '">' . get_string('show_all_questions', 'block_exaquest') . '</option>';
+        // }
         $html .= '    <optgroup label="' . get_string('created', 'block_exaquest') . '">';
         $html .= '        <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_NEW_QUESTIONS] . ' value="' .
             BLOCK_EXAQUEST_FILTERSTATUS_ALL_NEW_QUESTIONS . '">' . get_string('show_all_new_questions', 'block_exaquest') .
@@ -200,6 +197,14 @@ class exaquest_filters extends condition {
             BLOCK_EXAQUEST_FILTERSTATUS_ALL_LOCKED_QUESTIONS . '">' .
             get_string('show_all_locked_questions', 'block_exaquest') . '</option>';
         $html .= '    </optgroup>';
+        // if (has_capability('block/exaquest:readallquestions', \context_course::instance($COURSE->id))) {
+        $html .= '    <optgroup label="' . get_string('imported_questions', 'block_exaquest') . '">';
+        $html .= '      <option ' . $selected[BLOCK_EXAQUEST_FILTERSTATUS_ALL_IMPORTED_QUESTIONS] . ' value="' .
+            BLOCK_EXAQUEST_FILTERSTATUS_ALL_IMPORTED_QUESTIONS . '">' . get_string('show_all_imported_questions', 'block_exaquest') .
+            '</option>';
+        $html .= '    </optgroup>';
+        // }
+
         $html .= '</select></div></div>';
 
         return $html;

@@ -6,6 +6,7 @@ global $CFG, $COURSE, $PAGE, $OUTPUT, $SESSION;
 
 require_once($CFG->dirroot . '/question/editlib.php');
 require_once(__DIR__ . '/questionbank_extensions/exaquest_view.php');
+
 use qbank_managecategories\helper;
 
 list($thispageurl, $contexts, $cmid, $cm, $module, $pagevars) =
@@ -18,7 +19,16 @@ $fragencharakter = optional_param('fragencharakter', -2, PARAM_INT);
 $klassifikation = optional_param('klassifikation', -2, PARAM_INT);
 $fragefach = optional_param('fragefach', -2, PARAM_INT);
 $lehrinhalt = optional_param('lehrinhalt', -2, PARAM_INT);
-$category = optional_param('category', '', PARAM_TEXT);
+$catAndCont = optional_param('category', '', PARAM_TEXT);
+
+
+// if no category was specified in the url, we use this
+if (!$catAndCont) {
+    $catAndCont = get_question_category_and_context_of_course();
+} else {
+    $catAndCont = explode(',', $catAndCont);
+}
+$pagevars['cat'] = $catAndCont[0] . ',' . $catAndCont[1];
 
 require_login($courseid);
 require_capability('block/exaquest:viewquestionbanktab', context_course::instance($courseid));
@@ -64,9 +74,6 @@ $pagevars['klassifikation'] = $SESSION->klassifikation;
 $pagevars['fragefach'] = $SESSION->fragefach;
 $pagevars['lehrinhalt'] = $SESSION->lehrinhalt;
 
-// not sure if this is actually used anywhere, becasue we jsut call this function
-$catAndCont = get_question_category_and_context_of_course();
-$pagevars['cat'] = $catAndCont[0] . ',' . $catAndCont[1];
 
 $page_params = array('courseid' => $courseid);
 
@@ -85,10 +92,9 @@ $questionbank = new core_question\local\bank\exaquest_view($contexts, $url, $COU
 if (!@$_REQUEST['table_sql']) { // ! for easier testing
     $questionbank_table = new \block_exaquest\tables\questionbank_table(
         $questionbank,
-        preg_replace('!,.*!', '', $category) ?: 0 // TODO: gibts da mehrere ids?!?.
+        $catAndCont[0] ?: 0 // TODO: gibts da mehrere ids?!?.
     // Die erste Zahl ist die question_cateogry_id, die zweite die context_id (coursecategorycontextid). Kommt von "get_question_category_and_context_of_course", da ist es genauer beschrieben
     );
-
 
 
     echo $output->header($context, $courseid, get_string('get_questionbank', 'block_exaquest'));

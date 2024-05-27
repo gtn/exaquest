@@ -196,6 +196,7 @@ $string['review'] = 'Review:';
 $string['revise'] = 'Revise:';
 $string['release'] = 'Release:';
 $string['locked_filter'] = 'Locked:';
+$string['imported_questions'] = 'Imported';
 
 $string['open_question_for_review'] = 'Open question for review';
 $string['formal_review_done'] = 'Finish formal review';
@@ -417,6 +418,7 @@ $string['select_students_label'] = 'Anfordern von folgenden Schüler:innen';
 $string['assign_gradeexam'] = 'Assign exam to grade';
 $string['assign_gradeexam_label'] = 'Assign exam to grade';
 $string['select_questions_label'] = 'Select questions';
+$string['select_filter_label'] = 'Select filter:';
 $string['assign_gradeexam_comment_placeholder'] = 'Comment';
 $string['exams_for_me_to_check_grading'] = 'Exams for me to check grading';
 $string['exams_for_me_to_check_grading_title'] = 'Exams for me to check grading';

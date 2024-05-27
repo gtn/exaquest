@@ -107,3 +107,15 @@ function mark_request_as_done(requestid, requesttype, courseid) {
   });
 }
 
+// TODO should we hide the moodle question bank? Better with CSS probably
+// function hide_moodle_questionbank() {
+//   // Hide the moodle question bank
+//   debugger;
+//   $('a[href*="question/edit.php"]').hide();
+// }
+//
+// $(document).ready(function() {
+//   debugger;
+//   hide_moodle_questionbank();
+// });
+
