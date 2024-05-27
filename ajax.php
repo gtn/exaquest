@@ -18,7 +18,11 @@ $commenttext = optional_param('commenttext', null, PARAM_TEXT);
 $quizid = optional_param('quizid', null, PARAM_INT);
 
 require_login($courseid);
-require_capability('block/exaquest:viewquestionbanktab', context_course::instance($courseid));
+// check if the user has the capability of either addquestiontoexam or viewquestionbanktab
+$context = context_course::instance($courseid);
+if( !has_capability('block/exaquest:addquestiontoexam', $context) && !has_capability('block/exaquest:viewquestionbanktab', $context) ) {
+    throw new moodle_exception('no_permission, require addquestiontoexam or viewquestionbanktab capability');
+}
 require_sesskey();
 
 switch ($action) {

@@ -33,6 +33,16 @@ class popup_assign_addquestions implements renderable, templatable {
             //}
         }
 
+        // remove the ones that have already been assigned
+        foreach ($this->assigned_persons as $assigned_person) {
+            if (isset($this->pmw[$assigned_person->id])) {
+                unset($this->pmw[$assigned_person->id]);
+            }
+            if (isset($this->fp[$assigned_person->id])) {
+                unset($this->fp[$assigned_person->id]);
+            }
+        }
+
 
     }
 

@@ -336,10 +336,10 @@ function block_exaquest_get_pk_by_courseid($courseid) {
  */
 function block_exaquest_get_pmw_by_courseid($courseid) {
     $context = context_course::instance($courseid);
-    $userarray = array();
-    $userarray = array_merge($userarray,
-        get_enrolled_users($context, 'block/exaquest:pruefungsmitwirkende', 0, 'u.*', null, 0, 0, true));
-    return $userarray;
+    // $userarray = array();
+    // $userarray = array_merge($userarray,
+    //     );
+    return get_enrolled_users($context, 'block/exaquest:pruefungsmitwirkende', 0, 'u.*', null, 0, 0, true);
 }
 
 /**
@@ -1154,7 +1154,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
+    // unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
@@ -1163,7 +1163,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:addquestiontoexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewnewexamscard', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:assigngradeexam', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:createexam', $roleid, $context->id); // accidentally added, should be deleted
+    // unassign_capability('block/exaquest:createexam', $roleid, $context->id); // accidentally added, should be deleted
     assign_capability('block/exaquest:forcesendexamtoreview', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:doformalreview', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionstoreview', CAP_ALLOW, $roleid, $context);
@@ -1214,7 +1214,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
+    // unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
@@ -1232,7 +1232,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:dofachlichreview', CAP_ALLOW, $roleid, $context);
     //Mover should not be able to do this : assign_capability('block/exaquest:doformalreview', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:doformalreview', $roleid, $context->id); // accidentally added, should be deleted
+    // unassign_capability('block/exaquest:doformalreview', $roleid, $context->id); // accidentally added, should be deleted
     assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:assignaddquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:createexam', CAP_ALLOW, $roleid, $context);
@@ -1333,7 +1333,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
+    // unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
@@ -1376,7 +1376,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
+    // unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
@@ -1420,11 +1420,12 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
+    // unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
 
     // assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:viewquestionbanktab', $roleid, $context->id); // there is actually no reason for the FP to see it (looking at the original capabilities document and the Prüfungsprozess)
+    // unassign_capability('block/exaquest:viewquestionbanktab', $roleid, $context->id); // there is actually no reason for the FP to see it (looking at the original capabilities document and the Prüfungsprozess)
+    // this was added at one point, to allow them to see the questionbank that is used in the exams page to add questions. Has been replaced by a different capability
 
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
@@ -1440,8 +1441,8 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:dofachlichreviewexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:checkexamsgrading', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:gradequestion', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:assignaddquestions', $roleid,
-        $context->id); // accidentally added, should be deleted. ONLY allow this for your own exams. Only pk and mover can do it generally
+    // unassign_capability('block/exaquest:assignaddquestions', $roleid,
+    //     $context->id); // accidentally added, should be deleted. ONLY allow this for your own exams. Only pk and mover can do it generally
     // addquestion will be added in the output/exams.php for every exam the FP is FP of and for every PMW that has been assigned.
     assign_capability('block/exaquest:gradeexam', CAP_ALLOW, $roleid, $context);
 
@@ -1478,7 +1479,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
+    // unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
@@ -1486,7 +1487,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:assignaddquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewnewexamscard', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:assignaddquestions', $roleid, $context->id); // accidentally added, should be deleted
+    // unassign_capability('block/exaquest:assignaddquestions', $roleid, $context->id); // accidentally added, should be deleted
 
     //assign_capability('block/exaquest:addquestiontoexam', CAP_ALLOW, $roleid, $context);
     //unassign_capability('block/exaquest:createexam', $roleid, $context->id); // accidentally added, should be deleted
@@ -1610,7 +1611,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     // assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
+    // unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
