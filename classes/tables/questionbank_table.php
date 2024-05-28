@@ -2,7 +2,6 @@
 
 namespace block_exaquest\tables;
 
-use core\external\output\icon_system\load_fontawesome_map;
 use core_question\local\bank\menuable_action;
 use core_question\local\bank\view;
 use qbank_openquestionforreview\change_status;
@@ -31,7 +30,7 @@ class questionbank_table extends \local_table_sql\table_sql {
             'questionbankentryid' => 'Id',
             'qtype' => 'T',
             'name' => 'Name',
-            'ucname' => get_string('ownername', 'block_exaquest'),
+            'ownername' => get_string('ownername', 'block_exaquest'),
             'comments' => 'Kommentare',
             'categories' => 'Kategorien',
             'timecreated' => get_string('lastchanged', 'block_exaquest'),
@@ -70,23 +69,29 @@ class questionbank_table extends \local_table_sql\table_sql {
         ]);
 
         $this->set_sql_query('
-            SELECT DISTINCT qbe.id as questionbankentryid, qbe.questioncategoryid, qv.status, qc.id as categoryid, qv.version, qv.id as versionid, qrevisea.reviserid as reviserid, q.id, q.qtype, q.name
-            , qbe.idnumber, q.createdby, qc.contextid, uc.firstnamephonetic AS creatorfirstnamephonetic, uc.lastnamephonetic AS creatorlastnamephonetic, uc.middlename AS creatormiddlename, uc.alternatename AS creatoralternatename, uc.firstname AS creatorfirstname, uc.lastname AS creatorlastname, q.timecreated
+            SELECT DISTINCT qbe.id as questionbankentryid, qbe.questioncategoryid, qv.status, qc.id as categoryid, qv.version, qv.id as versionid
+            -- , qrevisea.reviserid as reviserid
+            , q.id, q.qtype, q.name
+            , qbe.idnumber, q.createdby, qc.contextid
             , qbe.ownerid
-            , CONCAT(uc.lastname, " ", uc.firstname) as ucname
-            , uc.id as ucid
+            , q.timecreated
+            -- , uc.firstnamephonetic AS creatorfirstnamephonetic, uc.lastnamephonetic AS creatorlastnamephonetic, uc.middlename AS creatormiddlename, uc.alternatename AS creatoralternatename, uc.firstname AS creatorfirstname, uc.lastname AS creatorlastname
+            -- , CONCAT(uc.lastname, " ", uc.firstname) as ucname
+            -- , uc.id as ucid
+            , CONCAT(owner.lastname, " ", owner.firstname) as ownername
             , ' . $categories . ' AS categories
             , ' . $status_sql . ' AS state_text
-            , qs.status AS teststatus
+            -- , qs.status AS teststatus
             FROM {question} q
-            LEFT JOIN {customfield_data} cfd ON q.id = cfd.instanceid
+            -- LEFT JOIN {customfield_data} cfd ON q.id = cfd.instanceid
             JOIN {question_versions} qv ON qv.questionid = q.id
             JOIN {question_bank_entries} qbe on qbe.id = qv.questionbankentryid
             JOIN {question_categories} qc ON qc.id = qbe.questioncategoryid
-            LEFT JOIN {user} uc ON uc.id = q.createdby
+            -- LEFT JOIN {user} uc ON uc.id = q.createdby
+            LEFT JOIN {user} owner ON owner.id = qbe.ownerid
             JOIN {block_exaquestquestionstatus} qs ON qbe.id = qs.questionbankentryid
-            LEFT JOIN {block_exaquestreviewassign} qra ON qbe.id = qra.questionbankentryid
-            LEFT JOIN {block_exaquestreviseassign} qrevisea ON qbe.id = qrevisea.questionbankentryid
+            -- LEFT JOIN {block_exaquestreviewassign} qra ON qbe.id = qra.questionbankentryid
+            -- LEFT JOIN {block_exaquestreviseassign} qrevisea ON qbe.id = qrevisea.questionbankentryid
             WHERE q.parent = 0 AND qv.version = (
                 SELECT MAX(v.version)
                 FROM {question_versions} v
@@ -227,17 +232,22 @@ class questionbank_table extends \local_table_sql\table_sql {
             $ret = $column->get_action_menu_link($row);
             if ($ret) {
                 $onclick = $column instanceof set_fragenersteller_column
-                    ? "set_fragenersteller_popup"
+                    ? "show_change_owner_popup"
                     : '';
 
 
-                $icon = @$icon_map[($ret->icon->component == 'moodle' ? 'core' : $ret->icon->component).':'.$ret->icon->pix];
+                $icon = @$icon_map[($ret->icon->component == 'moodle' ? 'core' : $ret->icon->component) . ':' . $ret->icon->pix];
+
+                // fix broken icon
+                if (!$icon && $column instanceof \qbank_history\history_action_column_exaquest) {
+                    $icon = 'fa-clock-rotate-left';
+                }
 
                 $final_actions[] = [
                     'url' => $ret->url->out(false),
                     'label' => $ret->text,
                     'onclick' => $onclick,
-                    'icon' => "icon fa $icon fa-fw", // TODO, anpassen
+                    'icon' => "icon fa $icon fa-fw",
                 ];
             }
         }
@@ -265,128 +275,176 @@ class questionbank_table extends \local_table_sql\table_sql {
 
         ?>
         <script>
-            var lastModalQuestionData;
+            (function () {
+                var lastModalQuestionData;
 
-            $(function () {
-                document.querySelector('.table-sql-container').addEventListener('click', function (e) {
-                    if ($(e.target).is('[data-toggle="modal"]')) {
-
-                        if (!$('#tmp-modal-container').length) {
-                            $('<div id="tmp-modal-container"></div>').appendTo('body');
-                        }
-
-                        // hack: save questiondata from last modal button
-                        lastModalQuestionData = JSON.parse($(e.target).closest('[data-question]').attr('data-question'));
-
-                        // move modal to body container (and remove old modal, if exists)
-                        var $modal = $('.table-sql-container').find($(e.target).attr('data-target'));
-                        if ($modal.length) {
-                            $('#tmp-modal-container').find($(e.target).attr('data-target')).remove();
-                            $modal.appendTo('#tmp-modal-container');
-
-                            // init modal
-                            // TODO: dem user-select eine eigene class geben
-                            let $user_select = $modal.find('select');
-
-                            require(['core/form-autocomplete'], function (amd) {
-                                amd.enhance($user_select[0], false, "", "Suchen", false, true, "Keine Auswahl");
-                            });
-                        }
-
-                        $($(e.target).attr('data-target')).modal('show');
-
-                        e.preventDefault();
-                    }
-                });
-            });
-
-            function set_fragenersteller_popup(e, tableRow) {
-            }
-
-            function comment_count_popup(e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                require(['qbank_comment/comment'], function (amd) {
-                    var id = Math.random();
-                    var $clone = $(e.target).clone();
-                    $clone.attr('data-tmp', id);
-                    $clone.attr('onclick', '');
-                    $clone.appendTo('body');
-
-                    amd.init('[data-tmp="' + id + '"]');
-
-                    var event = new Event('click');
-                    $clone[0].dispatchEvent(event);
-
-                    $clone.remove();
-                });
-            }
-
-            $(document).on('change', 'select.searchoptions', function () {
-                document.location.href = document.location.href.replace(/([?&])filterstatus=[^&]*/, '$1').replace(/&+$/, '') + '&filterstatus=' + $(this).val();
-            });
-
-            $(document).on('click', '.exaquest-changequestionstatus', function (e) {
-                let changestatus_value = e.currentTarget.value;
-                var $modal = $(this).closest('.modal');
-
-                var questionData = $(e.target).closest('[data-question]').length
-                    ? JSON.parse($(e.target).closest('[data-question]').attr('data-question'))
-                    : lastModalQuestionData;
-
-                if (changestatus_value == 'open_question_for_review' || changestatus_value == 'revise_question') {
-                    // TODO: dem user-select eine eigene class geben
-                    let selecteduser = $modal.find('select').val();
-                    if (selecteduser == "" || selecteduser && selecteduser.length == 0) {
-                        alert("Es muss mindestens eine Person ausgewählt sein!");
-                        return false;
-                    }
-                }
-
-                if (changestatus_value == 'revise_question') {
-                    let textarea_value = $modal.find('.commenttext').val();
-                    if (textarea_value == '') {
-                        alert("Es muss ein Kommentar eingegeben werden!");
-                        return false;
-                    }
-                }
-
-                var users = $modal.find('.form-autocomplete-selection').children().map(function () {
-                    return $(this).attr("data-value");
-                }).get();
-
-                var data = Object.assign(<?php echo json_encode([
-                    'courseid' => $COURSE->id,
-                    'sesskey' => sesskey(),
-                ])?>, {
-                    action: $(this).val(),
-                    questionbankentryid: questionData.questionbankentryid,
-                    questionid: questionData.questionid,
-                    users: users,
-                    commenttext: $modal.find('.commenttext').val(),
-                });
-                e.preventDefault();
-                var ajax = $.ajax({
-                    method: "POST",
-                    url: "ajax.php",
-                    data: data
-                }).done(function () {
-                    //console.log(data.action, 'ret', ret);
+                function reloadTable() {
                     document.dispatchEvent(new CustomEvent("local_table_sql:reload"));
 
                     // hide all modals
                     $('.modal:visible').modal('hide');
-                }).fail(function (ret) {
+                }
+
+                function showError(ret, data) {
                     var errorMsg = '';
                     if (ret.responseText[0] == '<') {
                         // html
                         errorMsg = $(ret.responseText).find('.errormessage').text();
                     }
                     console.log("Error in action '" + data.action + "'", errorMsg, 'ret', ret);
-                });
-            });
+                }
 
+                window.show_modal = function show_modal(modalSelector) {
+                    var $modal = $('.table-sql-container').find(modalSelector);
+
+                    // if the modal exists inside the table, move it to the body, so it gets displayed correctly
+                    if ($modal.length) {
+                        if (!$('#tmp-modal-container').length) {
+                            $('<div id="tmp-modal-container"></div>').appendTo('body');
+                        } else {
+                            $('#tmp-modal-container').find(modalSelector).remove();
+                        }
+
+                        $modal.appendTo('#tmp-modal-container');
+
+                        // init modal
+                        // TODO: dem user-select eine eigene class geben
+                        let $user_select = $modal.find('select');
+
+                        require(['core/form-autocomplete'], function (amd) {
+                            amd.enhance($user_select[0], false, "", "Suchen", false, true, "Keine Auswahl");
+                        });
+                    }
+
+                    $(modalSelector).modal('show');
+                }
+
+                $(function () {
+                    document.querySelector('.table-sql-container').addEventListener('click', function (e) {
+                        if ($(e.target).is('[data-toggle="modal"]')) {
+
+                            // hack: save questiondata from last modal button
+                            lastModalQuestionData = JSON.parse($(e.target).closest('[data-question]').attr('data-question'));
+
+                            // move modal to body container (and remove old modal, if exists)
+                            show_modal($(e.target).attr('data-target'));
+
+                            e.preventDefault();
+                        }
+                    });
+                });
+
+                window.show_change_owner_popup = function (e, tableRow) {
+                    lastModalQuestionData = tableRow.original;
+                    show_modal('#changeOwnerModal' + tableRow.original.id);
+                }
+
+                window.comment_count_popup = function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    require(['qbank_comment/comment'], function (amd) {
+                        var id = Math.random();
+                        var $clone = $(e.target).clone();
+                        $clone.attr('data-tmp', id);
+                        $clone.attr('onclick', '');
+                        $clone.appendTo('body');
+
+                        amd.init('[data-tmp="' + id + '"]');
+
+                        var event = new Event('click');
+                        $clone[0].dispatchEvent(event);
+
+                        $clone.remove();
+                    });
+                }
+
+                $(document).on('change', 'select.searchoptions', function () {
+                    document.location.href = document.location.href.replace(/([?&])filterstatus=[^&]*/, '$1').replace(/&+$/, '') + '&filterstatus=' + $(this).val();
+                });
+
+                $(document).on('click', '.exaquest-changequestionstatus', function (e) {
+                    e.preventDefault();
+
+                    let changestatus_value = e.currentTarget.value;
+                    var $modal = $(this).closest('.modal');
+
+                    var questionData = $(e.target).closest('[data-question]').length
+                        ? JSON.parse($(e.target).closest('[data-question]').attr('data-question'))
+                        : lastModalQuestionData;
+
+                    if (changestatus_value == 'open_question_for_review' || changestatus_value == 'revise_question') {
+                        // TODO: dem user-select eine eigene class geben
+                        let selecteduser = $modal.find('select').val();
+                        if (selecteduser == "" || selecteduser && selecteduser.length == 0) {
+                            alert("Es muss mindestens eine Person ausgewählt sein!");
+                            return false;
+                        }
+                    }
+
+                    if (changestatus_value == 'revise_question') {
+                        let textarea_value = $modal.find('.commenttext').val();
+                        if (textarea_value == '') {
+                            alert("Es muss ein Kommentar eingegeben werden!");
+                            return false;
+                        }
+                    }
+
+                    var users = $modal.find('.form-autocomplete-selection').children().map(function () {
+                        return $(this).attr("data-value");
+                    }).get();
+
+                    var data = {
+                        courseid: M.cfg.courseId,
+                        sesskey: M.cfg.sesskey,
+                        action: $(this).val(),
+                        questionbankentryid: questionData.questionbankentryid,
+                        questionid: questionData.questionid,
+                        users: users,
+                        commenttext: $modal.find('.commenttext').val(),
+                    };
+
+                    $.ajax({
+                        method: "POST",
+                        url: "ajax.php",
+                        data: data
+                    }).done(function () {
+                        reloadTable();
+                    }).fail(function (ret) {
+                        showError(ret, data);
+                    });
+                });
+
+                $(document).on('click', 'button[value="change_owner"]', function (e) {
+                    e.preventDefault();
+
+                    var questionData = lastModalQuestionData;
+                    var $modal = $(this).closest('.modal');
+
+                    var users = $modal.find('.form-autocomplete-selection').children().map(function () {
+                        return $(this).attr("data-value");
+                    }).get();
+
+                    var data = {
+                        courseid: M.cfg.courseId,
+                        sesskey: M.cfg.sesskey,
+                        action: $(this).val(),
+                        questionbankentryid: questionData.questionbankentryid,
+                        questionid: questionData.questionid || questionData.id,
+                        users: users
+                    };
+
+                    $.ajax({
+                        method: "POST",
+                        url: "ajax.php",
+                        data: data
+                    }).done(function () {
+                        reloadTable();
+                    }).fail(function (ret) {
+                        showError(ret, data);
+                    });
+                });
+            })();
         </script>
         <?php
     }
