@@ -76,7 +76,7 @@ if ($examid) {
     $examname = get_string("exaquest:similarity_exam_select_label", "block_exaquest");
 }
 require_login($courseID);
-[$thispageurl, $contexts, $cmid, $cm, $module, $pagevars] = question_edit_setup('questions', '/question/edit.php');
+[$thispageurl, $contexts, $cmid, $cm, $module, $pagevars] = question_edit_setup('questions', '/blocks/exaquest/similarity_comparison/similarity_comparison.php');
 $url = new moodle_url('/blocks/exaquest/similarity_comparison.php', array('courseid' => $courseID, "category" => $catAndCont));
 $PAGE->set_url($url);
 $PAGE->set_heading(get_string('similarity_of_course', 'block_exaquest', $COURSE->fullname));
