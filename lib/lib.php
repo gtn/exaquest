@@ -1263,6 +1263,7 @@ function block_exaquest_set_up_roles() {
     // for managing categories:
     assign_capability('moodle/category:manage', CAP_ALLOW, $roleid, $context);
     assign_capability('moodle/role:assign', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/role:review', CAP_ALLOW, $roleid, $context);
 
     // UNASSIGN CAPABILITIES from editinteacher. probably not the way to go, but instead start with archetype = 0
     //unassign_capability('mod/quiz:addinstance', $roleid, $context->id);

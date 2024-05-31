@@ -154,7 +154,6 @@ echo $output->render($dashboard);
 if (is_enrolled($context, $USER, "block/exaquest:createquestion")) {
     // ADD QUESTION
     echo "<div id='createnewquestion_button'>";
-    // $questionbank = new \block_exaquest\questionbank_extensions\exaquest_view($contexts, $url, $COURSE, $cm);
     $questionbank = new \block_exaquest\questionbank_extensions\exaquest_view($contexts, $url, $COURSE, $cm);
     //$categoryandcontext = $pagevars["cat"]; // not needed
     //list($categoryid, $contextid) = explode(',', $categoryandcontext); // not needed
