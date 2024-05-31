@@ -41,7 +41,7 @@ class popup_assign_kommissionell_check_exam_grading implements renderable, templ
         $data->fp = $this->fp;
         $data->quizid = $this->quizid;
         $data->assigned_persons =
-            array_values($this->assigned_persons); // ARRAY_VALUES is needed, so the array is not indexed by the id of the person. Otherwise in mustache they are not shown
+            array_values($this->assigned_persons); // ARRAY_VALUES is needed, so the array is not indexed by the id of the person. Otherwise, in mustache they are not shown
 
         // create the fp autocomplete field with the help of an mform
         $mform = new autofill_helper_form($data->fp);

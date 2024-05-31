@@ -85,10 +85,15 @@
                     {{#created_exams}}
                         <tr>
                             <td>
-                                <a class="link"
-                                   href={{link_to_exam}}
-                                >
-                                    {{name}} </a>
+                                {{#manageactivities}}
+                                    <a class="link"
+                                       href={{link_to_exam}}
+                                    >
+                                        {{name}} </a>
+                                {{/manageactivities}}
+                                {{^manageactivities}}
+                                    {{name}}
+                                {{/manageactivities}}
                             </td>
                             <td class="changestatus">
                                 {{>block_exaquest/button_go_to_exam_view}}
@@ -115,10 +120,15 @@
                     {{#fachlich_released_exams}}
                         <tr>
                             <td>
-                                <a class="link"
-                                   href={{link_to_exam}}
-                                >
-                                    {{name}} </a>
+                                {{#manageactivities}}
+                                    <a class="link"
+                                       href={{link_to_exam}}
+                                    >
+                                        {{name}} </a>
+                                {{/manageactivities}}
+                                {{^manageactivities}}
+                                    {{name}}
+                                {{/manageactivities}}
                             </td>
                             <td class="changestatus">
                                 {{>block_exaquest/button_go_to_exam_view}}
@@ -149,10 +159,15 @@
                     {{#active_exams}}
                         <tr>
                             <td>
-                                <a class="link"
-                                   href={{link_to_exam}}
-                                >
-                                    {{name}} </a>
+                                {{#manageactivities}}
+                                    <a class="link"
+                                       href={{link_to_exam}}
+                                    >
+                                        {{name}} </a>
+                                {{/manageactivities}}
+                                {{^manageactivities}}
+                                    {{name}}
+                                {{/manageactivities}}
                             </td>
                             <td class="changestatus">
                                 <button type="submit" class="btn btn-primary change-exam-status-button"
@@ -176,10 +191,15 @@
                     {{#finished_exams}}
                         <tr>
                             <td>
-                                <a class="link"
-                                   href={{link_to_exam}}
-                                >
-                                    {{name}} </a>
+                                {{#manageactivities}}
+                                    <a class="link"
+                                       href={{link_to_exam}}
+                                    >
+                                        {{name}} </a>
+                                {{/manageactivities}}
+                                {{^manageactivities}}
+                                    {{name}}
+                                {{/manageactivities}}
                             </td>
 
                             <td class="changestatus">
@@ -289,10 +309,15 @@
                     {{#grading_released_exams}}
                         <tr>
                             <td>
-                                <a class="link"
-                                   href={{link_to_exam}}
-                                >
-                                    {{name}} </a>
+                                {{#manageactivities}}
+                                    <a class="link"
+                                       href={{link_to_exam}}
+                                    >
+                                        {{name}} </a>
+                                {{/manageactivities}}
+                                {{^manageactivities}}
+                                    {{name}}
+                                {{/manageactivities}}
                             </td>
                             <!--                    <td class="changestatus"> -->
                             <!--                        <button type="submit" class="btn btn-primary change-exam-status-button"-->

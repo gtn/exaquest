@@ -265,7 +265,7 @@ class exams implements renderable, templatable {
                     function($exam) use ($finished_exam) {
                         return $exam->quizid == $finished_exam->quizid;
                     });
-                $popup = new popup_kommissionell_exams_for_me_to_check_grading($kommissionell_exams_to_check_grading);
+                $popup = new popup_kommissionell_exams_for_me_to_check_grading($kommissionell_exams_to_check_grading, true);
                 $finished_exam->popup_kommissionell_exams_for_me_to_check_grading = $popup->export_for_template($output);
             }
         }

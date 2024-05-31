@@ -5,7 +5,7 @@ global $CFG, $COURSE, $PAGE, $OUTPUT, $SESSION;
 
 
 require_once($CFG->dirroot . '/question/editlib.php');
-require_once(__DIR__ . '/classes/questionbank_extensions/exaquest_view.php');
+require_once($CFG->dirroot . '/blocks/exaquest/classes/questionbank_extensions/exaquest_view.php');
 
 use qbank_managecategories\helper;
 

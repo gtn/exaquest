@@ -248,3 +248,9 @@ table.exaquest-similarity-comparison-table .col-threshold {
 .quickediticon {
 
 }
+
+/* hide the moodle questionbank */
+/* this also hides it in the course overview page for example... which should not be the case ==> use javascript */
+/*a[href*="question/edit.php"] {*/
+/*    display: none;*/
+/*}*/

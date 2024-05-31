@@ -7,7 +7,7 @@ global $CFG, $COURSE, $PAGE, $OUTPUT;
 use core\event\question_category_viewed;
 
 require_once($CFG->dirroot . '/question/editlib.php');
-require_once(__DIR__ . '/questionbank_extensions/exaquest_finished_exam_view.php');
+require_once($CFG->dirroot . '/blocks/exaquest/classes/questionbank_extensions/exaquest_finished_exam_view.php');
 
 list($thispageurl, $contexts, $cmid, $cm, $module, $pagevars) =
     question_edit_setup('questions', '/blocks/exaquest/finished_exam_questionbank.php');
@@ -19,14 +19,14 @@ require_login($courseid);
 //require_capability('block/exaquest:viewcategorytab', context_course::instance($courseid));
 
 $quizid = required_param('quizid', PARAM_INT);
-// check the status of the quiz. If it is not BLOCK_EXAQUEST_QUIZSTATUS_CREATED or BLOCK_EXAQUEST_QUIZSTATUS_NEW it is not allowed to edit the questions
+// check the status of the quiz. If it is not BLOCK_EXAQUEST_QUIZSTATUS_CREATED or BLOCK_EXAQUEST_QUIZSTATUS_NEW or BLOCK_EXAQUEST_QUIZSTATUS_FACHLICH_RELEASED it is not allowed to edit the questions
 if ($quizid != null) {
     $quiz = $DB->get_record_sql('SELECT qs.status
         FROM {' . BLOCK_EXAQUEST_DB_QUIZSTATUS . '} qs
          WHERE qs.quizid = ?',
         array($quizid));
 
-    if ($quiz->status != BLOCK_EXAQUEST_QUIZSTATUS_CREATED && $quiz->status != BLOCK_EXAQUEST_QUIZSTATUS_NEW) {
+    if (!($quiz->status == BLOCK_EXAQUEST_QUIZSTATUS_CREATED || $quiz->status == BLOCK_EXAQUEST_QUIZSTATUS_NEW || $quiz->status == BLOCK_EXAQUEST_QUIZSTATUS_FACHLICH_RELEASED)) {
         // throw exception
         throw new moodle_exception('block_exaquest:quiz_not_editable', 'block_exaquest');
     }

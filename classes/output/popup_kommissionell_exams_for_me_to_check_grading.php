@@ -12,8 +12,9 @@ class popup_kommissionell_exams_for_me_to_check_grading implements renderable, t
     /** @var string $questions_to_create Part of the data that should be passed to the template. */
     var $questions_to_create = null;
 
-    public function __construct($exams) {
+    public function __construct($exams, $for_exams_page=false) { // for_exams_page and $quizid are needed for the exams page
         $this->exams = $exams;
+        $this->for_exams_page = $for_exams_page;
     }
 
     /**
@@ -31,7 +32,7 @@ class popup_kommissionell_exams_for_me_to_check_grading implements renderable, t
             //        array('id' => $exam->coursemoduleid,
             //                'mode' => 'overview',
             //        ));
-            // the customer wants it to be on an exaquestpage, not in the moodle report page
+            // the customer wants it to be on an exaquestpage, not in the moodle report page... apparently
             $exam->linktograding = new moodle_url('/blocks/exaquest/report.php',
                 array('id' => $exam->coursemoduleid,
                     'mode' => 'exaqueststatistics',
@@ -55,6 +56,7 @@ class popup_kommissionell_exams_for_me_to_check_grading implements renderable, t
             $PAGE->url->out(false, array('action' => 'mark_as_done', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
         $data->sesskey = sesskey();
         $data->courseid = $COURSE->id;
+        $data->for_exams_page = $this->for_exams_page;
         return $data;
     }
 }

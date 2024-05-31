@@ -150,6 +150,7 @@ switch ($action) {
     case ('revise_question_from_quiz'):
         $change_status_and_remove_from_quiz = optional_param('change_status_and_remove_from_quiz', false, PARAM_BOOL);
         if (!$change_status_and_remove_from_quiz) {
+            // only send a notification to the PKs, that the question has to be revised
             //$DB->record_exists(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, array("questionbankentryid" => $questionbankentryid));
             if ($commenttext != null) {
                 $args = new stdClass;
@@ -180,29 +181,33 @@ switch ($action) {
         }
         // if no break, then continue to revise_question and also remove the question from the quiz
         // code for removing from quiz is from edit_rest.php from mod/quiz
-        // require_sesskey();
+        // only try to remove from quiz if it is already in quiz .... if the id is not 0 (id is the slotid of the question in the quiz)
         $id = optional_param('id', 0, PARAM_INT);
-        $quizobj = quiz_settings::create($quizid);
-        $quiz = $quizobj->get_quiz();
-        $structure = $quizobj->get_structure();
-        $gradecalculator = $quizobj->get_grade_calculator();
-        $modcontext = $quizobj->get_context();
-        require_capability('mod/quiz:manage', $modcontext);
-        if (!$slot = $DB->get_record('quiz_slots', ['quizid' => $quiz->id, 'id' => $id])) {
-            throw new moodle_exception('AJAX commands.php: Bad slot ID ' . $id);
-        }
+        if ($id != -1){
+            $quizobj = quiz_settings::create($quizid);
+            $quiz = $quizobj->get_quiz();
+            $structure = $quizobj->get_structure();
+            $gradecalculator = $quizobj->get_grade_calculator();
+            $modcontext = $quizobj->get_context();
+            require_capability('mod/quiz:manage', $modcontext);
 
-        if (!$structure->has_use_capability($slot->slot)) {
-            $slotdetail = $structure->get_slot_by_id($slot->id);
-            $context = context::instance_by_id($slotdetail->contextid);
-            throw new required_capability_exception($context,
-                'moodle/question:useall', 'nopermissions', '');
+            if (!$slot = $DB->get_record('quiz_slots', ['quizid' => $quiz->id, 'id' => $id])) {
+                throw new moodle_exception('AJAX commands.php: Bad slot ID ' . $id);
+            }
+
+            if (!$structure->has_use_capability($slot->slot)) {
+                $slotdetail = $structure->get_slot_by_id($slot->id);
+                $context = context::instance_by_id($slotdetail->contextid);
+                throw new required_capability_exception($context,
+                    'moodle/question:useall', 'nopermissions', '');
+            }
+            $structure->remove_slot($slot->slot);
+            quiz_delete_previews($quiz); // moodle code also calls this whenever the quiz sumgrades are recomputed
+            $gradecalculator->recompute_quiz_sumgrades();
+            $result = ['newsummarks' => quiz_format_grade($quiz, $quiz->sumgrades),
+                'deleted' => true, 'newnumquestions' => $structure->get_question_count()];
         }
-        $structure->remove_slot($slot->slot);
-        quiz_delete_previews($quiz);
-        $gradecalculator->recompute_quiz_sumgrades();
-        $result = ['newsummarks' => quiz_format_grade($quiz, $quiz->sumgrades),
-            'deleted' => true, 'newnumquestions' => $structure->get_question_count()];
+        // if removed from the quiz, or also if not removed: always send it to revise
     case ('revise_question'):
         //$DB->record_exists(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, array("questionbankentryid" => $questionbankentryid));
         $data = new stdClass;

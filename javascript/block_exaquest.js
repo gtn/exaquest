@@ -1,6 +1,5 @@
 $(document).on('click', '.change-exam-status-button', function (event) {
 
-  debugger;
   if (this.value == 'fachlich_release_exam') {
     if (this.getAttribute("missingquestionscount") > 0) {
       if (!confirm("Es fehlen noch " + this.getAttribute("missingquestionscount") + " Fragen. Wirklich freigeben? Zum Freigeben auf OK klicken.")) {
@@ -31,7 +30,7 @@ $(document).on('click', '.change-exam-status-button', function (event) {
   }).done(function () {
     // Console.log(data.action, 'ret', ret);
     // TODO: more elegant solution needed to ensure everything is updated. Instead of reload for example update the html directly
-    debugger
+
     // In some cases, the last action would be repeated, as it is still in the URL ==> remove the action
     // Parse the current URL
     var url = new URL(window.location.href);
@@ -65,7 +64,7 @@ $(document).on('click', '.mark-kommissionell-check-grading-request-as-done-butto
 
 function mark_request_as_done(requestid, requesttype, courseid) {
   console.log('mark_request_as_done', requestid);
-  debugger;
+
   let action = '';
   if (requesttype == 'exam') {
     action = 'mark_exam_request_as_done';
@@ -107,15 +106,13 @@ function mark_request_as_done(requestid, requesttype, courseid) {
   });
 }
 
-// TODO should we hide the moodle question bank? Better with CSS probably
-// function hide_moodle_questionbank() {
-//   // Hide the moodle question bank
-//   debugger;
-//   $('a[href*="question/edit.php"]').hide();
-// }
-//
-// $(document).ready(function() {
-//   debugger;
-//   hide_moodle_questionbank();
-// });
+// TODO should we hide the moodle question bank? Better with CSS maybe?
+function hide_moodle_questionbank() {
+  // Hide the moodle question bank
+  $('a[href*="question/edit.php"]').hide();
+}
+
+$(document).ready(function() {
+  hide_moodle_questionbank();
+});
 

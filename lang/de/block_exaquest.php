@@ -12,7 +12,7 @@ $string['questionbank_of_course'] = 'Fragensammlung - Kurs "{$a}"';
 $string['similarity_of_course'] = 'Ähnlichkeitsvergleich - Kurs "{$a}"';
 $string['exams_of_course'] = 'Prüfungen - Kurs "{$a}"';
 $string['category_settings_of_course'] = 'Kategorieeinstellungen - Kurs "{$a}"';
-$string['get_questionbank'] = 'Fragensammlung';
+$string['get_questionbank'] = 'Exaquest-Fragensammlung';
 $string['similarity'] = 'Ähnlichkeitsübersicht';
 $string['exams'] = 'Prüfungen';
 $string['category_settings'] = 'Kategorieeinstellungen';
@@ -107,7 +107,7 @@ $string['quiz_finished_grading_open_comment'] = 'Diese Prüfung ist abgeschlosse
 
 
 $string['messageprovider:quizfinishedgradingdone'] = 'Prüfung abgeschlossen mit unvollständiger Beurteilung';
-$string['quiz_finished_grading_done'] = 'Die Prüfung <a href="{$a->url}">{$a->fullname}</a> wrude abgeschlossen und es sind noch Beurteilungen offen.';
+$string['quiz_finished_grading_done'] = 'Die Prüfung <a href="{$a->url}">{$a->fullname}</a> wurde abgeschlossen und es sind noch Beurteilungen offen.';
 $string['quiz_finished_grading_done_subject'] = 'Prüfung {$a->fullname} abgeschlossen und beurteilt.';
 $string['quiz_finished_grading_done_comment'] = 'Diese Prüfung ist abgeschlossen, die Fragen sind beurteilt, die Beurteilungskontrolle steht noch aus.';
 
@@ -477,3 +477,6 @@ $string['difficultyavg'] = 'Durchschn. Schwierigkeit (p) * in Prozent';
 $string['selectnessavg'] = 'Durchschn. Trennschärfe (r) * in Prozent';
 
 $string['send'] = 'Absenden';
+$string['times_used_last_on'] = 'mal benutzt, zuletzt verwendet am';
+$string['already_used_in_this_exam'] = 'Bereits in dieser Prüfung verwendet';
+$string['not_used'] = 'Noch nie verwendet';

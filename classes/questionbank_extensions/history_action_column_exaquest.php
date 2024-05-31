@@ -29,7 +29,7 @@ class history_action_column_exaquest extends history_action_column {
                 'returnurl' => $this->qbank->returnurl,
                 'courseid' => $this->qbank->course->id,
             ];
-            $url = new \moodle_url('/blocks/exaquest/questionbank_extensions/exaquest_history.php', $params);
+            $url = new \moodle_url('/blocks/exaquest/classes/questionbank_extensions/exaquest_history.php', $params);
             return [$url, 't/log', $this->strpreview];
         }
 

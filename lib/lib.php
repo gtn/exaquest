@@ -1385,7 +1385,8 @@ function block_exaquest_set_up_roles() {
     //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
     // unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
+    unassign_capability('block/exaquest:viewquestionbanktab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
 
     assign_capability('block/exaquest:viewfinishedexamscard', CAP_ALLOW, $roleid, $context);
@@ -1488,7 +1489,11 @@ function block_exaquest_set_up_roles() {
     //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
     // unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
+    unassign_capability('block/exaquest:viewquestionbanktab', $roleid, $context->id); // there is actually no reason for the PMW to see it (looking at the original capabilities document and the Prüfungsprozess)
+    // this was added at one point, to allow them to see the questionbank that is used in the exams page to add questions. Has been replaced by a different capability
+
+
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
@@ -2721,6 +2726,11 @@ function block_exaquest_assign_quiz_done_to_pk($userfrom, $userto, $comment, $qu
     if (block_exaquest_quizassign($userfromid, $usertoid, $comment, $quizid, $assigntype)) {
         // create the message
         $messageobject = new stdClass;
+
+        if($quizname == null) {
+            $quizname = $DB->get_record('quiz', array('id' => $quizid))->name;
+        }
+
         $messageobject->fullname = $quizname;
         $messageobject->url = new moodle_url('/blocks/exaquest/exams.php', ['courseid' => $COURSE->id]);
         $messageobject->url = $messageobject->url->raw_out(false);

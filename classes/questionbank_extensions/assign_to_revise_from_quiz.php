@@ -45,6 +45,12 @@ class assign_to_revise_from_quiz extends column_base {
                                               JOIN {quiz_slots} qs ON qr.itemid = qs.id
                                               WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?", array($quizid, $question->questionbankentryid));
 
+        // if it has not been assigned to the quiz yet, it can't be removed from the quiz / there is not quizslotid
+        if (!$quizslotid) {
+            $quizslotid = -1; // this shows that there is not quizslotid and the ajax call will not try to remove it from the quiz
+        }
+
+
         $selectusers = block_exaquest_get_pk_by_courseid($COURSE->id);
 
 
@@ -61,6 +67,8 @@ class assign_to_revise_from_quiz extends column_base {
 
             $(document).ready(function () {
                 $(".changestatus<?php echo $question->questionbankentryid; ?>").click(function (e) {
+                    debugger
+                    console.log("test")
                     var data = {
                         action: $(this).val(),
                         questionbankentryid: <?php echo $question->questionbankentryid; ?>,

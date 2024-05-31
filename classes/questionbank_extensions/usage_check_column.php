@@ -49,7 +49,7 @@ class usage_check_column extends column_base {
                                     FROM {question_references} qr
                                          JOIN {quiz_slots} qs ON qr.itemid = qs.id
                                    WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?", array($quizid, $question->questionbankentryid))) {
-            echo '<div class="p-3 mb-2 bg-secondary text-center text-white">Already used in this exam</div>';
+            echo '<div class="p-3 mb-2 bg-secondary text-center text-white">' . get_string('already_used_in_this_exam', 'block_exaquest') . '</div>';
         } else {
             $prevuses = $DB->get_records_sql("SELECT qu.id, qu.timemodified
                                     FROM {question_references} qr
@@ -70,9 +70,9 @@ class usage_check_column extends column_base {
             $date->setTimestamp($last);
 
             if ($prevusescnt > 0) {
-                echo '<div class="p-3 mb-2 bg-danger text-center text-white">' . $prevusescnt . ' times used, last on ' . $date->format('d.m.Y') . '</div>';
+                echo '<div class="p-3 mb-2 bg-danger text-center text-white">' . $prevusescnt . get_string('times_used_last_on', 'block_exaquest') . $date->format('d.m.Y') . '</div>';
             } else {
-                echo '<div class="p-3 mb-2 bg-success text-center text-white">Not used</div>';
+                echo '<div class="p-3 mb-2 bg-success text-center text-white">' . get_string('not_used', 'block_exaquest') . '</div>';
             }
 
         }

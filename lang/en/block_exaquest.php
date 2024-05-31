@@ -102,7 +102,7 @@ $string['quiz_finished_grading_open_comment'] = 'Diese Prüfung ist abgeschlosse
 
 
 $string['messageprovider:quizfinishedgradingdone'] = 'Prüfung abgeschlossen mit unvollständiger Beurteilung TODO TRANSLATE';
-$string['quiz_finished_grading_done'] = 'Die Prüfung <a href="{$a->url}">{$a->fullname}</a> wrude abgeschlossen und es sind noch Beurteilungen offen. TODO TRANSLATE';
+$string['quiz_finished_grading_done'] = 'Die Prüfung <a href="{$a->url}">{$a->fullname}</a> wurde abgeschlossen und es sind noch Beurteilungen offen. TODO TRANSLATE';
 $string['quiz_finished_grading_done_subject'] = 'Prüfung {$a->fullname} abgeschlossen und beurteilt. TODO TRANSLATE';
 $string['quiz_finished_grading_done_comment'] = 'Diese Prüfung ist abgeschlossen, die Fragen sind beurteilt, die Beurteilungskontrolle steht noch aus. TODO TRANSLATE';
 
@@ -471,3 +471,7 @@ $string['difficultyavg'] = 'Avg. Difficulty (p) * in percent';
 $string['selectnessavg'] = 'Avg. Selectiveness (r) * in percent';
 
 $string['send'] = 'Send';
+$string['times_used_last_on'] = 'times used, last on';
+$string['already_used_in_this_exam'] = 'Already used in this exam';
+$string['not_used'] = 'Not used';
+

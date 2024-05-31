@@ -4,7 +4,8 @@ require __DIR__ . '/inc.php';
 global $DB, $CFG, $COURSE, $PAGE, $OUTPUT, $USER;
 
 require_once($CFG->dirroot . '/question/editlib.php');
-require_once(__DIR__ . '/classes/questionbank_extensions/exaquest_view.php');
+require_once($CFG->dirroot . '/blocks/exaquest/classes/questionbank_extensions/exaquest_view.php');
+
 
 
 //read in a necessary params

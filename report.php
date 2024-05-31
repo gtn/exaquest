@@ -30,8 +30,6 @@ global $CFG, $COURSE, $PAGE, $OUTPUT, $SESSION;
 
 define('NO_OUTPUT_BUFFERING', true);
 
-
-require_once(__DIR__ . '/../../config.php');
 require_once($CFG->dirroot . '/mod/quiz/locallib.php');
 require_once($CFG->dirroot . '/mod/quiz/report/reportlib.php');
 

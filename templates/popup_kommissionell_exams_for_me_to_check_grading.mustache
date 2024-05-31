@@ -1,15 +1,26 @@
-<!-- using bootstrap modals to do the popups https://getbootstrap.com/docs/4.6/components/modal/ -->
-
-<a class="btn btn-light w-100 d-flex justify-content-between align-items-center" data-toggle="modal"
-   data-target="#kommissionellExamsForMeToCheckGradingModal">
+{{^for_exams_page}}
+    <a class="btn btn-light w-100 d-flex justify-content-between align-items-center" data-toggle="modal"
+       data-target="#kommissionellExamsForMeToCheckGradingModal">
     <span class="badge-outer text-center">
         <span class="badge  tododoscounter {{#kommissionell_exams_for_me_to_check_grading_count}}badge-primary{{/kommissionell_exams_for_me_to_check_grading_count}}">{{kommissionell_exams_for_me_to_check_grading_count}}</span>
     </span>
-    <span class="flex-grow-1"> {{#str}}
-        kommissionell_exams_for_me_to_check_grading, block_exaquest {{/str}}</span>
-</a>
+        <span class="flex-grow-1"> {{#str}}
+            kommissionell_exams_for_me_to_check_grading, block_exaquest {{/str}}</span>
+    </a>
+{{/for_exams_page}}
 
-<div class="modal fade" id="kommissionellExamsForMeToCheckGradingModal" tabindex="-1"
+{{#for_exams_page}}
+    <a class="btn btn-secondary justify-content-between align-items-center" data-toggle="modal"
+       data-target="#kommissionellExamsForMeToCheckGradingModal{{quizid}}">
+    <span class="badge-outer text-center">
+        <span class="badge  tododoscounter {{#kommissionell_exams_for_me_to_check_grading_count}}badge-primary{{/kommissionell_exams_for_me_to_check_grading_count}}">{{kommissionell_exams_for_me_to_check_grading_count}}</span>
+    </span>
+        <span class="flex-grow-1"> {{#str}}
+            kommissionell_exams_for_me_to_check_grading, block_exaquest {{/str}}</span>
+    </a>
+{{/for_exams_page}}
+
+<div class="modal fade" id="kommissionellExamsForMeToCheckGradingModal{{quizid}}" tabindex="-1"
      aria-labelledby="kommissionellExamsForMeToCheckGradingModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
@@ -31,7 +42,7 @@
                             <button id="kommissionell-check-grading-request-comment-button-{{id}}"
                                     class="mark-kommissionell-check-grading-request-as-done-button btn btn-light btn-sm ml-2"
                                     requestid= {{id}}
-                                    courseid={{courseid}}>
+                                        courseid={{courseid}}>
                                 <i class="icon fa fa-times fa-fw mr-1"></i> Erledigt
                             </button>
                         </li>

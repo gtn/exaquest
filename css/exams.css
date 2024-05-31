@@ -37,11 +37,10 @@ td {
     width: 100%;
 }
 
-#block_exaquest .examstable tr{
+#block_exaquest .examstable tr {
     display: grid;
     grid-template-columns: 1fr 7fr;
 }
-
 
 
 #block_exaquest .examstable .qtype {
@@ -66,6 +65,11 @@ td {
 #block_exaquest .examstable td.commentcount {
     text-align: center;
 }
+
+/*#block_exaquest a.btn-light {*/
+/*    background-color: black;*/
+/*}*/
+
 
 
 
