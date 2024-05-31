@@ -67,7 +67,6 @@ class assign_to_revise_from_quiz extends column_base {
 
             $(document).ready(function () {
                 $(".changestatus<?php echo $question->questionbankentryid; ?>").click(function (e) {
-                    debugger
                     console.log("test")
                     var data = {
                         action: $(this).val(),
@@ -86,8 +85,6 @@ class assign_to_revise_from_quiz extends column_base {
                         quizid: <?php echo $quizid; ?>,
                         sesskey: "<?php echo sessKey(); ?>"
                     };
-
-                    debugger
                     e.preventDefault();
                     var ajax = $.ajax({
                         method: "POST",

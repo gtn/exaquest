@@ -73,7 +73,6 @@ class lock_from_quiz extends column_base {
                         }).get(),
                     };
 
-                    debugger
                     e.preventDefault();
                     var ajax = $.ajax({
                         method: "POST",

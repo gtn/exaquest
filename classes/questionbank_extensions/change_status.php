@@ -212,7 +212,6 @@ class change_status extends column_base {
             //  javascript redirects events to the ajax.php file and passes necessary data
             $(document).ready(function () {
                 $(".changestatus<?php echo $question->questionbankentryid; ?>").click(function (e) {
-                    debugger
                     //let changestatus_value = $(".changestatus<?php //echo $question->questionbankentryid; ?>//").val();
                     let changestatus_value = e.currentTarget.value;
                     let textarea_value = $('.commenttext<?php echo $question->questionbankentryid; ?>').val();
@@ -267,7 +266,6 @@ class change_status extends column_base {
 
                 // same for changeowner
                 $(".changeowner<?php echo $question->questionbankentryid; ?>").click(function (e) {
-                    debugger
                     var data = {
                         action: $(this).val(),
                         questionbankentryid: <?php echo $question->questionbankentryid; ?>,
@@ -314,7 +312,6 @@ class change_status extends column_base {
 
                 // Attach click event handler to the link
                 openModalLink.addEventListener("click", function (event) {
-                    debugger
                     event.preventDefault(); // Prevent default link behavior
                     openModalWithButton(); // Call the function to open the modal
                 });

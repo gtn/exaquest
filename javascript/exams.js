@@ -1,7 +1,6 @@
 
 $(document).ready(function () {
     $('.assign_change_exam_grading_form').on('submit', function (event) {
-        debugger
               // Access the form that triggered the event
         var $form = $(this);
 

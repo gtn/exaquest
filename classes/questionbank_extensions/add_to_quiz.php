@@ -65,7 +65,6 @@ class add_to_quiz extends column_base {
         <script type="text/javascript">
             // redirects event to ajax.php
             $(document).ready(function () {
-                debugger
                 $(".addquestion<?php echo $question->questionbankentryid; ?>").click(function (e) {
                     var data = {
                         action: $(this).val(),

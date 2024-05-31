@@ -89,11 +89,6 @@ const BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN = 10;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE = 11;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_KOMMISSIONELL_CHECK_EXAM_GRADING = 12;
 
-// TODO add quizassigntype for finished exam for the PK... is this not BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN. TODOs are already created? TEST THIS 25.04.2024
-// yes, already done in: just test if the notifications work
-// block_exaquest_assign_quiz_done_to_pk($userfrom->id, $userto->id, '', $quizid, null,
-//                     BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE);
-
 /**
  * Filter Status
  */
