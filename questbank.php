@@ -5,7 +5,7 @@ global $CFG, $COURSE, $PAGE, $OUTPUT, $SESSION;
 
 
 require_once($CFG->dirroot . '/question/editlib.php');
-require_once(__DIR__ . '/questionbank_extensions/exaquest_view.php');
+require_once(__DIR__ . '/classes/questionbank_extensions/exaquest_view.php');
 
 use qbank_managecategories\helper;
 
@@ -87,7 +87,7 @@ $context = context_course::instance($courseid);
 $output = $PAGE->get_renderer('block_exaquest');
 
 // call to display view
-$questionbank = new core_question\local\bank\exaquest_view($contexts, $url, $COURSE, $cm);
+$questionbank = new \block_exaquest\questionbank_extensions\exaquest_view($contexts, $url, $COURSE, $cm);
 
 if (!@$_REQUEST['table_sql']) { // ! for easier testing
     $questionbank_table = new \block_exaquest\tables\questionbank_table(

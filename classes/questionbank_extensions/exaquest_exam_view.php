@@ -23,7 +23,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace core_question\local\bank;
+// namespace core_question\local\bank;
+namespace block_exaquest\questionbank_extensions;
 
 use core_plugin_manager;
 use core_question\bank\search\condition;

@@ -1,6 +1,7 @@
 <?php
 
-namespace core_question\local\bank;
+// namespace core_question\local\bank;
+namespace block_exaquest\questionbank_extensions;
 
 use core_plugin_manager;
 use moodle_url;

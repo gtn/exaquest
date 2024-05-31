@@ -100,7 +100,7 @@ if (($lastchanged = optional_param('lastchanged', 0, PARAM_INT)) !== 0) {
     $url->param('lastchanged', $lastchanged);
 }
 
-$questionbank = new core_question\local\bank\exaquest_exam_view($contexts, $url, $COURSE, $cm);
+$questionbank = new \block_exaquest\questionbank_extensions\exaquest_exam_view($contexts, $url, $COURSE, $cm);
 
 echo '<div class="questionbankwindow boxwidthwide boxaligncenter">';
 $questionbank->display($pagevars, 'editq');

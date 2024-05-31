@@ -1,6 +1,7 @@
 <?php
 
-namespace core_question\local\bank;
+// namespace core_question\local\bank;
+namespace block_exaquest\questionbank_extensions;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -26,6 +27,7 @@ require_once('question_name_idnumber_tags_column_exaquest.php');
 
 use core_plugin_manager;
 use core_question\bank\search\condition;
+use core_question\local\bank\view;
 use qbank_columnsortorder\column_manager;
 use qbank_editquestion\editquestion_helper;
 use qbank_managecategories\helper;

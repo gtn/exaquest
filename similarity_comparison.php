@@ -23,7 +23,7 @@ require __DIR__ . '/inc.php';
 global $DB, $CFG, $COURSE, $PAGE, $OUTPUT, $USER;
 
 require_once($CFG->dirroot . '/question/editlib.php');
-require_once(__DIR__ . '/questionbank_extensions/exaquest_view.php');
+require_once(__DIR__ . '/classes/questionbank_extensions/exaquest_view.php');
 require_once(__DIR__ . '/similarity_comparison/vendor/autoload.php'); // load similarity comparison library
 require_once(__DIR__ . '/classes/form/similarity_comparison_form.php');
 

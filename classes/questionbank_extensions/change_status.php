@@ -18,11 +18,11 @@ namespace qbank_openquestionforreview;
 
 use core_question\local\bank\column_base;
 
-require_once(__DIR__ . '/../classes/output/popup_change_status.php');
-require_once(__DIR__ . '/../classes/output/popup_change_status_primary_button.php');
-require_once(__DIR__ . '/../classes/output/popup_change_status_secondary_button.php');
-require_once(__DIR__ . '/../classes/output/popup_change_owner.php');
-require_once(__DIR__ . '/../classes/output/popup_change_status_warning.php');
+require_once(__DIR__ . '/../output/popup_change_status.php');
+require_once(__DIR__ . '/../output/popup_change_status_primary_button.php');
+require_once(__DIR__ . '/../output/popup_change_status_secondary_button.php');
+require_once(__DIR__ . '/../output/popup_change_owner.php');
+require_once(__DIR__ . '/../output/popup_change_status_warning.php');
 
 $PAGE->requires->js('/blocks/exaquest/javascript/jquery.js', true);
 
