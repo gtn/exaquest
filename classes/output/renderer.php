@@ -140,6 +140,10 @@ class renderer extends plugin_renderer_base {
         return parent::header() . $this->wrapperdivstart();
     }
 
+    public function render_scatter_chart(scatter_chart $chart) {
+        return parent::render($chart);
+    }
+
     public function footer() {
         return
             $this->wrapperdivend() .

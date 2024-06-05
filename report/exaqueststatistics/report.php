@@ -214,6 +214,39 @@ class quiz_exaqueststatistics_report extends report_base {
 		$table->tablealign  = 'center';
 		echo html_writer::table($table);
 
+		$chart = new \core\chart_bar(); // Create a bar chart instance.
+		$series1 = new \core\chart_series('Series 1 (Bar)', [1000, 1170, 660, 1030]);
+		$series2 = new \core\chart_series('Series 2 (Line)', [400, 460, 1120, 540]);
+		$series2->set_type(\core\chart_series::TYPE_LINE); // Set the series type to line chart.
+		$chart->add_series($series2);
+		$chart->add_series($series1);
+		$chart->set_labels(['2004', '2005', '2006', '2007']);
+		echo $OUTPUT->render($chart);
+		
+		//$js_params = array();
+		//$PAGE->requires->js_call_amd('block_exaquest/chart_scatter', 'drawChart', $js_params);
+		// Prepare data for scatter plot
+		$quiz1_scores = [-10,0,10,0.5];
+		$quiz2_scores = [0,10,5,5.5];
+		// Create the scatter chart
+		$chart = new \block_exaquest\output\scatter_chart();
+		$series = new core\chart_series('Quiz Scores', []);
+
+		// Add data to the series
+		$data = [];
+		foreach ($quiz1_scores as $index => $score) {
+			$data[] = ['x' => $score, 'y' => $quiz2_scores[$index]];
+		}
+		$series = new core\chart_series('Quiz Scores', $data, 'scatter');
+		
+		$chart->add_series($series);
+		//echo $OUTPUT->render($chart);
+		$renderer = $PAGE->get_renderer('block_exaquest');
+		
+		$PAGE->requires->js('/blocks/exaquest/javascript/chart_scatter.js', true);
+		//echo $renderer->render_scatter_chart($chart);
+		echo html_writer::empty_tag('canvas',array('id'=>'myScatterChart'));
+
         return true;
     }
 
