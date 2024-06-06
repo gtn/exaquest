@@ -26,7 +26,7 @@ require_once($CFG->dirroot . '/blocks/exaquest/classes/output/popup_change_statu
 require_once($CFG->dirroot . '/blocks/exaquest/classes/output/popup_change_owner.php');
 require_once($CFG->dirroot . '/blocks/exaquest/classes/output/popup_change_status_warning.php');
 
-$PAGE->requires->js('/blocks/exaquest/javascript/jquery.js', true);
+// $PAGE->requires->js('/blocks/exaquest/javascript/jquery.js', true);
 
 class change_status extends column_base {
 
