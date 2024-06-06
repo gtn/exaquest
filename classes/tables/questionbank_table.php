@@ -101,10 +101,12 @@ class questionbank_table extends \local_table_sql\table_sql {
                 JOIN {question_bank_entries} be
                 ON be.id = v.questionbankentryid
                 WHERE be.id = qbe.id
-            ) AND ((qbe.questioncategoryid = ?)) AND ((qs.status != 9)) AND ' .
+            ) AND ((qbe.questioncategoryid = ?)) AND ' .
             ($this->filterstatus_condition->where() ?: '1=1'), [
             $this->categoryid,
         ]);
+        // removed the "AND ((qs.status != 9))" as it will always be created in the $this->filterstatus_condition->where() when neccecary.
+        // so either it will be a duplicate condition OR it will be a condition that is wrong (for imported questions for example, we want "qs.status = 9"
 
         $this->set_row_actions_display_as_menu(true);
 
