@@ -276,6 +276,197 @@ function block_exaquest_instance_form_definition_after_data($formwrapper, $mform
     return;
 }
 
+function block_exaquest_before_standard_html_head() {
+    global $CFG, $PAGE;
+
+    // get path within the moodle dir + fix slashes in windows
+    $subpath = str_replace(
+        str_replace('\\', '/', $CFG->dirroot),
+        '',
+        str_replace('\\', '/', $_SERVER['SCRIPT_FILENAME']));
+
+    $js = '';
+
+    $PAGE->requires->js('/blocks/exaquest/js/exaquest.js');
+
+    if ($subpath == '/question/bank/editquestion/question.php') {
+        // TODO: über $PAGE->context kann man die kurs-kategorie rausfinden und die Logik nur dann aktivieren
+
+        // beim Anlegen von neuen Fragen:
+        // * Felder ausblenden
+        // * Default Werte befüllen
+        // * Expertenmodus
+        ob_start();
+        ?>
+        <script>
+            require(['jquery'], function ($) {
+                var $form = $('form[data-qtype]');
+
+                var isExpertMode = localStorage.getItem('exaquest_expert_mode') == '1';
+                var isNewQuestion = $form.find(':input[name="id"]').val() == 0; // true for '' and '0'
+                var isLocalDev = window.location.hostname == 'localhost';
+
+                function get_field(name) {
+                    var $field = $form.find(':input[name="' + name + '"]');
+
+                    if ($field.filter('[type="checkbox"]').length) {
+                        $field = $field.not('[type="hidden"]');
+                    }
+
+                    if ($field.length == 0) {
+                        console.error('field ' + name + ' not found');
+                    }
+                    if ($field.length > 1) {
+                        console.error('field ' + name + ' found ' + $field.length + ' times');
+                    }
+
+                    return $field;
+                }
+
+                function toggle_field(name) {
+                    get_field(name).closest('.row').toggle(isExpertMode);
+                }
+
+                // chatgpt
+                function roundToSixSignificantDigits(num) {
+                    let rounded = num.toPrecision(7);
+
+                    // Convert to number and then back to string to remove unnecessary trailing zeros
+                    let result = Number(rounded).toString();
+
+                    // Check if the result is an integer (no decimal point present)
+                    if (!result.includes('.')) {
+                        result += '.0'; // Add .0 to ensure at least one digit after the decimal point
+                    }
+
+                    return result;
+                }
+
+                var $bewertungDivs = $form.find('.form-group.row[id*=fraction_]');
+
+                // berechnet den Ausgewählten Wert der Select Dropdowns erneut
+                function updateBewertungen() {
+                    var richtigeAntwortenCnt = $bewertungDivs.find('input:checked').length;
+
+                    $bewertungDivs.map(function (i, div) {
+                        var $div = $(div);
+                        var $select = $div.find('select');
+                        var $checkbox = $div.find('input[type="checkbox"], input[type="radio"]');
+
+                        if ($checkbox.prop('checked')) {
+                            $select.val(roundToSixSignificantDigits(1 / richtigeAntwortenCnt));
+                        } else {
+                            $select.val('0.0');
+                        }
+                    });
+                }
+
+                function updateFields() {
+                    toggle_field('answernumbering');
+                    toggle_field('status');
+                    toggle_field('defaultmark');
+                    toggle_field('generalfeedback[text]');
+                    toggle_field('idnumber');
+                    toggle_field('showstandardinstruction');
+
+                    toggle_field('shuffleanswers');
+                    toggle_field('feedback[0][text]');
+                    toggle_field('feedback[1][text]');
+                    toggle_field('feedback[2][text]');
+                    toggle_field('feedback[3][text]');
+                    toggle_field('feedback[4][text]');
+
+                    $form.find('.form-group.row[id*=fraction_]')
+                        .css('margin-bottom', isExpertMode ? '' : '2em') // margin zwischen den Antworten fixen
+                        .each(function () {
+                            // border bottom anzeigen (gleicher style wie borderLeft verwenden)
+                            $(this).css('border-bottom', isExpertMode ? '' : window.getComputedStyle(this).borderLeft);
+                        });
+
+                    $form.find('fieldset#id_combinedfeedbackhdr').toggle(isExpertMode);
+                    $form.find('fieldset#id_multitriesheader').toggle(isExpertMode);
+
+                    // TODO: "nur eine Option für Tags" - was ist damit gemeint?!?
+
+                    $bewertungDivs.find('.richtig_falsch').remove();
+                    if (isExpertMode) {
+                        $bewertungDivs.find('select').show();
+                    } else {
+                        $bewertungDivs.find('select').hide();
+
+                        $bewertungDivs.find('select').each(function (i) {
+                            var $select = $(this);
+
+                            // Single Choice - "Nur eine Antwort erlauben"
+                            // Multiple Choice - "Mehrere erlauben...
+                            $('<label class="richtig_falsch"><input name="richtig_falsch_input" value="' + i + '" type="' + (get_field('single').val() == '1' ? 'radio' : 'checkbox') + '">' +
+                                '&nbsp;&nbsp;richtig</label>')
+                                .insertAfter($select)
+                                .find('input')
+                                .prop('checked', $select.val() > 0)
+                                .click(updateBewertungen);
+                        });
+                    }
+                }
+
+                updateFields();
+
+                get_field('single').change(function () {
+                    updateFields();
+
+                    if (!isExpertMode) {
+                        updateBewertungen();
+                    }
+                })
+
+                if (isNewQuestion) {
+                    // TODO: immer automatisch das Modul auswählen, in dem die Frage erstellt wird
+
+                    // diese sind eigentlich eh die default Werte. d.h. Logik nicht unbedingt notwendig
+                    get_field('answernumbering').val('abc');
+                    get_field('defaultmark').val('1');
+                    get_field('shuffleanswers').prop('checked', true);
+
+                    // Änderungen am Formular:
+                    get_field('showstandardinstruction').val('1');
+                }
+
+                // expert modus switch
+                var $button = $('<div style="display: inline-block"><div style="display: flex">' +
+                    '    <label class="ml-4 mr-2 mb-0 " for="expert_mode_switch">' +
+                    '        Experten Modus' +
+                    '    </label>' +
+                    '    <div class="custom-control custom-switch">' +
+                    '        <input type="checkbox" name="setmode" id="expert_mode_switch" class="custom-control-input">' +
+                    '        <span class="custom-control-label">&nbsp;</span>' +
+                    '    </div>' +
+                    '</div></div>');
+                $button.find(':checkbox').prop('checked', isExpertMode);
+
+                $button.on('click', function (e) {
+                    e.preventDefault();
+
+                    isExpertMode = !isExpertMode;
+                    localStorage.setItem('exaquest_expert_mode', isExpertMode ? '1' : '0');
+
+                    $(this).find(':checkbox').prop('checked', isExpertMode);
+
+                    updateFields();
+                });
+                $('.collapsible-actions').append($button);
+            });
+        </script>
+        <?php
+        $js .= ob_get_clean();
+    }
+
+    // remove the script tag, which was used just for the editor to format the code nicely
+    $js = trim(preg_replace('!</?script>!i', '', $js));
+
+    if ($js) {
+        $PAGE->requires->js_init_code($js);
+    }
+}
 
 ///**
 // * Inject the exaquest element into all moodle module settings forms.
