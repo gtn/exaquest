@@ -84,7 +84,14 @@
   });
 
   $(document).on('change', 'select.searchoptions', function () {
-    document.location.href = document.location.href.replace(/([?&])filterstatus=[^&]*/, '$1').replace(/&+$/, '') + '&filterstatus=' + $(this).val();
+    // ajax reload:
+    var newUrl = document.location.href.replace(/([?&])filterstatus=[^&]*/, '$1').replace(/&+$/, '') + '&filterstatus=' + $(this).val();
+    window.history.pushState({path: newUrl}, '', newUrl);
+
+    table_sql_reload();
+
+    // alternative: reload der ganzen seite
+    // document.location.href = document.location.href.replace(/([?&])filterstatus=[^&]*/, '$1').replace(/&+$/, '') + '&filterstatus=' + $(this).val();
   });
 
   $(document).on('click', '.exaquest-changequestionstatus', function (e) {
