@@ -93,7 +93,7 @@ class questionbank_table extends \local_table_sql\table_sql {
             -- LEFT JOIN {user} uc ON uc.id = q.createdby
             LEFT JOIN {user} owner ON owner.id = qbe.ownerid
             JOIN {block_exaquestquestionstatus} qs ON qbe.id = qs.questionbankentryid
-            -- LEFT JOIN {block_exaquestreviewassign} qra ON qbe.id = qra.questionbankentryid
+            LEFT JOIN {block_exaquestreviewassign} qra ON qbe.id = qra.questionbankentryid -- für filterstatus_condition notwendig
             -- LEFT JOIN {block_exaquestreviseassign} qrevisea ON qbe.id = qrevisea.questionbankentryid
             WHERE q.parent = 0 AND qv.version = (
                 SELECT MAX(v.version)
