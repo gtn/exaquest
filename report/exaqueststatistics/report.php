@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 use mod_quiz\local\reports\report_base;
+require_once($CFG->dirroot . '/blocks/exaquest/classes/output/scatter_chart.php');
+require_once($CFG->dirroot . '/blocks/exaquest/classes/output/renderer.php');
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -188,12 +190,14 @@ class quiz_exaqueststatistics_report extends report_base {
 		echo '</pre>';**/
 		
 		$tcontent = array();
+		$fragename = array();
 		foreach ($options as $key => $option) {
 			foreach ($option as $categoryid => $name) {
 				if ($key == BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH) {					
 					[$points,$questionids] = self::block_exaquest_calculate_question_points($questionDetails,$categoryid);
 					[$facilityValue,$discriminationValue] = self::block_exaquest_calculate_avg_index($questionstats->questionstats, $questionids[$categoryid]); 
 					$line = array();
+					$fragename[] = $name;
 					$line[] = $name;
 					$line[] = $categoryoptionidcount[$categoryid] ?: 0;
 					$line[] = $facilityValue;
@@ -203,7 +207,7 @@ class quiz_exaqueststatistics_report extends report_base {
 				}
 			}
 		}		
-		
+		print_r($fragename);
 		$table = new html_table();
 		$table->id = 'question-type-view';
 		$table->head  = array(get_string('questiontype', 'block_exaquest'), get_string('numberofquestion', 'block_exaquest'),get_string('difficultyavg', 'block_exaquest'),get_string('selectnessavg', 'block_exaquest') , get_string('statisticspoints', 'block_exaquest'));
@@ -213,40 +217,30 @@ class quiz_exaqueststatistics_report extends report_base {
 		$table->data  = $tcontent;
 		$table->tablealign  = 'center';
 		echo html_writer::table($table);
-
-		$chart = new \core\chart_bar(); // Create a bar chart instance.
-		$series1 = new \core\chart_series('Series 1 (Bar)', [1000, 1170, 660, 1030]);
-		$series2 = new \core\chart_series('Series 2 (Line)', [400, 460, 1120, 540]);
-		$series2->set_type(\core\chart_series::TYPE_LINE); // Set the series type to line chart.
-		$chart->add_series($series2);
-		$chart->add_series($series1);
-		$chart->set_labels(['2004', '2005', '2006', '2007']);
-		echo $OUTPUT->render($chart);
 		
-		//$js_params = array();
-		//$PAGE->requires->js_call_amd('block_exaquest/chart_scatter', 'drawChart', $js_params);
 		// Prepare data for scatter plot
-		$quiz1_scores = [-10,0,10,0.5];
-		$quiz2_scores = [0,10,5,5.5];
-		// Create the scatter chart
-		$chart = new \block_exaquest\output\scatter_chart();
-		$series = new core\chart_series('Quiz Scores', []);
+		$quiz1_scores = [1,2,3,4];
+		$quiz2_scores = [2,3,4,5];
 
 		// Add data to the series
 		$data = [];
 		foreach ($quiz1_scores as $index => $score) {
 			$data[] = ['x' => $score, 'y' => $quiz2_scores[$index]];
 		}
-		$series = new core\chart_series('Quiz Scores', $data, 'scatter');
+		$chartLabel = 'Trennschärfe / Schwierigkeit';
+		$chartLabels = $fragename;
+		$chartBackgroundColors = ["yellow", "aqua", "pink", "lightgreen"];
 		
-		$chart->add_series($series);
-		//echo $OUTPUT->render($chart);
-		$renderer = $PAGE->get_renderer('block_exaquest');
+		echo html_writer::empty_tag('canvas',array('id'=>'scatterChart'));
+		echo'
+			<script>
+				window.chartLabel = "'.$chartLabel.'";
+				window.chartData = ' . json_encode($data) . ';
+				window.chartLabels = ' .json_encode($chartLabels).';
+				window.chartBackgroundColors = ' .json_encode($chartBackgroundColors).';
+			</script>
+		';
 		
-		$PAGE->requires->js('/blocks/exaquest/javascript/chart_scatter.js', true);
-		//echo $renderer->render_scatter_chart($chart);
-		echo html_writer::empty_tag('canvas',array('id'=>'myScatterChart'));
-
         return true;
     }
 

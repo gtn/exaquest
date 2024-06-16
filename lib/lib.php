@@ -116,13 +116,20 @@ function block_exaquest_init_js_css() {
     }
     $js_inited = true;
     $PAGE->requires->jquery();
-    $PAGE->requires->js('/blocks/exaquest/javascript/block_exaquest.js', false);
+    $PAGE->requires->js('/blocks/exaquest/javascript/block_exaquest.js', false);	
 
     // main block CSS
     $PAGE->requires->css('/blocks/exaquest/css/block_exaquest.css');
 
     // page specific js/css
     $scriptName = preg_replace('!\.[^\.]+$!', '', basename($_SERVER['PHP_SELF']));
+	if($scriptName == "report"){
+		// Include the Chart.js library
+		$PAGE->requires->js('/blocks/exaquest/javascript/chart.js', true);
+
+		// Include your custom JavaScript file
+		$PAGE->requires->js('/blocks/exaquest/javascript/chart_scatter.js', true);
+	}
     if (file_exists($CFG->dirroot . '/blocks/exaquest/css/' . $scriptName . '.css')) {
         $PAGE->requires->css('/blocks/exaquest/css/' . $scriptName . '.css');
     }
