@@ -44,6 +44,7 @@ $(document).on('click', '.mark-question-request-as-done-button', function () {
             document.getElementById("requests").removeChild(document.getElementById("request-comment-li-" + this.getAttribute("requestid")));
             // Remove that entry from the database with ajax
             mark_request_as_done(this.getAttribute("requestid"), 'question', this.attributes.courseid.value);
+
         }
     }
 });

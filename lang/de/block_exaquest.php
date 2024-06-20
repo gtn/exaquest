@@ -39,6 +39,7 @@ $string['set_quizquestioncount'] = 'Benötigte Fragenanzahl pro Fragefach festle
 $string['exaquest_minimum_required_percentage_per_fragefach'] = 'Bestehensgrenze in % pro Fragefach';
 
 $string['mark_as_done'] = 'Als erledigt markieren';
+$string['done'] = 'Erledigt';
 $string['mark_selected_as_done_button'] = 'Selektierte Anfragen als erledigt markieren';
 
 $string['assign_addquestions'] = 'Fragenzuweisung anfordern';

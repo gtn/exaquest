@@ -287,8 +287,6 @@ function block_exaquest_before_standard_html_head() {
 
     $js = '';
 
-    $PAGE->requires->js('/blocks/exaquest/js/exaquest.js');
-
     if ($subpath == '/question/bank/editquestion/question.php') {
         // TODO: über $PAGE->context kann man die kurs-kategorie rausfinden und die Logik nur dann aktivieren
 

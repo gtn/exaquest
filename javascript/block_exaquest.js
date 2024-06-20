@@ -1,3 +1,64 @@
+function mark_request_as_done(requestid, requesttype, courseid) {
+  console.log('mark_request_as_done', requestid);
+
+  let action = '';
+  if (requesttype == 'exam') {
+    action = 'mark_exam_request_as_done';
+  } else if (requesttype == 'fill-exam') {
+    action = 'mark_fill_exam_request_as_done';
+  } else if (requesttype == 'check-grading') {
+    action = 'mark_check_exam_grading_request_as_done';
+  } else if (requesttype == 'change-grading') {
+    action = 'mark_change_exam_grading_request_as_done';
+  } else if (requesttype == 'grade') {
+    action = 'mark_grade_request_as_done';
+  } else if (requesttype == 'kommissionell-check-grading') {
+    action = 'mark_kommissionell_check_grading_as_done';
+  } else if (requesttype == 'question') {
+    action = 'mark_question_request_as_done';
+  } else {
+    console.error('Unknown requesttype', requesttype);
+    return;
+  }
+
+  let data = {
+    requestid: requestid,
+    action: action,
+    courseid: courseid,
+    sesskey: M.cfg.sesskey
+  };
+  debugger
+
+  $.ajax({
+    method: "POST",
+    url: "ajax_dashboard.php",
+    data: data
+  }).done(function () {
+    // Console.log(data.action, 'ret', ret);
+    // location.reload();
+
+    // Update the counter
+    // get the counter by getting the element with the id requesttype + '-todoscounter'
+    let counter = document.getElementById(requesttype + '-todoscounter');
+    if (counter != null) {
+      let newCounterValue = parseInt(counter.innerText) - 1;
+      counter.innerText = newCounterValue;
+      if (newCounterValue == 0) {
+        // change the color to gray by removing the classe "badge-primary"
+        counter.classList.remove("badge-primary");
+      }
+    }
+
+  }).fail(function (ret) {
+    var errorMsg = '';
+    if (ret.responseText[0] == '<') {
+      // Html
+      errorMsg = $(ret.responseText).find('.errormessage').text();
+    }
+    console.log("Error in action '" + data.action + "'", errorMsg, 'ret', ret);
+  });
+}
+
 $(document).on('click', '.change-exam-status-button', function (event) {
 
   if (this.value == 'fachlich_release_exam') {
@@ -62,49 +123,6 @@ $(document).on('click', '.mark-kommissionell-check-grading-request-as-done-butto
   }
 });
 
-function mark_request_as_done(requestid, requesttype, courseid) {
-  console.log('mark_request_as_done', requestid);
-
-  let action = '';
-  if (requesttype == 'exam') {
-    action = 'mark_exam_request_as_done';
-  } else if (requesttype == 'fill-exam') {
-    action = 'mark_fill_exam_request_as_done';
-  } else if (requesttype == 'check-grading') {
-    action = 'mark_check_exam_grading_request_as_done';
-  } else if (requesttype == 'change-grading') {
-    action = 'mark_change_exam_grading_request_as_done';
-  } else if (requesttype == 'grade') {
-    action = 'mark_grade_request_as_done';
-  } else if (requesttype == 'kommissionell-check-grading') {
-    action = 'mark_kommissionell_check_grading_as_done';
-  } else {
-    action = 'mark_question_request_as_done';
-  }
-
-  let data = {
-    requestid: requestid,
-    action: action,
-    courseid: courseid,
-    sesskey: M.cfg.sesskey
-  };
-
-  $.ajax({
-    method: "POST",
-    url: "ajax_dashboard.php",
-    data: data
-  }).done(function () {
-    // Console.log(data.action, 'ret', ret);
-    // location.reload();
-  }).fail(function (ret) {
-    var errorMsg = '';
-    if (ret.responseText[0] == '<') {
-      // Html
-      errorMsg = $(ret.responseText).find('.errormessage').text();
-    }
-    console.log("Error in action '" + data.action + "'", errorMsg, 'ret', ret);
-  });
-}
 
 // TODO should we hide the moodle question bank? Better with CSS maybe?
 function hide_moodle_questionbank() {
@@ -112,7 +130,7 @@ function hide_moodle_questionbank() {
   $('a[href*="question/edit.php"]').hide();
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
   hide_moodle_questionbank();
 });
 

@@ -39,6 +39,7 @@ $string['set_quizquestioncount'] = 'Request';
 $string['exaquest_minimum_required_percentage_per_fragefach'] = 'Minimum % for Fragefach';
 
 $string['mark_as_done'] = 'Mark as done';
+$string['done'] = 'Done';
 $string['mark_selected_as_done_button'] = 'Mark selected requests as done';
 
 $string['assign_addquestions'] = 'Fragenzuweisung anfordern';
