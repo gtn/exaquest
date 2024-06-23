@@ -182,12 +182,6 @@ class quiz_exaqueststatistics_report extends report_base {
         $questionstats = self::block_exaquest_get_all_stats_and_analysis($quiz,
             $quiz->grademethod, question_attempt::ALL_TRIES, new \core\dml\sql_join(),
             $questions, null);
-		/**echo '<pre>';
-		print_r($questionstats->questionstats);
-		echo '</pre>';
-		echo '<pre>';
-		print_r($questionDetails);
-		echo '</pre>';**/
 		
 		$tcontent = array();
 		$fragename = array();
@@ -206,8 +200,8 @@ class quiz_exaqueststatistics_report extends report_base {
 					$tcontent[] = $line;
 				}
 			}
-		}		
-		print_r($fragename);
+		}
+		
 		$table = new html_table();
 		$table->id = 'question-type-view';
 		$table->head  = array(get_string('questiontype', 'block_exaquest'), get_string('numberofquestion', 'block_exaquest'),get_string('difficultyavg', 'block_exaquest'),get_string('selectnessavg', 'block_exaquest') , get_string('statisticspoints', 'block_exaquest'));
@@ -218,25 +212,30 @@ class quiz_exaqueststatistics_report extends report_base {
 		$table->tablealign  = 'center';
 		echo html_writer::table($table);
 		
-		// Prepare data for scatter plot
-		$quiz1_scores = [1,2,3,4];
-		$quiz2_scores = [2,3,4,5];
-
+		foreach ($tcontent as $content){
+			$quiz1_scores[] = str_replace(',','.',str_replace(' %','', $content[2]));
+			$quiz2_scores[] = str_replace(',','.',str_replace(' %','', $content[3]));
+		}
+		
 		// Add data to the series
 		$data = [];
 		foreach ($quiz1_scores as $index => $score) {
 			$data[] = ['x' => $score, 'y' => $quiz2_scores[$index]];
 		}
-		$chartLabel = 'Trennschärfe / Schwierigkeit';
+
+		$chartLabel = '∅ Trennschärfe / ∅ Schwierigkeit';
 		$chartLabels = $fragename;
-		$chartBackgroundColors = ["yellow", "aqua", "pink", "lightgreen"];
 		
+		$pointStyles = ["circle","cross","crossRot","dash","rect","rectRounded","rectRot","triangle"];
+		$chartBackgroundColors = ["lightgreen", "aqua", "pink", "yellow","red","blue","green","voilet"];
+		echo html_writer::tag('h4', $chartLabel ,array('style'=>'text-align:center'));
 		echo html_writer::empty_tag('canvas',array('id'=>'scatterChart'));
 		echo'
 			<script>
 				window.chartLabel = "'.$chartLabel.'";
 				window.chartData = ' . json_encode($data) . ';
 				window.chartLabels = ' .json_encode($chartLabels).';
+				window.pointStyles = ' .json_encode($pointStyles).';
 				window.chartBackgroundColors = ' .json_encode($chartBackgroundColors).';
 			</script>
 		';
