@@ -14,9 +14,14 @@ class questionbank_table extends \local_table_sql\table_sql {
         protected view $qbank,
         protected int $categoryid,
     ) {
-        $filterstatus = optional_param('filterstatus', 0, PARAM_INT);
-        // 0 instead of -1 as default value. because 0 is the default value in public function __construct($filterstatus = 0) {
-        // if it is not 0, but -1, "if ($this->filterstatus == BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS) {" in exaquest_filters will not be true
+        global $SESSION;
+
+        $filterstatus = optional_param('filterstatus', null, PARAM_INT)
+            ?? $SESSION->block_exaquest_questionbank_table_filter
+            ?? 0;
+
+        $SESSION->block_exaquest_questionbank_table_filter = $filterstatus;
+
         // TODO: for now every role has every filter, so 0 as default value is fine. If we ever change it, we need to take care of the problem, that 0 may not be available.
 
         $this->filterstatus_condition = new \core_question\bank\search\exaquest_filters($filterstatus);
