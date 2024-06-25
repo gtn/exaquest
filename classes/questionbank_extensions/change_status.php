@@ -40,15 +40,18 @@ class change_status extends column_base {
     }
 
     protected function display_content($question, $rowclasses): void {
-        static::display_content_static($question);
+        echo static::get_content_static($question);
     }
 
-    public static function display_content_static($question) {
-        global $USER, $DB, $COURSE, $PAGE;
+    public static function get_content_static($question): string {
+        global $USER, $COURSE, $PAGE;
+
         //echo '<div class="container"><div class="row"><div class="col-md-12 text-right">';
         $output = $PAGE->get_renderer('block_exaquest');
 
         $fragenersteller = block_exaquest_get_fragenersteller_by_courseid($COURSE->id, false);
+
+        ob_start();
 
         //decides which button is visible to whom
         switch (intval($question->teststatus)) {
@@ -321,6 +324,7 @@ class change_status extends column_base {
         </script>
         <?php
 
+        return ob_get_clean();
     }
 
     public function load_additional_data(array $questions) {

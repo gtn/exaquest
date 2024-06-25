@@ -239,10 +239,10 @@ table.exaquest-similarity-comparison-table .col-threshold {
 #block_exaquest .exaquest-category-tag-lerninhalt {
     margin-bottom: 5px; /* Adjusts space between rows */
     margin-right: 5px; /* Adjusts space between columns */
-    display: flex;
-    justify-content: center; /* Aligns content horizontally at the center */
-    align-items: center; /* Aligns content vertically at the center */
+    text-align: center;
     width: 100%;
+    min-width: 150px;
+    white-space: normal; /* allow breaking */
 }
 
 .quickediticon {

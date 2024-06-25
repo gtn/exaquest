@@ -4,6 +4,7 @@ namespace block_exaquest\tables;
 
 use core_question\local\bank\menuable_action;
 use core_question\local\bank\view;
+use qbank_openquestionforreview\category_options;
 use qbank_openquestionforreview\change_status;
 use qbank_openquestionforreview\set_fragenersteller_column;
 
@@ -186,6 +187,10 @@ class questionbank_table extends \local_table_sql\table_sql {
         }
     }
 
+    public function col_categories($row) {
+        return category_options::get_content_static($row);
+    }
+
     protected function get_row_actions(object $row, array $row_actions): ?array {
         static $columns = null;
 
@@ -272,7 +277,7 @@ class questionbank_table extends \local_table_sql\table_sql {
                 'questionbankentryid' => $question->questionbankentryid,
                 'questionid' => $question->id,
             ])) . '">';
-        change_status::display_content_static($question);
+        echo change_status::get_content_static($question);
         echo '</div>';
         return ob_get_clean();
     }

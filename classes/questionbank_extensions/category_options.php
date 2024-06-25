@@ -37,11 +37,12 @@ class category_options extends column_base {
         return 'categoryoptions';
     }
 
-    protected function display_content($question, $rowclasses) {
+    protected function display_content($question, $rowclasses): void {
+        echo static::get_content_static($question);
+    }
 
-        $quizid = optional_param('quizid', null, PARAM_INT);
-
-        global $USER, $DB, $COURSE, $PAGE;
+    public static function get_content_static($question): string {
+        global $DB;
 
         $categoryoptionids = $DB->get_records_sql("SELECT cfd.value
                                     FROM {question} q
@@ -77,36 +78,33 @@ class category_options extends column_base {
             }
         }
 
-        $html = '<div class="container">
-          <div class="row">
-            <div class="col-sm-6 ">
+        ob_start();
+        ?>
+        <div style=" display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+            <div>
                 <div class="exaquest-category-tag-fragencharakter rounded">
-                    ' . implode(' ', $options[0]) . '
+                    <?= implode(' ', $options[0]) ?>
                 </div>
             </div>
-            <div class="col-sm-6 ">
-            <div class="exaquest-category-tag-klassifikation rounded">
-                    ' . implode(' ', $options[1]) . '
+            <div>
+                <div class="exaquest-category-tag-klassifikation rounded">
+                    <?= implode(' ', $options[1]) ?>
                 </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-6 ">
+            <div>
                 <div class="exaquest-category-tag-fragefach rounded">
-                    ' . implode(' ', $options[2]) . '
+                    <?= implode(' ', $options[2]) ?>
                 </div>
             </div>
-            <div class="col-sm-6 ">
+            <div>
                 <div class="exaquest-category-tag-lerninhalt rounded">
-                    ' . implode(' ', $options[3]) . '
+                    <?= implode(' ', $options[3]) ?>
                 </div>
             </div>
-          </div>
-        </div>';
+        </div>
+        <?php
 
-        echo $html;
-        //echo '<div class="p-3 mb-2 bg-danger text-center text-white"></div>';
-
+        return ob_get_clean();
     }
 
     public function get_extra_joins(): array {
