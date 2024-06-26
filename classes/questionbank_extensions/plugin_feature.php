@@ -21,6 +21,7 @@ require_once('lock_from_quiz.php');
  * @author     Ghaly Marc-Alexandre <marc-alexandreghaly@catalyst-ca.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+// TODO: delete class
 class plugin_feature extends \core_question\local\bank\plugin_features_base {
 
     public function get_question_columns(\core_question\local\bank\view $qbank): array {

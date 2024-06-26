@@ -197,46 +197,26 @@ class questionbank_table extends \local_table_sql\table_sql {
         static $columns = null;
 
         if ($columns === null) {
-            $specialpluginentrypointobject = new \qbank_openquestionforreview\plugin_feature();
-            $specialplugincolumnobjects = $specialpluginentrypointobject->get_question_columns($this->qbank);
+            $columns = [
+                // new question_id_column($this->qbank),
+                // new owner_column($this->qbank),
+                // new last_changed_column($this->qbank),
+                // new status_column($this->qbank),
+                // new change_status($this->qbank),
+                new \qbank_editquestion\edit_action_column_exaquest($this->qbank),
+                new \qbank_deletequestion\delete_action_column_exaquest($this->qbank),
+                new \qbank_history\history_action_column_exaquest($this->qbank),
+                // new \qbank_viewquestionname\question_name_idnumber_tags_column_exaquest($this->qbank),
+                new set_fragenersteller_column($this->qbank),
+            ];
 
-            // TODO: anders machen
-            $questionbankclasscolumns = [];
-            $questionbankclasscolumns["question_id_column"] = $specialplugincolumnobjects[8];
-            $questionbankclasscolumns["owner_column"] = $specialplugincolumnobjects[9];
-            $questionbankclasscolumns["last_changed_column"] = $specialplugincolumnobjects[10];
-            $questionbankclasscolumns["status_column"] = $specialplugincolumnobjects[11];
-            $questionbankclasscolumns["change_status"] = $specialplugincolumnobjects[0];
-            $questionbankclasscolumns["edit_action_column"] = $specialplugincolumnobjects[1];
-            $questionbankclasscolumns["delete_action_column"] = $specialplugincolumnobjects[2];
-            $questionbankclasscolumns["history_action_column"] = $specialplugincolumnobjects[3];
-            $questionbankclasscolumns["question_name_idnumber_tags_column"] = $specialplugincolumnobjects[12];
-            $questionbankclasscolumns["set_fragenersteller_column"] = $specialplugincolumnobjects[13];
-
-            // TODO: vielleicht so?
-            // $questionbankclasscolumns[] = new \qbank_editquestion\edit_action_column_exaquest($this->qbank);
-
-            // new change_status($qbank),
-            // new \qbank_editquestion\edit_action_column_exaquest($qbank),
-            // new \qbank_deletequestion\delete_action_column_exaquest($qbank),
-            // new \qbank_history\history_action_column_exaquest($qbank),
-            // new add_to_quiz($qbank),
-            // new usage_check_column($qbank),
-            // new category_options($qbank),
-            // new remove_from_quiz($qbank),
-            // new question_id_column($qbank),
-            // new owner_column($qbank),
-            // new last_changed_column($qbank),
-            // new status_column($qbank),
-            // new \qbank_viewquestionname\question_name_idnumber_tags_column_exaquest($qbank),
-            // new set_fragenersteller_column($qbank),
-            // new assign_to_revise_from_quiz($qbank),
-            // new lock_from_quiz($qbank),
-
-
-            $columns = array_filter($questionbankclasscolumns, function($column) {
-                return $column instanceof menuable_action;
-            });
+            // not needed anymore, all columns are instances of menuable_action
+            // $columns = array_filter($columns, function($column) {
+            //     if (!$column instanceof menuable_action) {
+            //         var_dump(get_class($column) . ' is not a menuable_action');
+            //     }
+            //     return $column instanceof menuable_action;
+            // });
         }
 
         $icon_system = \core\output\icon_system_fontawesome::instance();
