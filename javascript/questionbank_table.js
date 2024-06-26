@@ -125,19 +125,36 @@
       return $(this).attr("data-value");
     }).get();
 
-    var data = {
-      courseid: M.cfg.courseId,
-      sesskey: M.cfg.sesskey,
-      action: $(this).val(),
-      questionbankentryid: questionData.questionbankentryid,
-      questionid: questionData.questionid,
-      users: users,
-      commenttext: $modal.find('.commenttext').val(),
-    };
+    var data, url;
+
+    if (changestatus_value == 'removequestion') {
+      // spezial url und data für removequestion from quiz
+      url = M.cfg.wwwroot + '/mod/quiz/edit_rest.php';
+      data = {
+        action: "DELETE",
+        class: "resource",
+        id: $(this).data('quizslotid'),
+        courseid: M.cfg.courseId,
+        quizid: questionData.quizid,
+        sesskey: M.cfg.sesskey,
+      };
+    } else {
+      url = "ajax.php";
+      data = {
+        courseid: M.cfg.courseId,
+        sesskey: M.cfg.sesskey,
+        action: $(this).val(),
+        questionbankentryid: questionData.questionbankentryid,
+        questionid: questionData.questionid,
+        quizid: questionData.quizid, // for exam_questionbank.php addquestion to quiz, deletequestion from quiz
+        users: users,
+        commenttext: $modal.find('.commenttext').val(),
+      };
+    }
 
     $.ajax({
       method: "POST",
-      url: "ajax.php",
+      url: url,
       data: data
     }).done(function () {
       reloadTable();

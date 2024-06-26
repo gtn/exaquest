@@ -209,6 +209,8 @@ class change_status extends column_base {
                 break;
         }
 
+        // TODO: remove the script below
+        // the script is OLD code, which can be removed after everything is changed to table_sql!!!
         ?>
 
         <script type="text/javascript">

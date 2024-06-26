@@ -9,23 +9,26 @@ use qbank_openquestionforreview\change_status;
 use qbank_openquestionforreview\set_fragenersteller_column;
 
 class questionbank_table extends \local_table_sql\table_sql {
-    private $filterstatus_condition;
+    protected $filterstatus_condition;
 
     public function __construct(
         protected view $qbank,
         protected int $categoryid,
+        protected $with_filterstatus_condition = true
     ) {
         global $SESSION;
 
-        $filterstatus = optional_param('filterstatus', null, PARAM_INT)
-            ?? $SESSION->block_exaquest_questionbank_table_filter
-            ?? 0;
+        if ($this->with_filterstatus_condition) {
+            $filterstatus = optional_param('filterstatus', null, PARAM_INT)
+                ?? $SESSION->block_exaquest_questionbank_table_filter
+                ?? 0;
 
-        $SESSION->block_exaquest_questionbank_table_filter = $filterstatus;
+            $SESSION->block_exaquest_questionbank_table_filter = $filterstatus;
 
-        // TODO: for now every role has every filter, so 0 as default value is fine. If we ever change it, we need to take care of the problem, that 0 may not be available.
+            // TODO: for now every role has every filter, so 0 as default value is fine. If we ever change it, we need to take care of the problem, that 0 may not be available.
 
-        $this->filterstatus_condition = new \core_question\bank\search\exaquest_filters($filterstatus);
+            $this->filterstatus_condition = new \core_question\bank\search\exaquest_filters($filterstatus);
+        }
 
         global $PAGE;
         $PAGE->requires->js('/blocks/exaquest/javascript/questionbank_table.js');
@@ -34,7 +37,6 @@ class questionbank_table extends \local_table_sql\table_sql {
     }
 
     protected function define_table_configs() {
-
         $cols = [
             'questionbankentryid' => 'Id',
             'qtype' => 'T',
@@ -108,7 +110,7 @@ class questionbank_table extends \local_table_sql\table_sql {
                 ON be.id = v.questionbankentryid
                 WHERE be.id = qbe.id
             ) AND ((qbe.questioncategoryid = ?)) AND ' .
-            ($this->filterstatus_condition->where() ?: '1=1'), [
+            ($this->filterstatus_condition?->where() ?: '1=1'), [
             $this->categoryid,
         ]);
         // removed the "AND ((qs.status != 9))" as it will always be created in the $this->filterstatus_condition->where() when neccecary.
@@ -249,7 +251,6 @@ class questionbank_table extends \local_table_sql\table_sql {
                     ? "show_change_owner_popup"
                     : '';
 
-
                 $icon = @$icon_map[($ret->icon->component == 'moodle' ? 'core' : $ret->icon->component) . ':' . $ret->icon->pix];
 
                 // fix broken icon
@@ -277,12 +278,14 @@ class questionbank_table extends \local_table_sql\table_sql {
                 'questionbankentryid' => $question->questionbankentryid,
                 'questionid' => $question->id,
             ])) . '">';
+
         echo change_status::get_content_static($question);
+
         echo '</div>';
         return ob_get_clean();
     }
 
     public function wrap_html_start() {
-        echo $this->filterstatus_condition->display_options_adv();
+        echo $this->filterstatus_condition?->display_options_adv();
     }
 }

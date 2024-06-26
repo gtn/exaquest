@@ -20,7 +20,7 @@ $quizid = optional_param('quizid', null, PARAM_INT);
 require_login($courseid);
 // check if the user has the capability of either addquestiontoexam or viewquestionbanktab
 $context = context_course::instance($courseid);
-if( !has_capability('block/exaquest:addquestiontoexam', $context) && !has_capability('block/exaquest:viewquestionbanktab', $context) ) {
+if (!has_capability('block/exaquest:addquestiontoexam', $context) && !has_capability('block/exaquest:viewquestionbanktab', $context)) {
     throw new moodle_exception('no_permission, require addquestiontoexam or viewquestionbanktab capability');
 }
 require_sesskey();
@@ -183,7 +183,7 @@ switch ($action) {
         // code for removing from quiz is from edit_rest.php from mod/quiz
         // only try to remove from quiz if it is already in quiz .... if the id is not 0 (id is the slotid of the question in the quiz)
         $id = optional_param('id', 0, PARAM_INT);
-        if ($id != -1){
+        if ($id != -1) {
             $quizobj = quiz_settings::create($quizid);
             $quiz = $quizobj->get_quiz();
             $structure = $quizobj->get_structure();
@@ -207,7 +207,7 @@ switch ($action) {
             $result = ['newsummarks' => quiz_format_grade($quiz, $quiz->sumgrades),
                 'deleted' => true, 'newnumquestions' => $structure->get_question_count()];
         }
-        // if removed from the quiz, or also if not removed: always send it to revise
+    // if removed from the quiz, or also if not removed: always send it to revise
     case ('revise_question'):
         //$DB->record_exists(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, array("questionbankentryid" => $questionbankentryid));
         $data = new stdClass;

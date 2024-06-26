@@ -37,68 +37,77 @@ class add_to_quiz extends column_base {
         return 'addtoquiz';
     }
 
-    protected function display_content($question, $rowclasses) {
+    protected function display_content($question, $rowclasses): void {
+        echo static::get_content_static($question);
+    }
 
+    public static function get_content_static($question): string {
         $quizid = optional_param('quizid', null, PARAM_INT);
 
         global $USER, $DB, $COURSE, $PAGE;
-        $output = $PAGE->get_renderer('block_exaquest');
         $questioncreator = new \stdClass();
         $questioncreator->firstname = $question->creatorfirstname;
         $questioncreator->lastname = $question->creatorlastname;
         $questioncreator->id = $question->createdby;
-        $questioncreators = array($questioncreator);#
+
+        $quizslotid = $DB->get_field_sql("SELECT qs.id
+            FROM {question_references} qr
+            JOIN {quiz_slots} qs ON qr.itemid = qs.id
+            WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?",
+            array($quizid, $question->questionbankentryid));
+
+        ob_start();
 
         //check if already in the quiz
-        if (!$DB->record_exists_sql("SELECT *
-                                    FROM {question_references} qr
-                                         JOIN {quiz_slots} qs ON qr.itemid = qs.id
-                                   WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?",
-            array($quizid, $question->questionbankentryid))) {
-            echo '<button href="#" class="addquestion' . $question->questionbankentryid .
+        if (!$quizslotid) {
+            echo '<button href="#" class="exaquest-changequestionstatus addquestion' . $question->questionbankentryid .
                 ' btn btn-primary" role="button" value="addquestion"> ' . get_string('add_to_quiz', 'block_exaquest') .
                 '</button>';
-        }
 
-        ?>
+            // TODO: remove the script below
+            // the script is OLD code, which can be removed after everything is changed to table_sql!!!
+            ?>
 
-        <script type="text/javascript">
-            // redirects event to ajax.php
-            $(document).ready(function () {
-                $(".addquestion<?php echo $question->questionbankentryid; ?>").click(function (e) {
-                    var data = {
-                        action: $(this).val(),
-                        questionbankentryid: <?php echo $question->questionbankentryid; ?>,
-                        questionid: <?php echo $question->id; ?>,
-                        courseid: <?php echo $COURSE->id; ?>,
-                        quizid: <?php echo $quizid; ?>,
-                        sesskey: "<?php echo sessKey(); ?>"
-                    };
-                    e.preventDefault();
+            <script type="text/javascript">
+                // redirects event to ajax.php
+                $(document).ready(function () {
+                    $(".addquestion<?php echo $question->questionbankentryid; ?>").click(function (e) {
+                        var data = {
+                            action: $(this).val(),
+                            questionbankentryid: <?php echo $question->questionbankentryid; ?>,
+                            questionid: <?php echo $question->id; ?>,
+                            courseid: <?php echo $COURSE->id; ?>,
+                            quizid: <?php echo $quizid; ?>,
+                            sesskey: "<?php echo sessKey(); ?>"
+                        };
+                        e.preventDefault();
 
-                    // TODO: remove the button.
-                    // TODO: DO NOT RELOAD THE PAGE.
+                        // TODO: remove the button.
+                        // TODO: DO NOT RELOAD THE PAGE.
 
-                    var ajax = $.ajax({
-                        method: "POST",
-                        url: "ajax.php",
-                        data: data
-                    }).done(function (ret) {
-                        console.log(data.action, 'ret', ret);
-                        location.reload();
-                    }).fail(function (ret) {
-                        var errorMsg = '';
-                        if (ret.responseText[0] == '<') {
-                            // html
-                            errorMsg = $(ret.responseText).find('.errormessage').text();
-                        }
-                        console.log("Error in action '" + data.action + "'", errorMsg, 'ret', ret);
+                        var ajax = $.ajax({
+                            method: "POST",
+                            url: "ajax.php",
+                            data: data
+                        }).done(function (ret) {
+                            console.log(data.action, 'ret', ret);
+                            location.reload();
+                        }).fail(function (ret) {
+                            var errorMsg = '';
+                            if (ret.responseText[0] == '<') {
+                                // html
+                                errorMsg = $(ret.responseText).find('.errormessage').text();
+                            }
+                            console.log("Error in action '" + data.action + "'", errorMsg, 'ret', ret);
+                        });
                     });
                 });
-            });
 
-        </script>
-        <?php
+            </script>
+            <?php
+        }
+
+        return ob_get_clean();
     }
 
     public function get_extra_joins(): array {

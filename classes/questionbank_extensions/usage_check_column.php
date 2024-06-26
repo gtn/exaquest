@@ -38,11 +38,16 @@ class usage_check_column extends column_base {
         return 'usagecheck';
     }
 
-    protected function display_content($question, $rowclasses) {
+    protected function display_content($question, $rowclasses): void {
+        echo static::get_content_static($question);
+    }
 
+    public static function get_content_static($question): string {
         $quizid = optional_param('quizid', null, PARAM_INT);
 
         global $USER, $DB, $COURSE, $PAGE;
+
+        ob_start();
 
         //check if already in the quiz
         if ($DB->record_exists_sql("SELECT *
@@ -77,6 +82,6 @@ class usage_check_column extends column_base {
 
         }
 
-
+        return ob_get_clean();
     }
 }

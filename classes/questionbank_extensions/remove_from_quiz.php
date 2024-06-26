@@ -37,33 +37,33 @@ class remove_from_quiz extends column_base {
         return 'removefromquiz';
     }
 
-    protected function display_content($question, $rowclasses) {
+    protected function display_content($question, $rowclasses): void {
+        echo static::get_content_static($question);
+    }
 
+    public static function get_content_static($question): string {
         $quizid = optional_param('quizid', null, PARAM_INT);
 
-        global $USER, $DB, $COURSE, $PAGE;
-        //echo '<div class="container"><div class="row"><div class="col-md-12 text-right">';
-        $output = $PAGE->get_renderer('block_exaquest');
+        global $DB, $COURSE;
 
         $url = new \moodle_url('/mod/quiz/edit_rest.php');
         $quizslotid = $DB->get_field_sql("SELECT qs.id
-                                              FROM {question_references} qr
-                                              JOIN {quiz_slots} qs ON qr.itemid = qs.id
-                                              WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?",
+            FROM {question_references} qr
+            JOIN {quiz_slots} qs ON qr.itemid = qs.id
+            WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?",
             array($quizid, $question->questionbankentryid));
 
+        ob_start();
+
         //check if already in the quiz
-        if ($DB->record_exists_sql("SELECT *
-                                    FROM {question_references} qr
-                                         JOIN {quiz_slots} qs ON qr.itemid = qs.id
-                                   WHERE qr.component='mod_quiz' AND qr.questionarea = 'slot' AND qs.quizid = ? AND qr.questionbankentryid = ?",
-            array($quizid, $question->questionbankentryid))) {
-            echo '<button href="#" id="removequestion' . $question->questionbankentryid . '" class="removequestion' .
-                $question->questionbankentryid . ' btn btn-primary" type="button" value="removequestion"> ' .
+        if ($quizslotid) {
+            echo '<button href="#" id="removequestion' . $question->questionbankentryid . '" class="exaquest-changequestionstatus removequestion' .
+                $question->questionbankentryid . ' btn btn-primary" type="button" value="removequestion" data-quizslotid="' . $quizslotid . '"> ' .
                 get_string('remove_from_quiz', 'block_exaquest') . '</button>';
 
+            // TODO: remove the script below
+            // the script is OLD code, which can be removed after everything is changed to table_sql!!!
             ?>
-
             <script type="text/javascript">
                 $(document).ready(function () {
                     $("#removequestion<?php echo $question->questionbankentryid; ?>").click(function (e) {
@@ -97,8 +97,9 @@ class remove_from_quiz extends column_base {
 
             </script>
             <?php
-
         }
+
+        return ob_get_clean();
     }
 
     public function get_extra_joins(): array {
