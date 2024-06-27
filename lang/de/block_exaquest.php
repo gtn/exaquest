@@ -478,6 +478,6 @@ $string['difficultyavg'] = 'Durchschn. Schwierigkeit (p) * in Prozent';
 $string['selectnessavg'] = 'Durchschn. Trennschärfe (r) * in Prozent';
 
 $string['send'] = 'Absenden';
-$string['times_used_last_on'] = 'mal benutzt, zuletzt verwendet am';
+$string['times_used_last_on'] = ' mal benutzt, zuletzt verwendet am';
 $string['already_used_in_this_exam'] = 'Bereits in dieser Prüfung verwendet';
 $string['not_used'] = 'Noch nie verwendet';

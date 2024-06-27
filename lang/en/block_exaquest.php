@@ -472,7 +472,7 @@ $string['difficultyavg'] = 'Avg. Difficulty (p) * in percent';
 $string['selectnessavg'] = 'Avg. Selectiveness (r) * in percent';
 
 $string['send'] = 'Send';
-$string['times_used_last_on'] = 'times used, last on';
+$string['times_used_last_on'] = ' times used, last on';
 $string['already_used_in_this_exam'] = 'Already used in this exam';
 $string['not_used'] = 'Not used';
 

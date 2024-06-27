@@ -2106,7 +2106,7 @@ function block_exaquest_exams_by_status($courseid = null, $status = BLOCK_EXAQUE
     global $DB, $USER;
 
     if ($courseid) {
-        $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid, quizstatus.creatorid as creatorid
+        $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid, quizstatus.creatorid as creatorid, cm.course as courseid
 			FROM {" . BLOCK_EXAQUEST_DB_QUIZSTATUS . "} quizstatus
 			JOIN {quiz} q on q.id = quizstatus.quizid
 			JOIN {course_modules} cm on cm.instance = q.id
@@ -2130,7 +2130,7 @@ function block_exaquest_exams_by_status($courseid = null, $status = BLOCK_EXAQUE
         $quizzes = $DB->get_records_sql($sql,
             array("status" => $status, "courseid" => $courseid));
     } else {
-        $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid, q.timeclose as timeclose, quizstatus.creatorid as creatorid
+        $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid, q.timeclose as timeclose, q.timeopen as timeopen, quizstatus.creatorid as creatorid, cm.course as courseid
 			FROM {" . BLOCK_EXAQUEST_DB_QUIZSTATUS . "} quizstatus
 			JOIN {quiz} q on q.id = quizstatus.quizid
 			JOIN {course_modules} cm on cm.instance = q.id
@@ -2352,11 +2352,80 @@ function block_exaquest_get_pruefungskoodrination_by_courseid($courseid) {
     return get_enrolled_users($context, 'block/exaquest:pruefungskoordination', 0, 'u.*', null, 0, 0, true);
 }
 
+
+
+/*
+ * TODO:
+ * send out notifications 4, 3, and 2 weeks before exam
+ * send notifications to everyone who is assigned an has not marked as done
+ * send notifications to PK and FP if there are less questions than needed
+ *
+ * Also send out all other daily notifications (open todos, etc)
+ */
 function block_exaquest_create_daily_notifications() {
     global $USER;
 
-    $users = block_exaquest_get_all_exaquest_users();
 
+    // /////////////////
+    // /// EXAM REMINDER NOTIFICATIONS IN PROGRESS
+    // // get all courses with exams that are not yet filled
+    // $exams = block_exaquest_exams_by_status(null, BLOCK_EXAQUEST_QUIZSTATUS_NEW);
+    //
+    // foreach ($exams as $exam) {
+    //     // todo: check if the exam is in the future and how far in the future ( 4 weeks, 3 weeks or 2 weeks)
+    //     // get the time of the exam
+    //     $time_in_two_weeks = time() + 2*7*3600*24;
+    //     $time_in_three_weeks = time() + 3*7*3600*24;
+    //     $time_in_four_weeks = time() + 4*7*3600*24;
+    //     // if the timeopen is smaller than $time_in_two_weeks but larger than $time_in_two_weeks
+    //     // this is to prevent sending out the notification multiple times. It only sends out exactly on the day two weeks before
+    //
+    //
+    //     // get all users that are assigned with BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS
+    //     $assigned_users = block_exaquest_get_assigned_persons_by_quizid_and_assigntype($exam->quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
+    //     // for every $user in $assigned_users where done = 0, send a notification
+    //     foreach ($assigned_users as $user) {
+    //         if ($exam->timeopen < $time_in_two_weeks) {
+    //             // check if this notification has already been sent out
+    //
+    //             // // only create a message, when the todos count differs from the message of the previous day. careful: if it is the first notification --> null problems
+    //             // // check if there exist a notifications with the same eventtype (dailytodos) and the same userid get the most current one and compare the content
+    //             // // if the content is the same, don't send it again. if there is not notifaction or the content is not the same --> send it
+    //             // // content = message
+    //             // // get the notifcations with eventtype="dailtytodos" and userid=$user->id
+    //             $notifications = block_exaquest_get_notifications_by_eventtype_userid_fullmessage("fillexamreminder", $user->id, $full);
+    //             if ($notifications) {
+    //                 $notification = reset($notifications); // get the first element of the array
+    //                 if ($notification->fullmessage == $message) {
+    //                     // do not send the notification again
+    //                     continue;
+    //                 }
+    //             }
+    //             // send out notification 2 weeks before exam
+    //             $message = get_string('fill_exam_reminder_two_weeks', 'block_exaquest', $messageobject); // TODO create the strings
+    //         } else if ($exam->timeopen < $time_in_three_weeks) {
+    //             // send out notification 3 weeks before exam
+    //             $message = get_string('fill_exam_reminder_three_weeks', 'block_exaquest', $messageobject);
+    //         } else if ($exam->timeopen < $time_in_four_weeks) {
+    //             // send out notification 4 weeks before exam
+    //             $message = get_string('fill_exam_reminder_four_weeks', 'block_exaquest', $messageobject);
+    //         }
+    //         // TODO: If there is an exam in the next 2 weeks, or below, e.g. in 5 days: Create the notification if it does not exist yet
+    //         // use e.g. customdata in the notification to identify this.
+    //         // this makes sure, that if the cronjob for some reason is not run for a day, the notification is still sent out the next day
+    //
+    //         $messageobject = new stdClass();
+    //         $messageobject->fullname = $exam->name;
+    //         $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $exam->courseid]);
+    //         $messageobject->url = $messageobject->url->raw_out(false);
+    //         $subject = get_string('fill_exam_reminder_subject', 'block_exaquest', $messageobject);
+    //         block_exaquest_send_moodle_notification("fillexamreminder", $USER->id, $user, $subject, $message,
+    //             "fillexamreminder", $messageobject->url);
+    //     }
+    // }
+    // ///////////
+
+    $users = block_exaquest_get_all_exaquest_users();
     foreach ($users as $user) {
         // get the todocount and create the todos notification
         $courses = block_exaquest_get_relevant_courses_for_user($user->id);
@@ -2448,6 +2517,19 @@ function block_exaquest_get_notifications_by_eventtype_and_userid($eventtype, $u
     global $DB;
     $notifications = $DB->get_records('notifications',
         array('eventtype' => $eventtype, 'useridto' => $useridto), 'timecreated DESC');
+    return $notifications;
+}
+
+/**
+ * @param $eventtype
+ * @param $useridto
+ * @return notifications with the given eventtype and userid ordered by timecreated (element with highest timecreated first /
+ *     newest notification first)
+ */
+function block_exaquest_get_notifications_by_eventtype_userid_fullmessage($eventtype, $useridto, $fullmessage) {
+    global $DB;
+    $notifications = $DB->get_records('notifications',
+        array('eventtype' => $eventtype, 'useridto' => $useridto, 'fullmessage' => $fullmessage), 'timecreated DESC');
     return $notifications;
 }
 
@@ -2544,6 +2626,7 @@ function block_exaquest_assign_quiz_addquestions($userfrom, $userto, $comment, $
     block_exaquest_send_moodle_notification("fillexam", $userfrom->id, $userto, $subject, $message,
         "fillexam", $messageobject->url);
 }
+
 
 //function block_exaquest_assign_quiz_fachlich_release_exam($userfrom, $userto, $comment, $quizid, $quizname = null,
 //        $assigntype = null) {
