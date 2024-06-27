@@ -1,4 +1,15 @@
-(function () {
+require(['jquery'], function ($) {
+  // Get the current URL
+  var url = new URL(window.location.href);
+
+  // Get the search parameters
+  var params = new URLSearchParams(url.search);
+
+  // Function to get a specific query parameter by name
+  function getQueryParam(name) {
+    return params.get(name);
+  }
+
   var lastModalQuestionData;
 
   function reloadTable() {
@@ -97,14 +108,14 @@
   $(document).on('click', '.exaquest-changequestionstatus', function (e) {
     e.preventDefault();
 
-    let changestatus_value = e.currentTarget.value;
+    let action = e.currentTarget.value;
     var $modal = $(this).closest('.modal');
 
     var questionData = $(e.target).closest('[data-question]').length
       ? JSON.parse($(e.target).closest('[data-question]').attr('data-question'))
       : lastModalQuestionData;
 
-    if (changestatus_value == 'open_question_for_review' || changestatus_value == 'revise_question') {
+    if (action == 'open_question_for_review' || action == 'revise_question') {
       // TODO: dem user-select eine eigene class geben
       let selecteduser = $modal.find('select').val();
       if (selecteduser == "" || selecteduser && selecteduser.length == 0) {
@@ -113,7 +124,7 @@
       }
     }
 
-    if (changestatus_value == 'revise_question') {
+    if (action == 'revise_question') {
       let textarea_value = $modal.find('.commenttext').val();
       if (textarea_value == '') {
         alert("Es muss ein Kommentar eingegeben werden!");
@@ -127,7 +138,7 @@
 
     var data, url;
 
-    if (changestatus_value == 'removequestion') {
+    if (action == 'removequestion') {
       // spezial url und data für removequestion from quiz
       url = M.cfg.wwwroot + '/mod/quiz/edit_rest.php';
       data = {
@@ -143,7 +154,7 @@
       data = {
         courseid: M.cfg.courseId,
         sesskey: M.cfg.sesskey,
-        action: $(this).val(),
+        action: action,
         questionbankentryid: questionData.questionbankentryid,
         questionid: questionData.questionid,
         quizid: questionData.quizid, // for exam_questionbank.php addquestion to quiz, deletequestion from quiz
@@ -158,6 +169,9 @@
       data: data
     }).done(function () {
       reloadTable();
+      if (action == 'addquestion' || action == 'removequestion') {
+        $(document).trigger('quiz-questions-changed');
+      }
     }).fail(function (ret) {
       showError(ret, data);
     });
@@ -190,6 +204,23 @@
       reloadTable();
     }).fail(function (ret) {
       showError(ret, data);
+    });
+  });
+
+  $(document).on('quiz-questions-changed', function (e) {
+    var data = {
+      courseid: M.cfg.courseId,
+      sesskey: M.cfg.sesskey,
+      action: 'questioncount_per_category',
+      quizid: getQueryParam('quizid'),
+    };
+
+    $.ajax({
+      method: "POST",
+      url: 'ajax.php',
+      data: data
+    }).done(function (ret) {
+      $('#block_exaquest_questioncount_per_category').replaceWith(ret.result.html);
     });
   });
 })();

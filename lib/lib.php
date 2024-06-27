@@ -3213,6 +3213,8 @@ function block_exaquest_render_questioncount_per_category() {
             }
         }
     }
+
+    echo '<div id="block_exaquest_questioncount_per_category">';
     echo $OUTPUT->heading(get_string('questionbank_selected_quiz', 'block_exaquest') . '' . $quizname, 2);
 
     // get the questioncounts from questionqcount table for this quiz
@@ -3238,7 +3240,7 @@ function block_exaquest_render_questioncount_per_category() {
                 </div>';
     echo "<br/>";
     echo $html;
-    echo "<br/>";
+    echo '</div>';
 }
 
 function block_exaquest_render_buttons_for_exam_questionbank() {

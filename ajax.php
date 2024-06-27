@@ -8,8 +8,8 @@ require_once($CFG->dirroot . '/mod/quiz/locallib.php');
 
 use mod_quiz\quiz_settings;
 
-$questionbankentryid = required_param('questionbankentryid', PARAM_INT);
-$questionid = required_param('questionid', PARAM_INT);
+$questionbankentryid = optional_param('questionbankentryid', 0, PARAM_INT);
+$questionid = optional_param('questionid', 0, PARAM_INT);
 $action = required_param('action', PARAM_TEXT);
 $courseid = required_param('courseid', PARAM_INT);
 $users = optional_param('users', null, PARAM_RAW);
@@ -24,6 +24,15 @@ if (!has_capability('block/exaquest:addquestiontoexam', $context) && !has_capabi
     throw new moodle_exception('no_permission, require addquestiontoexam or viewquestionbanktab capability');
 }
 require_sesskey();
+
+function block_exaquest_result_success($result) {
+    header("Content-Type: application/json");
+    echo json_encode([
+        'type' => 'success',
+        'result' => $result]
+    );
+    die();
+}
 
 switch ($action) {
     case ('open_question_for_review'):
@@ -294,6 +303,17 @@ switch ($action) {
         $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
 
         break;
+
+    case 'questioncount_per_category':
+        ob_start();
+        block_exaquest_render_questioncount_per_category();
+        $html = ob_get_clean();
+
+        block_exaquest_result_success(['html' => $html]);
+        break;
+
+    default:
+        throw new \moodle_exception("action {$action} not found");
 }
 
 function realease_question($questionbankentryid) {
