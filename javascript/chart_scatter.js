@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
 				data: [window.chartData[i]],
 				backgroundColor: getRandomElement(window.chartBackgroundColors),
 				pointStyle: getRandomElement(window.pointStyles),
-				pointStyleWidth: 78,
+				pointStyleWidth: 85,
 				//borderColor: getRandomElement(window.chartBackgroundColors),
 				borderWidth: 2,
 				pointRadius: 10,
