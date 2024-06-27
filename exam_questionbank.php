@@ -312,12 +312,13 @@ if (@!$_REQUEST['table_sql']) {
     block_exaquest_render_buttons_for_exam_questionbank();
 
     // print the create_question_button
-    $coursecategorycontextid = $catAndCont[1];
-    $coursecategory = \qbank_managecategories\helper::get_categories_for_contexts($coursecategorycontextid, 'id', false);
-    $coursecategory = array_pop($coursecategory);
-    $coursecategorycontext = \context::instance_by_id($coursecategorycontextid);
-    $canadd = has_capability('moodle/question:add', $coursecategorycontext);
-    $questionbank->create_new_question_form_dashboard($coursecategory, $canadd);
+    // $coursecategorycontextid = $catAndCont[1];
+    // $coursecategory = \qbank_managecategories\helper::get_categories_for_contexts($coursecategorycontextid, 'id', false);
+    // $coursecategory = array_pop($coursecategory);
+    // $coursecategorycontext = \context::instance_by_id($coursecategorycontextid);
+    // $canadd = has_capability('moodle/question:add', $coursecategorycontext);
+    // $questionbank->create_new_question_form_dashboard($coursecategory, $canadd);
+    // Not needed in exam context
 
 
     $questionbank_table->out();

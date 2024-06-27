@@ -1974,6 +1974,7 @@ function block_exaquest_get_courseids() {
  *
  * Returns all course ids where an instance of Exabis question management tool is installed for this user
  * The course has to have an enddate that ends in the last 6 months, or no enddate (be active)
+ * TODO: also return all courses where there is a block because of the category
  */
 function block_exaquest_get_relevant_courses_for_user($userid = null) {
     global $DB, $USER;
@@ -1982,22 +1983,38 @@ function block_exaquest_get_relevant_courses_for_user($userid = null) {
         $userid = $USER->id;
     }
 
-    $instances = $DB->get_records('block_instances', array('blockname' => 'exaquest'));
+    $instances = $DB->get_records('block_instances', array('blockname' => 'exaquest')); // TODO: check out what those instances are
 
     $exaquest_courses = array();
 
     foreach ($instances as $instance) {
+        $courseids = array();
         $context = $DB->get_record('context', array('id' => $instance->parentcontextid, 'contextlevel' => CONTEXT_COURSE));
         if ($context) {
-            if (block_exaquest_is_user_in_course($userid, $context->instanceid)) {
+            $courseids[] = $context->instanceid;
+        } else {
+            // if the coursecategory has the block and the showinsubcontexts is active: get the courses of the category
+            $context = $DB->get_record('context', array('id' => $instance->parentcontextid, 'contextlevel' => CONTEXT_COURSECAT));
+            if ($context) {
+                // get all courses of that coursecategory
+                $courses = $DB->get_records('course', array('category' => $context->instanceid));
+                foreach ($courses as $course) {
+                    $courseids[] = $course->id;
+                }
+            }
+        }
+
+        // for each courseid, check if the user is in this course and if the course is still active or was active in the last 6 months
+        foreach ($courseids as $courseid) {
+            if (block_exaquest_is_user_in_course($userid, $courseid)) {
                 // check if the course is still active or was active in the lase 6 months
-                $course = get_course($context->instanceid);
+                $course = get_course($courseid);
                 if ($course->enddate) {
                     if ($course->enddate > (time() - 15552000)) { // 15552000 is 6 months in seconds
-                        $exaquest_courses[$context->instanceid] = $course;
+                        $exaquest_courses[$courseid] = $course;
                     }
                 } else {
-                    $exaquest_courses[$context->instanceid] = $course;
+                    $exaquest_courses[$courseid] = $course;
                 }
             }
         }
@@ -2722,7 +2739,7 @@ function block_exaquest_assign_quiz_done_to_pk($userfrom, $userto, $comment, $qu
         // create the message
         $messageobject = new stdClass;
 
-        if($quizname == null) {
+        if ($quizname == null) {
             $quizname = $DB->get_record('quiz', array('id' => $quizid))->name;
         }
 
