@@ -14,8 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-use core_question\statistics\responses\analyser;
+global $CFG;
+
 use mod_quiz\local\reports\report_base;
+require_once($CFG->dirroot . '/blocks/exaquest/classes/output/scatter_chart.php');
+require_once($CFG->dirroot . '/blocks/exaquest/classes/output/renderer.php');
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/mod/quiz/report/statistics/statisticslib.php');
@@ -191,12 +194,14 @@ class quiz_exaqueststatistics_report extends report_base {
 		echo '</pre>';**/
 
 		$tcontent = array();
+		$fragename = array();
 		foreach ($options as $key => $option) {
 			foreach ($option as $categoryid => $name) {
 				if ($key == BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH) {
 					[$points,$questionids] = self::block_exaquest_calculate_question_points($questionDetails,$categoryid);
 					[$facilityValue,$discriminationValue] = self::block_exaquest_calculate_avg_index($questionstats->questionstats, $questionids[$categoryid]);
 					$line = array();
+					$fragename[] = $name;
 					$line[] = $name;
 					$line[] = $categoryoptionidcount[$categoryid] ?: 0;
 					$line[] = $facilityValue;
@@ -216,6 +221,69 @@ class quiz_exaqueststatistics_report extends report_base {
 		$table->data  = $tcontent;
 		$table->tablealign  = 'center';
 		echo html_writer::table($table);
+
+		foreach ($tcontent as $content){
+			$quiz1_scores[] = str_replace(',','.',str_replace(' %','', $content[2]));
+			$quiz2_scores[] = str_replace(',','.',str_replace(' %','', $content[3]));
+		}
+
+		// Add data to the series
+		$data = [];
+		foreach ($quiz1_scores as $index => $score) {
+			$data[] = ['x' => $score, 'y' => $quiz2_scores[$index]];
+		}
+
+		$chartLabel = '∅ Trennschärfe / ∅ Schwierigkeit';
+		$chartLabels = $fragename;
+
+		$pointStyles = ["circle","cross","crossRot","rect","rectRounded","rectRot","triangle"];
+		$chartBackgroundColors = ["lightgreen", "aqua", "pink", "yellow","red","blue","green","voilet"];
+		echo html_writer::tag('h4', $chartLabel ,array('style'=>'text-align:center'));
+
+		$chart = html_writer::empty_tag('canvas',array('id'=>'scatterChart'));
+		$chartimage = html_writer::tag('div', $chart ,array('class'=>'chart-image'));
+		$chartarea = html_writer::tag('div', $chartimage ,array('class'=>'chart-area'));
+		$graph = html_writer::tag('div', $chartarea ,array('class'=>'graph'));
+		echo $graph;
+		echo'
+			<script>
+				window.chartLabel = "'.$chartLabel.'";
+				window.chartData = ' . json_encode($data) . ';
+				window.chartLabels = ' .json_encode($chartLabels).';
+				window.pointStyles = ' .json_encode($pointStyles).';
+				window.chartBackgroundColors = ' .json_encode($chartBackgroundColors).';
+			</script>
+		';
+
+		$heading = get_string('listofquestion', 'block_exaquest');
+		echo $OUTPUT->heading($heading);
+
+		$qcontent = array();
+		foreach ($questionstats->questionstats as $key => $questionstat) {
+			$line = array();
+			$line[] = $key;
+			$line[] = $questionstat->question->number;
+			$line[] = question_bank::get_qtype_name($questionstat->question->qtype);
+			$line[] = $questionstat->question->name;
+			$line[] = '';
+			$line[] = '';
+			$line[] = format_float($questionstat->facility*100,2).' %';
+			$line[] = ($questionstat->discriminationindex)?format_float($questionstat->discriminationindex,2).' %':'';
+			$line[] = '';
+
+			$qcontent[] = $line;
+		}
+
+		$qtable = new html_table();
+		$qtable->id = 'question-view';
+		$qtable->head  = array(get_string('questionno', 'block_exaquest'), get_string('questionid', 'block_exaquest'),get_string('questiontype', 'block_exaquest'),get_string('questiontitle', 'block_exaquest') , get_string('questioncategory', 'block_exaquest'),get_string('questiondifficulty', 'block_exaquest'),get_string('questionanalyse', 'block_exaquest'),get_string('discriminationindex', 'block_exaquest'),get_string('questionquality', 'block_exaquest'));
+		$qtable->size  = array('30%', '15%','20%','20%','15%','30%', '15%','20%','20%');
+		$qtable->align = array('left', 'left', 'left', 'left','left', 'left', 'left', 'left', 'left');
+		$qtable->width = '30%';
+		$qtable->data  = $qcontent;
+		$qtable->tablealign  = 'center';
+
+		echo html_writer::table($qtable);
 
         return true;
     }

@@ -470,6 +470,15 @@ $string['questiontype'] = 'Question Type';
 $string['numberofquestion'] = 'Number of Questions';
 $string['difficultyavg'] = 'Avg. Difficulty (p) * in percent';
 $string['selectnessavg'] = 'Avg. Selectiveness (r) * in percent';
+$string['listofquestion'] = 'List of Questions';
+$string['questionno'] = 'Number';
+$string['questionid'] = 'Question ID';
+$string['questiontitle'] = 'Question Title';
+$string['questioncategory'] = 'Question Category';
+$string['questiondifficulty'] = 'Difficulty';
+$string['questionanalyse'] = 'Selectiveness';
+$string['discriminationindex'] = 'Discrimination';
+$string['questionquality'] = 'Question Quality';
 
 $string['send'] = 'Send';
 $string['times_used_last_on'] = ' times used, last on';

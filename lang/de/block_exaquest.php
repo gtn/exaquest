@@ -481,3 +481,13 @@ $string['send'] = 'Absenden';
 $string['times_used_last_on'] = ' mal benutzt, zuletzt verwendet am';
 $string['already_used_in_this_exam'] = 'Bereits in dieser Prüfung verwendet';
 $string['not_used'] = 'Noch nie verwendet';
+
+$string['listofquestion'] = 'Liste der Fragen';
+$string['questionno'] = 'Nummer';
+$string['questionid'] = 'Frage ID';
+$string['questiontitle'] = 'Fragentitle';
+$string['questioncategory'] = 'Fragefach';
+$string['questiondifficulty'] = 'Schwierigkeit(p)';
+$string['questionanalyse'] = 'Trennschärfe (p)';
+$string['discriminationindex'] = 'Diskriminationsindex';
+$string['questionquality'] = 'Fragenqualität';
