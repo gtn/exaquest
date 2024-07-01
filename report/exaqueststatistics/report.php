@@ -17,6 +17,7 @@
 global $CFG;
 
 use mod_quiz\local\reports\report_base;
+use core_question\statistics\responses\analyser;
 require_once($CFG->dirroot . '/blocks/exaquest/classes/output/scatter_chart.php');
 require_once($CFG->dirroot . '/blocks/exaquest/classes/output/renderer.php');
 
