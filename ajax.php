@@ -8,8 +8,8 @@ require_once($CFG->dirroot . '/mod/quiz/locallib.php');
 
 use mod_quiz\quiz_settings;
 
-$questionbankentryid = required_param('questionbankentryid', PARAM_INT);
-$questionid = required_param('questionid', PARAM_INT);
+$questionbankentryid = optional_param('questionbankentryid', 0, PARAM_INT);
+$questionid = optional_param('questionid', 0, PARAM_INT);
 $action = required_param('action', PARAM_TEXT);
 $courseid = required_param('courseid', PARAM_INT);
 $users = optional_param('users', null, PARAM_RAW);
@@ -18,7 +18,21 @@ $commenttext = optional_param('commenttext', null, PARAM_TEXT);
 $quizid = optional_param('quizid', null, PARAM_INT);
 
 require_login($courseid);
-require_capability('block/exaquest:viewquestionbanktab', context_course::instance($courseid));
+// check if the user has the capability of either addquestiontoexam or viewquestionbanktab
+$context = context_course::instance($courseid);
+if (!has_capability('block/exaquest:addquestiontoexam', $context) && !has_capability('block/exaquest:viewquestionbanktab', $context)) {
+    throw new moodle_exception('no_permission, require addquestiontoexam or viewquestionbanktab capability');
+}
+require_sesskey();
+
+function block_exaquest_result_success($result) {
+    header("Content-Type: application/json");
+    echo json_encode([
+        'type' => 'success',
+        'result' => $result]
+    );
+    die();
+}
 
 switch ($action) {
     case ('open_question_for_review'):
@@ -26,7 +40,7 @@ switch ($action) {
 
         // if there is a reviseassign entry ==> delete that, since it is now revised
         $oldstatus =
-                $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'status', array("questionbankentryid" => $questionbankentryid));
+            $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'status', array("questionbankentryid" => $questionbankentryid));
         if ($oldstatus == BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE) {
             $DB->delete_records(BLOCK_EXAQUEST_DB_REVISEASSIGN, ['questionbankentryid' => $questionbankentryid]);
         }
@@ -38,13 +52,13 @@ switch ($action) {
         $data->timestamp = time();
         $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
         $questionname = $DB->get_record('question', array('id' => $questionid))->name;
-        //$catAndCont = get_question_category_and_context_of_course($courseid);
-        $course = get_course($courseid);
-        $coursecategoryid = $course->category;
+        //$catAndCont = get_question_category_and_context_of_course($courseid); // this IS relevant, but it is done in the request_review_function
+        // $course = get_course($courseid);
+        // $coursecategoryid = $course->category;
         if ($users != null) {
             foreach ($users as $user) {
                 block_exaquest_request_review($USER, $user, $commenttext, $questionbankentryid, $questionname,
-                        $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH);
+                    $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH);
             }
         }
         // get the PKs, which are the ones that should be assigned to do the formal review
@@ -52,7 +66,7 @@ switch ($action) {
         if ($formalreviewusers != null) {
             foreach ($formalreviewusers as $user) {
                 block_exaquest_request_review($USER, $user->id, $commenttext, $questionbankentryid, $questionname,
-                        $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FORMAL);
+                    $courseid, BLOCK_EXAQUEST_REVIEWTYPE_FORMAL);
             }
         }
 
@@ -99,7 +113,7 @@ switch ($action) {
         } else {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE;
             $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN,
-                    ['questionbankentryid' => $questionbankentryid, 'reviewtype' => BLOCK_EXAQUEST_REVIEWTYPE_FORMAL]);
+                ['questionbankentryid' => $questionbankentryid, 'reviewtype' => BLOCK_EXAQUEST_REVIEWTYPE_FORMAL]);
         }
         $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
         break;
@@ -135,7 +149,7 @@ switch ($action) {
         } else {
             $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE;
             $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN,
-                    ['questionbankentryid' => $questionbankentryid, 'reviewtype' => BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH]);
+                ['questionbankentryid' => $questionbankentryid, 'reviewtype' => BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH]);
             $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
             break;
         }
@@ -145,6 +159,7 @@ switch ($action) {
     case ('revise_question_from_quiz'):
         $change_status_and_remove_from_quiz = optional_param('change_status_and_remove_from_quiz', false, PARAM_BOOL);
         if (!$change_status_and_remove_from_quiz) {
+            // only send a notification to the PKs, that the question has to be revised
             //$DB->record_exists(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, array("questionbankentryid" => $questionbankentryid));
             if ($commenttext != null) {
                 $args = new stdClass;
@@ -167,37 +182,41 @@ switch ($action) {
                 if ($users != null) {
                     foreach ($users as $user) {
                         block_exaquest_request_revision($USER, $user, $commenttext, $questionbankentryid, $questionname,
-                                $courseid, true, $questionid);
+                            $courseid, true, $questionid);
                     }
                 }
             }
             break;
         }
-        // if not break, then continue to revise_question and also remove the question from the quiz
+        // if no break, then continue to revise_question and also remove the question from the quiz
         // code for removing from quiz is from edit_rest.php from mod/quiz
-        require_sesskey();
+        // only try to remove from quiz if it is already in quiz .... if the id is not 0 (id is the slotid of the question in the quiz)
         $id = optional_param('id', 0, PARAM_INT);
-        $quizobj = quiz_settings::create($quizid);
-        $quiz = $quizobj->get_quiz();
-        $structure = $quizobj->get_structure();
-        $gradecalculator = $quizobj->get_grade_calculator();
-        $modcontext = $quizobj->get_context();
-        require_capability('mod/quiz:manage', $modcontext);
-        if (!$slot = $DB->get_record('quiz_slots', ['quizid' => $quiz->id, 'id' => $id])) {
-            throw new moodle_exception('AJAX commands.php: Bad slot ID ' . $id);
-        }
+        if ($id != -1) {
+            $quizobj = quiz_settings::create($quizid);
+            $quiz = $quizobj->get_quiz();
+            $structure = $quizobj->get_structure();
+            $gradecalculator = $quizobj->get_grade_calculator();
+            $modcontext = $quizobj->get_context();
+            require_capability('mod/quiz:manage', $modcontext);
 
-        if (!$structure->has_use_capability($slot->slot)) {
-            $slotdetail = $structure->get_slot_by_id($slot->id);
-            $context = context::instance_by_id($slotdetail->contextid);
-            throw new required_capability_exception($context,
+            if (!$slot = $DB->get_record('quiz_slots', ['quizid' => $quiz->id, 'id' => $id])) {
+                throw new moodle_exception('AJAX commands.php: Bad slot ID ' . $id);
+            }
+
+            if (!$structure->has_use_capability($slot->slot)) {
+                $slotdetail = $structure->get_slot_by_id($slot->id);
+                $context = context::instance_by_id($slotdetail->contextid);
+                throw new required_capability_exception($context,
                     'moodle/question:useall', 'nopermissions', '');
-        }
-        $structure->remove_slot($slot->slot);
-        quiz_delete_previews($quiz);
-        $gradecalculator->recompute_quiz_sumgrades();
-        $result = ['newsummarks' => quiz_format_grade($quiz, $quiz->sumgrades),
+            }
+            $structure->remove_slot($slot->slot);
+            quiz_delete_previews($quiz); // moodle code also calls this whenever the quiz sumgrades are recomputed
+            $gradecalculator->recompute_quiz_sumgrades();
+            $result = ['newsummarks' => quiz_format_grade($quiz, $quiz->sumgrades),
                 'deleted' => true, 'newnumquestions' => $structure->get_question_count()];
+        }
+    // if removed from the quiz, or also if not removed: always send it to revise
     case ('revise_question'):
         //$DB->record_exists(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, array("questionbankentryid" => $questionbankentryid));
         $data = new stdClass;
@@ -228,16 +247,19 @@ switch ($action) {
             if ($users != null) {
                 foreach ($users as $user) {
                     block_exaquest_request_revision($USER, $user, $commenttext, $questionbankentryid, $questionname,
-                            $courseid);
+                        $courseid);
                 }
             }
         }
+
+        // delete the entry in exaquestreviewassign, since no review can be done, while it is in revise status
+        $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN, ['questionbankentryid' => $questionbankentryid]);
         break;
 
     case ('mark_request_as_done'):
 
         break;
-    case ('addquestion'):#
+    case ('addquestion'):
         //add the quiz question
         $quiz = new stdClass();
         $quiz->id = $quizid;
@@ -281,6 +303,17 @@ switch ($action) {
         $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
 
         break;
+
+    case 'questioncount_per_category':
+        ob_start();
+        block_exaquest_render_questioncount_per_category();
+        $html = ob_get_clean();
+
+        block_exaquest_result_success(['html' => $html]);
+        break;
+
+    default:
+        throw new \moodle_exception("action {$action} not found");
 }
 
 function realease_question($questionbankentryid) {
@@ -291,4 +324,7 @@ function realease_question($questionbankentryid) {
     $data->status = BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED;
     $data->id = $DB->get_field(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, 'id', array("questionbankentryid" => $questionbankentryid));
     $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $data);
+
+    // delete any entry for this questinbankentryid in exaquestreviewassign, since no review has to be done anymore once it is released.
+    $DB->delete_records(BLOCK_EXAQUEST_DB_REVIEWASSIGN, ['questionbankentryid' => $questionbankentryid]);
 }

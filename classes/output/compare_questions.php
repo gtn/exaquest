@@ -62,18 +62,18 @@ class compare_questions implements renderable, templatable {
             "classes" => "exaquest-similarity-settings-btn",
             "attributes" => [
                 "name" => "data-attribute",
-                "value" => "yeah"
+                "value" => "yeah",
             ],
             "params" => [
                 [
                     "name" => "section",
-                    "value" => $settingsSection
+                    "value" => $settingsSection,
                 ],
                 [
                     "name" => "returnurl",
-                    "value" => $return->out_as_local_url(false)
-                ]
-            ]
+                    "value" => $return->out_as_local_url(false),
+                ],
+            ],
         ];
     }
 
@@ -128,7 +128,7 @@ class compare_questions implements renderable, templatable {
             'col_similarity' => get_string("exaquest:similarity_col_similarity", "block_exaquest"),
             'col_timestamp' => get_string("exaquest:similarity_col_timestamp", "block_exaquest"),
             'col_threshold' => get_string("exaquest:similarity_col_threshold", "block_exaquest"),
-            'col_algorithm' => get_string("exaquest:similarity_col_algorithm", "block_exaquest")
+            'col_algorithm' => get_string("exaquest:similarity_col_algorithm", "block_exaquest"),
         ];
         foreach ($this->allSimilarityRecordArr as $similarityRecord) {
             // do not create records for older versions if the user wants to hide them
@@ -164,34 +164,34 @@ class compare_questions implements renderable, templatable {
             "label" => get_string($buttonLabel, 'block_exaquest'),
             "attributes" => [
                 "name" => "data-attribute",
-                "value" => "yeah"
+                "value" => "yeah",
             ],
             "params" => [
                 [
                     "name" => "courseid",
-                    "value" => $courseid
+                    "value" => $courseid,
                 ],
                 [
                     "name" => "action",
-                    "value" => "showSimilarityComparison"
+                    "value" => "showSimilarityComparison",
                 ],
                 [
                     "name" => "substituteid",
-                    "value" => $url->get_param("substituteid")
+                    "value" => $url->get_param("substituteid"),
                 ],
                 [
                     "name" => "hidepreviousq",
-                    "value" => $url->get_param("hidepreviousq")
+                    "value" => $url->get_param("hidepreviousq"),
                 ],
                 [
                     "name" => "sort",
-                    "value" => $url->get_param("sort")
+                    "value" => $url->get_param("sort"),
                 ],
                 [
                     "name" => "category",
-                    "value" => $url->get_param("category")
-                ]
-            ]
+                    "value" => $url->get_param("category"),
+                ],
+            ],
         ];
     }
 
@@ -234,7 +234,7 @@ class compare_questions implements renderable, templatable {
             'edit_q1_button' => $this->createEditQuestionButton($dbSimilarityRecord->question_id1,
                 $this->substituteID($dbSimilarityRecord->question_id1)),
             'edit_q2_button' => $this->createEditQuestionButton($dbSimilarityRecord->question_id2,
-                $this->substituteID($dbSimilarityRecord->question_id2))
+                $this->substituteID($dbSimilarityRecord->question_id2)),
         ];
     }
 
@@ -283,22 +283,22 @@ class compare_questions implements renderable, templatable {
             "classes" => "exaquest-similarity-edit-question-btn",
             "attributes" => [
                 "name" => "data-attribute",
-                "value" => "yeah"
+                "value" => "yeah",
             ],
             "params" => [
                 [
                     "name" => "id",
-                    "value" => $qid
+                    "value" => $qid,
                 ],
                 [
                     "name" => "courseid",
-                    "value" => $this->courseid
+                    "value" => $this->courseid,
                 ],
                 [
                     "name" => "returnurl",
-                    "value" => $this->overview_url->out_as_local_url(false)
-                ]
-            ]
+                    "value" => $this->overview_url->out_as_local_url(false),
+                ],
+            ],
         ];
     }
 

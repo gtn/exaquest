@@ -2,14 +2,15 @@
 // Standard GPL and phpdocs
 namespace block_exaquest\output;
 
+use moodle_url;
 use renderable;
 use renderer_base;
 use stdClass;
 use templatable;
-use moodle_url;
 
 require_once(__DIR__ . '/popup_edit_category.php');
 require_once(__DIR__ . '/popup_delete_category.php');
+
 class category_settings implements renderable, templatable {
     var $questions = null;
     private $capabilities;
@@ -29,8 +30,8 @@ class category_settings implements renderable, templatable {
         // get all categories to display
         $records = $DB->get_records(BLOCK_EXAQUEST_DB_CATEGORIES, array("coursecategoryid" => $COURSE->category, "deleted" => 0), 'categoryname');
         $categories = array();
-        foreach($records as $key => $record){
-                $categories[$record->categorytype][] = $record;
+        foreach ($records as $key => $record) {
+            $categories[$record->categorytype][] = $record;
         }
         $this->categories = $categories;
 
@@ -46,8 +47,8 @@ class category_settings implements renderable, templatable {
         $output = $PAGE->get_renderer('block_exaquest');
 
         $templates = array();
-        foreach($this->categories as $type => $category){
-            foreach($category as $cat){
+        foreach ($this->categories as $type => $category) {
+            foreach ($category as $cat) {
                 $cat->editTemplate = (new popup_edit_category($cat->id, $cat->categoryname))->export_for_template($output);
                 $cat->deleteTemplate = (new popup_delete_category($cat->id))->export_for_template($output);
             }

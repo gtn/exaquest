@@ -5,7 +5,6 @@ namespace block_exaquest\output;
 use moodle_url;
 use renderable;
 use renderer_base;
-use stdClass;
 use templatable;
 
 // not needed since mustache is directly used in other mustache, no specific object is created in php code

@@ -1,9 +1,7 @@
-<!-- using bootstrap modals to do the popups https://getbootstrap.com/docs/4.6/components/modal/ -->
-
 <a class="btn btn-light w-100 d-flex justify-content-between align-items-center" data-toggle="modal"
    data-target="#examsForMeToFillModal">
     <span class="badge-outer text-center">
-        <span class="badge  tododoscounter {{#exams_for_me_to_fill_count}}badge-primary{{/exams_for_me_to_fill_count}}">{{exams_for_me_to_fill_count}}</span>
+        <span id="fill-exam-todoscounter" class="badge  tododoscounter {{#exams_for_me_to_fill_count}}badge-primary{{/exams_for_me_to_fill_count}}">{{exams_for_me_to_fill_count}}</span>
     </span>
     <span class="flex-grow-1"> {{#str}}
         exams_for_me_to_fill, block_exaquest {{/str}}</span>

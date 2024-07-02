@@ -25,7 +25,7 @@ class button_go_to_exam_view implements renderable, templatable {
     public function export_for_template(renderer_base $output) {
         $data = new stdClass();
         $data->go_to_exam_view = new moodle_url('/blocks/exaquest/finished_exam_questionbank.php',
-                array('courseid' => $this->courseid, "category" => $this->catAndCont[0] . ',' . $this->catAndCont[1]));
+            array('courseid' => $this->courseid, "category" => $this->catAndCont[0] . ',' . $this->catAndCont[1]));
         $data->quizid = $this->quizid;
         return $data;
     }

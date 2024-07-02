@@ -36,13 +36,16 @@ $string['request_exams_comment_placeholder'] = 'Which kind of exam is needed? Op
 $string['request_exams_button'] = 'Request';
 
 $string['set_quizquestioncount'] = 'Request';
+$string['exaquest_minimum_required_percentage_per_fragefach'] = 'Minimum % for Fragefach';
 
 $string['mark_as_done'] = 'Mark as done';
+$string['done'] = 'Done';
 $string['mark_selected_as_done_button'] = 'Mark selected requests as done';
 
 $string['assign_addquestions'] = 'Fragenzuweisung anfordern';
 $string['assign_addquestions_label'] = 'Fragenzuweisung anfordern von ...';
 $string['assign_addquestions_comment_placeholder'] = 'Kommentar an die ausgewählten Personen';
+$string['assign_add_questions_button'] = 'Request';
 
 // Messages
 $string['messageprovider:newquestionsrequest'] = 'New questions have been requested';
@@ -96,11 +99,13 @@ $string['daily_released_questions_in_course'] =
 $string['messageprovider:quizfinishedgradingopen'] = 'Prüfung abgeschlossen und Beurteilung abgeschlossen TODO TRANSLATE';
 $string['quiz_finished_grading_open'] = 'Die Prüfung <a href="{$a->url}">{$a->fullname}</a> wurde abgeschlossen und die Beurteilungen wurden vergeben, müssen aber noch begutachtet werden. TODO TRANSLATE';
 $string['quiz_finished_grading_open_subject'] = 'Prüfung {$a->fullname} abgeschlossen aber nicht beurteilt. TODO TRANSLATE';
+$string['quiz_finished_grading_open_comment'] = 'Diese Prüfung ist abgeschlossen, es sind aber noch Fragen zu beurteilen. TODO TRANSLATE';
+
 
 $string['messageprovider:quizfinishedgradingdone'] = 'Prüfung abgeschlossen mit unvollständiger Beurteilung TODO TRANSLATE';
-$string['quiz_finished_grading_done'] = 'Die Prüfung <a href="{$a->url}">{$a->fullname}</a> wrude abgeschlossen und es sind noch Beurteilungen offen. TODO TRANSLATE';
+$string['quiz_finished_grading_done'] = 'Die Prüfung <a href="{$a->url}">{$a->fullname}</a> wurde abgeschlossen und es sind noch Beurteilungen offen. TODO TRANSLATE';
 $string['quiz_finished_grading_done_subject'] = 'Prüfung {$a->fullname} abgeschlossen und beurteilt. TODO TRANSLATE';
-
+$string['quiz_finished_grading_done_comment'] = 'Diese Prüfung ist abgeschlossen, die Fragen sind beurteilt, die Beurteilungskontrolle steht noch aus. TODO TRANSLATE';
 
 // Roles and Capabilities
 
@@ -163,9 +168,9 @@ $string['compare_questions'] = 'Compare questions';
 $string['exams_for_me_to_create'] = 'Exams for me to create';
 $string['exams_for_me_to_fachlich_release'] = 'Exams for me to fachlich release';
 $string['exams_for_me_to_fill'] = 'Exams for me to fill with questions';
-$string['exams_for_me_to_fill_title'] = 'Prüfungen die ich mit Fragen befüllen soll';
-$string['exams_finished_grading_open'] = 'Prüfungen wo die Beurteilung noch aussteht TODO TRANSLATE';
-$string['exams_finished_grading_done'] = 'Prüfungen wo die Beurteilung no überprüft werden muss TODO TRANSLATE';
+$string['exams_for_me_to_fill_title'] = 'Exams for me to fill with questions';
+$string['exams_finished_grading_open'] = 'Exams where grading has to be done';
+$string['exams_finished_grading_done'] = 'Exams where grading has to be checked';
 
 //Questionbank
 
@@ -192,6 +197,7 @@ $string['review'] = 'Review:';
 $string['revise'] = 'Revise:';
 $string['release'] = 'Release:';
 $string['locked_filter'] = 'Locked:';
+$string['imported_questions'] = 'Imported';
 
 $string['open_question_for_review'] = 'Open question for review';
 $string['formal_review_done'] = 'Finish formal review';
@@ -399,29 +405,41 @@ $string['revise_question_from_quiz'] = 'Revise question';
 $string['lock_from_quiz'] = 'Lock';
 
 $string['send_exam_to_review'] = 'Send exam to review';
+$string['force_send_exam_to_review'] = 'Prüfung sofort zur Begutachtung schicken TODO TRANSLATE';
 $string['fachlich_release_exam'] = 'Fachlich release exam';
 $string['assign_check_exam_grading'] = 'Assign exam to check grading';
 $string['assign_check_exam_grading_label'] = 'Assign exam to check grading';
 $string['assign_check_exam_grading_comment_placeholder'] = 'Comment';
 $string['assign_check_exam_grading_button'] = 'Assign';
+$string['assign_kommissionell_check_exam_grading'] = 'Assign exam for kommissionell check grading';
+$string['assign_kommissionell_check_exam_grading_label'] = 'Assign the following fachliche Prüfer';
+$string['assign_kommissionell_check_exam_grading_comment_placeholder'] = 'Comment';
+$string['assign_kommissionell_check_exam_grading_button'] = 'Assign';
+$string['select_students_label'] = 'Anfordern von folgenden Schüler:innen';
 $string['assign_gradeexam'] = 'Assign exam to grade';
 $string['assign_gradeexam_label'] = 'Assign exam to grade';
 $string['select_questions_label'] = 'Select questions';
+$string['select_filter_label'] = 'Select filter:';
 $string['assign_gradeexam_comment_placeholder'] = 'Comment';
 $string['exams_for_me_to_check_grading'] = 'Exams for me to check grading';
 $string['exams_for_me_to_check_grading_title'] = 'Exams for me to check grading';
+$string['kommissionell_exams_for_me_to_check_grading'] = 'Kommissionell exams for me to check grading';
+$string['kommissionell_exams_for_me_to_check_grading_title'] = 'Kommissionell exams for me to check grading';
 $string['exams_for_me_to_grade'] = 'Exams for me to grade';
 $string['exams_for_me_to_grade_title'] = 'Exams for me to grade';
 $string['please_change_exam_grading'] = 'Please change the grading of the exam <a href="{$a->url}">{$a->fullname}</a>. Comment: {$a->requestcomment}... Requested by: {$a->requester}';
 $string['please_change_exam_grading_subject'] = 'Please change the grading of the exam {$a->fullname}';
+$string['please_kommissionell_check_exam_grading'] = 'Bitte überprüfen Sie die Beurteilung der kommissionellen Prüfung <a href="{$a->url}">{$a->fullname}</a>. Kommentar: {$a->requestcomment}... Angefordert von: {$a->requester}';
+$string['please_kommissionell_check_exam_grading_subject'] = 'Bitte überprüfen Sie die Beurteilung der kommissionellen Prüfung {$a->fullname}';
 $string['assign_change_exam_grading'] = 'Request Change of Grading';
 $string['assign_change_exam_grading_label'] = 'Request Change of Grading';
 $string['assign_change_exam_grading_comment_placeholder'] = 'Comment';
 $string['assign_change_exam_grading_button'] = 'Request';
 $string['exams_for_me_to_change_grading'] = 'Exams for me to change grading';
 $string['exams_for_me_to_change_grading_title'] = 'Exams for me to change grading';
+$string['selected_student'] = 'Selected student';
 
-$string['exams_for_me_to_fachlich_release_title'] = 'TODO: create exams_for_me_to_fachlich_release_title TODO TRANSLATE';
+$string['exams_for_me_to_fachlich_release_title'] = 'Exams to fachlich release';
 
 # popuptexts:
 $string['already_requested_from'] = 'Already requested from:';
@@ -437,6 +455,16 @@ $string['statisticspoints'] = 'Points';
 $string['statisticsgrade'] = 'Grade';
 $string['numericaldist'] = 'Numerical Distribution';
 $string['percentagedist'] = 'Percentag Distribution';
+
+$string['go_to_exam_report_overview'] = 'Zum Prüfungsbericht TODO TRANSLATE';
+$string['go_to_exam_report_grading'] = 'Zur Prüfungsbeurteilung TODO TRANSLATE';
+$string['send_exam_to_revise'] = 'Prüfung zur Überarbeitung zurückschicken TODO TRANSLATE';
+
+$string['points_per_help'] = 'This is the number of points per category. Please specify the points carefully.';
+$string['minimum_percentage_help'] = 'Geben Sie die Bestehensgrenze für dieses Fragefach an, falls es ein Kernfach ist. Wenn es kein Kernfach ist, lassen Sie 0% stehen. TODO TRANSLATE';
+$string['minimum_percentage'] = 'Minimum percentage to pass';
+$string['change_status_and_remove_from_quiz'] = 'Change status of question to "to revise" and remove from quiz';
+
 $string['questionstatisticsheader'] = 'Distribution of question subjects';
 $string['questiontype'] = 'Question Type';
 $string['numberofquestion'] = 'Number of Questions';
@@ -451,3 +479,9 @@ $string['questiondifficulty'] = 'Difficulty';
 $string['questionanalyse'] = 'Selectiveness';
 $string['discriminationindex'] = 'Discrimination';
 $string['questionquality'] = 'Question Quality';
+
+$string['send'] = 'Send';
+$string['times_used_last_on'] = ' times used, last on';
+$string['already_used_in_this_exam'] = 'Already used in this exam';
+$string['not_used'] = 'Not used';
+

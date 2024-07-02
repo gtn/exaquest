@@ -4,8 +4,8 @@ namespace block_exaquest\output;
 
 use renderable;
 use renderer_base;
-use templatable;
 use stdClass;
+use templatable;
 
 global $CFG;
 require_once($CFG->dirroot . '/blocks/exaquest/classes/form/autofill_helper_form.php');
@@ -19,18 +19,28 @@ class popup_assign_addquestions implements renderable, templatable {
         $this->assigned_persons = block_exaquest_get_assigned_persons_by_quizid_and_assigntype($quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
 
 
-        $categorys_required_counts = block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid);
+        $categorys_required_counts = block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid, false);
         $categorys_current_counts = block_exaquest_get_category_question_count($quizid);
         $categoryoptionidkeys = array_keys($categorys_required_counts);
         $this->fragefaecher = block_exaquest_get_category_names_by_ids($categoryoptionidkeys, true);
         $this->missingquestionscount = 0;
-        foreach($this->fragefaecher as $key => $option){
+        foreach ($this->fragefaecher as $key => $option) {
             $this->fragefaecher[$key]->requiredquestioncount = $categorys_required_counts[$key]->questioncount;
-            $this->fragefaecher[$key]->currentquestioncount = $categorys_current_counts[$key] ? : 0;
+            $this->fragefaecher[$key]->currentquestioncount = $categorys_current_counts[$key] ?: 0;
             //if($this->fragefaecher[$key]->currentquestioncount < $this->fragefaecher[$key]->requiredquestioncount) {
             //    $this->missingquestionscount += $this->fragefaecher[$key]->requiredquestioncount -
             //            $this->fragefaecher[$key]->currentquestioncount;
             //}
+        }
+
+        // remove the ones that have already been assigned
+        foreach ($this->assigned_persons as $assigned_person) {
+            if (isset($this->pmw[$assigned_person->id])) {
+                unset($this->pmw[$assigned_person->id]);
+            }
+            if (isset($this->fp[$assigned_person->id])) {
+                unset($this->fp[$assigned_person->id]);
+            }
         }
 
 
@@ -72,7 +82,7 @@ class popup_assign_addquestions implements renderable, templatable {
         foreach ($data->fp as $fp) {
             $autocompleteoptions[$fp->id] = $fp->firstname . ' ' . $fp->lastname;
         }
-        $pmw_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, "pmw".$data->quizid, 'popup_assign_addquestions');
+        $pmw_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, "pmw" . $data->quizid, 'popup_assign_addquestions');
         $data->pmw_autocomplete_html = $pmw_autocomplete_html;
 
 

@@ -4,8 +4,8 @@ namespace block_exaquest\output;
 
 use renderable;
 use renderer_base;
-use templatable;
 use stdClass;
+use templatable;
 
 class popup_change_status_warning implements renderable, templatable {
     /** @var string $fragenersteller Part of the data that should be passed to the template. */
@@ -38,12 +38,11 @@ class popup_change_status_warning implements renderable, templatable {
         $data->disabled = "";
         $data->dataToggle = "modal";
         // disable the button if not all categorytypes are assigned
-        if(!block_exaquest_check_if_question_contains_categories($this->questionid)){
+        if (!block_exaquest_check_if_question_contains_categories($this->questionid)) {
             $data->disabled = "disabled";
             $data->dataToggle = "tooltip";
             $data->tooltip = get_string('missing_category_tooltip', 'block_exaquest');
         }
-
 
 
         $data->action = $this->action;

@@ -10,8 +10,18 @@ class block_exaquest extends block_list {
     public function get_content() {
         global $CFG, $COURSE, $PAGE, $DB, $USER;
 
+        $this->content = new stdClass;
+        //$this->content->body = html_writer::tag('div', '', array('id' => 'block_exaquest block list_block mb-3'));
+        $this->content->items = array();
+        $this->content->icons = array();
+        $this->content->footer = '';
+
+        // don't waste time if it is not any of those two layouts. The block will be active in any page in a coursecategory since the user does not want to manually add the block to every course
+        if (!($PAGE->pagelayout == "mydashboard"|| $PAGE->pagelayout == "course")) {
+            return $this->content;
+        }
+
         $context = context_block::instance($this->instance->id);
-        //$context = context_system::instance(); // TODO: system? or block? think of dashboard. for now solved with viewdashboardoutsidecourse cap
 
         // get all courses where exaquest is added as a block:
         $courses = block_exaquest_get_relevant_courses_for_user($USER->id);
@@ -23,19 +33,12 @@ class block_exaquest extends block_list {
             }
         }
         if (has_capability('block/exaquest:view', $context) || $hascapability_in_some_course) {
-            if ($this->content !== null) {
-                return $this->content;
-            }
 
             $PAGE->requires->css('/blocks/exaquest/css/block_exaquest.css', true);
             //$PAGE->requires->jquery();
             //$PAGE->requires->js("/blocks/exaquest/javascript/block_exaquest.js", true);
 
-            $this->content = new stdClass;
-            //$this->content->body = html_writer::tag('div', '', array('id' => 'block_exaquest block list_block mb-3'));
-            $this->content->items = array();
-            $this->content->icons = array();
-            $this->content->footer = '';
+
 
             $previous_coursecat = 0;
             if ($PAGE->pagelayout == "mydashboard") {
@@ -66,7 +69,9 @@ class block_exaquest extends block_list {
                     $combinedmessage = html_writer::tag('div', $combinedmessage, array('class' => 'mb-2'));
                     $this->content->items[] = $combinedmessage;
                 }
-            } else {
+            } else if ($PAGE->pagelayout == "coursecategory") {
+                return $this->content;
+            } else if ($PAGE->pagelayout == "course") { // TODO check for course pageleayout
                 // this is used to get the contexts of the category in the questionbank
                 $catAndCont = get_question_category_and_context_of_course();
                 // this is to get the button for creating a new question
@@ -92,9 +97,9 @@ class block_exaquest extends block_list {
                     $this->content->items[] = html_writer::tag('a', get_string('category_settings', 'block_exaquest'),
                         array('href' => $CFG->wwwroot . '/blocks/exaquest/category_settings.php?courseid=' . $COURSE->id));
                 }
+            } else {
+                // TODO
             }
-        } else {
-            return null;
         }
 
         return $this->content;
@@ -121,7 +126,7 @@ class block_exaquest extends block_list {
         $instanceconfigs = !empty($this->config) ? $this->config : new stdClass();
         $pluginconfigs = get_config('block_exaquest');
 
-        return (object) [
+        return (object)[
             'instance' => $instanceconfigs,
             'plugin' => $pluginconfigs,
         ];

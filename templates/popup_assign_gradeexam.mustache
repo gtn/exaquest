@@ -1,6 +1,6 @@
 <!-- using bootstrap modals to do the popups https://getbootstrap.com/docs/4.6/components/modal/ -->
 
-<button class="btn btn-primary w-100" data-toggle="modal" data-target="#assignGradeExamModal{{quizid}}">
+<button class="btn btn-secondary w-100" data-toggle="modal" data-target="#assignGradeExamModal{{quizid}}">
     {{#str}}assign_gradeexam, block_exaquest {{/str}}
     <!--    <i class="icon fa fa-plus fa-fw "></i>-->
 </button>
@@ -33,8 +33,7 @@
                         {{{ bmw_autocomplete_html }}}
                     </div>
 
-                    <div class="form-group">{{#str}}
-                        select_questions_label, block_exaquest {{/str}}
+                    <div class="form-group">{{#str}} select_questions_label, block_exaquest {{/str}}
                         {{{ questions_autocomplete_html }}}
                     </div>
 
@@ -47,7 +46,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <input type="submit"
-                           value="{{#str}} request_questions_button, block_exaquest {{/str}}"
+                           value="{{#str}} assign_grade_exam_button, block_exaquest {{/str}}"
                            class="btn btn-primary assign_grade_exam_submit">
                 </div>
             </form>

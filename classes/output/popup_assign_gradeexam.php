@@ -4,8 +4,8 @@ namespace block_exaquest\output;
 
 use renderable;
 use renderer_base;
-use templatable;
 use stdClass;
+use templatable;
 
 global $CFG;
 require_once($CFG->dirroot . '/blocks/exaquest/classes/form/autofill_helper_form.php');
@@ -21,6 +21,16 @@ class popup_assign_gradeexam implements renderable, templatable {
         $quiz->id = $quizid;
         $this->significant_questions = quiz_report_get_significant_questions($quiz);
         $this->assigned_persons = block_exaquest_get_assigned_persons_by_quizid_and_assigntype($quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM);
+
+        // remove the bmw and fp that have already been assigned:
+        foreach ($this->assigned_persons as $assigned_person) {
+            if (isset($this->bmw[$assigned_person->id])) {
+                unset($this->bmw[$assigned_person->id]);
+            }
+            if (isset($this->fp[$assigned_person->id])) {
+                unset($this->fp[$assigned_person->id]);
+            }
+        }
     }
 
     /**
@@ -50,13 +60,13 @@ class popup_assign_gradeexam implements renderable, templatable {
             $autocompleteoptions[$fp->id] = $fp->firstname . ' ' . $fp->lastname;
         }
         $bmw_autocomplete_html = $mform->create_autocomplete_multi_select_html($autocompleteoptions, "bmw" . $data->quizid,
-                'popup_assign_gradeexam');
+            'popup_assign_gradeexam');
         $data->bmw_autocomplete_html = $bmw_autocomplete_html;
 
         $significant_questions = $this->significant_questions;
         // get the question names
 
-        // create the bmw autocomplete field with the help of an mform
+        // create the question autocomplete field with the help of an mform
         $mform = new autofill_helper_form($significant_questions);
         // the choosable options need to be an array of strings
         $autocompleteoptions = [];
@@ -64,12 +74,12 @@ class popup_assign_gradeexam implements renderable, templatable {
             $autocompleteoptions[$question->id] = $DB->get_record('question', array('id' => $question->id))->name;
         }
         $questions_autocomplete_html =
-                $mform->create_autocomplete_multi_select_html($autocompleteoptions, "questions" . $data->quizid,
-                        'popup_assign_gradeexam');
+            $mform->create_autocomplete_multi_select_html($autocompleteoptions, "questions" . $data->quizid,
+                'popup_assign_gradeexam');
         $data->questions_autocomplete_html = $questions_autocomplete_html;
 
         $data->action =
-                $PAGE->url->out(false, array('action' => 'assign_gradeexam', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
+            $PAGE->url->out(false, array('action' => 'assign_gradeexam', 'sesskey' => sesskey(), 'courseid' => $COURSE->id));
         $data->sesskey = sesskey();
 
         return $data;

@@ -4,8 +4,8 @@ namespace block_exaquest\output;
 
 use renderable;
 use renderer_base;
-use templatable;
 use stdClass;
+use templatable;
 
 class index_page implements renderable, templatable {
     /** @var string $sometext Some text to show how to pass data to a template. */

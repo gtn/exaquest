@@ -11,7 +11,7 @@
                        COMMENT="questionbankentryid"/>
                 <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="status"/>
                 <FIELD NAME="timestamp" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
-                <FIELD NAME="is_imported" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"
+                <FIELD NAME="is_imported" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" DEFAULT="0"
                        COMMENT="Boolean value, 0 = not imported, 1 = imported"/>
                 <FIELD NAME="reviewed_by_mover" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"
                        COMMENT="Boolean value, 0 = not reviewed by mover, 1 = reviewed by mover. Needed for skipping steps if reviewed by mover (directly release once it is formal reviewed)"/>
@@ -173,8 +173,10 @@
                        COMMENT="the person that created the assignment. 0 if system"/>
                 <FIELD NAME="assigntype" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
                        COMMENT="type of the assignment, e.g. addquestions"/>
-                <FIELD NAME="done" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"
+                <FIELD NAME="done" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"
                        COMMENT="Boolean value, 0 = not done yet, 1 = done (formerly it just got deleted)"/>
+                <FIELD NAME="customdata" TYPE="char" LENGTH="1000" NOTNULL="false" SEQUENCE="false"
+                       COMMENT="Customdata. For example for the 'kommissionelle Prüfung' it stores the studentid"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -213,6 +215,23 @@
                        COMMENT="the id of the related exaquestcategory entry"/>
                 <FIELD NAME="questioncount" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
                        COMMENT="amount of questions for that quiz and exaquestcategory (fragefach)"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="quizid" TYPE="foreign" FIELDS="quizid" REFTABLE="quiz" REFFIELDS="id"/>
+                <KEY NAME="exaquestcategoryid" TYPE="foreign" FIELDS="exaquestcategoryid"
+                     REFTABLE="block_exaquestcategories" REFFIELDS="id"/>
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="block_exaquestquizminpercent"
+               COMMENT="For each quiz and Fragefach there can be a set minimum percentage that is needed for passing the quiz. This is stored in this table.">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="id"/>
+                <FIELD NAME="quizid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="quizid"/>
+                <FIELD NAME="exaquestcategoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="the id of the related exaquestcategory entry"/>
+                <FIELD NAME="percentage" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"
+                       COMMENT="minimum percentage that is needed for passing for that quiz and exaquestcategory (fragefach)"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

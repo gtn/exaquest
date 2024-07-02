@@ -23,7 +23,7 @@ require __DIR__ . '/inc.php';
 global $DB, $CFG, $COURSE, $PAGE, $OUTPUT, $USER;
 
 require_once($CFG->dirroot . '/question/editlib.php');
-require_once(__DIR__ . '/questionbank_extensions/exaquest_view.php');
+require_once($CFG->dirroot . '/blocks/exaquest/classes/questionbank_extensions/exaquest_view.php');
 require_once(__DIR__ . '/similarity_comparison/vendor/autoload.php'); // load similarity comparison library
 require_once(__DIR__ . '/classes/form/similarity_comparison_form.php');
 
@@ -46,17 +46,17 @@ $testMessage = MoodleImporter::test(); // quick and dirty test whether autoload 
 $similarityComparisonSettings =
     [
         "algorithm" => get_config("block_exaquest", "config_similarity_algorithm") ?: JaroWinklerStrategy::class, // required
-        "threshold" => (float) get_config("block_exaquest", "config_similarity_threshold") ?: 0.8, // required
-        "nrOfThreads" => (int) get_config("block_exaquest", "config_similarity_nrofthreads") ?: 1, // optional
-        "jwMinPrefixLength" => (int) get_config("block_exaquest", "config_similarity_jwminprefixlength") ?: 4,
+        "threshold" => (float)get_config("block_exaquest", "config_similarity_threshold") ?: 0.8, // required
+        "nrOfThreads" => (int)get_config("block_exaquest", "config_similarity_nrofthreads") ?: 1, // optional
+        "jwMinPrefixLength" => (int)get_config("block_exaquest", "config_similarity_jwminprefixlength") ?: 4,
         // optional, JaroWinkler parameter
-        "jwPrefixScale" => (float) get_config("block_exaquest", "config_similarity_jwprefixscale") ?: 0.1,
+        "jwPrefixScale" => (float)get_config("block_exaquest", "config_similarity_jwprefixscale") ?: 0.1,
         // optional, JaroWinkler parameter
-        "swgMatchValue" => (float) get_config("block_exaquest", "config_similarity_swgmatchmalue") ?: 1.0,
+        "swgMatchValue" => (float)get_config("block_exaquest", "config_similarity_swgmatchmalue") ?: 1.0,
         // optional, SmithWatermanGotoh parameter
-        "swgMismatchValue" => (float) get_config("block_exaquest", "config_similarity_swgmismatchvalue") ?: -2.0,
+        "swgMismatchValue" => (float)get_config("block_exaquest", "config_similarity_swgmismatchvalue") ?: -2.0,
         // optional, SmithWatermanGotoh parameter
-        "swgGapValue" => (float) get_config("block_exaquest", "config_similarity_swggapvalue") ?: -0.5
+        "swgGapValue" => (float)get_config("block_exaquest", "config_similarity_swggapvalue") ?: -0.5,
         // optional, SmithWatermanGotoh parameter
     ];
 
@@ -69,14 +69,14 @@ $sortBy = optional_param('sort', 'similarityDesc', PARAM_ALPHANUMEXT);
 $substituteIDs = optional_param('substituteid', false, PARAM_BOOL);
 $hidePreviousQ = optional_param('hidepreviousq', false, PARAM_BOOL);
 $examid = optional_param('examid', 0, PARAM_INT);
-if($examid) {
+if ($examid) {
     // get quizname from quizid
     $examname = $DB->get_record('quiz', array('id' => $examid), 'name')->name;
-}else{
+} else {
     $examname = get_string("exaquest:similarity_exam_select_label", "block_exaquest");
 }
 require_login($courseID);
-[$thispageurl, $contexts, $cmid, $cm, $module, $pagevars] = question_edit_setup('questions', '/question/edit.php');
+[$thispageurl, $contexts, $cmid, $cm, $module, $pagevars] = question_edit_setup('questions', '/blocks/exaquest/similarity_comparison/similarity_comparison.php');
 $url = new moodle_url('/blocks/exaquest/similarity_comparison.php', array('courseid' => $courseID, "category" => $catAndCont));
 $PAGE->set_url($url);
 $PAGE->set_heading(get_string('similarity_of_course', 'block_exaquest', $COURSE->fullname));
@@ -168,9 +168,9 @@ function evaluateSimiliarityComparisonFormAction(similarity_comparison_form $mfo
             //$redirectUrl->param($paramname, 'showSimilarityComparison');
             $action = 'showSimilarityComparison';
             //redirect($redirectUrl); // TODO: do we have to redirect? it loses the courseid GET param after form submission, but seems to work nevertheless?
-        //} else if (isset($mdata->computeSimilarityButton)) {
-        //    //$redirectUrl->param($paramname, 'computeSimilarity');
-        //    $action = 'computeSimilarity';
+            //} else if (isset($mdata->computeSimilarityButton)) {
+            //    //$redirectUrl->param($paramname, 'computeSimilarity');
+            //    $action = 'computeSimilarity';
         } else if (isset($mdata->computeSimilarityStoreButton)) {
             //$redirectUrl->param($paramname, 'computeSimilarityStore');
             $action = 'computeSimilarityStore';
@@ -520,7 +520,7 @@ function loadMoodleQuestions(array $categoryList, $examid): array {
                 ON qbe.id = qv.questionbankentryid
               JOIN {question_categories} qc
                 ON qc.id = qbe.questioncategoryid
-              JOIN {block_exaquestquestionstatus} qs 
+              JOIN {block_exaquestquestionstatus} qs
                 ON qbe.id = qs.questionbankentryid
               JOIN {question_references} qr
                 ON qbe.id = qr.questionbankentryid
@@ -550,7 +550,7 @@ function loadMoodleQuestions(array $categoryList, $examid): array {
                 ON qbe.id = qv.questionbankentryid
               JOIN {question_categories} qc
                 ON qc.id = qbe.questioncategoryid
-              JOIN {block_exaquestquestionstatus} qs 
+              JOIN {block_exaquestquestionstatus} qs
                 ON qbe.id = qs.questionbankentryid
               WHERE qs.status = " . BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED . " AND qc.id = :questioncategoryid
               AND qv.version = (SELECT MAX(v.version)
@@ -724,7 +724,7 @@ function calculateStatistics(array $moodleQuestions, array $allSimilarityRecordW
 function filterQuestions(array $moodleQuestions, array $allSimilarityRecordWrappers, bool $similar): array {
     $moodleQuestionsFiltered = array();
     foreach ($allSimilarityRecordWrappers as $qr) {
-        if ((int) $qr->is_similar === (int) $similar
+        if ((int)$qr->is_similar === (int)$similar
             && array_key_exists($qr->question_id1, $moodleQuestions) && array_key_exists($qr->question_id2, $moodleQuestions)) {
             $moodleQuestionsFiltered[$qr->question_id1] = $moodleQuestions[$qr->question_id1];
             $moodleQuestionsFiltered[$qr->question_id2] = $moodleQuestions[$qr->question_id2];

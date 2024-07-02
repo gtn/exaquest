@@ -38,6 +38,7 @@ const BLOCK_EXAQUEST_DB_QUIZASSIGN = 'block_exaquestquizassign';
 const BLOCK_EXAQUEST_DB_CATEGORIES = 'block_exaquestcategories';
 const BLOCK_EXAQUEST_DB_QUIZQCOUNT = 'block_exaquestquizqcount';
 const BLOCK_EXAQUEST_DB_QUIZCOMMENT = 'block_exaquestquizcomment';
+const BLOCK_EXAQUEST_DB_QUIZQMINPERCENTAGE = 'block_exaquestquizminpercent';
 /**
  * Question Status
  */
@@ -83,9 +84,10 @@ const BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING = 6;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERZWEITPRUEFER = 7;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERDRITTPRUEFER = 8;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHANGE_EXAM_GRADING = 9;
-// TODO add quizassigntype for finished exam for the PK
+
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN = 10;
 const BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE = 11;
+const BLOCK_EXAQUEST_QUIZASSIGNTYPE_KOMMISSIONELL_CHECK_EXAM_GRADING = 12;
 
 /**
  * Filter Status
@@ -158,7 +160,7 @@ function block_exaquest_request_question($userfrom, $userto, $comment) {
     $subject = get_string('please_create_new_questions_subject', 'block_exaquest', $messageobject);
 
     block_exaquest_send_moodle_notification("newquestionsrequest", $userfrom, $userto, $subject, $message,
-            "Frageerstellung", $messageobject->url);
+        "Frageerstellung", $messageobject->url);
 }
 
 function block_exaquest_request_exam($userfrom, $userto, $comment) {
@@ -180,13 +182,16 @@ function block_exaquest_request_exam($userfrom, $userto, $comment) {
     $subject = get_string('please_create_new_exams_subject', 'block_exaquest', $messageobject);
 
     block_exaquest_send_moodle_notification("newexamsrequest", $userfrom, $userto, $subject, $message,
-            "Prüfungserstellung", $messageobject->url);
+        "Prüfungserstellung", $messageobject->url);
 }
 
 function block_exaquest_request_review($userfrom, $userto, $comment, $questionbankentryid, $questionname,
-        $courseid,
-        $reviewtype) {
-    global $DB, $COURSE;
+    $courseid,
+    $reviewtype) {
+    global $DB;
+
+    $catAndCont = get_question_category_and_context_of_course($courseid);
+
     // enter data into the exaquest tables
     $assigndata = new stdClass;
     $assigndata->questionbankentryid = $questionbankentryid;
@@ -200,18 +205,22 @@ function block_exaquest_request_review($userfrom, $userto, $comment, $questionba
     $messageobject->fullname = $questionname;
     //$messageobject->url = new moodle_url('/blocks/exaquest/questbank.php', array('courseid' => $courseid, 'category' => $catAndCont[0] . ',' . $catAndCont[1]));
     $messageobject->url = new moodle_url('/blocks/exaquest/questbank.php',
-            array('courseid' => $courseid, 'filterstatus' => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW));
+        array('courseid' => $courseid, 'filterstatus' => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVIEW, 'category' => $catAndCont[0] . ',' . $catAndCont[1]));
+    // like in output/dashboard.php: $data->questions_for_me_to_review_link = ...
     $messageobject->url = $messageobject->url->raw_out(false);
     $messageobject->requestcomment = $comment;
     $message = get_string('please_review_question', 'block_exaquest', $messageobject);
     $subject = get_string('please_review_question_subject', 'block_exaquest', $messageobject);
     block_exaquest_send_moodle_notification("reviewquestion", $userfrom->id, $userto, $subject, $message,
-            "Review", $messageobject->url);
+        "Review", $messageobject->url);
 }
 
 function block_exaquest_request_revision($userfrom, $userto, $comment, $questionbankentryid, $questionname,
-        $courseid, $link_to_released_questions = false, $questionid = 0) {
-    global $DB, $COURSE;
+    $courseid, $link_to_released_questions = false, $questionid = 0) {
+    global $DB;
+
+    $catAndCont = get_question_category_and_context_of_course($courseid);
+
     // enter data into the exaquest tables
     $assigndata = new stdClass;
     $assigndata->questionbankentryid = $questionbankentryid;
@@ -225,18 +234,18 @@ function block_exaquest_request_revision($userfrom, $userto, $comment, $question
     if ($link_to_released_questions) { // if the question status is NOT changed from the reviseassign, link to editquestion
         // e.g. http://localhost/question/bank/editquestion/question.php?returnurl=%2Fblocks%2Fexaquest%2Fquestbank.php%3Fcourseid%3D3&courseid=3&id=1
         $messageobject->url = new moodle_url('/question/bank/editquestion/question.php?',
-                array('courseid' => $courseid, 'id' => $questionid,
-                        'returnurl' => '/blocks/exaquest/dashboard.php?courseid=' . $courseid));
+            array('courseid' => $courseid, 'id' => $questionid,
+                'returnurl' => '/blocks/exaquest/dashboard.php?courseid=' . $courseid, 'category' => $catAndCont[0] . ',' . $catAndCont[1]));
     } else {
         $messageobject->url = new moodle_url('/blocks/exaquest/questbank.php',
-                array('courseid' => $courseid, 'filterstatus' => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE));
+            array('courseid' => $courseid, 'filterstatus' => BLOCK_EXAQUEST_FILTERSTATUS_QUESTIONS_FOR_ME_TO_REVISE, 'category' => $catAndCont[0] . ',' . $catAndCont[1]));
     }
     $messageobject->url = $messageobject->url->raw_out(false);
     $messageobject->requestcomment = $comment;
     $message = get_string('please_revise_question', 'block_exaquest', $messageobject);
     $subject = get_string('please_revise_question_subject', 'block_exaquest', $messageobject);
     block_exaquest_send_moodle_notification("revisequestion", $userfrom->id, $userto, $subject, $message,
-            "Revise", $messageobject->url);
+        "Revise", $messageobject->url);
 }
 
 function block_exaquest_notify_mover_of_finalised_question($userfrom, $questionbankentryid, $questionname, $courseid) {
@@ -244,7 +253,7 @@ function block_exaquest_notify_mover_of_finalised_question($userfrom, $questionb
     $messageobject = new stdClass;
     $messageobject->fullname = $questionname;
     $messageobject->url = new moodle_url('/blocks/exaquest/questbank.php',
-            array('courseid' => $courseid, 'filterstatus' => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE));
+        array('courseid' => $courseid, 'filterstatus' => BLOCK_EXAQUEST_FILTERSTATUS_ALL_QUESTIONS_TO_RELEASE));
     $messageobject->url = $messageobject->url->raw_out(false);
     $message = get_string('please_release_question', 'block_exaquest', $messageobject);
     $subject = get_string('please_release_question_subject', 'block_exaquest', $messageobject);
@@ -252,13 +261,13 @@ function block_exaquest_notify_mover_of_finalised_question($userfrom, $questionb
     $movers = block_exaquest_get_modulverantwortliche_by_courseid($courseid);
     foreach ($movers as $mover) {
         block_exaquest_send_moodle_notification("releasequestion", $userfrom->id, $mover->id, $subject, $message, "Release",
-                $messageobject->url);
+            $messageobject->url);
     }
 
 }
 
 function block_exaquest_send_moodle_notification($notificationtype, $userfrom, $userto, $subject, $message, $context,
-        $contexturl = null, $courseid = 0, $customdata = null, $messageformat = FORMAT_HTML) {
+    $contexturl = null, $courseid = 0, $customdata = null, $messageformat = FORMAT_HTML) {
     global $CFG, $DB;
 
     require_once($CFG->dirroot . '/message/lib.php');
@@ -291,14 +300,16 @@ function block_exaquest_send_moodle_notification($notificationtype, $userfrom, $
  * @param $courseid
  * @return array
  */
-function block_exaquest_get_fragenersteller_by_courseid($courseid) {
+function block_exaquest_get_fragenersteller_by_courseid($courseid, $withlight = true) {
     $context = context_course::instance($courseid);
     $userarray = array();
-    $userarray = array_replace($userarray,
+    if ($withlight) {
+        $userarray = array_replace($userarray,
             get_enrolled_users($context, 'block/exaquest:fragenerstellerlight', 0, 'u.*', null, 0, 0, true));
+    }
 
     $userarray = array_replace($userarray,
-            get_enrolled_users($context, 'block/exaquest:fragenersteller', 0, 'u.*', null, 0, 0, true));
+        get_enrolled_users($context, 'block/exaquest:fragenersteller', 0, 'u.*', null, 0, 0, true));
     return $userarray;
 }
 
@@ -313,7 +324,7 @@ function block_exaquest_get_pk_by_courseid($courseid) {
     $context = context_course::instance($courseid);
     $userarray = array();
     $userarray = array_replace($userarray,
-            get_enrolled_users($context, 'block/exaquest:pruefungskoordination', 0, 'u.*', null, 0, 0, true));
+        get_enrolled_users($context, 'block/exaquest:pruefungskoordination', 0, 'u.*', null, 0, 0, true));
 
     return $userarray;
 }
@@ -327,10 +338,10 @@ function block_exaquest_get_pk_by_courseid($courseid) {
  */
 function block_exaquest_get_pmw_by_courseid($courseid) {
     $context = context_course::instance($courseid);
-    $userarray = array();
-    $userarray = array_merge($userarray,
-            get_enrolled_users($context, 'block/exaquest:pruefungsmitwirkende', 0, 'u.*', null, 0, 0, true));
-    return $userarray;
+    // $userarray = array();
+    // $userarray = array_merge($userarray,
+    //     );
+    return get_enrolled_users($context, 'block/exaquest:pruefungsmitwirkende', 0, 'u.*', null, 0, 0, true);
 }
 
 /**
@@ -342,10 +353,7 @@ function block_exaquest_get_pmw_by_courseid($courseid) {
  */
 function block_exaquest_get_bmw_by_courseid($courseid) {
     $context = context_course::instance($courseid);
-    $userarray = array();
-    $userarray = array_merge($userarray,
-            get_enrolled_users($context, 'block/exaquest:beurteilungsmitwirkende', 0, 'u.*', null, 0, 0, true));
-    return $userarray;
+    return get_enrolled_users($context, 'block/exaquest:beurteilungsmitwirkende', 0, 'u.*', null, 0, 0, true);
 }
 
 /**
@@ -360,29 +368,29 @@ function block_exaquest_get_fachlichepruefer_by_courseid($courseid) {
     return get_enrolled_users($context, 'block/exaquest:fachlicherpruefer', 0, 'u.*', null, 0, 0, true);
 }
 
-/**
- *
- * Returns all fachlichezweitpruefer of this course
- *
- * @param $courseid
- * @return array
- */
-function block_exaquest_get_fachlichezweitpruefer_by_courseid($courseid) {
-    $context = context_course::instance($courseid);
-    return get_enrolled_users($context, 'block/exaquest:fachlichezweitpruefer', 0, 'u.*', null, 0, 0, true);
-}
+// /**
+//  *
+//  * Returns all fachlichezweitpruefer of this course
+//  *
+//  * @param $courseid
+//  * @return array
+//  */
+// function block_exaquest_get_fachlichezweitpruefer_by_courseid($courseid) {
+//     $context = context_course::instance($courseid);
+//     return get_enrolled_users($context, 'block/exaquest:fachlichezweitpruefer', 0, 'u.*', null, 0, 0, true);
+// }
 
-/**
- *
- * Returns all fachlichedrittpruefer of this course
- *
- * @param $courseid
- * @return array
- */
-function block_exaquest_get_fachlichedrittpruefer_by_courseid($courseid) {
-    $context = context_course::instance($courseid);
-    return get_enrolled_users($context, 'block/exaquest:fachlichedrittpruefer', 0, 'u.*', null, 0, 0, true);
-}
+// /**
+//  *
+//  * Returns all fachlichedrittpruefer of this course
+//  *
+//  * @param $courseid
+//  * @return array
+//  */
+// function block_exaquest_get_fachlichedrittpruefer_by_courseid($courseid) {
+//     $context = context_course::instance($courseid);
+//     return get_enrolled_users($context, 'block/exaquest:fachlichedrittpruefer', 0, 'u.*', null, 0, 0, true);
+// }
 
 /**
  *
@@ -408,9 +416,9 @@ function block_exaquest_get_reviewer_by_courseid($courseid) {
     $userarray = array();
     //$userarray = array_merge($userarray, get_enrolled_users($context, 'block/exaquest:modulverantwortlicher'));
     $userarray =
-            array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fachlfragenreviewer', 0, 'u.*', null, 0, 0, true));
+        array_merge($userarray, get_enrolled_users($context, 'block/exaquest:fachlfragenreviewer', 0, 'u.*', null, 0, 0, true));
     $userarray = array_merge($userarray,
-            get_enrolled_users($context, 'block/exaquest:fachlfragenreviewerlight', 0, 'u.*', null, 0, 0, true));
+        get_enrolled_users($context, 'block/exaquest:fachlfragenreviewerlight', 0, 'u.*', null, 0, 0, true));
     //$userarray = array_merge($userarray, get_enrolled_users($context,
     //    'block/exaquest:pruefungskoordination')); // according to 20230112 Feedbackliste. But should they really have the right to review? nope, they should not be here, as told in later feedbackliste 20230323
     $userarray = array_unique($userarray, SORT_REGULAR); // to remove users who have multiple roles
@@ -430,7 +438,7 @@ function block_exaquest_get_questionbankentries_by_questioncategoryid_count($que
 			JOIN {question_bank_entries} qbe ON qs.questionbankentryid = qbe.id
 			WHERE qbe.questioncategoryid = :questioncategoryid
 			AND qs.status != " .
-            BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED; // "all" questions except imported ones that have not been released yet
+        BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED; // "all" questions except imported ones that have not been released yet
 
     // we simply count the exaquestquestionstatus entries for this course, so we do not need to have the category, do not read unneccesary entries in the question_bank_entries etc
 
@@ -454,7 +462,7 @@ function block_exaquest_get_my_questionbankentries_count($questioncategoryid, $u
     }
     $sql = "SELECT qs.id
               FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
-              JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid 
+              JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid
              WHERE qbe.questioncategoryid = :questioncategoryid
              AND qbe.ownerid = :ownerid";
 
@@ -476,14 +484,14 @@ function block_exaquest_get_my_questionbankentries_to_submit_count($questioncate
     }
     $sql = "SELECT qs.id
               FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
-              JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid 
+              JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid
              WHERE qbe.questioncategoryid = :questioncategoryid
              AND qbe.ownerid = :ownerid
              AND qs.status = :newquestion";
 
     $questions = count($DB->get_records_sql($sql,
-            array("questioncategoryid" => $questioncategoryid, "ownerid" => $userid,
-                    "newquestion" => BLOCK_EXAQUEST_QUESTIONSTATUS_NEW)));
+        array("questioncategoryid" => $questioncategoryid, "ownerid" => $userid,
+            "newquestion" => BLOCK_EXAQUEST_QUESTIONSTATUS_NEW)));
 
     return $questions;
 }
@@ -505,10 +513,10 @@ function block_exaquest_get_questionbankentries_to_be_reviewed_count($questionca
 			OR qs.status = :toassess)";
 
     $questions = count($DB->get_records_sql($sql,
-            array("questioncategoryid" => $questioncategoryid,
-                    "fachlichreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE,
-                    "formalreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE,
-                    "toassess" => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS)));
+        array("questioncategoryid" => $questioncategoryid,
+            "fachlichreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE,
+            "formalreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE,
+            "toassess" => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS)));
 
     return $questions;
 
@@ -529,7 +537,7 @@ function block_exaquest_get_questionbankentries_to_be_revised_count($questioncat
 			AND qs.status = :questionstatus";
 
     $questions = count($DB->get_records_sql($sql,
-            array("questioncategoryid" => $questioncategoryid, "questionstatus" => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE)));
+        array("questioncategoryid" => $questioncategoryid, "questionstatus" => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE)));
 
     return $questions;
 
@@ -550,7 +558,7 @@ function block_exaquest_get_questionbankentries_new_count($questioncategoryid) {
 			AND qs.status = :questionstatus";
 
     $questions = count($DB->get_records_sql($sql,
-            array("questioncategoryid" => $questioncategoryid, "questionstatus" => BLOCK_EXAQUEST_QUESTIONSTATUS_NEW)));
+        array("questioncategoryid" => $questioncategoryid, "questionstatus" => BLOCK_EXAQUEST_QUESTIONSTATUS_NEW)));
 
     return $questions;
 
@@ -571,8 +579,8 @@ function block_exaquest_get_questionbankentries_formal_reviewed_count($questionc
 			AND qs.status = :formalreviewdone";
 
     $questions = count($DB->get_records_sql($sql,
-            array("questioncategoryid" => $questioncategoryid,
-                    "formalreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE)));
+        array("questioncategoryid" => $questioncategoryid,
+            "formalreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE)));
 
     return $questions;
 }
@@ -592,8 +600,8 @@ function block_exaquest_get_questionbankentries_fachlich_reviewed_count($questio
 			AND qs.status = :fachlichreviewdone";
 
     $questions = count($DB->get_records_sql($sql,
-            array("questioncategoryid" => $questioncategoryid,
-                    "fachlichreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE)));
+        array("questioncategoryid" => $questioncategoryid,
+            "fachlichreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE)));
 
     return $questions;
 }
@@ -611,7 +619,7 @@ function block_exaquest_get_my_questionbankentries_to_be_reviewed_count($questio
     }
     $sql = "SELECT qs.id
 			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
-			JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid 
+			JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid
 			WHERE qbe.questioncategoryid = :questioncategoryid
 			AND (qs.status = :fachlichreviewdone
 			OR qs.status = :formalreviewdone
@@ -619,10 +627,10 @@ function block_exaquest_get_my_questionbankentries_to_be_reviewed_count($questio
             AND qbe.ownerid = :ownerid";
 
     $questions = count($DB->get_records_sql($sql,
-            array("questioncategoryid" => $questioncategoryid,
-                    "fachlichreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE,
-                    "formalreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE,
-                    "toassess" => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS, "ownerid" => $userid)));
+        array("questioncategoryid" => $questioncategoryid,
+            "fachlichreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE,
+            "formalreviewdone" => BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE,
+            "toassess" => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS, "ownerid" => $userid)));
 
     return $questions;
 }
@@ -642,7 +650,7 @@ function block_exaquest_get_released_questionbankentries_count($questioncategory
 			AND qs.status = :finalised";
 
     $questions = count($DB->get_records_sql($sql,
-            array("questioncategoryid" => $questioncategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED)));
+        array("questioncategoryid" => $questioncategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_RELEASED)));
 
     return $questions;
 }
@@ -665,7 +673,7 @@ function block_exaquest_get_locked_questionbankentries_count($questioncategoryid
 			AND qs.status = :locked";
 
     $questions = count($DB->get_records_sql($sql,
-            array("questioncategoryid" => $questioncategoryid, "locked" => BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED)));
+        array("questioncategoryid" => $questioncategoryid, "locked" => BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED)));
 
     return $questions;
 }
@@ -685,7 +693,7 @@ function block_exaquest_get_released_and_to_review_questionbankentries_count($qu
 			AND qs.status = :finalised";
 
     $questions = count($DB->get_records_sql($sql,
-            array("questioncategoryid" => $questioncategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED)));
+        array("questioncategoryid" => $questioncategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_LOCKED)));
 
     return $questions;
 }
@@ -706,7 +714,7 @@ function block_exaquest_get_finalised_questionbankentries_count($questioncategor
 			AND qs.status = :finalised";
 
     $questions = count($DB->get_records_sql($sql,
-            array("questioncategoryid" => $questioncategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED)));
+        array("questioncategoryid" => $questioncategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED)));
 
     return $questions;
 }
@@ -725,37 +733,41 @@ function block_exaquest_get_my_finalised_questionbankentries_count($questioncate
     }
     $sql = "SELECT qs.id
 			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
-			JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid 
+			JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid
 			WHERE qbe.questioncategoryid = :questioncategoryid
 			AND qs.status = :finalised
 			AND qbe.ownerid = :ownerid";
 
     $questions = count($DB->get_records_sql($sql,
-            array("questioncategoryid" => $questioncategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED,
-                    "ownerid" => $userid)));
+        array("questioncategoryid" => $questioncategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED,
+            "ownerid" => $userid)));
 
     return $questions;
 }
 
 function block_exaquest_get_quizzes_for_me_to_fill_count($userid) {
     return count(block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS,
-            BLOCK_EXAQUEST_QUIZSTATUS_NEW));
+        BLOCK_EXAQUEST_QUIZSTATUS_NEW));
 }
 
 function block_exaquest_get_exams_finished_grading_open_count($userid) {
     return count(block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
-            BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN,
-            BLOCK_EXAQUEST_QUIZSTATUS_FINISHED));
+        BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN,
+        BLOCK_EXAQUEST_QUIZSTATUS_FINISHED));
 }
 
 function block_exaquest_get_exams_finished_grading_done_count($userid) {
     return count(block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
-            BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE,
-            BLOCK_EXAQUEST_QUIZSTATUS_FINISHED));
+        BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE,
+        BLOCK_EXAQUEST_QUIZSTATUS_FINISHED));
 }
 
-function block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, $assigntype, $quizstatus) {
+function block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, $assigntype, $quizstatus, $courseid = 0) {
     global $DB, $USER, $COURSE;
+
+    if ($courseid == 0) {
+        $courseid = $COURSE->id;
+    }
 
     if (!$userid) {
         $userid = $USER->id;
@@ -764,7 +776,7 @@ function block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, $
     $sql = 'SELECT DISTINCT qa.quizid as quizid, q.name as name,  cm.id as coursemoduleid, qa.done
 			FROM {' . BLOCK_EXAQUEST_DB_QUIZASSIGN . '} qa
 			JOIN {' . BLOCK_EXAQUEST_DB_QUIZSTATUS . '} qs on qs.quizid = qa.quizid
-			JOIN {quiz} q on q.id = qa.quizid 
+			JOIN {quiz} q on q.id = qa.quizid
 			JOIN {course_modules} cm on cm.instance = q.id
 			JOIN {modules} m on m.id = cm.module
 			WHERE qa.assigneeid = :userid
@@ -775,7 +787,7 @@ function block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid, $
     // The quiz would not show up in the e.g. new-exams but the assignment would
 
     $quizzes = $DB->get_records_sql($sql,
-            array('userid' => $userid, 'assigntype' => $assigntype, 'quizstatus' => $quizstatus, 'courseid' => $COURSE->id));
+        array('userid' => $userid, 'assigntype' => $assigntype, 'quizstatus' => $quizstatus, 'courseid' => $courseid));
     return $quizzes;
 }
 
@@ -804,7 +816,7 @@ function block_exaquest_get_questions_for_me_to_review_count($questioncategoryid
     //AND (ra.reviewtype = '. BLOCK_EXAQUEST_REVIEWTYPE_FORMAL .' OR ra.reviewtype =  '. BLOCK_EXAQUEST_REVIEWTYPE_FACHLICH .')';
 
     $questions = count($DB->get_records_sql($sql,
-            array('userid' => $userid, 'questioncategoryid' => $questioncategoryid)));
+        array('userid' => $userid, 'questioncategoryid' => $questioncategoryid)));
 
     return $questions;
 }
@@ -849,7 +861,7 @@ function block_exaquest_get_questions_for_me_to_create($coursecategoryid, $useri
 			AND req.coursecategoryid = :coursecategoryid';
 
     $questions = $DB->get_records_sql($sql,
-            array('userid' => $userid, 'coursecategoryid' => $coursecategoryid));
+        array('userid' => $userid, 'coursecategoryid' => $coursecategoryid));
 
     return $questions;
 }
@@ -873,7 +885,7 @@ function block_exaquest_get_exams_for_me_to_create($coursecategoryid, $userid = 
             AND req.coursecategoryid = :coursecategoryid';
 
     $questions = $DB->get_records_sql($sql,
-            array('userid' => $userid, 'coursecategoryid' => $coursecategoryid));
+        array('userid' => $userid, 'coursecategoryid' => $coursecategoryid));
 
     return $questions;
 }
@@ -895,7 +907,7 @@ function block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid, $as
     $sql = 'SELECT qa.*, q.name, qc.comment, cm.id as coursemoduleid
 			FROM {' . BLOCK_EXAQUEST_DB_QUIZASSIGN . '} qa
 			JOIN {quiz} q on q.id = qa.quizid
-			JOIN {course_modules} cm on cm.instance = q.id 
+			JOIN {course_modules} cm on cm.instance = q.id
 			LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZCOMMENT . '} qc on qc.quizid = qa.quizid AND qc.quizassignid = qa.id
 			WHERE qa.assigneeid = :assigneeid
 			AND qa.done = 0
@@ -904,7 +916,10 @@ function block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid, $as
             AND cm.module = (SELECT id FROM {modules} WHERE name = "quiz")'; // to get the coursemoduleid for quizzes... "AND cm.module = 17"
 
     $exams = $DB->get_records_sql($sql,
-            array('assigneeid' => $userid, 'courseid' => $courseid, 'assigntype' => $assigntype));
+        array('assigneeid' => $userid, 'courseid' => $courseid, 'assigntype' => $assigntype));
+
+    // Note: this returns multiple lines if there are multiple comments (the same assignment has been made e.g. twice)
+    // Either the commenting should be changed, or it is fine to simply display the latest comment, which is the case right now
 
     return $exams;
 }
@@ -915,7 +930,7 @@ function block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid, $as
  * @param $courseid
  * @return array
  */
-function block_exaquest_get_assigned_exams_by_assigntype_count($courseid, $userid, $assigntype) {
+function block_exaquest_get_assigned_quizzes_by_assigntype_count($courseid, $userid, $assigntype) {
     return count(block_exaquest_get_assigned_exams_by_assigntype($courseid, $userid, $assigntype));
 }
 
@@ -942,8 +957,8 @@ function block_exaquest_get_questions_for_me_to_revise_count($questioncategoryid
 			AND qbe.questioncategoryid = :questioncategoryid';
 
     $questions =
-            count($DB->get_records_sql($sql, array('reviserid' => $userid, 'status' => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE,
-                    'questioncategoryid' => $questioncategoryid)));
+        count($DB->get_records_sql($sql, array('reviserid' => $userid, 'status' => BLOCK_EXAQUEST_QUESTIONSTATUS_TO_REVISE,
+            'questioncategoryid' => $questioncategoryid)));
 
     return $questions;
 }
@@ -964,14 +979,14 @@ function block_exaquest_get_questions_for_me_to_release_count($questioncategoryi
     $sql = "SELECT qs.id
 			FROM {" . BLOCK_EXAQUEST_DB_QUESTIONSTATUS . "} qs
 			JOIN {" . BLOCK_EXAQUEST_DB_REVIEWASSIGN . "} qra ON qra.questionbankentryid = qs.questionbankentryid
-			JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid 
+			JOIN {question_bank_entries} qbe ON qbe.id = qs.questionbankentryid
 			WHERE qbe.questioncategoryid = :questioncategoryid
 			AND qs.status = :finalised
 			AND qra.reviewerid = :reviewerid";
 
     $questions = count($DB->get_records_sql($sql,
-            array("questioncategoryid" => $questioncategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED,
-                    "reviewerid" => $userid)));
+        array("questioncategoryid" => $questioncategoryid, "finalised" => BLOCK_EXAQUEST_QUESTIONSTATUS_FINALISED,
+            "reviewerid" => $userid)));
 
     return $questions;
 }
@@ -983,16 +998,16 @@ function block_exaquest_set_up_roles() {
     global $DB;
     $context = \context_system::instance();
     $options = array(
-            'shortname' => 0,
-            'name' => 0,
-            'description' => 0,
-            'permissions' => 1,
-            'archetype' => 0,
-            'contextlevels' => 1,
-            'allowassign' => 0,
-            'allowoverride' => 0,
-            'allowswitch' => 0,
-            'allowview' => 0);
+        'shortname' => 0,
+        'name' => 0,
+        'description' => 0,
+        'permissions' => 1,
+        'archetype' => 0,
+        'contextlevels' => 1,
+        'allowassign' => 0,
+        'allowoverride' => 0,
+        'allowswitch' => 0,
+        'allowview' => 0);
 
     //if (!$DB->record_exists('role', ['shortname' => 'testroleauto'])) {
     //    $roleid = create_role('testroleauto', 'testroleauto', 'testroleauto');
@@ -1012,20 +1027,19 @@ function block_exaquest_set_up_roles() {
     //    $roleid = $DB->get_record('role', ['shortname' => 'admintechnpruefungsdurchf'])->id;
     //}
 
-    // is this the MUSSS?
+    // Start with weak archetype (e.g. no archetype) and then add neccecary capabilities
+    // is this the MUSSS? YES
     if (!$DB->record_exists('role', ['shortname' => 'admintechnpruefungsdurchf'])) {
         $roleid = create_role('admin./techn. Prüfungsdurchf.', 'admintechnpruefungsdurchf', '', 'editingteacher');
-        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
-        //$archetype = 0;
+        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype fits for this role, as it is an adminrole
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
-                $options); // overwrites everything that is set in the options. The rest stays.
+            $options); // overwrites everything that is set in the options. The rest stays.
         $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
         $definitiontable->save_changes();
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
-
         // allow setting role at context level "course category"
         set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
@@ -1052,16 +1066,15 @@ function block_exaquest_set_up_roles() {
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungskoordination'])) {
         $roleid = create_role('Prüfungskoordination', 'pruefungskoordination', '', 'editingteacher');
-        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
+        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype fits for this role
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
-                $options); // overwrites everything that is set in the options. The rest stays.
+            $options); // overwrites everything that is set in the options. The rest stays.
         $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
         $definitiontable->save_changes();
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
-
         // allow setting role at context level "course category"
         set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
@@ -1110,23 +1123,29 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:changeowner', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:dofachlichreviewexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:assigncheckexamgrading', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:skipandreleaseexam', CAP_ALLOW, $roleid, $context);
+    //assign_capability('block/exaquest:skipandreleaseexam', CAP_ALLOW, $roleid, $context);
+    //unassign_capability('block/exaquest:skipandreleaseexam', $roleid, $context->id);
     assign_capability('block/exaquest:assigngradeexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:changeexamsgrading', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:forcesendexamtoreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:checkgradingforfp', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:requestquestions', CAP_ALLOW, $roleid, $context);
+    // moodle capabilities:
+    // for managing categories:
+    assign_capability('moodle/category:manage', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsstudmis'])) {
-        $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '', 'editingteacher');
-        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
+        $roleid = create_role('PrüfungsStudMis', 'pruefungsstudmis', '');
+        $archetype = 0; // completely clean, no capabilities
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
-                $options); // overwrites everything that is set in the options. The rest stays.
+            $options); // overwrites everything that is set in the options. The rest stays.
         $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
         $definitiontable->save_changes();
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
-
-        // allow setting role at context level "course category"
+        // allow setting role at context level "course category" and "course"
         set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'pruefungsstudmis'])->id;
@@ -1140,7 +1159,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
+    // unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
@@ -1149,21 +1168,37 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:addquestiontoexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewnewexamscard', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:assigngradeexam', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:createexam', $roleid, $context->id); // accidentally added, should be deleted
+    // unassign_capability('block/exaquest:createexam', $roleid, $context->id); // accidentally added, should be deleted
+    assign_capability('block/exaquest:forcesendexamtoreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:doformalreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewquestionstoreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:editquestiontoreview', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewfinishedexamscard', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:assigncheckexamgrading', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:assigngradeexam', CAP_ALLOW, $roleid, $context);
 
+    // moodle capabilities:
+    assign_capability('moodle/question:viewall', CAP_ALLOW, $roleid, $context); // so they can add questions in the exams tab
+    assign_capability('moodle/question:useall', CAP_ALLOW, $roleid, $context);
+    assign_capability('mod/quiz:manage', CAP_ALLOW, $roleid, $context); // so they can remove questions from exams
+    assign_capability('mod/quiz:view', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/course:manageactivities', CAP_ALLOW, $roleid, $context);
+    assign_capability('mod/quiz:addinstance', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/course:update', CAP_ALLOW, $roleid, $context); // needed to have the "edit" button in the course
+
+    // rework capabilities documentation: start from archetype 0. Almost no rights in exam page needed. Some rights needed for question page.
     if (!$DB->record_exists('role', ['shortname' => 'modulverantwortlicher'])) {
-        $roleid = create_role('Modulverantwortlicher', 'modulverantwortlicher', '', 'editingteacher');
-        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
+        $roleid = create_role('modulverantwortlicher', 'modulverantwortlicher', '');
+        $archetype = 0; // completely clean, no capabilities
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
-                $options); // overwrites everything that is set in the options. The rest stays.
+            $options); // overwrites everything that is set in the options. The rest stays.
         $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
         $definitiontable->save_changes();
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
-
-        // allow setting role at context level "course category"
+        // allow setting role at context level "course category" and "course"
         set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'modulverantwortlicher'])->id;
@@ -1184,7 +1219,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
+    // unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
@@ -1202,29 +1237,52 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:dofachlichreview', CAP_ALLOW, $roleid, $context);
     //Mover should not be able to do this : assign_capability('block/exaquest:doformalreview', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:doformalreview', $roleid, $context->id); // accidentally added, should be deleted
+    // unassign_capability('block/exaquest:doformalreview', $roleid, $context->id); // accidentally added, should be deleted
     assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:assignaddquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:createexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:setquestioncount', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:changeowner', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:skipandreleaseexam', CAP_ALLOW, $roleid, $context);
-    unassign_capability('mod/quiz:addinstance', $roleid, $context->id);
+    assign_capability('block/exaquest:requestquestions', CAP_ALLOW, $roleid, $context);
+    //assign_capability('block/exaquest:skipandreleaseexam', CAP_ALLOW, $roleid, $context);
+    //unassign_capability('mod/quiz:skipandreleaseexam', $roleid, $context->id);
     //unassign_capability('mod/quiz:moodle/course:manageactivities', $roleid, $context->id); // "Prüfungen anlegen und Bearbeiten sollen nur MUSSS, PK und StudMA, nicht MOVER oder andere Rolle können"
 
+    //moodle capabilities:
+    assign_capability('moodle/question:add', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:viewmine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:movemine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:tagmine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:commentmine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:editmine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:viewall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:moveall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:tagall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:commentall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:editall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:usemine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:useall', CAP_ALLOW, $roleid, $context);
+    // for managing categories:
+    assign_capability('moodle/category:manage', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/role:assign', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/role:review', CAP_ALLOW, $roleid, $context);
+
+    // UNASSIGN CAPABILITIES from editinteacher. probably not the way to go, but instead start with archetype = 0
+    //unassign_capability('mod/quiz:addinstance', $roleid, $context->id);
+
     if (!$DB->record_exists('role', ['shortname' => 'fragenersteller'])) {
-        $roleid = create_role('Fragenersteller', 'fragenersteller', 'This user can only create questions and see the dashboard');
-        $archetype = 0;
+        $roleid = create_role('fragenersteller', 'fragenersteller', 'This user can only create questions and see the dashboard');
+        $archetype = 0; // completely clean, no capabilities
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
-                $options); // overwrites everything that is set in the options. The rest stays.
+            $options); // overwrites everything that is set in the options. The rest stays.
         $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
         $definitiontable->save_changes();
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
         // allow setting role at context level "course category" and "course"
-        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'fragenersteller'])->id;
     }
@@ -1255,20 +1313,22 @@ function block_exaquest_set_up_roles() {
     assign_capability('moodle/question:tagall', CAP_ALLOW, $roleid, $context);
     assign_capability('moodle/question:commentall', CAP_ALLOW, $roleid, $context);
     assign_capability('moodle/question:editall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:usemine', CAP_ALLOW, $roleid, $context); // needed for getting the preview of a question when clicking on it
 
     if (!$DB->record_exists('role', ['shortname' => 'fachlfragenreviewer'])) {
-        $roleid = create_role('fachl. Fragenreviewer', 'fachlfragenreviewer', 'This user can only create questions and see the dashboard');
+        $roleid = create_role('fachl. Fragenreviewer', 'fachlfragenreviewer',
+            '');
         $archetype = 0;
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
-                $options); // overwrites everything that is set in the options. The rest stays.
+            $options); // overwrites everything that is set in the options. The rest stays.
         $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
         $definitiontable->save_changes();
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
         // allow setting role at context level "course category" and "course"
-        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
+        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'fachlfragenreviewer'])->id;
     }
@@ -1282,7 +1342,7 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
+    // unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
@@ -1296,25 +1356,25 @@ function block_exaquest_set_up_roles() {
     //assign_capability('moodle/question:tagmine', CAP_ALLOW, $roleid, $context);
     //assign_capability('moodle/question:commentmine', CAP_ALLOW, $roleid, $context);
     //assign_capability('moodle/question:editmine', CAP_ALLOW, $roleid, $context);
-    //assign_capability('moodle/question:viewall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:viewall', CAP_ALLOW, $roleid, $context);
     //assign_capability('moodle/question:moveall', CAP_ALLOW, $roleid, $context);
-    //assign_capability('moodle/question:tagall', CAP_ALLOW, $roleid, $context);
-    //assign_capability('moodle/question:commentall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:tagall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:commentall', CAP_ALLOW, $roleid, $context);
     //assign_capability('moodle/question:editall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:useall', CAP_ALLOW, $roleid, $context);
 
     if (!$DB->record_exists('role', ['shortname' => 'beurteilungsmitwirkende'])) {
-        $roleid = create_role('Beurteilungsmitwirkende', 'beurteilungsmitwirkende', '', 'editingteacher');
-        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
+        $roleid = create_role('beurteilungsmitwirkende', 'beurteilungsmitwirkende', '');
+        $archetype = 0; // completely clean, no capabilities
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
-                $options); // overwrites everything that is set in the options. The rest stays.
+            $options); // overwrites everything that is set in the options. The rest stays.
         $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
         $definitiontable->save_changes();
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
-
-        // allow setting role at context level "course category"
+        // allow setting role at context level "course category" and "course"
         set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'beurteilungsmitwirkende'])->id;
@@ -1325,9 +1385,10 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
+    // unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
+    unassign_capability('block/exaquest:viewquestionbanktab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
 
     assign_capability('block/exaquest:viewfinishedexamscard', CAP_ALLOW, $roleid, $context);
@@ -1337,19 +1398,24 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:gradequestion', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:gradeexam', CAP_ALLOW, $roleid, $context);
 
+    // moodle capabilities:
+    assign_capability('mod/quiz:view', CAP_ALLOW, $roleid, $context);
+    assign_capability('mod/quiz:grade', CAP_ALLOW, $roleid, $context); // so they can see the statistics
+    assign_capability('mod/quiz:viewreports', CAP_ALLOW, $roleid, $context); // so they can see the statistics
+    assign_capability('quiz/statistics:view', CAP_ALLOW, $roleid, $context); // so they can see the statistics
+
     if (!$DB->record_exists('role', ['shortname' => 'fachlicherpruefer'])) {
-        $roleid = create_role('fachlicher Prüfer', 'fachlicherpruefer', '', 'editingteacher');
-        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
+        $roleid = create_role('fachlicher Prüfer', 'fachlicherpruefer', '');
+        $archetype = 0; // completely clean, no capabilities
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
-                $options); // overwrites everything that is set in the options. The rest stays.
-        $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null. This would read the form data if done by the admin in the settings page
+            $options); // overwrites everything that is set in the options. The rest stays.
+        $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
         $definitiontable->save_changes();
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
-
-        // allow setting role at context level "course category"
+        // allow setting role at context level "course category" and "course"
         set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'fachlicherpruefer'])->id;
@@ -1364,9 +1430,13 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
+    // unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
+
+    // assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
+    // unassign_capability('block/exaquest:viewquestionbanktab', $roleid, $context->id); // there is actually no reason for the FP to see it (looking at the original capabilities document and the Prüfungsprozess)
+    // this was added at one point, to allow them to see the questionbank that is used in the exams page to add questions. Has been replaced by a different capability
+
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
@@ -1381,24 +1451,33 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:dofachlichreviewexam', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:checkexamsgrading', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:gradequestion', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:assignaddquestions', $roleid,
-            $context->id); // accidentally added, should be deleted. ONLY allow this for your own exams. Only pk and mover can do it generally
+    // unassign_capability('block/exaquest:assignaddquestions', $roleid,
+    //     $context->id); // accidentally added, should be deleted. ONLY allow this for your own exams. Only pk and mover can do it generally
     // addquestion will be added in the output/exams.php for every exam the FP is FP of and for every PMW that has been assigned.
     assign_capability('block/exaquest:gradeexam', CAP_ALLOW, $roleid, $context);
 
+    // moodle capabilities:
+    assign_capability('moodle/question:viewall', CAP_ALLOW, $roleid, $context); // so they can add questions in the exams tab
+    assign_capability('moodle/question:useall', CAP_ALLOW, $roleid, $context);
+    assign_capability('mod/quiz:manage', CAP_ALLOW, $roleid, $context); // so they can remove questions from exams
+    assign_capability('mod/quiz:view', CAP_ALLOW, $roleid, $context);
+    assign_capability('mod/quiz:grade', CAP_ALLOW, $roleid, $context); // so they can see the statistics
+    assign_capability('mod/quiz:viewreports', CAP_ALLOW, $roleid, $context); // so they can see the statistics
+    assign_capability('quiz/statistics:view', CAP_ALLOW, $roleid, $context); // so they can see the statistics
+    assign_capability('mod/quiz:preview', CAP_ALLOW, $roleid, $context); // so they can see the preview
+
     if (!$DB->record_exists('role', ['shortname' => 'pruefungsmitwirkende'])) {
-        $roleid = create_role('Prüfungsmitwirkende', 'pruefungsmitwirkende', '', 'editingteacher');
-        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
+        $roleid = create_role('Prüfungsmitwirkende', 'pruefungsmitwirkende', '');
+        $archetype = 0; // completely clean, no capabilities
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
-                $options); // overwrites everything that is set in the options. The rest stays.
+            $options); // overwrites everything that is set in the options. The rest stays.
         $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
         $definitiontable->save_changes();
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
-
-        // allow setting role at context level "course category"
+        // allow setting role at context level "course category" and "course"
         set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'pruefungsmitwirkende'])->id;
@@ -1410,71 +1489,81 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
+    // unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
+    unassign_capability('block/exaquest:viewquestionbanktab', $roleid, $context->id); // there is actually no reason for the PMW to see it (looking at the original capabilities document and the Prüfungsprozess)
+    // this was added at one point, to allow them to see the questionbank that is used in the exams page to add questions. Has been replaced by a different capability
+
+
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:assignaddquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewnewexamscard', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:assignaddquestions', $roleid, $context->id); // accidentally added, should be deleted
+    // unassign_capability('block/exaquest:assignaddquestions', $roleid, $context->id); // accidentally added, should be deleted
 
     //assign_capability('block/exaquest:addquestiontoexam', CAP_ALLOW, $roleid, $context);
     //unassign_capability('block/exaquest:createexam', $roleid, $context->id); // accidentally added, should be deleted
 
-    // TODO: is this even a needed role? Or is it actually just "fachlicherpruefer" but assignes as a zweitpruefer to an exam? I guess so...
-    if (!$DB->record_exists('role', ['shortname' => 'fachlicherzweitpruefer'])) {
-        $roleid = create_role('Fachlicher Zweitprüfer', 'fachlicherzweitpruefer', '', 'editingteacher');
-        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
-        $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
-        $definitiontable->force_duplicate($archetype,
-                $options); // overwrites everything that is set in the options. The rest stays.
-        $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
-        $definitiontable->save_changes();
-        $sourcerole = new \stdClass();
-        $sourcerole->id = $archetype;
-        role_cap_duplicate($sourcerole, $roleid);
+    // moodle capabilities:
+    assign_capability('moodle/question:viewall', CAP_ALLOW, $roleid, $context); // so they can add questions in the exams tab
+    assign_capability('moodle/question:useall', CAP_ALLOW, $roleid, $context);
+    assign_capability('mod/quiz:manage', CAP_ALLOW, $roleid, $context); // so they can remove questions from exams
+    assign_capability('mod/quiz:view', CAP_ALLOW, $roleid, $context);
 
-        // allow setting role at context level "course category"
-        set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
-    } else {
-        $roleid = $DB->get_record('role', ['shortname' => 'fachlicherzweitpruefer'])->id;
-    }
-    assign_capability('block/exaquest:fachlicherzweitpruefer', CAP_ALLOW, $roleid, $context);
-    assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
-    //added during development:
-    assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
-    //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
-    assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
 
-    assign_capability('block/exaquest:viewnewexamscard', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewcreatedexamscard', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewreleasedexamscard', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewactiveexamscard', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewfinishedexamscard', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewgradesreleasedexamscard', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:gradeexam', CAP_ALLOW, $roleid, $context);
+    // // is this even a needed role? Or is it actually just "fachlicherpruefer" but assignes as a zweitpruefer to an exam? I guess so...
+    // // just an assignment
+    // if (!$DB->record_exists('role', ['shortname' => 'fachlicherzweitpruefer'])) {
+    //     $roleid = create_role('Fachlicherzweitpruefer', 'fachlicherzweitpruefer', '');
+    //     $archetype = 0; // completely clean, no capabilities
+    //     $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
+    //     $definitiontable->force_duplicate($archetype,
+    //         $options); // overwrites everything that is set in the options. The rest stays.
+    //     $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
+    //     $definitiontable->save_changes();
+    //     $sourcerole = new \stdClass();
+    //     $sourcerole->id = $archetype;
+    //     role_cap_duplicate($sourcerole, $roleid);
+    //     // allow setting role at context level "course category" and "course"
+    //     set_role_contextlevels($roleid, array(CONTEXT_COURSECAT, CONTEXT_COURSE));
+    // } else {
+    //     $roleid = $DB->get_record('role', ['shortname' => 'fachlicherzweitpruefer'])->id;
+    // }
+    // assign_capability('block/exaquest:fachlicherzweitpruefer', CAP_ALLOW, $roleid, $context);
+    // assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
+    // //added during development:
+    // assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
+    // //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
+    // unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
+    // assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
+    //
+    // assign_capability('block/exaquest:viewnewexamscard', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewcreatedexamscard', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewreleasedexamscard', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewactiveexamscard', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewfinishedexamscard', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewgradesreleasedexamscard', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:gradeexam', CAP_ALLOW, $roleid, $context);
 
-    // ---
+    // --- The fragenerstellerlight is like the fragenersteller but with less rights: They cannot see so much of the other questions
     if (!$DB->record_exists('role', ['shortname' => 'fragenerstellerlight'])) {
-        $roleid = create_role('Fragenerstellerlight', 'fragenerstellerlight', '', 'editingteacher');
-        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
+        $roleid = create_role('Fragenerstellerlight', 'fragenerstellerlight', '');
+        $archetype = 0; // completely clean, no capabilities
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
-                $options); // overwrites everything that is set in the options. The rest stays.
+            $options); // overwrites everything that is set in the options. The rest stays.
         $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
         $definitiontable->save_changes();
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
-
-        // allow setting role at context level "course category"
+        // allow setting role at context level "course category" and "course"
         set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'fragenerstellerlight'])->id;
@@ -1495,20 +1584,33 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:viewownquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
+    //moodle capabilities:
+    assign_capability('moodle/question:add', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:viewmine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:movemine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:tagmine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:commentmine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:editmine', CAP_ALLOW, $roleid, $context);
+    // assign_capability('moodle/question:viewall', CAP_ALLOW, $roleid, $context); // this is the difference to fragenersteller
+    // assign_capability('moodle/question:moveall', CAP_ALLOW, $roleid, $context);
+    // assign_capability('moodle/question:tagall', CAP_ALLOW, $roleid, $context);
+    // assign_capability('moodle/question:commentall', CAP_ALLOW, $roleid, $context);
+    // assign_capability('moodle/question:editall', CAP_ALLOW, $roleid, $context);
 
+    // TODO: what is the reviewerlight used for? The only thing in the "FFR: gleich wie FE + Lightversion evtl auch einplanen" But a FFR that can only see their own questions does not make sense
+    // functionality right now: this role only sees questions that should be reviewed. They do not see e.g. released questions
     if (!$DB->record_exists('role', ['shortname' => 'fachlfragenreviewerlight'])) {
-        $roleid = create_role('fachl. Fragenreviewerlight', 'fachlfragenreviewerlight', '', 'editingteacher');
-        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
+        $roleid = create_role('Fachlicher Fragenreviewerlight', 'fachlfragenreviewerlight', '');
+        $archetype = 0; // completely clean, no capabilities
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
-                $options); // overwrites everything that is set in the options. The rest stays.
+            $options); // overwrites everything that is set in the options. The rest stays.
         $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
         $definitiontable->save_changes();
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
-
-        // allow setting role at context level "course category"
+        // allow setting role at context level "course category" and "course"
         set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'fachlfragenreviewerlight'])->id;
@@ -1521,29 +1623,47 @@ function block_exaquest_set_up_roles() {
     assign_capability('enrol/category:synchronised', CAP_ALLOW, $roleid, $context);
     //added during development:
     assign_capability('block/exaquest:viewsimilaritytab', CAP_ALLOW, $roleid, $context);
-    assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
+    // assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
     //assign_capability('block/exaquest:viewcategorytab', CAP_ALLOW, $roleid, $context);
-    unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
+    // unassign_capability('block/exaquest:viewcategorytab', $roleid, $context->id);
     assign_capability('block/exaquest:viewdashboardtab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionbanktab', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewdashboardoutsidecourse', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewownquestions', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:dofachlichreview', CAP_ALLOW, $roleid, $context);
+    //moodle capabilities:
+    //assign_capability('moodle/question:add', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:viewmine', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:movemine', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:tagmine', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:commentmine', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:editmine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:viewall', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:moveall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:tagall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:commentall', CAP_ALLOW, $roleid, $context);
+    //assign_capability('moodle/question:editall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:useall', CAP_ALLOW, $roleid, $context);
 
+    // TODO: what does sekretariat do?
+    // neues Recht: Fragenersteller auszuwählen/ändern bei Fragen → Recht bekommen Rollen: Sekretariat, PK, Prüfungs StudMis, MV
+    // neue Rolle Sekretariat: Rechte von FE + Recht Fragenersteller auszuwählen/ändern + Fragen anfordern + fragen einer Prüfung zuweisen
+    // zB für Sekretariat, das Fragen für Chef/Team eingibt oder Fragenerstellung im Team verteilt/anfordert; und bei Import von exisiterenden Fragen, wenn FE noch definiert
+    // werden muss (zB durch Prüfungs StudMis)
     if (!$DB->record_exists('role', ['shortname' => 'sekretariat'])) {
-        $roleid = create_role('Sekretariat', 'sekretariat', '', 'editingteacher');
-        $archetype = $DB->get_record('role', ['shortname' => 'editingteacher'])->id; // editingteacher archetype
+        $roleid = create_role('Sekretariat', 'sekretariat', '');
+        $archetype = 0; // completely clean, no capabilities
         $definitiontable = new core_role_define_role_table_advanced($context, $roleid); //
         $definitiontable->force_duplicate($archetype,
-                $options); // overwrites everything that is set in the options. The rest stays.
+            $options); // overwrites everything that is set in the options. The rest stays.
         $definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
         $definitiontable->save_changes();
         $sourcerole = new \stdClass();
         $sourcerole->id = $archetype;
         role_cap_duplicate($sourcerole, $roleid);
-
-        // allow setting role at context level "course category"
+        // allow setting role at context level "course category" and "course"
         set_role_contextlevels($roleid, array(CONTEXT_COURSECAT));
     } else {
         $roleid = $DB->get_record('role', ['shortname' => 'sekretariat'])->id;
@@ -1564,6 +1684,28 @@ function block_exaquest_set_up_roles() {
     assign_capability('block/exaquest:exaquestuser', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:viewquestionstorevise', CAP_ALLOW, $roleid, $context);
     assign_capability('block/exaquest:changeowner', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:requestquestions', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewexamstab', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:addquestiontoexam', CAP_ALLOW, $roleid, $context);
+    assign_capability('block/exaquest:viewnewexamscard', CAP_ALLOW, $roleid, $context);
+
+    //moodle capabilities:
+    assign_capability('moodle/question:add', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:viewmine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:movemine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:tagmine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:commentmine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:editmine', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:viewall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:moveall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:tagall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:commentall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:editall', CAP_ALLOW, $roleid, $context);
+    assign_capability('moodle/question:viewall', CAP_ALLOW, $roleid, $context); // so they can add questions in the exams tab
+    assign_capability('moodle/question:useall', CAP_ALLOW, $roleid, $context); // so they can add questions in the exams tab
+    assign_capability('mod/quiz:manage', CAP_ALLOW, $roleid, $context); // so they can remove questions from exams
+    assign_capability('mod/quiz:view', CAP_ALLOW, $roleid, $context); // so they can remove questions from exams
+
 
     //
     //role_assign($roleid, $USER->id, $contextid);
@@ -1587,7 +1729,7 @@ function block_exaquest_set_up_roles() {
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'beurteilungsmitwirkende'])->id;
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'fachlicherpruefer'])->id;
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'pruefungsmitwirkende'])->id;
-    $allowedroles[] = $DB->get_record('role', ['shortname' => 'fachlicherzweitpruefer'])->id;
+    // $allowedroles[] = $DB->get_record('role', ['shortname' => 'fachlicherzweitpruefer'])->id;
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'fragenerstellerlight'])->id;
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'fachlfragenreviewerlight'])->id;
     $allowedroles[] = $DB->get_record('role', ['shortname' => 'sekretariat'])->id;
@@ -1651,6 +1793,9 @@ function block_exaquest_set_up_roles() {
     //$definitiontable->read_submitted_permissions(); // just to not throw a warning because some array is null
     //$definitiontable->allowassign = array(7, 8, 9, 10);
     //$definitiontable->save_changes();
+
+    // REWORK END
+
 }
 
 //function block_exaquest_set_role_allow_assign($roleid, $allowedroles){
@@ -1719,40 +1864,44 @@ function block_exaquest_build_navigation_tabs($context, $courseid) {
     //die;
 
     $rows[] = new tabobject('tab_dashboard',
-            new moodle_url('/blocks/exaquest/dashboard.php', array("courseid" => $courseid)),
-            get_string('dashboard', 'block_exaquest'), null, true);
+        new moodle_url('/blocks/exaquest/dashboard.php', array("courseid" => $courseid)),
+        get_string('dashboard', 'block_exaquest'), null, true);
 
     if (has_capability('block/exaquest:viewquestionbanktab', \context_course::instance($COURSE->id))) {
         $rows[] = new tabobject('tab_get_questions',
-                new moodle_url('/blocks/exaquest/questbank.php',
-                        array("courseid" => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1])),
-                get_string('get_questionbank', 'block_exaquest'), null, true);
+            new moodle_url('/blocks/exaquest/questbank.php',
+                array("courseid" => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1])),
+            get_string('get_questionbank', 'block_exaquest'), null, true);
     }
 
     if (has_capability('block/exaquest:viewsimilaritytab', \context_course::instance($COURSE->id))) {
         $rows[] = new tabobject('tab_similarity_comparison',
-                new moodle_url('/blocks/exaquest/similarity_comparison.php',
-                        array("courseid" => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1])),
-                get_string('similarity', 'block_exaquest'), null, true);
+            new moodle_url('/blocks/exaquest/similarity_comparison.php',
+                array("courseid" => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1])),
+            get_string('similarity', 'block_exaquest'), null, true);
     }
 
     if (has_capability('block/exaquest:viewexamstab', \context_course::instance($COURSE->id))) {
         $rows[] = new tabobject('tab_exams',
-                new moodle_url('/blocks/exaquest/exams.php', array("courseid" => $courseid)),
-                get_string('exams', 'block_exaquest'), null, true);
+            new moodle_url('/blocks/exaquest/exams.php', array("courseid" => $courseid)),
+            get_string('exams', 'block_exaquest'), null, true);
     }
 
     if (has_capability('block/exaquest:viewcategorytab', \context_course::instance($COURSE->id))) {
         $rows[] = new tabobject('tab_category_settings',
-                new moodle_url('/blocks/exaquest/category_settings.php', array("courseid" => $courseid)),
-                get_string('category_settings', 'block_exaquest'), null, true);
+            new moodle_url('/blocks/exaquest/category_settings.php', array("courseid" => $courseid)),
+            get_string('category_settings', 'block_exaquest'), null, true);
     }
 
     return $rows;
 }
 
-// this is used to get the contexts of the (question!!)category in the questionbank. The default question category of the coursecategory is used.
 
+/**
+ * @param $courseid
+ * @return array
+ * this is used to get the contexts of the (question!!)category in the questionbank. The default question category of the coursecategory is used.
+ */
 function get_question_category_and_context_of_course($courseid = null) {
     global $COURSE, $DB;
     if ($courseid == null) {
@@ -1799,8 +1948,8 @@ function get_question_category_and_context_of_course($courseid = null) {
     // explanation for what categoryid and contextid is and how context works in this case:
     // categoryid is the id of the questioncategory in the question_categories table, which is what we need
     // contextid is the contextid saved in the questioncategory table. This contextid is the id in the context table.
-    // in the context table the instanceid is the id of the coursecategory
-    // this way, the questioncontext for the coursecategory of the current course can be found.
+    // in the context table the instanceid is the id of the coursecategory. So contextid = coursecategorycontextid
+    // this way, the questioncontextid for the coursecategory of the current course can be found.
 
     return [$categoryid, $contextid];
 
@@ -1832,6 +1981,7 @@ function block_exaquest_get_courseids() {
  *
  * Returns all course ids where an instance of Exabis question management tool is installed for this user
  * The course has to have an enddate that ends in the last 6 months, or no enddate (be active)
+ * TODO: also return all courses where there is a block because of the category
  */
 function block_exaquest_get_relevant_courses_for_user($userid = null) {
     global $DB, $USER;
@@ -1840,22 +1990,38 @@ function block_exaquest_get_relevant_courses_for_user($userid = null) {
         $userid = $USER->id;
     }
 
-    $instances = $DB->get_records('block_instances', array('blockname' => 'exaquest'));
+    $instances = $DB->get_records('block_instances', array('blockname' => 'exaquest')); // TODO: check out what those instances are
 
     $exaquest_courses = array();
 
     foreach ($instances as $instance) {
+        $courseids = array();
         $context = $DB->get_record('context', array('id' => $instance->parentcontextid, 'contextlevel' => CONTEXT_COURSE));
         if ($context) {
-            if (block_exaquest_is_user_in_course($userid, $context->instanceid)) {
+            $courseids[] = $context->instanceid;
+        } else {
+            // if the coursecategory has the block and the showinsubcontexts is active: get the courses of the category
+            $context = $DB->get_record('context', array('id' => $instance->parentcontextid, 'contextlevel' => CONTEXT_COURSECAT));
+            if ($context) {
+                // get all courses of that coursecategory
+                $courses = $DB->get_records('course', array('category' => $context->instanceid));
+                foreach ($courses as $course) {
+                    $courseids[] = $course->id;
+                }
+            }
+        }
+
+        // for each courseid, check if the user is in this course and if the course is still active or was active in the last 6 months
+        foreach ($courseids as $courseid) {
+            if (block_exaquest_is_user_in_course($userid, $courseid)) {
                 // check if the course is still active or was active in the lase 6 months
-                $course = get_course($context->instanceid);
+                $course = get_course($courseid);
                 if ($course->enddate) {
                     if ($course->enddate > (time() - 15552000)) { // 15552000 is 6 months in seconds
-                        $exaquest_courses[$context->instanceid] = $course;
+                        $exaquest_courses[$courseid] = $course;
                     }
                 } else {
-                    $exaquest_courses[$context->instanceid] = $course;
+                    $exaquest_courses[$courseid] = $course;
                 }
             }
         }
@@ -1880,12 +2046,13 @@ function block_exaquest_get_relevant_courses_for_user($userid = null) {
  *     but this will lead to a count of 0 for those todos, which means, it does not matter. No capabilities check needed.
  */
 function block_exaquest_get_todo_count($userid, $coursecategoryid, $questioncategoryid, $context, $courseid) {
+    // question todos
     $questions_for_me_to_create_count =
-            block_exaquest_get_questions_for_me_to_create_count($coursecategoryid, $userid);
+        block_exaquest_get_questions_for_me_to_create_count($coursecategoryid, $userid);
     $questions_for_me_to_review_count =
-            block_exaquest_get_questions_for_me_to_review_count($questioncategoryid, $userid);
+        block_exaquest_get_questions_for_me_to_review_count($questioncategoryid, $userid);
     $questions_for_me_to_revise_count =
-            block_exaquest_get_questions_for_me_to_revise_count($questioncategoryid, $userid);
+        block_exaquest_get_questions_for_me_to_revise_count($questioncategoryid, $userid);
 
     // there is no "for me to release, which is why we take the finalised questionbankentries count. This is not available for everyone ==> check capability
     $questions_finalised_count = 0;
@@ -1894,22 +2061,30 @@ function block_exaquest_get_todo_count($userid, $coursecategoryid, $questioncate
     }
 
     $my_questions_to_submit_count =
-            block_exaquest_get_my_questionbankentries_to_submit_count($questioncategoryid, $userid);
+        block_exaquest_get_my_questionbankentries_to_submit_count($questioncategoryid, $userid);
+
+    // exams todos
+
     //$exams_for_me_to_create_count =
     //    block_exaquest_get_exams_for_me_to_create_count($coursecategoryid, $userid);
-    $exams_for_me_to_fill_count = block_exaquest_get_assigned_exams_by_assigntype_count($courseid, $userid,
-            BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
+    $exams_for_me_to_fill_count = block_exaquest_get_assigned_quizzes_by_assigntype_count($courseid, $userid,
+        BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
 
-    $exams_for_me_to_check_grading_count = block_exaquest_get_assigned_exams_by_assigntype_count($courseid, $userid,
-            BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
-    $exams_for_me_to_grade_count = block_exaquest_get_assigned_exams_by_assigntype_count($courseid, $userid,
-            BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM);
-    $exams_for_me_to_change_grading_count = block_exaquest_get_assigned_exams_by_assigntype_count($courseid, $userid,
-            BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHANGE_EXAM_GRADING);
+    $exams_for_me_to_check_grading_count = block_exaquest_get_assigned_quizzes_by_assigntype_count($courseid, $userid,
+        BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING);
+    $exams_for_me_to_grade_count = block_exaquest_get_assigned_quizzes_by_assigntype_count($courseid, $userid,
+        BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM);
+    $exams_for_me_to_change_grading_count = block_exaquest_get_assigned_quizzes_by_assigntype_count($courseid, $userid,
+        BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHANGE_EXAM_GRADING);
+
+    // there is no direct assignment to fachlich release, only to be the FACHLICHERPRUEFER and when the status is CREATED it means the FP has a todoo.
+    $exams_to_fachlich_release = count(block_exaquest_get_assigned_quizzes_by_assigntype_and_status($userid,
+        BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER, BLOCK_EXAQUEST_QUIZSTATUS_CREATED, $courseid));
 
     return $questions_for_me_to_create_count + $questions_for_me_to_review_count + $questions_for_me_to_revise_count +
-            $questions_finalised_count + $exams_for_me_to_fill_count + $my_questions_to_submit_count +
-            $exams_for_me_to_check_grading_count + $exams_for_me_to_grade_count + $exams_for_me_to_change_grading_count;
+        $questions_finalised_count + $exams_for_me_to_fill_count + $my_questions_to_submit_count +
+        $exams_for_me_to_check_grading_count + $exams_for_me_to_grade_count + $exams_for_me_to_change_grading_count +
+        $exams_to_fachlich_release;
 }
 
 function block_exaquest_is_user_in_course($userid, $courseid) {
@@ -1938,9 +2113,9 @@ function block_exaquest_exams_by_status($courseid = null, $status = BLOCK_EXAQUE
     global $DB, $USER;
 
     if ($courseid) {
-        $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid, quizstatus.creatorid as creatorid
+        $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid, quizstatus.creatorid as creatorid, cm.course as courseid
 			FROM {" . BLOCK_EXAQUEST_DB_QUIZSTATUS . "} quizstatus
-			JOIN {quiz} q on q.id = quizstatus.quizid 
+			JOIN {quiz} q on q.id = quizstatus.quizid
 			JOIN {course_modules} cm on cm.instance = q.id
 			JOIN {modules} m on m.id = cm.module
 			WHERE quizstatus.status = :status
@@ -1960,17 +2135,17 @@ function block_exaquest_exams_by_status($courseid = null, $status = BLOCK_EXAQUE
          */
 
         $quizzes = $DB->get_records_sql($sql,
-                array("status" => $status, "courseid" => $courseid));
+            array("status" => $status, "courseid" => $courseid));
     } else {
-        $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid, q.timeclose as timeclose, quizstatus.creatorid as creatorid
+        $sql = "SELECT q.id as quizid, q.name as name,  cm.id as coursemoduleid, q.timeclose as timeclose, q.timeopen as timeopen, quizstatus.creatorid as creatorid, cm.course as courseid
 			FROM {" . BLOCK_EXAQUEST_DB_QUIZSTATUS . "} quizstatus
-			JOIN {quiz} q on q.id = quizstatus.quizid 
+			JOIN {quiz} q on q.id = quizstatus.quizid
 			JOIN {course_modules} cm on cm.instance = q.id
 			JOIN {modules} m on m.id = cm.module
 			WHERE quizstatus.status = :status
 			AND m.name = 'quiz'";
         $quizzes = $DB->get_records_sql($sql,
-                array("status" => $status));
+            array("status" => $status));
     }
 
     return $quizzes;
@@ -1987,12 +2162,17 @@ function block_exaquest_exams_set_status($quizid, $status) {
     global $DB, $COURSE;
     $record = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, array("quizid" => $quizid));
     $record->status = $status;
-    // if the status is changed to BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED ==> remove all quizassigns for this quiz, as they no longer make any sense
-    if ($status == BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED) {
+
+    if ($status == BLOCK_EXAQUEST_QUIZSTATUS_CREATED || $status == BLOCK_EXAQUEST_QUIZSTATUS_FACHLICH_RELEASED) {
+        // if the status is changed to BLOCK_EXAQUEST_QUIZSTATUS_CREATED or BLOCK_EXAQUEST_QUIZSTATUS_FACHLICH_RELEASED remove all quizassigns assigntype BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS
         $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
-                array("quizid" => $quizid, "assigntype" => BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM));
+            array("quizid" => $quizid, "assigntype" => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS));
+    } else if ($status == BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED) {
+        // if the status is changed to BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED ==> remove all quizassigns for this quiz, as they no longer make any sense
         $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
-                array("quizid" => $quizid, "assigntype" => BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING));
+            array("quizid" => $quizid, "assigntype" => BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM));
+        $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+            array("quizid" => $quizid, "assigntype" => BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING));
     } else if ($status == BLOCK_EXAQUEST_QUIZSTATUS_FINISHED) {
         // if the status changes to finished, todoos for PK should be sent out
         // BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN
@@ -2004,17 +2184,17 @@ function block_exaquest_exams_set_status($quizid, $status) {
         // $userto is the pk
         $courseid = $DB->get_record('quiz', array('id' => $quizid))->course;
         $pks =
-                block_exaquest_get_pk_by_courseid($courseid); // courseid is the course of the quiz. not $COURSE as this would not work in cronjob
+            block_exaquest_get_pk_by_courseid($courseid); // courseid is the course of the quiz. not $COURSE as this would not work in cronjob
         if ($ungraded_questions_count > 0) {
             // create quizassign for pk with type BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN
             foreach ($pks as $userto) {
                 block_exaquest_assign_quiz_done_to_pk($userfrom->id, $userto->id, '', $quizid, null,
-                        BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN);
+                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN);
             }
         } else {
             foreach ($pks as $userto) {
                 block_exaquest_assign_quiz_done_to_pk($userfrom->id, $userto->id, '', $quizid, null,
-                        BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE);
+                    BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE);
             }
         }
 
@@ -2025,6 +2205,23 @@ function block_exaquest_exams_set_status($quizid, $status) {
     //}
     $DB->update_record(BLOCK_EXAQUEST_DB_QUIZSTATUS, $record);
 }
+
+
+// /**
+//  * Set status of question.
+//  * Use this instead of the update_record function, because it also deletes assignments that no longer make sense.
+//  *
+//  * @param $questionbankentryid
+//  * @param $status
+//  */
+// function block_exaquest_question_set_status($questionbankentryid, $status) {
+//     global $DB, $COURSE;
+//     $record = $DB->get_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, array("quizid" => $questionbankentryid));
+//     $record->status = $status;
+//
+//
+//     $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $record);
+// }
 
 function is_exaquest_active_in_course() {
     global $COURSE, $PAGE, $CFG;
@@ -2063,7 +2260,7 @@ function block_exaquest_get_capabilities($context) {
     $capabilities["beurteilungsmitwirkende"] = has_capability("block/exaquest:beurteilungsmitwirkende", $context, $USER);
     $capabilities["fachlicherpruefer"] = has_capability("block/exaquest:fachlicherpruefer", $context, $USER);
     $capabilities["pruefungsmitwirkende"] = has_capability("block/exaquest:pruefungsmitwirkende", $context, $USER);
-    $capabilities["fachlicherzweitpruefer"] = has_capability("block/exaquest:fachlicherzweitpruefer", $context, $USER);
+    // $capabilities["fachlicherzweitpruefer"] = has_capability("block/exaquest:fachlicherzweitpruefer", $context, $USER);
 
     // capabilities defined by ZML
     $capabilities["viewquestionstorevise"] = has_capability("block/exaquest:viewquestionstorevise", $context, $USER);
@@ -2072,7 +2269,7 @@ function block_exaquest_get_capabilities($context) {
     $capabilities["readallquestions"] = has_capability("block/exaquest:readallquestions", $context, $USER);
     $capabilities["readquestionstatistics"] = has_capability("block/exaquest:readquestionstatistics", $context, $USER);
     $capabilities["changestatusofreleasedquestions"] =
-            has_capability("block/exaquest:changestatusofreleasedquestions", $context, $USER);
+        has_capability("block/exaquest:changestatusofreleasedquestions", $context, $USER);
     $capabilities["setstatustoreview"] = has_capability("block/exaquest:setstatustoreview", $context, $USER);
     $capabilities["reviseownquestion"] = has_capability("block/exaquest:reviseownquestion", $context, $USER);
     $capabilities["setstatustofinalised"] = has_capability("block/exaquest:setstatustofinalised", $context, $USER);
@@ -2111,6 +2308,8 @@ function block_exaquest_get_capabilities($context) {
     $capabilities["checkexamsgrading"] = has_capability("block/exaquest:checkexamsgrading", $context, $USER);
     $capabilities["gradequestion"] = has_capability("block/exaquest:gradequestion", $context, $USER);
     $capabilities["changeexamsgrading"] = has_capability("block/exaquest:changeexamsgrading", $context, $USER);
+    $capabilities["viewexamstab"] = has_capability("block/exaquest:viewexamstab", $context, $USER);
+    $capabilities["requestquestions"] = has_capability("block/exaquest:requestquestions", $context, $USER);
 
     return $capabilities;
 }
@@ -2160,11 +2359,80 @@ function block_exaquest_get_pruefungskoodrination_by_courseid($courseid) {
     return get_enrolled_users($context, 'block/exaquest:pruefungskoordination', 0, 'u.*', null, 0, 0, true);
 }
 
+
+
+/*
+ * TODO:
+ * send out notifications 4, 3, and 2 weeks before exam
+ * send notifications to everyone who is assigned an has not marked as done
+ * send notifications to PK and FP if there are less questions than needed
+ *
+ * Also send out all other daily notifications (open todos, etc)
+ */
 function block_exaquest_create_daily_notifications() {
     global $USER;
 
-    $users = block_exaquest_get_all_exaquest_users();
 
+    // /////////////////
+    // /// EXAM REMINDER NOTIFICATIONS IN PROGRESS
+    // // get all courses with exams that are not yet filled
+    // $exams = block_exaquest_exams_by_status(null, BLOCK_EXAQUEST_QUIZSTATUS_NEW);
+    //
+    // foreach ($exams as $exam) {
+    //     // todo: check if the exam is in the future and how far in the future ( 4 weeks, 3 weeks or 2 weeks)
+    //     // get the time of the exam
+    //     $time_in_two_weeks = time() + 2*7*3600*24;
+    //     $time_in_three_weeks = time() + 3*7*3600*24;
+    //     $time_in_four_weeks = time() + 4*7*3600*24;
+    //     // if the timeopen is smaller than $time_in_two_weeks but larger than $time_in_two_weeks
+    //     // this is to prevent sending out the notification multiple times. It only sends out exactly on the day two weeks before
+    //
+    //
+    //     // get all users that are assigned with BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS
+    //     $assigned_users = block_exaquest_get_assigned_persons_by_quizid_and_assigntype($exam->quizid, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS);
+    //     // for every $user in $assigned_users where done = 0, send a notification
+    //     foreach ($assigned_users as $user) {
+    //         if ($exam->timeopen < $time_in_two_weeks) {
+    //             // check if this notification has already been sent out
+    //
+    //             // // only create a message, when the todos count differs from the message of the previous day. careful: if it is the first notification --> null problems
+    //             // // check if there exist a notifications with the same eventtype (dailytodos) and the same userid get the most current one and compare the content
+    //             // // if the content is the same, don't send it again. if there is not notifaction or the content is not the same --> send it
+    //             // // content = message
+    //             // // get the notifcations with eventtype="dailtytodos" and userid=$user->id
+    //             $notifications = block_exaquest_get_notifications_by_eventtype_userid_fullmessage("fillexamreminder", $user->id, $full);
+    //             if ($notifications) {
+    //                 $notification = reset($notifications); // get the first element of the array
+    //                 if ($notification->fullmessage == $message) {
+    //                     // do not send the notification again
+    //                     continue;
+    //                 }
+    //             }
+    //             // send out notification 2 weeks before exam
+    //             $message = get_string('fill_exam_reminder_two_weeks', 'block_exaquest', $messageobject); // TODO create the strings
+    //         } else if ($exam->timeopen < $time_in_three_weeks) {
+    //             // send out notification 3 weeks before exam
+    //             $message = get_string('fill_exam_reminder_three_weeks', 'block_exaquest', $messageobject);
+    //         } else if ($exam->timeopen < $time_in_four_weeks) {
+    //             // send out notification 4 weeks before exam
+    //             $message = get_string('fill_exam_reminder_four_weeks', 'block_exaquest', $messageobject);
+    //         }
+    //         // TODO: If there is an exam in the next 2 weeks, or below, e.g. in 5 days: Create the notification if it does not exist yet
+    //         // use e.g. customdata in the notification to identify this.
+    //         // this makes sure, that if the cronjob for some reason is not run for a day, the notification is still sent out the next day
+    //
+    //         $messageobject = new stdClass();
+    //         $messageobject->fullname = $exam->name;
+    //         $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $exam->courseid]);
+    //         $messageobject->url = $messageobject->url->raw_out(false);
+    //         $subject = get_string('fill_exam_reminder_subject', 'block_exaquest', $messageobject);
+    //         block_exaquest_send_moodle_notification("fillexamreminder", $USER->id, $user, $subject, $message,
+    //             "fillexamreminder", $messageobject->url);
+    //     }
+    // }
+    // ///////////
+
+    $users = block_exaquest_get_all_exaquest_users();
     foreach ($users as $user) {
         // get the todocount and create the todos notification
         $courses = block_exaquest_get_relevant_courses_for_user($user->id);
@@ -2207,7 +2475,7 @@ function block_exaquest_create_daily_notifications() {
                 }
             }
             block_exaquest_send_moodle_notification("dailytodos", $USER->id, $user->id, $subject, $message,
-                    "TODOs", $url_to_moodle_dashboard);
+                "TODOs", $url_to_moodle_dashboard);
         }
     }
 
@@ -2218,7 +2486,7 @@ function block_exaquest_create_daily_notifications() {
         $daily_released_questions_message = '';
         foreach ($courses as $c) {
             if (has_capability('block/exaquest:pruefungskoordination', \context_course::instance($c->id),
-                    $pk->id)) { // could have another role in this course ==> skip
+                $pk->id)) { // could have another role in this course ==> skip
                 $questioncategoryid = get_question_category_and_context_of_course($c->id)[0];
                 $daily_released_questions = get_daily_released_questions($questioncategoryid);
                 if ($daily_released_questions) {
@@ -2229,7 +2497,7 @@ function block_exaquest_create_daily_notifications() {
                     $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $c->id]);
                     $messageobject->url = $messageobject->url->raw_out(false);
                     $daily_released_questions_message .= get_string('daily_released_questions_in_course', 'block_exaquest',
-                            $messageobject);
+                        $messageobject);
                 }
             }
         }
@@ -2241,7 +2509,7 @@ function block_exaquest_create_daily_notifications() {
             $url_to_moodle_dashboard = new moodle_url('/my/index.php');
             $url_to_moodle_dashboard = $url_to_moodle_dashboard->raw_out();
             block_exaquest_send_moodle_notification('daily_released_questions', $USER->id, $pk->id, $subject, $message,
-                    'Daily released questions', $url_to_moodle_dashboard);
+                'Daily released questions', $url_to_moodle_dashboard);
         }
     }
 }
@@ -2255,7 +2523,20 @@ function block_exaquest_create_daily_notifications() {
 function block_exaquest_get_notifications_by_eventtype_and_userid($eventtype, $useridto) {
     global $DB;
     $notifications = $DB->get_records('notifications',
-            array('eventtype' => $eventtype, 'useridto' => $useridto), 'timecreated DESC');
+        array('eventtype' => $eventtype, 'useridto' => $useridto), 'timecreated DESC');
+    return $notifications;
+}
+
+/**
+ * @param $eventtype
+ * @param $useridto
+ * @return notifications with the given eventtype and userid ordered by timecreated (element with highest timecreated first /
+ *     newest notification first)
+ */
+function block_exaquest_get_notifications_by_eventtype_userid_fullmessage($eventtype, $useridto, $fullmessage) {
+    global $DB;
+    $notifications = $DB->get_records('notifications',
+        array('eventtype' => $eventtype, 'useridto' => $useridto, 'fullmessage' => $fullmessage), 'timecreated DESC');
     return $notifications;
 }
 
@@ -2327,16 +2608,16 @@ function block_exaquest_clean_up_tables() {
     // delete entries in exaquestreviewassign that do not have the status that they should be reviewed
     $sql = 'DELETE FROM {' . BLOCK_EXAQUEST_DB_REVIEWASSIGN . '}
     WHERE questionbankentryid NOT IN (SELECT id FROM {' . BLOCK_EXAQUEST_DB_QUESTIONSTATUS .
-            '} WHERE  status = ' . BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS . ' OR status = ' .
-            BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE . ' OR status = ' .
-            BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE .
-            ')';
+        '} WHERE  status = ' . BLOCK_EXAQUEST_QUESTIONSTATUS_TO_ASSESS . ' OR status = ' .
+        BLOCK_EXAQUEST_QUESTIONSTATUS_FORMAL_REVIEW_DONE . ' OR status = ' .
+        BLOCK_EXAQUEST_QUESTIONSTATUS_FACHLICHES_REVIEW_DONE .
+        ')';
 
     $DB->execute($sql);
 }
 
 function block_exaquest_assign_quiz_addquestions($userfrom, $userto, $comment, $quizid, $quizname = null,
-        $assigntype = null) {
+    $assigntype = null) {
     global $DB, $COURSE;
 
     block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assigntype);
@@ -2350,8 +2631,9 @@ function block_exaquest_assign_quiz_addquestions($userfrom, $userto, $comment, $
     $message = get_string('please_fill_exam', 'block_exaquest', $messageobject);
     $subject = get_string('please_fill_exam_subject', 'block_exaquest', $messageobject);
     block_exaquest_send_moodle_notification("fillexam", $userfrom->id, $userto, $subject, $message,
-            "fillexam", $messageobject->url);
+        "fillexam", $messageobject->url);
 }
+
 
 //function block_exaquest_assign_quiz_fachlich_release_exam($userfrom, $userto, $comment, $quizid, $quizname = null,
 //        $assigntype = null) {
@@ -2372,7 +2654,7 @@ function block_exaquest_assign_quiz_addquestions($userfrom, $userto, $comment, $
 //}
 
 function block_exaquest_assign_check_exam_grading($userfrom, $userto, $comment, $quizid, $quizname = null,
-        $assigntype = null) {
+    $assigntype = null) {
     global $COURSE;
 
     block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assigntype);
@@ -2386,11 +2668,36 @@ function block_exaquest_assign_check_exam_grading($userfrom, $userto, $comment, 
     $message = get_string('please_check_exam_grading', 'block_exaquest', $messageobject);
     $subject = get_string('please_check_exam_grading_subject', 'block_exaquest', $messageobject);
     block_exaquest_send_moodle_notification("checkexamgrading", $userfrom->id, $userto, $subject, $message,
-            "checkexamgrading", $messageobject->url);
+        "checkexamgrading", $messageobject->url);
+}
+
+function block_exaquest_assign_kommissionell_check_exam_grading($userfrom, $userto, $comment, $quizid, $quizname = null,
+    $assigntype = null, $selectedstudents = null) {
+    global $COURSE, $DB;
+
+    //add the $selectedstudents to the comment
+    $comment .= "\n\n" . get_string('selected_student', 'block_exaquest') . "\n";
+    foreach ($selectedstudents as $selectedstudent) {
+        $single_comment = $comment; // a comment per assigned student
+        $student = $DB->get_record('user', array('id' => $selectedstudent));
+        $single_comment .= $student->firstname . " " . $student->lastname . "\n";
+        block_exaquest_quizassign($userfrom, $userto, $single_comment, $quizid, $assigntype, $selectedstudent);
+
+        // create the message
+        $messageobject = new stdClass;
+        $messageobject->fullname = $quizname;
+        $messageobject->url = new moodle_url('/blocks/exaquest/dashboard.php', ['courseid' => $COURSE->id]);
+        $messageobject->url = $messageobject->url->raw_out(false);
+        $messageobject->requestcomment = $single_comment;
+        $message = get_string('please_kommissionell_check_exam_grading', 'block_exaquest', $messageobject);
+        $subject = get_string('please_kommissionell_check_exam_grading_subject', 'block_exaquest', $messageobject);
+        block_exaquest_send_moodle_notification("kommissionellcheckexamgrading", $userfrom->id, $userto, $subject, $message,
+            "kommissionellcheckexamgrading", $messageobject->url);
+    }
 }
 
 function block_exaquest_assign_change_exam_grading($userfrom, $userto, $comment, $quizid, $quizname = null,
-        $assigntype = null) {
+    $assigntype = null) {
     global $COURSE;
 
     block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assigntype);
@@ -2405,11 +2712,11 @@ function block_exaquest_assign_change_exam_grading($userfrom, $userto, $comment,
     $message = get_string('please_change_exam_grading', 'block_exaquest', $messageobject);
     $subject = get_string('please_change_exam_grading_subject', 'block_exaquest', $messageobject);
     block_exaquest_send_moodle_notification("changeexamgrading", $userfrom->id, $userto, $subject, $message,
-            "changeexamgrading", $messageobject->url);
+        "changeexamgrading", $messageobject->url);
 }
 
 function block_exaquest_assign_gradeexam($userfrom, $userto, $comment, $quizid, $quizname = null,
-        $assigntype = null, $selectedquestions = null) {
+    $assigntype = null, $selectedquestions = null) {
     global $COURSE, $DB;
 
     // add the $selectedquestions to the comment
@@ -2429,7 +2736,7 @@ function block_exaquest_assign_gradeexam($userfrom, $userto, $comment, $quizid, 
     $message = get_string('please_grade_exam', 'block_exaquest', $messageobject);
     $subject = get_string('please_grade_exam_subject', 'block_exaquest', $messageobject);
     block_exaquest_send_moodle_notification("gradeexam", $userfrom->id, $userto, $subject, $message,
-            "gradeexam", $messageobject->url);
+        "gradeexam", $messageobject->url);
 }
 
 /**
@@ -2441,7 +2748,7 @@ function block_exaquest_assign_gradeexam($userfrom, $userto, $comment, $quizid, 
  * @return bool true if a new assignment is made, false if not (if it is just reset to done=false)
  * @throws dml_exception
  */
-function block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assigntype = null) {
+function block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assigntype = null, $customdata = null) {
     global $DB;
 
     // check $userto and $userfrom if they are objects or the ids
@@ -2456,23 +2763,23 @@ function block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assig
         $userfromid = $userfrom;
     }
 
-    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that exact quizid, assigneeid and assigntype.
     // enter data into the exaquest tables
     $assigndata = new stdClass;
     $assigndata->quizid = $quizid;
     $assigndata->assigneeid = $usertoid;
     $assigndata->assignerid = $userfromid;
     $assigndata->assigntype = $assigntype;
+    $assigndata->customdata = $customdata;
     //if that assignment does not exist yet, create it
     $quizassignid = $DB->get_record(BLOCK_EXAQUEST_DB_QUIZASSIGN,
-            array('quizid' => $quizid, 'assigneeid' => $usertoid, 'assigntype' => $assigntype))->id;
+        array('quizid' => $quizid, 'assigneeid' => $usertoid, 'assigntype' => $assigntype, 'customdata' => $customdata))->id;
     if (!$quizassignid) {
         $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
         $newlyassigned = true;
     } else {
         // already exists, reset the "done" field
         $DB->set_field(BLOCK_EXAQUEST_DB_QUIZASSIGN, 'done', 0,
-                array('id' => $quizassignid));
+            array('id' => $quizassignid));
         $newlyassigned = false;
     }
 
@@ -2490,7 +2797,7 @@ function block_exaquest_quizassign($userfrom, $userto, $comment, $quizid, $assig
 }
 
 function block_exaquest_assign_quiz_done_to_pk($userfrom, $userto, $comment, $quizid, $quizname = null,
-        $assigntype = null) {
+    $assigntype = null) {
     global $COURSE, $DB, $CFG;
 
     // check $userto and $userfrom if they are objects or the ids
@@ -2521,91 +2828,110 @@ function block_exaquest_assign_quiz_done_to_pk($userfrom, $userto, $comment, $qu
     if (block_exaquest_quizassign($userfromid, $usertoid, $comment, $quizid, $assigntype)) {
         // create the message
         $messageobject = new stdClass;
+
+        if ($quizname == null) {
+            $quizname = $DB->get_record('quiz', array('id' => $quizid))->name;
+        }
+
         $messageobject->fullname = $quizname;
         $messageobject->url = new moodle_url('/blocks/exaquest/exams.php', ['courseid' => $COURSE->id]);
         $messageobject->url = $messageobject->url->raw_out(false);
         if ($assigntype == BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_OPEN) {
             $messageobject->requestcomment =
-                    new lang_string('quiz_finished_grading_open_comment', 'block_exaquest', null, $preferred_language);
+                new lang_string('quiz_finished_grading_open_comment', 'block_exaquest', null, $preferred_language);
             $messageobject->requestcomment = $messageobject->requestcomment->__toString();
             $message = new lang_string('quiz_finished_grading_open', 'block_exaquest', $messageobject, $preferred_language);
             $message = $message->__toString();
             $subject = new lang_string('quiz_finished_grading_open_subject', 'block_exaquest', $messageobject, $preferred_language);
             $subject = $subject->__toString();
             block_exaquest_send_moodle_notification("quizfinishedgradingopen", $userfromid, $usertoid, $subject, $message,
-                    "quizfinishedgradingopen", $messageobject->url);
+                "quizfinishedgradingopen", $messageobject->url);
         } else if ($assigntype == BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE) {
             $messageobject->requestcomment =
-                    new lang_string('quiz_finished_grading_done_comment', 'block_exaquest', null,  $preferred_language);
+                new lang_string('quiz_finished_grading_done_comment', 'block_exaquest', null, $preferred_language);
             $messageobject->requestcomment = $messageobject->requestcomment->__toString();
             $message = new lang_string('quiz_finished_grading_done', 'block_exaquest', $messageobject, $preferred_language);
             $message = $message->__toString();
             $subject = new lang_string('quiz_finished_grading_done_subject', 'block_exaquest', $messageobject, $preferred_language);
             $subject = $subject->__toString();
             block_exaquest_send_moodle_notification("quizfinishedgradingdone", $userfromid, $usertoid, $subject, $message,
-                    "quizfinishedgradingdone", $messageobject->url);
+                "quizfinishedgradingdone", $messageobject->url);
         }
     }
 }
 
-function block_exaquest_assign_quiz_fp($userto, $quizid) {
-    global $DB, $COURSE;
+/** deprecated, use block_exaquest_quizassign() instead */
+//function block_exaquest_assign_quiz_fp($userto, $quizid) {
+//    global $DB, $COURSE;
+//
+//    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that quizid and assigntype, as it should be overridden (there can only be one)
+//    $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+//            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER));
+//
+//    // enter data into the exaquest tables
+//    $assigndata = new stdClass;
+//    $assigndata->quizid = $quizid;
+//    $assigndata->assigneeid = $userto;
+//    $assigndata->assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER;
+//    $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
+//}
 
-    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that quizid and assigntype, as it should be overridden (there can only be one)
-    $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
-            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER));
+/** deprecated, use block_exaquest_quizassign() instead */
+//function block_exaquest_assign_quiz_fzp($userto, $quizid) {
+//    global $DB, $COURSE;
+//
+//    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that quizid and assigntype, as it should be overridden (there can only be one)
+//    $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+//            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERZWEITPRUEFER));
+//
+//    // enter data into the exaquest tables
+//    $assigndata = new stdClass;
+//    $assigndata->quizid = $quizid;
+//    $assigndata->assigneeid = $userto;
+//    $assigndata->assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERZWEITPRUEFER;
+//    $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
+//}
 
-    // enter data into the exaquest tables
-    $assigndata = new stdClass;
-    $assigndata->quizid = $quizid;
-    $assigndata->assigneeid = $userto;
-    $assigndata->assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER;
-    $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
-}
+/** deprecated, use block_exaquest_quizassign() instead */
+//function block_exaquest_assign_quiz_fdp($userto, $quizid) {
+//    global $DB, $COURSE;
+//
+//    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that quizid and assigntype, as it should be overridden (there can only be one)
+//    $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+//            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERDRITTPRUEFER));
+//
+//    // enter data into the exaquest tables
+//    $assigndata = new stdClass;
+//    $assigndata->quizid = $quizid;
+//    $assigndata->assigneeid = $userto;
+//    $assigndata->assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERDRITTPRUEFER;
+//    $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
+//}
 
-function block_exaquest_assign_quiz_fzp($userto, $quizid) {
-    global $DB, $COURSE;
-
-    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that quizid and assigntype, as it should be overridden (there can only be one)
-    $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
-            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERZWEITPRUEFER));
-
-    // enter data into the exaquest tables
-    $assigndata = new stdClass;
-    $assigndata->quizid = $quizid;
-    $assigndata->assigneeid = $userto;
-    $assigndata->assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERZWEITPRUEFER;
-    $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
-}
-
-function block_exaquest_assign_quiz_fdp($userto, $quizid) {
-    global $DB, $COURSE;
-
-    // delete existing entries in BLOCK_EXAQUEST_DB_QUIZASSIGN for that quizid and assigntype, as it should be overridden (there can only be one)
-    $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
-            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERDRITTPRUEFER));
-
-    // enter data into the exaquest tables
-    $assigndata = new stdClass;
-    $assigndata->quizid = $quizid;
-    $assigndata->assigneeid = $userto;
-    $assigndata->assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERDRITTPRUEFER;
-    $quizassignid = $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZASSIGN, $assigndata);
-}
-
-function block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid) {
+function block_exaquest_get_fragefaecher_by_courseid_and_quizid($courseid, $quizid, $show_deleted = false) {
     global $DB;
 
     // get course
     $course = $DB->get_record('course', array('id' => $courseid));
 
-    $sql = 'SELECT cat.*, qc.questioncount, qc.quizid
+    if ($show_deleted) {
+        $sql = 'SELECT cat.*, qc.questioncount, qc.quizid, qpercent.percentage
             FROM {' . BLOCK_EXAQUEST_DB_CATEGORIES . '} cat
-            LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZQCOUNT . '} qc ON qc.exaquestcategoryid = cat.id AND qc.quizid = :quizid
+            LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZQCOUNT . '} qc ON qc.exaquestcategoryid = cat.id AND qc.quizid = :quizid1
+            LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZQMINPERCENTAGE . '} qpercent ON qpercent.exaquestcategoryid = cat.id AND qc.quizid = :quizid2
             WHERE cat.coursecategoryid = :coursecategoryid
             AND cat.categorytype = ' . BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH;
+    } else {
+        $sql = 'SELECT cat.*, qc.questioncount, qc.quizid, qpercent.percentage
+            FROM {' . BLOCK_EXAQUEST_DB_CATEGORIES . '} cat
+            LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZQCOUNT . '} qc ON qc.exaquestcategoryid = cat.id AND qc.quizid = :quizid1
+            LEFT JOIN {' . BLOCK_EXAQUEST_DB_QUIZQMINPERCENTAGE . '} qpercent ON qpercent.exaquestcategoryid = cat.id AND qc.quizid = :quizid2
+            WHERE cat.coursecategoryid = :coursecategoryid
+            AND cat.deleted = 0
+            AND cat.categorytype = ' . BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH;
+    }
 
-    $fragefaecher = $DB->get_records_sql($sql, array('coursecategoryid' => $course->category, 'quizid' => $quizid));
+    $fragefaecher = $DB->get_records_sql($sql, array('coursecategoryid' => $course->category, 'quizid1' => $quizid, 'quizid2' => $quizid));
 
     return $fragefaecher;
 }
@@ -2641,7 +2967,7 @@ function block_exaquest_get_missing_questions_count($quizid, $courseid) {
         $fragefaecher[$key]->currentquestioncount = $categorys_current_counts[$key] ?: 0;
         if ($fragefaecher[$key]->currentquestioncount < $fragefaecher[$key]->requiredquestioncount) {
             $missingquestionscount += $fragefaecher[$key]->requiredquestioncount -
-                    $fragefaecher[$key]->currentquestioncount;
+                $fragefaecher[$key]->currentquestioncount;
         }
     }
     return $missingquestionscount;
@@ -2662,7 +2988,7 @@ function block_exaquest_get_category_question_count($quizid) {
                                                     JOIN {question_bank_entries} be
                                                     ON be.id = v.questionbankentryid
                                                     WHERE  be.id = qref.questionbankentryid) AND qusl.quizid=:quizid",
-            array('quizid' => $quizid));
+        array('quizid' => $quizid));
 
     $categoryoptionidarray = array();
     foreach ($customfieldvalues as $categoryoptionid) {
@@ -2688,7 +3014,7 @@ function block_exaquest_get_assigned_fachlicherpruefer($quizid) {
 			WHERE qa.quizid = :quizid
 			AND qa.assigntype = ' . BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER;
     $fachlicherpreufer = $DB->get_record_sql($sql,
-            array('quizid' => $quizid));
+        array('quizid' => $quizid));
     return $fachlicherpreufer;
 }
 
@@ -2699,7 +3025,7 @@ function block_exaquest_get_assigned_fachlicherzweitpruefer($quizid) {
 			WHERE qa.quizid = :quizid
 			AND qa.assigntype = ' . BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERZWEITPRUEFER;
     $fachlicherpreufer = $DB->get_record_sql($sql,
-            array('quizid' => $quizid));
+        array('quizid' => $quizid));
     return $fachlicherpreufer;
 }
 
@@ -2710,12 +3036,12 @@ function block_exaquest_get_assigned_fachlicherdrittpruefer($quizid) {
 			WHERE qa.quizid = :quizid
 			AND qa.assigntype = ' . BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERDRITTPRUEFER;
     $fachlicherpreufer = $DB->get_record_sql($sql,
-            array('quizid' => $quizid));
+        array('quizid' => $quizid));
     return $fachlicherpreufer;
 }
 
 function block_exaquest_get_assigned_persons_by_quizid_and_assigntype($quizid,
-        $assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS) {
+    $assigntype = BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS) {
     global $DB;
     $sql = 'SELECT qa.assigneeid, u.*, qa.done
 			FROM {' . BLOCK_EXAQUEST_DB_QUIZASSIGN . '} qa
@@ -2724,20 +3050,28 @@ function block_exaquest_get_assigned_persons_by_quizid_and_assigntype($quizid,
 			AND qa.assigntype = :assigntype';
 
     $assignedpersons = $DB->get_records_sql($sql,
-            array('quizid' => $quizid, 'assigntype' => $assigntype));
+        array('quizid' => $quizid, 'assigntype' => $assigntype));
     return $assignedpersons;
 }
 
-function block_exaquest_get_fragefaecher_by_courseid($courseid) {
+function block_exaquest_get_fragefaecher_by_courseid($courseid, $show_deleted = false) {
     global $DB;
 
     // get course
     $course = $DB->get_record('course', array('id' => $courseid));
 
-    $sql = 'SELECT cat.*
+    if ($show_deleted) {
+        $sql = 'SELECT cat.*
             FROM {' . BLOCK_EXAQUEST_DB_CATEGORIES . '} cat
             WHERE cat.coursecategoryid = :coursecategoryid
             AND cat.categorytype = ' . BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH;
+    } else {
+        $sql = 'SELECT cat.*
+            FROM {' . BLOCK_EXAQUEST_DB_CATEGORIES . '} cat
+            WHERE cat.coursecategoryid = :coursecategoryid
+            AND cat.deleted = 0
+            AND cat.categorytype = ' . BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH;
+    }
 
     $fragefaecher = $DB->get_records_sql($sql, array('coursecategoryid' => $course->category));
 
@@ -2750,7 +3084,7 @@ function block_exaquest_set_questioncount_for_exaquestcategory($quizid, $exaques
 
     // get the current questioncount for this quiz and exaquestcategory
     $quizqcount =
-            $DB->get_record(BLOCK_EXAQUEST_DB_QUIZQCOUNT, array('quizid' => $quizid, 'exaquestcategoryid' => $exaquestcategoryid));
+        $DB->get_record(BLOCK_EXAQUEST_DB_QUIZQCOUNT, array('quizid' => $quizid, 'exaquestcategoryid' => $exaquestcategoryid));
 
     // if it exists: update, else: create new
     if ($quizqcount) {
@@ -2762,6 +3096,26 @@ function block_exaquest_set_questioncount_for_exaquestcategory($quizid, $exaques
         $quizqcount->exaquestcategoryid = $exaquestcategoryid;
         $quizqcount->questioncount = $count;
         $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZQCOUNT, $quizqcount);
+    }
+}
+
+function block_exaquest_set_minimum_required_percentage_for_exaquestcategory($quizid, $exaquestcategoryid, $percentage) {
+    global $DB;
+
+    // get the current percentage for this quiz and exaquestcategory
+    $quizpercentage =
+        $DB->get_record(BLOCK_EXAQUEST_DB_QUIZQMINPERCENTAGE, array('quizid' => $quizid, 'exaquestcategoryid' => $exaquestcategoryid));
+
+    // if it exists: update, else: create new
+    if ($quizpercentage) {
+        $quizpercentage->percentage = $percentage;
+        $DB->update_record(BLOCK_EXAQUEST_DB_QUIZQMINPERCENTAGE, $quizpercentage);
+    } else {
+        $quizpercentage = new stdClass;
+        $quizpercentage->quizid = $quizid;
+        $quizpercentage->exaquestcategoryid = $exaquestcategoryid;
+        $quizpercentage->percentage = $percentage;
+        $DB->insert_record(BLOCK_EXAQUEST_DB_QUIZQMINPERCENTAGE, $quizpercentage);
     }
 }
 
@@ -2797,16 +3151,15 @@ function block_exaquest_check_if_questions_imported($questionid, $questionbanken
         $questionstatus->status = BLOCK_EXAQUEST_QUESTIONSTATUS_IMPORTED;
         $questionstatus->is_imported = 1;
         $DB->update_record(BLOCK_EXAQUEST_DB_QUESTIONSTATUS, $questionstatus);
-    } else {
-        // it has been created manually --> everything can stay as it is
     }
+    // or it has been created manually --> everything can stay as it is
 }
 
 function block_exaquest_check_if_exam_is_ready($quizid) {
     global $DB;
     // check if every assignment of this kind is done for this quiz
     if ($DB->get_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
-            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS, 'done' => 0))) {
+        array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS, 'done' => 0))) {
         // records still exist and "done" = 0 ==> not every todoo is done
         return false;
     } else {
@@ -2823,14 +3176,20 @@ function block_exaquest_check_if_exam_is_ready($quizid) {
 
 }
 
+/** checks if every assignment of CHECK_EXAM_GRADING has been done as well as every assignment of KOMMISSIONELL_CHECK_EXAM_GRADING */
 function block_exaquest_check_if_grades_should_be_released($quizid) {
     global $DB;
     // check if every assignment of this kind is done for this quiz
     if ($DB->get_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
-            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING))) {
-        // records still exist ==> not every todoo is done
+        array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_CHECK_EXAM_GRADING, 'done' => 0))) {
+        // records still exist and "done" = 0 ==> not every todoo is done
+        return false;
+    } else if ($DB->get_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
+        array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_KOMMISSIONELL_CHECK_EXAM_GRADING,
+            'done' => 0))) {
         return false;
     } else {
+
         // no records exist ==> every assignment is done
         // set the quizstatus from BLOCK_EXAQUEST_QUIZSTATUS_FINISHED to BLOCK_EXAQUEST_QUIZSTATUS_GRADING_RELEASED and release the grades
         // TODO: release the grades, this has to trigger sometghing from moodle?
@@ -2862,14 +3221,14 @@ function block_exaquest_check_if_all_gradings_have_been_done($quizid) {
         // $userto is the pk
         $courseid = $DB->get_record('quiz', array('id' => $quizid))->course;
         $pks =
-                block_exaquest_get_pk_by_courseid($courseid); // courseid is the course of the quiz. not $COURSE as this would not work in cronjob
+            block_exaquest_get_pk_by_courseid($courseid); // courseid is the course of the quiz. not $COURSE as this would not work in cronjob
         foreach ($pks as $userto) {
             block_exaquest_assign_quiz_done_to_pk($userfrom->id, $userto->id,
-                    '',
-                    $quizid, null, BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE);
+                '',
+                $quizid, null, BLOCK_EXAQUEST_QUIZASSIGNTYPE_EXAM_FINISHED_GRADING_DONE);
         }
         $DB->delete_records(BLOCK_EXAQUEST_DB_QUIZASSIGN,
-                array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM));
+            array('quizid' => $quizid, 'assigntype' => BLOCK_EXAQUEST_QUIZASSIGNTYPE_GRADE_EXAM));
         return true;
     }
 }
@@ -2926,7 +3285,7 @@ function block_exaquest_render_questioncount_per_category() {
         // first check if it is even an array, or if it is completely empty still
         // then check, if for THIS specific cat there is already an entry in the array or not
         if (!is_array($options[BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH]) ||
-                !array_key_exists($cat_required->id, $options[BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH])) {
+            !array_key_exists($cat_required->id, $options[BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH])) {
             $options[BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH][$cat_required->id] = $cat_required->categoryname;
         }
     }
@@ -2935,41 +3294,43 @@ function block_exaquest_render_questioncount_per_category() {
     foreach ($options as $key => $option) {
         foreach ($option as $categoryid => $name) {
             if ($key == BLOCK_EXAQUEST_CATEGORYTYPE_FRAGEFACH) {
-                $qcount = $categoryoptionidcount[$categoryid] ?: 0;
+                $qcount = array_key_exists($categoryid, $categoryoptionidcount) ? $categoryoptionidcount[$categoryid] : 0;
                 $content[$key] .= '<div class="col-lg-12"><span>' . $name . ': ' . $qcount .
-                        ' von ' . $categorys_required_counts[$categoryid]->questioncount . '</span></div>';
+                    ' von ' . $categorys_required_counts[$categoryid]->questioncount . '</span></div>';
             } else {
                 $content[$key] .= '<div class="col-lg-12"><span>' . $name . ': ' . $categoryoptionidcount[$categoryid] .
-                        '</span></div>';
+                    '</span></div>';
             }
         }
     }
+
+    echo '<div id="block_exaquest_questioncount_per_category">';
     echo $OUTPUT->heading(get_string('questionbank_selected_quiz', 'block_exaquest') . '' . $quizname, 2);
 
     // get the questioncounts from questionqcount table for this quiz
     $html = '<div class="container-fluid">
                     <div class="row">
                          <div class="col-lg-3">
-                         <div class="col-lg-12 border-bottom"><h6>Fragencharakter</h6></div>
+                         <div class="col-lg-12 border-bottom exaquest-category-tag-fragencharakter rounded"><h6>Fragencharakter</h6></div>
                             ' . $content[0] . '
                         </div>
                         <div class="col-lg-3">
-                        <div class="col-lg-12 border-bottom"><h6>Klassifikation</h6></div>
+                        <div class="col-lg-12 border-bottom exaquest-category-tag-klassifikation rounded"><h6>Klassifikation</h6></div>
                             ' . $content[1] . '
                         </div>
                         <div class="col-lg-3">
-                        <div class="col-lg-12 border-bottom"><h6>Fragefach</h6></div>
+                        <div class="col-lg-12 border-bottom exaquest-category-tag-fragefach rounded"><h6>Fragefach</h6></div>
                             ' . $content[2] . '
                         </div>
                         <div class="col-lg-3">
-                        <div class="col-lg-12 border-bottom"><h6>Lerninhalt</h6></div>
+                        <div class="col-lg-12 border-bottom exaquest-category-tag-lerninhalt rounded"><h6>Lerninhalt</h6></div>
                             ' . $content[3] . '
                         </div>
                     </div>
                 </div>';
     echo "<br/>";
     echo $html;
-    echo "<br/>";
+    echo '</div>';
 }
 
 function block_exaquest_render_buttons_for_exam_questionbank() {
@@ -2993,8 +3354,8 @@ function block_exaquest_render_buttons_for_exam_questionbank() {
 function block_exaquest_render_check_similiarity_button($quizid, $courseid, $catAndCont) {
     // add a button that links to exaquest/similarity_comparison.php with questioncategoryid, courseid and examid
     $url_check_similarity = new moodle_url('/blocks/exaquest/similarity_comparison.php',
-            array("courseid" => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1], "examid" => $quizid));
-    return '<a href="' . $url_check_similarity . '" class="btn btn-primary">Ähnlichkeitsvergleich</a>';
+        array("courseid" => $courseid, "category" => $catAndCont[0] . ',' . $catAndCont[1], "examid" => $quizid));
+    return '<a href="' . $url_check_similarity . '" class="btn btn-secondary">' . get_string("exaquest:similarity_title", "block_exaquest") . '</a>';
 }
 
 // not needed, use mustache instead
@@ -3021,27 +3382,27 @@ function block_exaquest_render_buttons_for_finished_exam_questionbank() {
     // fachlichreleaseexam when you are the FP of this quiz
 
     $assigned_to_fill =
-            block_exaquest_get_assigned_quizzes_by_assigntype_and_status($USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS,
-                    BLOCK_EXAQUEST_QUIZSTATUS_NEW);
-    if ($assigned_to_fill[$quizid] && $assigned_to_fill[$quizid]->done == 0) {
+        block_exaquest_get_assigned_quizzes_by_assigntype_and_status($USER->id, BLOCK_EXAQUEST_QUIZASSIGNTYPE_ADDQUESTIONS,
+            BLOCK_EXAQUEST_QUIZSTATUS_NEW);
+    if (array_key_exists($quizid, $assigned_to_fill) && $assigned_to_fill[$quizid]->done == 0) {
         $sendexamtoreview = new \block_exaquest\output\button_send_exam_to_review($quizid, $courseid);
         $buttons .= $OUTPUT->render($sendexamtoreview);
         $buttons .= ' ';
     }
 
-    // if the quiz is new or created, then the FP can release it
+    // if the quiz is new or created, then the FP can fachlich review it
     $quizstatus = $DB->get_field(BLOCK_EXAQUEST_DB_QUIZSTATUS, "status", array("quizid" => $quizid));
     if ($quizstatus == BLOCK_EXAQUEST_QUIZSTATUS_NEW || $quizstatus == BLOCK_EXAQUEST_QUIZSTATUS_CREATED) {
         $assigned_as_fp =
-                block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id,
-                        BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER);
+            block_exaquest_get_assigned_exams_by_assigntype($courseid, $USER->id,
+                BLOCK_EXAQUEST_QUIZASSIGNTYPE_FACHLICHERPRUEFER);
         $assigned_as_fp_filter_quizid = array_filter($assigned_as_fp, function($exam) use ($quizid) {
             return $exam->quizid == $quizid;
         });
         if (!empty($assigned_as_fp_filter_quizid)) {
             $missingquestionscount = block_exaquest_get_missing_questions_count($quizid, $courseid);
             $fachlichreleaseexam =
-                    new \block_exaquest\output\button_fachlich_release_exam($quizid, $courseid, $missingquestionscount);
+                new \block_exaquest\output\button_fachlich_release_exam($quizid, $courseid, $missingquestionscount);
             $buttons .= $OUTPUT->render($fachlichreleaseexam);
         }
     }

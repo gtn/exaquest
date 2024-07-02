@@ -7,7 +7,7 @@
 <a class="btn btn-light w-100 d-flex justify-content-between align-items-center" data-toggle="modal"
    data-target="#questionsForMeToCreateModal">
     <span class="badge-outer text-center">
-        <span class="badge  tododoscounter {{#questions_for_me_to_create_count}}badge-primary{{/questions_for_me_to_create_count}}">{{questions_for_me_to_create_count}}</span>
+        <span id="question-todoscounter" class="badge tododoscounter {{#questions_for_me_to_create_count}}badge-primary{{/questions_for_me_to_create_count}}">{{questions_for_me_to_create_count}}</span>
     </span>
     <span class="flex-grow-1"> {{#str}}
         questions_for_me_to_create, block_exaquest {{/str}}</span>
@@ -42,7 +42,7 @@
                                     class="mark-question-request-as-done-button btn btn-light btn-sm ml-2"
                                     requestid= {{id}}
                                     courseid={{courseid}}>
-                                <i class="icon fa fa-times fa-fw mr-1"></i> Erledigt
+                                <i class="icon fa fa-times fa-fw mr-1"></i> {{#str}}done, block_exaquest {{/str}}
                             </button>
                             <!--                            <a id="request-comment-a-{{id}}" class="mark-question-request-as-done-button"
                                href="#"

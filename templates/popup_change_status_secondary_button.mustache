@@ -1,0 +1,54 @@
+<!-- using bootstrap modals to do the popups https://getbootstrap.com/docs/4.6/components/modal/ -->
+<button type="button" class="btn btn-secondary" data-toggle="modal"
+        data-target="#changeStatusModal{{questionbankentryid}}">
+    {{name}}
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="changeStatusModal{{questionbankentryid}}" data-backdrop="static" data-keyboard="false"
+     tabindex="-1" aria-labelledby="changeStatusModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">{{title}}</h5>
+                <button type="button" class="close btn-sm" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body col-auto">
+                <h5>{{#str}}question, block_exaquest {{/str}} {{questionname}}</h5>
+                <p>{{text}}</p>
+                <div class="form-check{{questionbankentryid}}">
+                    {{{ selectusers_autocomplete_html }}}
+                </div>
+                <br>
+                <p>{{send_to_pk_text}}</p>
+                <br>
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">{{#str}}write_a_comment, block_exaquest {{/str}}</label>
+                    <textarea class="form-control commenttext{{questionbankentryid}} commenttext" name="commenttext"
+                              id="texta" rows="3"
+                              placeholder="{{commentplaceholder}}"></textarea>
+                </div>
+
+                <!-- Checkbox for changing the status and removing from quiz -->
+                {{#change_status_and_remove_from_quiz}}
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="change_status_and_remove_from_quiz{{questionbankentryid}}">
+                        <label class="form-check-label" for="removeFromQuizCheckbox{{questionbankentryid}}">
+                            {{#str}}change_status_and_remove_from_quiz, block_exaquest{{/str}}
+                        </label>
+                    </div>
+                {{/change_status_and_remove_from_quiz}}
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{#str}}cancel, moodle{{/str}}</button>
+                <button type="submit" value="{{action}}"
+                        class="btn btn-primary exaquest-changequestionstatus changestatus{{questionbankentryid}} {{#require}}disable{{questionbankentryid}}{{/require}}">
+                    {{#str}}send, block_exaquest{{/str}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

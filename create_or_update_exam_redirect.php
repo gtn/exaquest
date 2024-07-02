@@ -160,8 +160,6 @@ $mform = new $mformclassname($data, $cw->section, $cm, $course);
 $mform->set_data($data);
 
 
-
-
 if ($fromform = $mform->get_data()) {
     if (!empty($fromform->update)) {
         list($cm, $fromform) = update_moduleinfo($cm, $fromform, $course, $mform);

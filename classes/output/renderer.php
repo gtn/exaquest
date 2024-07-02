@@ -19,8 +19,8 @@ namespace block_exaquest\output;
 
 defined('MOODLE_INTERNAL') || die;
 
-use plugin_renderer_base;
 use html_writer;
+use plugin_renderer_base;
 
 /*
  * Useful sources for development
